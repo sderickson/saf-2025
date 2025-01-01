@@ -15,6 +15,11 @@ Torn between mainly Golang and Node. Might try Rust. I'm interested in trying Go
 
 Mainly torn between React and Vue. I'm curious how Vue has evolved since I last worked with it. I'll go with that one. Am I choosing too many things I'm less familiar with? Nah. Anyway, I'm not looking to make huge applications, and Vue seems better for smaller, focused products.
 
+# Other JS Libs
+**Decision**: Tanstack Query, Vue Router, Tanstack Query, maybe Pinia?
+
+I'm going to see if I can get away without a utility library like lodash. Also, reviewing the docs, Vue's state management system seems pretty modular, including Pinia and reactive. Will see how they go.
+
 # Frontend Languge
 **Decision**: TypeScript
 
@@ -40,6 +45,11 @@ Instead of rendering server-side for each static, logged-out page request in pro
 
 Might as well go with the testing library that integrates with Vite.
 
+# Other Testing Tools
+**Decision**: Storybook, Playwright
+
+Will also look through other recommendations [here](https://vuejs.org/guide/scaling-up/testing.html).
+
 # Code Repository
 **Decision**: GitHub
 
@@ -53,11 +63,16 @@ I've used AWS, Azure, Google Cloud, and Linode to various degrees. I suspect tha
 I'll also host DB on the same service as the web server. DigitalOcean supports both MongoDB and PostgreSQL.
 
 # Telemetry/Alerting
-**Decision**: Redis, Grafana, Pagerduty
+**Decision**: Redis (self hosted), Grafana (self hosted), Pagerduty, Sentry
 
-I'd like some monitoring of application metrics such as HTTP response codes, and in some cases be able to provide metrics as a feature of the application. I could use a service like Datadog but... it's a bit spendy. I'm going to try rolling my own here and see what happens.
+I'd like some monitoring of application metrics such as HTTP response codes, and in some cases be able to provide metrics as a feature of the application. I could use a service like Datadog but... it's a bit spendy, and seems to overlap with what hosting services provide. I'm going to try rolling my own here and see what happens. And how far I can get with free Pagerduty, Sentry plans.
 
 # Auth
 **Decision**: Passport.js/Twilio (Sendgrid)
 
 I'm tempted to pay for an identity service like Okta/0Auth, but I think it's best to just set up a standard SUSI form in this template and use it across different applications. I'll still need a service for reliably sending verification emails, though, and Sendgrid looks good. I also like the look of other Twilio products, like Lookup.
+
+# API Specs
+**Decision**: Swagger?
+
+I'm surprised Swagger doesn't autogen a node or express server! At least, the node one is archived. (TODO)
