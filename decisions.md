@@ -1,9 +1,26 @@
-Reference for how I want to build my web stack.
+This is a living doc documenting what libraries and services I'm planning on using in this stack. I'll update it as I go along; I'm sure some decisions will change as I get into implementation.
 
-# Database
-**Decision**: PostgreSQL
+# Context
+I have a few web apps I want to build or upgrade and I'd like to share the full-stack framework between them. So I'm putting together a base framework which I can fork from.
 
-Not sure which to use between MongoDB or PostgreSQL. Probably depends on the project, so I'll start with setting up PostgreSQL (which I haven't used before), get a feel for it, and go from there.
+## Principles
+The libraries and software used should be:
+* **Platform Independent**: I don't want to be dependent on or locked into specialty solutions provided by Amazon, Google, Microsoft, et al.
+* **Industry Standard**: At least, the default pieces won't be the latest trend. Generally going for the ones that have wide adoption and fairly mature.
+* **Modular**: I'm not looking to use some vertically-integrated solution, either. The glue should be provided by this framework.
+
+For the glue that is this framework itself, I'm aiming for:
+* **Loose Coupling**: I don't want it to be too hard to swap out pieces. So direct dependencies will be kept to a minimum, and 
+
+## References
+Aside from the documentation itself, here are some docs I'm relying on particularly heavily to make decisions:
+* [State of JS 2024](https://2024.stateofjs.com/en-US). I always like to catch up on the results of this survey and see the trajectory of the latest tools in the JS ecosystem. I also use some of their terminology.
+* [Claude](https://claude.ai/). I've heard good things, and I've found this handy to get some ideas and also weigh pros/cons.
+* You! Feel free to use this repo to discuss and collaborate.
+
+# Decisions
+## Database: PostgreSQL
+Torn between MongoDB or PostgreSQL. Probably depends on the project, so I'll start with setting up PostgreSQL (which I haven't used before), get a feel for it, and go from there.
 
 # Web Server
 **Decision**: Node/ExpressJS
