@@ -27,27 +27,28 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 
 | Category | Choice | Might Also Try |
 | - | - | - |
-| [Disk Database](#disk-database) | PostgreSQL | MongoDB |
+| [Disk Database](#disk-database) | PostgreSQL | MongoDB, SQLite |
 | [In-Memory Database](#in-memory-database) | Redis | |
 | [Web Server](#web-server) | Node/Express | Go, Rust |
 | [FE Framework](#frontend-framework) | Vue | React |
 | [FE Libraries](#frontend-libraries) | Tanstack Query, Vue Router | Pinia, Jotai |
 | [FE Language](#frontend-language) | TypeScript | |
+| [CSS](#css) | DaisyUI? | |
 | [Meta Framework](#meta-framework) | None | Astro |
 | [Build Tool](#build-tool) | Vite | |
 | [Unit Tests](#unit-tests) | Vitest | |
 | [Other Testing Tools](#other-testing-tools) | Storybook, Playwright | |
 | [Code Repository](#code-repository) | GitHub | GitLab |
 | [Orchestration](#orchestration) | Kubernetes | |
-| [Telemetry/Alerting](#telemetryalerting) | Redis, Grafana, PagerDuty | Prometheus instead of Redis |
-| [Auth](#auth) | Passport.js/Sendgrid | Authentik, Keycloak |
+| [Observability/Alerting](#observabilityalerting) | ~LGTM, PagerDuty | |
+| [Auth](#auth) | Passport.js/Sendgrid | Auth0, Keycloak, Authentik |
 | [API Specs](#api-specs) | OpenAPI | gRPC-Web |
 
 
 
 # Rationale
 ## Disk Database
-Torn between MongoDB or PostgreSQL. I'll start with setting up PostgreSQL (which I haven't used before), get a feel for it, and go from there. Good opportunity to brush up on my SQL, anyway. Apache OpenDAL was recommended to check out.
+Torn between MongoDB or PostgreSQL. I'll start with setting up PostgreSQL (which I haven't used before), get a feel for it, and go from there. Good opportunity to brush up on my SQL, anyway. Apache OpenDAL was recommended to check out. Also SQLite, which could be powerufl enough for at least some of the applications I'm working on. It would simplify things...
 
 ## In-Memory Database
 I'm not exactly sure how I want to go about doing things like caching, message queues, pub/sub, and alike, but an in-memory datastore is appropriate for all sorts of features like these. I honestly am not familiar with the ecosystem, and this decision is not thoroughly thought-out, but Redis seems like a perfectly good place to start. Although, digging a bit the licensing situation looks complicated. If that turns out to be an issue I'll perhaps try RabbitMQ and/or Memcached.
@@ -63,6 +64,9 @@ I'm going to see if I can get away without a utility library like lodash. Also, 
 
 ## Frontend Language
 For sure TS over JS. I could consider WASM-based tools but I don't think any are mature enough for the purpose of this framework.
+
+## CSS
+Vue comes with some CSS features. But Tailwind was recommended and that does look like it would save some time, while being much less heavy than something like Bootstrap was (is?). Still, it would be nice to have some components and not have to make them myself. Maybe DaisyUI since it's built on Tailwind? TBD.
 
 ## Meta-Framework
 As defined by [State of JS](https://2024.stateofjs.com/en-US/libraries/meta-frameworks/), these frameworks also run in the backend, like Next.js. Using Vue precludes choosing Next.js. I *could* try Astro but... frankly SSR is a feature I'm less interested in than others. I'll just serve static HTML for static pages, and do client-side JS for the logged-in applications for now.
@@ -84,8 +88,8 @@ So, I expect for this framework, I'll test it out on various hosting services in
 
 I'm rather tempted to use their managed solutions. But I suspect that will make it more difficult to stay cost-effective and hosting independent. So instead I'll run and manage container orchestration as part of the framework. Kubernetes is industry standard so go with that.
 
-## Telemetry/Alerting
-I'd like some monitoring of application metrics such as HTTP response codes, and in some cases be able to provide metrics as a feature of the application. I could use a service like Datadog but... it's a bit spendy, and seems to overlap with what hosting services provide. I'm going to try rolling my own here and see what happens. And how far I can get with free Pagerduty, Sentry plans. I've heard also Prometheus is good for time series but given that Redis supports time series and other use cases, I'm going to see if Redis is satisfactory for this use case as well.
+## Observability/Alerting
+I could use a service like Datadog but... it's a bit spendy (confirmed), and seems to overlap with what hosting services provide. I'll see how far I can get with free Pagerduty, Sentry plans, and self-hosting a minimal LGTM stack. I'll start with Loki and Grafana, hold off on Tempo for now, and use Prometheus instead of Mimir (since I've heard Prometheus recommended a couple times now). And use Sentry for frontend observability.
 
 ## Auth
 I'm tempted to pay for an identity service like Okta/0Auth, but I think it's best to just set up a standard SUSI form in this template and use it across different applications. I'll still need a service for reliably sending verification emails, though, and Sendgrid looks good. I also like the look of other Twilio products, like Lookup.
@@ -93,4 +97,4 @@ I'm tempted to pay for an identity service like Okta/0Auth, but I think it's bes
 Before I invest heavily in my own identity service, I might try some open source solutions. Authentik and Keycloak were suggested.
 
 ## API Specs
-Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD exactly which libraries I'll use to 1) generate SDKs, 2) generate server stubs/validation, and 3) generate/host docs. Per Claude, I'll start with openapi-typescript, tsoa or Express OpenAPI Validator, and Redoc respectively.
+Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD exactly which libraries I'll use to 1) generate SDKs, 2) generate server stubs/validation, and 3) generate/host docs. Per Claude, I'll start with openapi-typescript, tsoa or Express OpenAPI Validator, and Redoc respectively. Fern was suggested but that doesn't look free.
