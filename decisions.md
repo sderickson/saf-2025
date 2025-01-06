@@ -112,7 +112,7 @@ I could spend all my time planning and not building. Here are a few areas of dec
 * Development workflow
 * Documentation
 * Error boundaries on FE
-* FE observability (analytics, gating, session replay)
+* FE observability (analytics, gating, session replay, cookie consent)
 * File uploads
 * Folder structure
 * i18n
