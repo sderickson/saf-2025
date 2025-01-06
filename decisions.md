@@ -121,5 +121,5 @@ I could spend all my time planning and not building. Here are a few areas of dec
 * Secret management, env variables
 
 # TODOs
-[] Consider CRDT
-[] Plan out how this will be built
+* Consider CRDT
+* Plan out how this will be built
