@@ -27,7 +27,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 
 | Category | Choice | Might Also Try |
 | - | - | - |
-| [Disk Database](#disk-database) | PostgreSQL | MongoDB, SQLite |
+| [Disk Database](#disk-database) | SQLite | PostgreSQL, MongoDB |
 | [In-Memory Database](#in-memory-database) | Redis | |
 | [Web Server](#web-server) | Node/Express | Go, Rust |
 | [FE Framework](#frontend-framework) | Vue | React |
@@ -39,7 +39,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 | [Unit Tests](#unit-tests) | Vitest | |
 | [Other Testing Tools](#other-testing-tools) | Storybook, Playwright | |
 | [Code Repository](#code-repository) | GitHub | GitLab |
-| [Orchestration](#orchestration) | Kubernetes | |
+| [Orchestration](#orchestration) | Docker-Compose | Kubernetes |
 | [Observability/Alerting](#observabilityalerting) | ~LGTM, PagerDuty | |
 | [Auth](#auth) | Passport.js/Sendgrid | Auth0, Keycloak, Authentik |
 | [API Specs](#api-specs) | OpenAPI | gRPC-Web |
@@ -48,7 +48,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 
 # Rationale
 ## Disk Database
-Torn between MongoDB or PostgreSQL. I'll start with setting up PostgreSQL (which I haven't used before), get a feel for it, and go from there. Good opportunity to brush up on my SQL, anyway. Apache OpenDAL was recommended to check out. Also SQLite, which could be powerufl enough for at least some of the applications I'm working on. It would simplify things...
+Torn between MongoDB or PostgreSQL/SQLite. I'll start with SQLite (which I haven't used in a while), get a feel for it, should be fine for most applications, and go from there. Good opportunity to brush up on my SQL, anyway. Apache OpenDAL was recommended to check out. If needed, an app can be transitioned from SQLite to PostgreSQL.
 
 ## In-Memory Database
 I'm not exactly sure how I want to go about doing things like caching, message queues, pub/sub, and alike, but an in-memory datastore is appropriate for all sorts of features like these. I honestly am not familiar with the ecosystem, and this decision is not thoroughly thought-out, but Redis seems like a perfectly good place to start. Although, digging a bit the licensing situation looks complicated. If that turns out to be an issue I'll perhaps try RabbitMQ and/or Memcached.
@@ -63,10 +63,10 @@ Mainly torn between React and Vue. I'm curious how Vue has evolved since I last 
 I'm going to see if I can get away without a utility library like lodash. Also, reviewing the docs, Vue's state management system seems pretty modular, including Pinia and reactive. Will see how they go.
 
 ## Frontend Language
-For sure TS over JS. I could consider WASM-based tools but I don't think any are mature enough for the purpose of this framework.
+For sure TS over JS. I could consider WASM-based tools but I don't think any are mature enough for the purpose of this framework. Presumably supplemented with ESLint and some plugins. Claude suggested `@typescript-eslint/eslint-plugin`, `eslint-plugin-vue`, and `eslint-plugin-import`.
 
 ## CSS
-Vue comes with some CSS features. But Tailwind was recommended and that does look like it would save some time, while being much less heavy than something like Bootstrap was (is?). Still, it would be nice to have some components and not have to make them myself. Maybe DaisyUI since it's built on Tailwind? TBD.
+Vue comes with some CSS features. But Tailwind was recommended and that does look like it would save some time, while being much less heavy than something like Bootstrap was (is?). Still, it would be nice to have some components and not have to make them myself. Maybe DaisyUI since it's built on Tailwind? Also recommended: Vuetify or PrimeVue (more established).
 
 ## Meta-Framework
 As defined by [State of JS](https://2024.stateofjs.com/en-US/libraries/meta-frameworks/), these frameworks also run in the backend, like Next.js. Using Vue precludes choosing Next.js. I *could* try Astro but... frankly SSR is a feature I'm less interested in than others. I'll just serve static HTML for static pages, and do client-side JS for the logged-in applications for now.
@@ -86,7 +86,7 @@ Used to it. Don't need things to be super fancy. Will just use GitHub actions an
 ## Orchestration
 So, I expect for this framework, I'll test it out on various hosting services including AWS, Google Cloud, Azure, and DigitalOcean, and it should be pretty agnostic and seamless to run on any of them. I also think it's a given that I'll be using Docker containers. But then the question is how to deploy and manage these Docker containers.
 
-I'm rather tempted to use their managed solutions. But I suspect that will make it more difficult to stay cost-effective and hosting independent. So instead I'll run and manage container orchestration as part of the framework. Kubernetes is industry standard so go with that.
+I'm rather tempted to use their managed solutions. But I suspect that will make it more difficult to stay cost-effective and hosting independent. So instead I'll run and manage container orchestration as part of the framework. Kubernetes is industry standard but is probably more than I need at first. I'll start with just a single instance running Docker Compose and go from there.
 
 ## Observability/Alerting
 I could use a service like Datadog but... it's a bit spendy (confirmed), and seems to overlap with what hosting services provide. I'll see how far I can get with free Pagerduty, Sentry plans, and self-hosting a minimal LGTM stack. I'll start with Loki and Grafana, hold off on Tempo for now, and use Prometheus instead of Mimir (since I've heard Prometheus recommended a couple times now). And use Sentry for frontend observability.
@@ -98,3 +98,28 @@ Before I invest heavily in my own identity service, I might try some open source
 
 ## API Specs
 Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD exactly which libraries I'll use to 1) generate SDKs, 2) generate server stubs/validation, and 3) generate/host docs. Per Claude, I'll start with openapi-typescript, tsoa or Express OpenAPI Validator, and Redoc respectively. Fern was suggested but that doesn't look free.
+
+## Other Considerations
+I could spend all my time planning and not building. Here are a few areas of decision-making to work on as I go, rather than figuring out everything ahead of time.
+
+* API versioning
+* CDN
+* Code formatting/quality
+* Cron and background (batch) jobs
+* DB backups
+* DB connection pooling
+* Dependency management
+* Development workflow
+* Documentation
+* Error boundaries on FE
+* FE observability (analytics, gating, session replay)
+* File uploads
+* Folder structure
+* i18n
+* Monorepo managemetn, npm workspaces
+* Rate limiting
+* Secret management, env variables
+
+# TODOs
+[] Consider CRDT
+[] Plan out how this will be built
