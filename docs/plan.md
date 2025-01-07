@@ -7,9 +7,9 @@ Once all of this is done, should start using this in actual applications.
 
 * Local
     * ✓ Vite/Vue
-    * Node/Express
+    * ✓ Node/Express
     * SQLite
-    * API Specs (experiment with npm workspaces here)
+    * API Specs
     * Docker Compose
     * Auth (use-case for framework features)
 * Production
