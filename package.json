@@ -1,0 +1,22 @@
+{
+  "name": "saf-2025",
+  "version": "1.0.0",
+  "description": "Full-featured web application framework using my preferred libraries and services.",
+  "directories": {
+    "doc": "docs"
+  },
+  "author": "Scott Erickson <sderickson@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:api-app": "npm run dev --workspace api-app",
+    "dev:vue-app": "npm run dev --workspace vue-app"
+  },
+  "workspaces": [
+    "api-app",
+    "vue-app"
+  ],
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}
