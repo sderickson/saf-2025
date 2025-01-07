@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  vue-app:
+    build:
+      context: ./vue-app
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"  # Vite's default port
+    volumes:
+      - ./vue-app:/app
+
+      # Claude put Node modules in Docker volumes to
+      # "prevent conflicts with local environment".
+      - /app/node_modules
+    environment:
+      # per nodejs.org, always run in prod. Code that depends
+      # on environment is an antipattern.
+      - NODE_ENV=production
+    command: npm run dev
+    depends_on:
+      - api-app
+
+  api-app:
+    build:
+      context: ./api-app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api-app:/app
+      - ./api-app/data:/app/data
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - SQLITE_DB_PATH=/app/data/database.sqlite
+      - PORT=3000
+    command: npm run dev
+
+# is this needed?
+volumes:
+  sqlite-data:
