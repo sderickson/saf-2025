@@ -1,0 +1,6 @@
+{
+    "name": "db",
+    "dependencies": {
+        "better-sqlite3": "^11.7.2"
+    }
+}

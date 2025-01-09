@@ -2,13 +2,22 @@
 
 Rough order of development
 
+### Backlog
+* Add some usage docs
+* Get Node on TS
+* Integrate Node with Docker watch mode
+* Give db some organization
+* See how one might restrict imports
+* Figure out require/import
+* Incorporate some of Express' best practices
+
 ### Core
 Once all of this is done, should start using this in actual applications.
 
 * Local
     * ✓ Vite/Vue
     * ✓ Node/Express
-    * SQLite
+    * ✓ SQLite
     * API Specs
     * Docker Compose
     * Auth (use-case for framework features)
