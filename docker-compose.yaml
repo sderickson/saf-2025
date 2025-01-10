@@ -34,7 +34,7 @@ services:
       - NODE_ENV=production
       - SQLITE_DB_PATH=/app/data/database.sqlite
       - PORT=3000
-    command: npm run dev
+    command: npm start
 
 # is this needed?
 volumes:

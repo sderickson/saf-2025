@@ -1,5 +1,5 @@
-const createError = require('http-errors');
-const express = require('express');
+import createError, { HttpError } from 'http-errors';
+import express, { Request, Response, NextFunction } from "express";
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
@@ -11,13 +11,23 @@ const uuid = require('uuid');
 
 const app = express();
 
+declare global {
+  namespace Express {
+    interface Request {
+      id: string;
+      db: any; // TODO: fix,
+      log: any; // TODO: fix
+    }
+  }
+}
+
 app.use((req, res, next) => {
   req.id = uuid.v4().slice(0, 8);
   next();
 })
 
 // 3rd party middleware
-morgan.token('id', (req) => req.id);
+morgan.token('id', (req: Request) => req.id);
 app.use(morgan(':date[iso] <:id> :method :url :status :response-time ms - :res[content-length]'));
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -40,7 +50,8 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp(),
-    winston.format.printf(({ reqId, level, message, timestamp }) => {
+    // TODO: add winston types?
+    winston.format.printf(({ reqId, level, message, timestamp }: { reqId: string, level: string, message: string, timestamp: string}) => {
       return `${timestamp} <${reqId}> [${level}]: ${message}`;
     })
   ),
@@ -59,7 +70,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   req.log.error(err.stack);
   res.status(err.status || 500);
   res.send("Error");

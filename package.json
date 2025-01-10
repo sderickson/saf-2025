@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
-    "dev:api-app": "npm run dev --workspace api-app",
+    "dev:api-app": "npm run start --workspace api-app",
     "dev:vue-app": "npm run dev --workspace vue-app"
   },
   "workspaces": [
