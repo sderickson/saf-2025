@@ -15,7 +15,7 @@ declare global {
   namespace Express {
     interface Request {
       id: string;
-      db: any; // TODO: fix,
+      db: ReturnType<typeof createDatabase>;
       log: Logger;
     }
   }
