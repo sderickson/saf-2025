@@ -1,13 +1,13 @@
 import createError, { HttpError } from 'http-errors';
 import express, { Request, Response, NextFunction } from "express";
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
-const cors = require('cors');
-const corsOptions = require('./cors-config');
-const db = require('db');
-const winston = require('winston');
-const uuid = require('uuid');
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
+import { corsOptions } from './cors-config';
+import { createDatabase } from 'db';
+import winston, { Logger } from 'winston';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
@@ -16,13 +16,13 @@ declare global {
     interface Request {
       id: string;
       db: any; // TODO: fix,
-      log: any; // TODO: fix
+      log: Logger;
     }
   }
 }
 
 app.use((req, res, next) => {
-  req.id = uuid.v4().slice(0, 8);
+  req.id = uuidv4().slice(0, 8);
   next();
 })
 
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // db injection
-const dbInstance = db.createDatabase();
+const dbInstance = createDatabase();
 app.use((req, _, next) => {
   req.db = dbInstance;
   next();
@@ -50,8 +50,7 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp(),
-    // TODO: add winston types?
-    winston.format.printf(({ reqId, level, message, timestamp }: { reqId: string, level: string, message: string, timestamp: string}) => {
+    winston.format.printf(({ reqId, level, message, timestamp }) => {
       return `${timestamp} <${reqId}> [${level}]: ${message}`;
     })
   ),
@@ -61,7 +60,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const usersRouter = require('./routes/users');
+import { usersRouter } from './routes/users';
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
@@ -71,7 +70,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  req.log.error(err.stack);
+  if (!req.log) {
+    console.error(err.stack);
+  } else {
+    req.log.error(err.stack);
+  }
   res.status(err.status || 500);
   res.send("Error");
 });

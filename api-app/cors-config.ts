@@ -1,4 +1,4 @@
-const corsOptions = {
+export const corsOptions = {
     origin: [
         'http://localhost:5173',
         'https://app.yourdomain.com'
@@ -7,5 +7,3 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
-
-module.exports = corsOptions;
