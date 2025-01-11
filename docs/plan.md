@@ -4,8 +4,6 @@ Rough order of development
 
 ### Backlog
 * Add some usage docs
-* Get Node on TS
-* Integrate Node with Docker watch mode
 * Give db some organization
 * See how one might restrict imports
 * Figure out require/import

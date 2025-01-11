@@ -27,7 +27,6 @@ services:
       - "3000:3000"
     volumes:
       - /app/api-app/node_modules
-      - ./api-app:/app/api-app
       - ./api-app/data:/app/api-app/data
       - ./db:/app/db
     environment:
@@ -35,6 +34,15 @@ services:
       - SQLITE_DB_PATH=/app/data/database.sqlite
       - PORT=3000
     command: npm start
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./api-app/
+          target: /app/api-app
+          ignore:
+            - ./api-app/node_modules/
+            - ./api-app/data/
+            - ./node_modules/
 
 # is this needed?
 volumes:
