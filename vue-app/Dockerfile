@@ -1,15 +1,18 @@
 FROM node:22-slim
 
+# Mono-repo setup
 WORKDIR /app
+COPY ./package*.json .
+COPY ./api-spec/package*.json ./api-spec/
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application
-COPY . .
+COPY ./api-spec ./api-spec
+RUN cd api-spec ; npm run generate
 
-# Expose Vite's default port
+# Vue app setup
+WORKDIR /app/vue-app
+COPY package*.json ./
+RUN npm install
+COPY . .
 EXPOSE 5173

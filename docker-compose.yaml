@@ -1,13 +1,13 @@
 services:
   vue-app:
     build:
-      context: ./vue-app
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: ./vue-app/Dockerfile
     ports:
       - "5173:5173"
     volumes:
-      - ./vue-app:/app
-      - /app/node_modules # So HMR works
+      - ./vue-app:/app/vue-app
+      - /app/vue-app/node_modules # So HMR works
     environment:
       - NODE_ENV=production # per nodejs.org, always run in prod
     command: npm run dev

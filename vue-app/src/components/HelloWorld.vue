@@ -4,6 +4,16 @@ import { ref } from 'vue'
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+
+import createClient from "openapi-fetch";
+import type { paths } from 'api-spec/openapi';
+
+async function testClient() {
+  const client = createClient<paths>({ baseUrl: "http://localhost:3000/" });
+  const { data, error } = await client.GET('/users');
+  console.log({data, error});
+}
+testClient();
 </script>
 
 <template>
