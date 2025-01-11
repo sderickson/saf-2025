@@ -1,0 +1,13 @@
+{
+    "name": "api-spec",
+    "scripts": {
+        "generate:types": "openapi-typescript ./openapi.yaml -o ./openapi.d.ts",
+        "generate:json": "cat openapi.yaml | yaml --json --indent 2 --single > openapi.json",
+        "generate": "npm run generate:types && npm run generate:json"
+    },
+    "devDependencies": {
+        "openapi-typescript": "^7.5.2",
+        "typescript": "^5.7.3",
+        "yaml": "^2.7.0"
+    }
+}

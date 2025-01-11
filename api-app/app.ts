@@ -8,6 +8,10 @@ import { corsOptions } from './cors-config';
 import { createDatabase } from 'db';
 import winston, { Logger } from 'winston';
 import { v4 as uuidv4 } from 'uuid';
+import * as OpenApiValidator from 'express-openapi-validator';
+import openApiSpec from 'api-spec/openapi.json';
+import { usersRouter } from './routes/users';
+import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 
 const app = express();
 
@@ -22,6 +26,7 @@ declare global {
   }
 }
 
+// request id generator
 app.use((req, res, next) => {
   req.id = uuidv4().slice(0, 8);
   next();
@@ -61,15 +66,20 @@ app.use((req, res, next) => {
   next();
 });
 
-import { usersRouter } from './routes/users';
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: openApiSpec as OpenAPIV3.DocumentV3,
+    validateRequests: true, // (default)
+    validateResponses: true, // false by default
+  }),
+);
+
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (!req.log) {
     console.error(err.stack);

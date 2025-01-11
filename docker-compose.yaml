@@ -46,6 +46,3 @@ services:
         - action: rebuild
           path: ./db/package.json
           target: /app/db/package.json
-# is this needed?
-volumes:
-  sqlite-data:

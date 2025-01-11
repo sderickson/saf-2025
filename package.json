@@ -8,6 +8,7 @@
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [
+    "api-spec",
     "api-app",
     "vue-app",
     "db"

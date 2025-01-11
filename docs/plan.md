@@ -3,11 +3,15 @@
 Rough order of development
 
 ### Backlog
-* Add some usage docs
-* Give db some organization
-* See how one might restrict imports
-* Figure out require/import
+* Add drizzle so db has types
+* Figure out how best to add types to express routes
+* Make api spec auto-generate on change
+* Make db, spec into their own images?
 * Incorporate some of Express' best practices
+* Figure out db migrations
+* Add version to api routes
+* Add api spec docs
+* Add api client to vue
 
 ### Core
 Once all of this is done, should start using this in actual applications.

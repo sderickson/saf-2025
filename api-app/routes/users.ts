@@ -1,6 +1,8 @@
 import express from 'express';
 export const usersRouter = express.Router();
 
+import { components } from 'api-spec/openapi';
+
 usersRouter.get('/', function(req, res) {
   const users = req.db.users.getAll.all();
   res.json(users);
