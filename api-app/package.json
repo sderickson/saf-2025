@@ -4,7 +4,7 @@
     "start": "ts-node ./bin/www"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "1.4.4",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "http-errors": "~1.6.3",

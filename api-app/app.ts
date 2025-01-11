@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
+// Define properties added to Express Request objects by middleware
 declare global {
   namespace Express {
     interface Request {

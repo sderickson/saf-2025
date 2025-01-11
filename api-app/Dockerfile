@@ -3,6 +3,7 @@ FROM node:22-slim
 # Mono-repo setup
 WORKDIR /app
 COPY ./package*.json .
+COPY ./tsconfig.json .
 COPY ./db/package*.json ./db/
 COPY ./api-app/package*.json ./api-app/
 

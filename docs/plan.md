@@ -16,8 +16,8 @@ Once all of this is done, should start using this in actual applications.
     * ✓ Vite/Vue
     * ✓ Node/Express
     * ✓ SQLite
+    * ✓ Docker Compose
     * API Specs
-    * Docker Compose
     * Auth (use-case for framework features)
 * Production
     * Experiment with GitHub Actions, hosting services and products, settle on one
@@ -56,7 +56,7 @@ What follows can largely be done in any order.
     * Kubernetes
     * Secret management
 * Workflow+
-    * Code formatting, quality
+    * Code formatting, quality, ESLint
     * API Versioning
     * Documentation
     * Dependency management

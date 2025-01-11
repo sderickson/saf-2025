@@ -4,17 +4,12 @@ services:
       context: ./vue-app
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"  # Vite's default port
+      - "5173:5173"
     volumes:
       - ./vue-app:/app
-
-      # Claude put Node modules in Docker volumes to
-      # "prevent conflicts with local environment".
-      - /app/node_modules
+      - /app/node_modules # So HMR works
     environment:
-      # per nodejs.org, always run in prod. Code that depends
-      # on environment is an antipattern.
-      - NODE_ENV=production
+      - NODE_ENV=production # per nodejs.org, always run in prod
     command: npm run dev
     depends_on:
       - api-app
@@ -26,9 +21,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - /app/api-app/node_modules
-      - ./api-app/data:/app/api-app/data
-      - ./db:/app/db
+      - ./db/data:/app/db/data
     environment:
       - NODE_ENV=production
       - SQLITE_DB_PATH=/app/data/database.sqlite
@@ -41,9 +34,18 @@ services:
           target: /app/api-app
           ignore:
             - ./api-app/node_modules/
-            - ./api-app/data/
-            - ./node_modules/
-
+        - action: sync+restart
+          path: ./db
+          target: /app/db
+          ignore:
+            - ./db/node_modules/
+            - ./db/data/
+        - action: rebuild
+          path: ./api-app/package.json
+          target: /app/api-app/package.json
+        - action: rebuild
+          path: ./db/package.json
+          target: /app/db/package.json
 # is this needed?
 volumes:
   sqlite-data:
