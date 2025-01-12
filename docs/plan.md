@@ -10,8 +10,6 @@ Rough order of development
 * Incorporate some of Express' best practices
 * Figure out db migrations
 * Add version to api routes
-* Add api spec docs
-* Add api client to vue
 
 ### Core
 Once all of this is done, should start using this in actual applications.

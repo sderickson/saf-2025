@@ -3,12 +3,9 @@ FROM node:22-slim
 # Mono-repo setup
 WORKDIR /app
 COPY ./package*.json .
-COPY ./api-spec/package*.json ./api-spec/
-
 RUN npm install
 
-COPY ./api-spec ./api-spec
-RUN cd api-spec ; npm run generate
+COPY ./api-spec/dist ./api-spec/dist
 
 # Vue app setup
 WORKDIR /app/vue-app

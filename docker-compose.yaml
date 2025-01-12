@@ -34,6 +34,11 @@ services:
           target: /app/api-app
           ignore:
             - ./api-app/node_modules/
+        - action: rebuild
+          path: ./api-app/package.json
+          target: /app/api-app/package.json
+        
+        # ../db
         - action: sync+restart
           path: ./db
           target: /app/db
@@ -41,8 +46,25 @@ services:
             - ./db/node_modules/
             - ./db/data/
         - action: rebuild
-          path: ./api-app/package.json
-          target: /app/api-app/package.json
-        - action: rebuild
           path: ./db/package.json
           target: /app/db/package.json
+
+        # ../api-spec
+        - action: sync+restart
+          path: ./api-spec/dist
+          target: /app/api-spec/dist
+
+  api-spec:
+    build:
+      context: ./
+      dockerfile: ./api-spec/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./api-spec/dist:/app/api-spec/dist
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./api-spec/openapi.yaml
+          target: /app/api-spec/openapi.yaml
+    command: npm run generate-and-serve

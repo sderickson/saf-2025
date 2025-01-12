@@ -9,7 +9,7 @@ import { createDatabase } from 'db';
 import winston, { Logger } from 'winston';
 import { v4 as uuidv4 } from 'uuid';
 import * as OpenApiValidator from 'express-openapi-validator';
-import openApiSpec from 'api-spec/openapi.json';
+import openApiSpec from 'api-spec/dist/openapi.json';
 import { usersRouter } from './routes/users';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 

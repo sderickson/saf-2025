@@ -1,12 +1,17 @@
 {
     "name": "api-spec",
     "scripts": {
-        "generate:types": "openapi-typescript ./openapi.yaml -o ./openapi.d.ts",
-        "generate:json": "cat openapi.yaml | yaml --json --indent 2 --single > openapi.json",
-        "generate": "npm run generate:types && npm run generate:json"
+        "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
+        "generate:json": "cat openapi.yaml | yaml --json --indent 2 --single > dist/openapi.json",
+        "generate:html": "redocly build-docs ./openapi.yaml --output=dist/index.html",
+        "generate": "npm run generate:types && npm run generate:json && npm run generate:html",
+        "serve": "serve dist -p 3001",
+        "generate-and-serve": "npm run generate && npm run serve"
     },
     "devDependencies": {
+        "@redocly/cli": "^1.27.1",
         "openapi-typescript": "^7.5.2",
+        "serve": "^14.2.4",
         "typescript": "^5.7.3",
         "yaml": "^2.7.0"
     }
