@@ -1,5 +1,5 @@
-import * as users from './queries/users'
-import { DatabaseError, UnhandledDatabaseError } from './errors'
+import * as users from './src/queries/users'
+import { DatabaseError, UnhandledDatabaseError } from './src/errors'
 
 export {
     users,

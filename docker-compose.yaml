@@ -21,8 +21,8 @@ services:
     ports:
       - "3000:3000"
     # need to fix db container; right now changes to db are triggering sync+restart
-    # volumes:
-    #   - ./db/data:/app/db/data
+    volumes:
+      - ./db/data:/app/db/data
     environment:
       - NODE_ENV=production
       - SQLITE_DB_PATH=/app/data/database.sqlite
@@ -31,24 +31,15 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ./api-app/
+          path: ./api-app
           target: /app/api-app
           ignore:
             - ./api-app/node_modules/
-        - action: rebuild
-          path: ./api-app/package.json
-          target: /app/api-app/package.json
-        
+
         # ../db
-        # - action: sync+restart
-        #   path: ./db
-        #   target: /app/db
-        #   ignore:
-        #     - ./db/node_modules/
-        #     - ./db/data/
-        - action: rebuild
-          path: ./db/package.json
-          target: /app/db/package.json
+        - action: sync+restart
+          path: ./db/src
+          target: /app/db/src
 
         # ../api-spec
         - action: sync+restart

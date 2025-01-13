@@ -5,7 +5,7 @@ export const migrationsPath = path.join(__dirname, './migrations');
 
 export default defineConfig({
   out: migrationsPath,
-  schema: './schema.ts',
+  schema: './src/schema.ts',
   dialect: 'sqlite',
   dbCredentials: {
     url: dbPath,

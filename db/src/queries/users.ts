@@ -14,6 +14,7 @@ export class EmailConflictError extends DatabaseError {
 
 export const create = async function(user: NewUser): Promise<SelectUser> {
     try {
+        console.log('create user??');
         const result = await db.insert(users).values(user).returning();
         return result[0];
     } catch (e: unknown) {

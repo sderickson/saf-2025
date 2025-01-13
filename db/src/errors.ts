@@ -9,7 +9,7 @@ export class UnhandledDatabaseError extends DatabaseError {
 
 export const handleUnknownError = function (err: Error) {
     // Log, but don't propagate, details about the error. Database errors should
-    // be handled within db/queries.
+    // be handled within db/src/queries.
     console.error(err.message);
     console.error(err.stack);
     throw new UnhandledDatabaseError();
