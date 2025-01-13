@@ -3,13 +3,11 @@
 Rough order of development
 
 ### Backlog
-* Add drizzle so db has types
 * Figure out how best to add types to express routes
-* Make api spec auto-generate on change
 * Make db, spec into their own images?
 * Incorporate some of Express' best practices
-* Figure out db migrations
 * Add version to api routes
+* Refactor logging out of api-app, share with db
 
 ### Core
 Once all of this is done, should start using this in actual applications.

@@ -38,6 +38,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '409':
+          description: User already exists
 
 components:
   schemas:
@@ -49,7 +51,7 @@ components:
         - name
       properties:
         id:
-          type: string
+          type: number
           format: uuid
         email:
           type: string

@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import { corsOptions } from './cors-config';
-import { createDatabase } from 'db';
+import * as db from 'db';
 import winston, { Logger } from 'winston';
 import { v4 as uuidv4 } from 'uuid';
 import * as OpenApiValidator from 'express-openapi-validator';
@@ -20,7 +20,7 @@ declare global {
   namespace Express {
     interface Request {
       id: string;
-      db: ReturnType<typeof createDatabase>;
+      db: typeof db;
       log: Logger;
     }
   }
@@ -41,9 +41,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // db injection
-const dbInstance = createDatabase();
 app.use((req, _, next) => {
-  req.db = dbInstance;
+  req.db = db;
   next();
 });
 app.use(express.static(path.join(__dirname, 'public')));
@@ -69,8 +68,8 @@ app.use((req, res, next) => {
 app.use(
   OpenApiValidator.middleware({
     apiSpec: openApiSpec as OpenAPIV3.DocumentV3,
-    validateRequests: true, // (default)
-    validateResponses: true, // false by default
+    validateRequests: true,
+    validateResponses: true,
   }),
 );
 

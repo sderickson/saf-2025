@@ -30,6 +30,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 | [Disk Database](#disk-database) | SQLite | PostgreSQL, MongoDB |
 | [In-Memory Database](#in-memory-database) | Redis | |
 | [Web Server](#web-server) | Node/Express | Go, Rust |
+| [DB Library](#db-library) | Drizzle | |
 | [FE Framework](#frontend-framework) | Vue | React |
 | [FE Libraries](#frontend-libraries) | Tanstack Query, Vue Router | Pinia, Jotai |
 | [FE Language](#frontend-language) | TypeScript | |
@@ -55,6 +56,9 @@ I'm not exactly sure how I want to go about doing things like caching, message q
 
 ## Web Server
 Torn between mainly Golang and Node. I'm interested in trying Golang more but the cost of learning and supporting another language doesn't seem worth it right now. Perhaps later.
+
+## DB Library
+I want to use TypeScript when interacting with the DB, and also have a system for managing DB migrations. So I need some sort of ORM which will handle these things. Most of what's out there seems fairly new... I mostly looked at Prisma, Keysely, and Drizzle. Prisma aims to add an abstraction layer over SQL and I'd rather use an ORM that's closer to SQL. Between Keysely and Drizzle, both have not reached their v1 release, but I like Drizzle's documentation better, for example how it goes over different [database migration workflows](https://orm.drizzle.team/docs/migrations) and how it supports each one.
 
 ## Frontend Framework
 Mainly torn between React and Vue. I'm curious how Vue has evolved since I last worked with it. I'll go with that one. Vue also seems better for the smaller, focused products which I'll be working on.
@@ -116,7 +120,7 @@ I could spend all my time planning and not building. Here are a few areas of dec
 * File uploads
 * Folder structure
 * i18n
-* Monorepo managemetn, npm workspaces
+* Monorepo management, npm workspaces
 * Rate limiting
 * Secret management, env variables
 

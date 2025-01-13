@@ -20,8 +20,9 @@ services:
       dockerfile: ./api-app/Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./db/data:/app/db/data
+    # need to fix db container; right now changes to db are triggering sync+restart
+    # volumes:
+    #   - ./db/data:/app/db/data
     environment:
       - NODE_ENV=production
       - SQLITE_DB_PATH=/app/data/database.sqlite
@@ -39,12 +40,12 @@ services:
           target: /app/api-app/package.json
         
         # ../db
-        - action: sync+restart
-          path: ./db
-          target: /app/db
-          ignore:
-            - ./db/node_modules/
-            - ./db/data/
+        # - action: sync+restart
+        #   path: ./db
+        #   target: /app/db
+        #   ignore:
+        #     - ./db/node_modules/
+        #     - ./db/data/
         - action: rebuild
           path: ./db/package.json
           target: /app/db/package.json

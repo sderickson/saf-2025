@@ -10,8 +10,19 @@ import type { paths } from 'api-spec/dist/openapi';
 
 async function testClient() {
   const client = createClient<paths>({ baseUrl: "http://localhost:3000/" });
-  const { data, error } = await client.GET('/users');
-  console.log({data, error});
+  {
+    const { data, error } = await client.POST('/users', {
+      body: {
+        email: "test"+(Math.random()*100000).toFixed()+"@gmail.com",
+        name: "tester",
+      }
+    });
+    console.log({data, error});
+  }
+  {
+    const { data, error } = await client.GET('/users');
+    console.log({data, error});
+  }
 }
 testClient();
 </script>

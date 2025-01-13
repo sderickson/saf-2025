@@ -28,7 +28,7 @@ export interface components {
     schemas: {
         User: {
             /** Format: uuid */
-            id: string;
+            id: number;
             /** Format: email */
             email: string;
             name: string;
@@ -90,6 +90,13 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["User"];
                 };
+            };
+            /** @description User already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
