@@ -3,7 +3,6 @@
 Rough order of development
 
 ### Backlog
-* Add design system
 * Set up vite with three entrypoints: landing (root), auth, and app, with basic ux
 * Build frontend basic register/login form.
 * Build backend for creating a user and also logging in
@@ -45,7 +44,7 @@ What follows can largely be done in any order.
     * Tanstack Query
     * Vue Router
     * Sentry, Error boundaries
-    * Design system, components
+    * ✓ Design system, components
     * Analytics et al
     * i18n
 * Testing+

@@ -30,6 +30,10 @@ testClient();
 <template>
   <h1>{{ msg }}</h1>
 
+  <v-chip color="primary">
+    Chip: Vuetify is working
+  </v-chip>
+
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
     <p>
