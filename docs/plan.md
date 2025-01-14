@@ -3,6 +3,11 @@
 Rough order of development
 
 ### Backlog
+* Add design system
+* Set up vite with three entrypoints: landing (root), auth, and app, with basic ux
+* Build frontend basic register/login form.
+* Build backend for creating a user and also logging in
+* Add caddy intermediary
 
 ### Core
 Once all of this is done, should start using this in actual applications.

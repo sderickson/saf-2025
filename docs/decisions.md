@@ -44,6 +44,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 | [Observability/Alerting](#observabilityalerting) | ~LGTM, PagerDuty | |
 | [Auth](#auth) | Passport.js/Sendgrid | Auth0, Keycloak, Authentik |
 | [API Specs](#api-specs) | OpenAPI | gRPC-Web |
+| [Reverse Proxy](#reverse-proxy) | Caddy | Nginx |
 
 
 
@@ -98,10 +99,13 @@ I could use a service like Datadog but... it's a bit spendy (confirmed), and see
 ## Auth
 I'm tempted to pay for an identity service like Okta/0Auth, but I think it's best to just set up a standard SUSI form in this template and use it across different applications. I'll still need a service for reliably sending verification emails, though, and Sendgrid looks good. I also like the look of other Twilio products, like Lookup.
 
-Before I invest heavily in my own identity service, I might try some open source solutions. Authentik and Keycloak were suggested.
+I looked at a couple Authentik and Keycloak that were suggested. However, they look pretty heavy for what I need, more like Enterprise auth systems like Okta. So I'll stick with Passport.js.
 
 ## API Specs
 Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD exactly which libraries I'll use to 1) generate SDKs, 2) generate server stubs/validation, and 3) generate/host docs. Per Claude, I'll start with openapi-typescript, tsoa or Express OpenAPI Validator, and Redoc respectively. Fern was suggested but that doesn't look free.
+
+## Reverse Proxy
+I've used Nginx before, but I could use something a bit more opinionated, conventional, and well documented. Claude recommended Caddy, and for example I like the [forwarded auth](https://caddyserver.com/docs/caddyfile/directives/forward_auth) directive. So I'll start with that.
 
 ## Other Considerations
 I could spend all my time planning and not building. Here are a few areas of decision-making to work on as I go, rather than figuring out everything ahead of time.
