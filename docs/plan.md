@@ -3,8 +3,6 @@
 Rough order of development
 
 ### Backlog
-* Figure out how best to add types to express routes
-* Make db, spec into their own images?
 * Incorporate some of Express' best practices
 * Add version to api routes
 * Refactor logging out of api-app, share with db
