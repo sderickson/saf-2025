@@ -3,7 +3,6 @@
 Rough order of development
 
 ### Backlog
-* Incorporate some of Express' best practices
 
 ### Core
 Once all of this is done, should start using this in actual applications.
@@ -13,7 +12,7 @@ Once all of this is done, should start using this in actual applications.
     * ✓ Node/Express
     * ✓ SQLite
     * ✓ Docker Compose
-    * API Specs
+    * ✓ API Specs
     * Auth (use-case for framework features)
 * Production
     * Experiment with GitHub Actions, hosting services and products, settle on one
