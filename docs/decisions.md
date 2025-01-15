@@ -37,6 +37,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 | [CSS](#css) | DaisyUI? | |
 | [Meta Framework](#meta-framework) | None | Astro |
 | [Build Tool](#build-tool) | Vite | |
+| [Static Pages](#static-pages) | None | VitePress |
 | [Unit Tests](#unit-tests) | Vitest | |
 | [Other Testing Tools](#other-testing-tools) | Storybook, Playwright | |
 | [Code Repository](#code-repository) | GitHub | GitLab |
@@ -45,7 +46,7 @@ Aside from the documentation itself, here are some docs I'm relying on particula
 | [Auth](#auth) | Passport.js/Sendgrid | Auth0, Keycloak, Authentik |
 | [API Specs](#api-specs) | OpenAPI | gRPC-Web |
 | [Reverse Proxy](#reverse-proxy) | Caddy | Nginx |
-
+| [Monorepo Tools](#monorepo-tools) | npm workspaces | pnpm, Bun |
 
 
 # Rationale
@@ -79,6 +80,9 @@ As defined by [State of JS](https://2024.stateofjs.com/en-US/libraries/meta-fram
 ## Build Tool
 Vite seems pretty hot right now and also orchestrates lower-level build tools esbuild and rollup. I'd rather minimize my dev tooling work. Also, it looks like it *could* handle things like SSR that otherwise a Meta-Framework would do.
 
+## Static Pages
+For landing pages, marketing pages, blogs, and alike, I'd prefer an SSG, rather than a SPA like the core product. However, in setting up a really minimal landing page, running `vite build` and `vite preview`, all static assets sum to 65kb gzipped! I'm kind of curious how performant a SPA would be... So for now I'll set up all frontend as Vue SPAs, and explore other options if and when it becomes necessary. VitePress looks appealing, for example.
+
 ## Unit Tests
 Might as well go with the testing library that integrates with Vite.
 
@@ -107,10 +111,12 @@ Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD e
 ## Reverse Proxy
 I've used Nginx before, but I could use something a bit more opinionated, conventional, and well documented. Claude recommended Caddy, and for example I like the [forwarded auth](https://caddyserver.com/docs/caddyfile/directives/forward_auth) directive. So I'll start with that.
 
+## Monorepo Tools
+I sort of went with npm workspaces without much consideration. But I think it would probably be good to try out some alternatives at some point. `pnpm` has high positivity in the [State of JS](https://2024.stateofjs.com/en-US/libraries/monorepo_tools/), and I know Taylor is using Bun. Both are drop-in replacements, so I might move this project a little more and then see if there's a noticeable difference in DX (in the case of both) and/or runtime (in the case of bun).
+
 ## Other Considerations
 I could spend all my time planning and not building. Here are a few areas of decision-making to work on as I go, rather than figuring out everything ahead of time.
 
-* API versioning
 * CDN
 * Code formatting/quality
 * Cron and background (batch) jobs
@@ -124,9 +130,11 @@ I could spend all my time planning and not building. Here are a few areas of dec
 * File uploads
 * Folder structure
 * i18n
-* Monorepo management, npm workspaces
 * Rate limiting
 * Secret management, env variables
+
+### Outside of Scope
+* **API Versioning**: The APIs in this framework are really solely intended to be used by the app, and so can just have the one (current) version. You'd need versioning for instances where there are multiple teams are consuming the same APIs, or some of the APIs are public.
 
 # TODOs
 * Consider CRDT
