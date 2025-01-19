@@ -19,6 +19,8 @@
         <v-row align="center">
           <v-col class="text-center px-0">
             <h1 class="text-h2 font-weight-bold mb-4">
+              <v-icon icon="mdi-home" />
+
               Your Amazing Product
             </h1>
             <p class="text-h5 mb-8">
@@ -38,29 +40,24 @@
     </v-main>
 
     <!-- Footer -->
-    <v-footer class="bg-grey-lighten-1">
-      <v-row justify="center" no-gutters>
-        <v-col cols="12" class="text-center">
-          <v-btn
+    <v-app-bar class="bg-grey-lighten-1" location="bottom">
+      <v-row>
+        <v-btn
             v-for="link in ['Home', 'About', 'Services', 'Blog', 'Contact Us']"
             :key="link"
             variant="text"
             class="mx-2 d-sm-inline-block"
             rounded="xl"
           >
-            {{ link }}
-          </v-btn>
-          <v-col class="text-center mt-4">
-            {{ new Date().getFullYear() }} — <strong>Your Product</strong>
-          </v-col>
-        </v-col>
+          {{ link }}
+        </v-btn>
       </v-row>
-    </v-footer>
+      <v-row>
+        {{ new Date().getFullYear() }} — <strong>Your Product</strong>
+      </v-row>
+    </v-app-bar>
   </v-app>
 </template>
 
 <style scoped>
-.v-container {
-  max-width: 960px;
-}
 </style>
