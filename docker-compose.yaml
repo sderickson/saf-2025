@@ -8,8 +8,6 @@ services:
     volumes:
       - ./vue-app:/app/vue-app
       - /app/vue-app/node_modules # So HMR works
-    environment:
-      - NODE_ENV=production # per nodejs.org, always run in prod
     command: npm run dev
     depends_on:
       - api-app
