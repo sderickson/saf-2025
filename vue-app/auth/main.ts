@@ -5,7 +5,7 @@ import { createApp } from "vue";
 import App from "./AuthApp.vue";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
-
+import { router } from "./router";
 const vuetify = createVuetify({
   icons: {
     defaultSet: "mdi",
@@ -17,4 +17,4 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
-app.use(vuetify).mount("#app");
+app.use(vuetify).use(router).mount("#app");
