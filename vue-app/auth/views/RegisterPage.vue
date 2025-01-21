@@ -72,15 +72,10 @@ const register = () => {
         </v-btn>
 
         <v-card-text class="text-center">
-          <a
-            class="text-blue text-decoration-none"
-            href="#"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
+          <router-link class="text-blue text-decoration-none" to="/login">
             Already have an account? Log in
             <v-icon icon="mdi-chevron-right"></v-icon>
-          </a>
+          </router-link>
         </v-card-text>
       </v-form>
     </v-card>
