@@ -2,7 +2,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import "vuetify/styles";
 
 import { createApp } from "vue";
-import App from "./LandingApp.vue";
+import App from "./landing/LandingApp.vue";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 
