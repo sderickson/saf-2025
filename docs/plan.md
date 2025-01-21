@@ -5,8 +5,6 @@ Rough order of development
 ### Backlog
 
 - Build frontend basic register/login form.
-  - Install vue router
-  - Set up register, login, logout, and forgot pages
   - Set up register with form validation and submission
   - Set up react-query
   - Have react-query send the data, handle error

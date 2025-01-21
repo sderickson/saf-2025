@@ -22,7 +22,16 @@ export default typescriptEslint.config(
       },
     },
     rules: {
-      // your rules
+      // Allow unused variables when they are prefixed with "_"
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
     },
   },
   eslintConfigPrettier,

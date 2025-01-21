@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
-const visible = ref(false);
+const passwordVisible = ref(false);
+const email = ref("");
+const password = ref("");
+
+const login = () => {
+  console.log("login", email.value, password.value);
+};
 </script>
 
 <template>
@@ -9,6 +15,7 @@ const visible = ref(false);
       <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
       <v-text-field
+        v-model="email"
         density="compact"
         placeholder="Email address"
         prepend-inner-icon="mdi-email-outline"
@@ -31,15 +38,23 @@ const visible = ref(false);
       </div>
 
       <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
+        v-model="password"
+        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="passwordVisible ? 'text' : 'password'"
         density="compact"
         placeholder="Enter your password"
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
-        @click:append-inner="visible = !visible"
+        @click:append-inner="passwordVisible = !passwordVisible"
       ></v-text-field>
-      <v-btn class="mb-8" color="blue" size="large" variant="tonal" block>
+      <v-btn
+        class="mb-8"
+        color="blue"
+        size="large"
+        variant="tonal"
+        block
+        @click="login"
+      >
         Log In
       </v-btn>
 
