@@ -33,14 +33,12 @@ const login = () => {
         >
           Password
 
-          <a
+          <router-link
             class="text-caption text-decoration-none text-blue"
-            href="#"
-            rel="noopener noreferrer"
-            target="_blank"
+            to="/forgot"
           >
-            Forgot login password?</a
-          >
+            Forgot login password?
+          </router-link>
         </div>
 
         <v-text-field
