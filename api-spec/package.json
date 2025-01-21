@@ -9,7 +9,7 @@
         "generate-and-serve": "npm run generate && npm run serve"
     },
     "devDependencies": {
-        "@redocly/cli": "^1.27.1",
+        "@redocly/cli": "^1.27.2",
         "openapi-typescript": "^7.5.2",
         "serve": "^14.2.4",
         "typescript": "^5.7.3",

@@ -2,7 +2,7 @@
 openapi: 3.0.0
 info:
   title: Sample API
-  version: '1.0.0'
+  version: "1.0.0"
   description: A sample API with TypeScript generation
 servers:
   - url: http://localhost:3000
@@ -14,14 +14,14 @@ paths:
       summary: Get all users
       operationId: getUsers
       responses:
-        '200':
+        "200":
           description: List of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: "#/components/schemas/User"
     post:
       summary: Create a user
       operationId: createUser
@@ -30,38 +30,30 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUserRequest'
+              $ref: "#/components/schemas/CreateUserRequest"
       responses:
-        '201':
+        "201":
           description: User created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '409':
+                $ref: "#/components/schemas/User"
+        "409":
           description: User already exists
+
+  /auth/login:
+    post:
+      $ref: "./routes/auth.yaml#/login/post"
+
+  /auth/logout:
+    post:
+      $ref: "./routes/auth.yaml#/logout/post"
 
 components:
   schemas:
     User:
-      type: object
-      required:
-        - id
-        - email
-        - name
-      properties:
-        id:
-          type: number
-          format: uuid
-        email:
-          type: string
-          format: email
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-    
+      $ref: "./schemas/user.yaml"
+
     CreateUserRequest:
       type: object
       required:
