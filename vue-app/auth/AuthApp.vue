@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 const visible = ref(false);
 </script>
 
 <template>
   <v-app>
     <div class="d-flex justify-center align-center flex-column fill-height">
-      <v-card
-        class="mx-auto pa-12 pb-8"
-        elevation="8"
-        width="448"
-        rounded="lg"
-      >
+      <v-card class="mx-auto pa-12 pb-8" elevation="8" width="448" rounded="lg">
         <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
         <v-text-field
@@ -21,7 +16,9 @@ const visible = ref(false);
           variant="outlined"
         ></v-text-field>
 
-        <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
+        <div
+          class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
+        >
           Password
 
           <a
@@ -30,7 +27,8 @@ const visible = ref(false);
             rel="noopener noreferrer"
             target="_blank"
           >
-            Forgot login password?</a>
+            Forgot login password?</a
+          >
         </div>
 
         <v-text-field
@@ -42,7 +40,7 @@ const visible = ref(false);
           variant="outlined"
           @click:append-inner="visible = !visible"
         ></v-text-field>
-<!-- 
+        <!-- 
         <v-card
           class="mb-12"
           color="surface-variant"
@@ -53,13 +51,7 @@ const visible = ref(false);
           </v-card-text>
         </v-card> -->
 
-        <v-btn
-          class="mb-8"
-          color="blue"
-          size="large"
-          variant="tonal"
-          block
-        >
+        <v-btn class="mb-8" color="blue" size="large" variant="tonal" block>
           Log In
         </v-btn>
 
@@ -83,4 +75,3 @@ const visible = ref(false);
   background-color: #f5f5f5;
 }
 </style>
-
