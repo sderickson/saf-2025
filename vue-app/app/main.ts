@@ -1,4 +1,4 @@
-import "vuetify/styles";
+import "vuetify/lib/styles/main.css";
 
 import { createApp } from "vue";
 import App from "./CoreProductApp.vue";
