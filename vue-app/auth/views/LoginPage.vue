@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { emailRules, passwordRules } from "../rules";
+import { emailRules, passwordRules } from "vue-app/auth/rules";
+import { client } from "vue-app/client";
+
+async function test() {
+  const { data, error } = await client.GET("/users");
+  console.log(data, error);
+}
+test();
 
 const passwordVisible = ref(false);
 const email = ref("");

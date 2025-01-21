@@ -2,12 +2,18 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 import vueDevTools from "vite-plugin-vue-devtools";
-import { ProxyOptions } from "vite";
+import type { ProxyOptions } from "vite";
+import path from "path";
 const DEBUG_PROXY = true;
 
 function makeConfig() {
   return defineConfig({
     plugins: [vue(), vuetify(), vueDevTools()],
+    resolve: {
+      alias: {
+        "vue-app": path.resolve(__dirname, "./"),
+      },
+    },
     server: {
       strictPort: true,
       host: true,

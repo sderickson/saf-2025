@@ -4,10 +4,7 @@ Rough order of development
 
 ### Backlog
 
-- Build frontend basic register/login form.
-  - Set up register with form validation and submission
-  - Set up react-query
-  - Have react-query send the data, handle error
+- Build frontend basic register/login form. - Have react-query send the data, handle error
   - Set up backend route for registering a user
   - Create the database schema for users signing up with passwords
   - Do the same above but for logging in

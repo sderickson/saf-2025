@@ -1,11 +1,13 @@
 import "@mdi/font/css/materialdesignicons.css";
-import "vuetify/styles";
+import "vuetify/lib/styles/main.css";
 
 import { createApp } from "vue";
 import App from "./AuthApp.vue";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { router } from "./router";
+import { VueQueryPlugin } from "@tanstack/vue-query";
+
 const vuetify = createVuetify({
   icons: {
     defaultSet: "mdi",
@@ -17,4 +19,4 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
-app.use(vuetify).use(router).mount("#app");
+app.use(vuetify).use(router).use(VueQueryPlugin).mount("#app");
