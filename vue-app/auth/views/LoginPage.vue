@@ -25,6 +25,7 @@ const login = () => {
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
           :rules="emailRules"
+          autofocus
         ></v-text-field>
 
         <div
@@ -74,5 +75,3 @@ const login = () => {
     </v-card>
   </div>
 </template>
-
-<style scoped></style>

@@ -31,6 +31,7 @@ const register = () => {
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
           :rules="emailRules"
+          autofocus
         ></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis">Password</div>
