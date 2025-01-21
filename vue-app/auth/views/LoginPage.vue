@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { emailRules, passwordRules } from "../rules";
+
 const passwordVisible = ref(false);
 const email = ref("");
 const password = ref("");
 const valid = ref(null);
-
-const emailRules = [
-  (value: string) => !!value || "Email is required",
-  (value: string) => /.+@.+\..+/.test(value) || "Email must be valid",
-];
-
-const passwordRules = [
-  (value: string) => !!value || "Password is required",
-  (value: string) =>
-    value.length >= 8 || "Password must be at least 8 characters",
-];
 
 const login = () => {
   console.log("login", email.value, password.value, { valid: valid.value });
