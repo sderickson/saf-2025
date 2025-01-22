@@ -4,24 +4,6 @@
  */
 
 export interface paths {
-    "/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get all users */
-        get: operations["getUsers"];
-        put?: never;
-        /** Create a user */
-        post: operations["createUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -31,7 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** User login */
+        /** Authenticate User */
         post: operations["loginUser"];
         delete?: never;
         options?: never;
@@ -48,8 +30,26 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** User logout */
+        /** Logout User */
         post: operations["logoutUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Users */
+        get: operations["getUsers"];
+        put?: never;
+        /** Create User */
+        post: operations["createUser"];
         delete?: never;
         options?: never;
         head?: never;
@@ -61,10 +61,13 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         User: components["schemas"]["user"];
-        CreateUserRequest: {
+        LoginRequest: {
             /** Format: email */
             email: string;
-            name: string;
+            password: string;
+        };
+        LoginResponse: {
+            token: string;
         };
         user: {
             /** Format: uuid */
@@ -75,13 +78,10 @@ export interface components {
             /** Format: date-time */
             createdAt?: string;
         };
-        LoginRequest: {
+        CreateUserRequest: {
             /** Format: email */
             email: string;
-            password: string;
-        };
-        LoginResponse: {
-            token: string;
+            name: string;
         };
     };
     responses: never;
@@ -92,6 +92,55 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    loginUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful login */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResponse"];
+                };
+            };
+            /** @description Invalid credentials */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    logoutUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful logout */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getUsers: {
         parameters: {
             query?: never;
@@ -136,55 +185,6 @@ export interface operations {
             };
             /** @description User already exists */
             409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    loginUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LoginRequest"];
-            };
-        };
-        responses: {
-            /** @description Successful login */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["LoginResponse"];
-                };
-            };
-            /** @description Invalid credentials */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    logoutUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful logout */
-            200: {
                 headers: {
                     [name: string]: unknown;
                 };

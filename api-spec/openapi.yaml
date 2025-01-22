@@ -1,67 +1,27 @@
 # openapi.yaml
 openapi: 3.0.0
 info:
-  title: Sample API
+  title: Your Product's API
   version: "1.0.0"
-  description: A sample API with TypeScript generation
+  description: The API used internally by vue-app.
 servers:
   - url: http://localhost:3000
     description: Development server
 
 paths:
-  /users:
-    get:
-      summary: Get all users
-      operationId: getUsers
-      responses:
-        "200":
-          description: List of users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/User"
-    post:
-      summary: Create a user
-      operationId: createUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateUserRequest"
-      responses:
-        "201":
-          description: User created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "409":
-          description: User already exists
-
   /auth/login:
     post:
       $ref: "./routes/auth.yaml#/login/post"
-
   /auth/logout:
     post:
       $ref: "./routes/auth.yaml#/logout/post"
+  /users:
+    get:
+      $ref: "./routes/users.yaml#/get"
+    post:
+      $ref: "./routes/users.yaml#/post"
 
 components:
   schemas:
     User:
       $ref: "./schemas/user.yaml"
-
-    CreateUserRequest:
-      type: object
-      required:
-        - email
-        - name
-      properties:
-        email:
-          type: string
-          format: email
-        name:
-          type: string

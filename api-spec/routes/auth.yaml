@@ -1,29 +1,29 @@
 login:
   post:
-    summary: User login
+    summary: "Authenticate User"
     operationId: loginUser
     requestBody:
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/LoginRequest'
+            $ref: "#/components/schemas/LoginRequest"
     responses:
-      '200':
+      "200":
         description: Successful login
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginResponse'
-      '401':
+              $ref: "#/components/schemas/LoginResponse"
+      "401":
         description: Invalid credentials
 
 logout:
   post:
-    summary: User logout
+    summary: "Logout User"
     operationId: logoutUser
     responses:
-      '200':
+      "200":
         description: Successful logout
 
 components:
