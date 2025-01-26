@@ -4,14 +4,17 @@ Rough order of development
 
 ### Backlog
 
-- Build frontend basic register/login form. - Have react-query send the data, handle error
-  - Set up backend route for registering a user
-  - Create the database schema for users signing up with passwords
-  - Do the same above but for logging in
-  - And the forgot page
-  - And the logout page
-- Build backend for creating a user and also logging in
+- Set up backend login/logout/register routes w/out db
+- Set up dotenv with node backend
+- Figure out if need session resave
+- Set up auth endpoints with own db
+- Hook frontend into backend with react-query, make it work
 - Add caddy intermediary
+- Refactor auth endpoints into separate container
+- Add forgot frontend
+- Add forgot backend, printing to console
+- Add forgot integration with email service
+- Start adding tests...
 
 ### Core
 

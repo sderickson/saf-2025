@@ -1,17 +1,22 @@
-import createError, { HttpError } from 'http-errors';
+import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
-import cors from 'cors';
-import { corsOptions } from './cors-config';
-import * as db from 'db';
-import winston, { Logger } from 'winston';
-import { v4 as uuidv4 } from 'uuid';
-import * as OpenApiValidator from 'express-openapi-validator';
-import openApiSpec from 'api-spec/dist/openapi.json';
-import { usersRouter } from './routes/users';
-import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
+import path from "path";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import cors from "cors";
+import session from "express-session";
+import passport from "passport";
+import { corsOptions } from "./cors-config";
+import * as db from "db";
+import winston, { Logger } from "winston";
+import { v4 as uuidv4 } from "uuid";
+import * as OpenApiValidator from "express-openapi-validator";
+import openApiSpec from "api-spec/dist/openapi.json";
+import { usersRouter } from "./routes/users";
+
+import { authRouter } from "./routes/auth";
+import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import "./config/passport";
 
 const app = express();
 
@@ -23,6 +28,11 @@ declare global {
       db: typeof db;
       log: Logger;
     }
+    // Add User type for Passport
+    interface User {
+      id: string;
+      email: string;
+    }
   }
 }
 
@@ -30,28 +40,47 @@ declare global {
 app.use((req, res, next) => {
   req.id = uuidv4().slice(0, 8);
   next();
-})
+});
 
 // 3rd party middleware
-morgan.token('id', (req: Request) => req.id);
-app.use(morgan(':date[iso] <:id> :method :url :status :response-time ms - :res[content-length]'));
+morgan.token("id", (req: Request) => req.id);
+app.use(
+  morgan(
+    ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
+  )
+);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
+  })
+);
+
+// Initialize Passport and restore authentication state from session
+app.use(passport.initialize());
+app.use(passport.session());
 
 // db injection
 app.use((req, _, next) => {
   req.db = db;
   next();
 });
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // winston logger injection
 const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-  ],
+  transports: [new winston.transports.Console()],
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp(),
@@ -59,9 +88,9 @@ const logger = winston.createLogger({
       return `${timestamp} <${reqId}> [${level}]: ${message}`;
     })
   ),
-})
+});
 app.use((req, res, next) => {
-  req.log = logger.child({reqId: req.id});
+  req.log = logger.child({ reqId: req.id });
   next();
 });
 
@@ -70,12 +99,13 @@ app.use(
     apiSpec: openApiSpec as OpenAPIV3.DocumentV3,
     validateRequests: true,
     validateResponses: true,
-  }),
+  })
 );
 
-app.use('/users', usersRouter);
+app.use("/users", usersRouter);
+app.use("/auth", authRouter);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 

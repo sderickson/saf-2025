@@ -4,12 +4,18 @@
     "start": "ts-node ./bin/www"
   },
   "dependencies": {
+    "@types/express-session": "^1.18.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-openapi-validator": "^5.4.2",
+    "express-session": "^1.18.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "ts-node": "^10.9.2",
     "uuid": "^11.0.4",
     "winston": "^3.17.0"
