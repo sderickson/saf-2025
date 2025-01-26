@@ -2,7 +2,7 @@
     "name": "api-spec",
     "scripts": {
         "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
-        "generate:json": "cat openapi.yaml | yaml --json --indent 2 --single > dist/openapi.json",
+        "generate:json": "redocly bundle openapi.yaml --ext json --output dist/openapi.json",
         "generate:html": "redocly build-docs ./openapi.yaml --output=dist/index.html",
         "generate": "npm run generate:types && npm run generate:json && npm run generate:html",
         "serve": "serve dist -p 3001",
