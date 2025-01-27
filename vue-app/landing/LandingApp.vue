@@ -7,7 +7,9 @@
       <v-btn variant="text">Features</v-btn>
       <v-btn variant="text">Pricing</v-btn>
       <v-btn variant="text">About</v-btn>
-      <v-btn color="secondary" variant="flat" class="mr-5"> Sign In </v-btn>
+      <v-btn color="secondary" variant="flat" class="mr-5" href="/auth/login">
+        Sign In
+      </v-btn>
     </v-app-bar>
 
     <v-main class="d-flex align-center justify-center text-center">

@@ -14,8 +14,15 @@ const email = ref("");
 const password = ref("");
 const valid = ref(null);
 
-const login = () => {
-  console.log("login", email.value, password.value, { valid: valid.value });
+const login = async () => {
+  const { data, error } = await client.POST("/auth/login", {
+    body: {
+      email: email.value,
+      password: password.value,
+    },
+  });
+  console.log(data, error);
+  // console.log("login", email.value, password.value, { valid: valid.value });
 };
 </script>
 

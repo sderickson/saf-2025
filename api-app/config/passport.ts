@@ -9,7 +9,7 @@ passport.serializeUser((user: User, done) => {
 passport.deserializeUser(async (id: string, done) => {
   try {
     // TODO: Replace with actual user lookup from your database
-    const user = { id, email: "user@example.com" }; // Placeholder
+    const user = { id, email: "user@example.com" };
     done(null, user);
   } catch (err) {
     done(err);
