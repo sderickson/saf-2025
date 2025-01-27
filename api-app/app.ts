@@ -1,7 +1,6 @@
 import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import cors from "cors";
 import session from "express-session";
