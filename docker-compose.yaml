@@ -22,9 +22,9 @@ services:
     volumes:
       - ./db/data:/app/db/data
     environment:
-      - NODE_ENV=production
       - SQLITE_DB_PATH=/app/data/database.sqlite
       - PORT=3000
+      - NODE_ENV=development
     command: npm start
     develop:
       watch:

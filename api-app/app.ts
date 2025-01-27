@@ -52,7 +52,6 @@ app.use(
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 // Session configuration
 app.use(
@@ -63,6 +62,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: process.env.NODE_ENV === "production" ? "lax" : "strict",
     },
   })
 );

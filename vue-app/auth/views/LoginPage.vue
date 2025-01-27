@@ -4,8 +4,20 @@ import { emailRules, passwordRules } from "vue-app/auth/rules";
 import { client } from "vue-app/client";
 
 async function test() {
-  const { data, error } = await client.GET("/users");
-  console.log(data, error);
+  {
+    const { data, error } = await client.POST("/auth/login", {
+      body: {
+        email: "user@example.com",
+        password: "password",
+      },
+    });
+    console.log(data, error);
+    // Testing session
+  }
+  {
+    const { data, error } = await client.GET("/users");
+    console.log(data, error);
+  }
 }
 test();
 
