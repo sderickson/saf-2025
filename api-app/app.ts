@@ -17,6 +17,10 @@ import { authRouter } from "./routes/auth";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import "./config/passport";
 import dotenv from "dotenv";
+import sqlite from "better-sqlite3";
+import BetterSqlite3SessionStore from "better-sqlite3-session-store";
+const SqliteStore = BetterSqlite3SessionStore(session);
+const sessionDb = new sqlite("./db/sessions.db");
 
 dotenv.config();
 
@@ -58,6 +62,13 @@ app.use(express.urlencoded({ extended: false }));
 // Session configuration
 app.use(
   session({
+    store: new SqliteStore({
+      client: sessionDb,
+      expired: {
+        clear: true,
+        intervalMs: 900000, //ms = 15min
+      },
+    }),
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,

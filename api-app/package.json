@@ -4,9 +4,8 @@
     "start": "ts-node ./bin/www"
   },
   "dependencies": {
-    "@types/express-session": "^1.18.1",
-    "@types/passport": "^1.0.17",
-    "@types/passport-local": "^1.0.38",
+    "better-sqlite3": "^11.8.1",
+    "better-sqlite3-session-store": "^0.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -21,11 +20,15 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.5",
+    "@types/passport": "^1.0.17",
+    "@types/passport-local": "^1.0.38",
     "typescript": "^5.7.3"
   }
 }
