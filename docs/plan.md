@@ -4,8 +4,6 @@ Rough order of development
 
 ### Backlog
 
-- Set up backend login/logout/register routes w/out db
-- Set up dotenv with node backend
 - Figure out if need session resave
 - Set up auth endpoints with own db
 - Hook frontend into backend with react-query, make it work

@@ -16,6 +16,9 @@ import { usersRouter } from "./routes/users";
 import { authRouter } from "./routes/auth";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import "./config/passport";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 

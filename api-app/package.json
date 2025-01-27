@@ -8,6 +8,7 @@
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-openapi-validator": "^5.4.2",
     "express-session": "^1.18.1",
