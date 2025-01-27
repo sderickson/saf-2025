@@ -1,5 +1,5 @@
 {
-    "name": "db",
+    "name": "auth-db",
     "main": "./index.ts",
     "exports": {
         ".": {
@@ -9,7 +9,9 @@
     "dependencies": {
         "@libsql/client": "^0.14.0",
         "better-sqlite3": "^11.7.2",
-        "drizzle-orm": "^0.38.3"
+        "better-sqlite3-session-store": "^0.1.0",
+        "drizzle-orm": "^0.38.3",
+        "express-session": "^1.18.1"
     },
     "devDependencies": {
         "@types/better-sqlite3": "^7.6.12",

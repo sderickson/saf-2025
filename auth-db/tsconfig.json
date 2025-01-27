@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "db": ["./index.ts"],
-    }
+      "auth-db": ["./index.ts"],
+    },
+    "typeRoots": ["./types", "./node_modules/@types"]
   }
 }

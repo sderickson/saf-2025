@@ -3,10 +3,10 @@ import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import morgan from "morgan";
 import cors from "cors";
-import session from "express-session";
 import passport from "passport";
 import { corsOptions } from "./cors-config";
-import * as db from "db";
+import * as db from "../auth-db";
+import session from "express-session";
 import winston, { Logger } from "winston";
 import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
@@ -17,10 +17,6 @@ import { authRouter } from "./routes/auth";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import "./config/passport";
 import dotenv from "dotenv";
-import sqlite from "better-sqlite3";
-import BetterSqlite3SessionStore from "better-sqlite3-session-store";
-const SqliteStore = BetterSqlite3SessionStore(session);
-const sessionDb = new sqlite("./db/sessions.db");
 
 dotenv.config();
 
@@ -62,13 +58,7 @@ app.use(express.urlencoded({ extended: false }));
 // Session configuration
 app.use(
   session({
-    store: new SqliteStore({
-      client: sessionDb,
-      expired: {
-        clear: true,
-        intervalMs: 900000, //ms = 15min
-      },
-    }),
+    store: db.sessionStore,
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,

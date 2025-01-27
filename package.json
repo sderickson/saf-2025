@@ -9,9 +9,9 @@
   "license": "MIT",
   "workspaces": [
     "api-spec",
-    "api-app",
+    "auth-app",
     "vue-app",
-    "db"
+    "auth-db"
   ],
   "engines": {
     "node": ">=22"

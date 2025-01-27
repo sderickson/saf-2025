@@ -10,17 +10,17 @@ services:
       - /app/vue-app/node_modules # So HMR works
     command: npm run dev
     depends_on:
-      - api-app
+      - auth-app
 
-  api-app:
+  auth-app:
     build:
       context: ./
-      dockerfile: ./api-app/Dockerfile
+      dockerfile: ./auth-app/Dockerfile
     ports:
       - "3000:3000"
     # need to fix db container; right now changes to db are triggering sync+restart
     volumes:
-      - ./db/data:/app/db/data
+      - ./auth-db/data:/app/auth-db/data
     environment:
       - SQLITE_DB_PATH=/app/data/database.sqlite
       - PORT=3000
@@ -29,14 +29,14 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ./api-app
-          target: /app/api-app
+          path: ./auth-app
+          target: /app/auth-app
           ignore:
-            - ./api-app/node_modules/
+            - ./auth-app/node_modules/
 
         # ../db
         - action: sync+restart
-          path: ./db/src
+          path: ./auth-db/src
           target: /app/db/src
 
         # ../api-spec

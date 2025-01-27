@@ -4,18 +4,18 @@ FROM node:22-slim
 WORKDIR /app
 COPY ./package*.json .
 COPY ./tsconfig.json .
-COPY ./db/package*.json ./db/
-COPY ./api-app/package*.json ./api-app/
+COPY ./auth-db/package*.json ./auth-db/
+COPY ./auth-app/package*.json ./auth-app/
 COPY ./api-spec/package*.json ./api-spec/
 
 RUN npm install
 
-COPY ./db ./db
-COPY ./api-app ./api-app
+COPY ./auth-db ./auth-db
+COPY ./auth-app ./auth-app
 COPY ./api-spec ./api-spec
 
 RUN cd api-spec ; npm run generate
 
-WORKDIR /app/api-app
+WORKDIR /app/auth-app
 
 EXPOSE 3000

@@ -4,9 +4,7 @@ Rough order of development
 
 ### Backlog
 
-- Figure out if need session resave
-- Set up auth endpoints with own db
-- Hook frontend into backend with react-query, make it work
+- Rename api-app, db to auth-app, auth-db
 - Add caddy intermediary
 - Refactor auth endpoints into separate container
 - Add forgot frontend
