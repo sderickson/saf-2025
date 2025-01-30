@@ -1,0 +1,21 @@
+type: object
+required:
+  - id
+  - title
+  - completed
+  - created_at
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Unique identifier for the todo item
+  title:
+    type: string
+    description: The title/description of the todo item
+  completed:
+    type: boolean
+    description: Whether the todo item has been completed
+  created_at:
+    type: string
+    format: date-time
+    description: When the todo item was created

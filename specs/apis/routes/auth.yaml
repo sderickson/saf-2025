@@ -2,6 +2,8 @@ login:
   post:
     summary: "Authenticate User"
     operationId: loginUser
+    tags:
+      - auth
     requestBody:
       required: true
       content:
@@ -22,6 +24,8 @@ logout:
   post:
     summary: "Logout User"
     operationId: logoutUser
+    tags:
+      - auth
     responses:
       "200":
         description: Successful logout

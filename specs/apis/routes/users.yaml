@@ -1,6 +1,8 @@
 get:
   summary: "Get Users"
   operationId: getUsers
+  tags:
+    - users
   responses:
     "200":
       description: List of users
@@ -14,6 +16,8 @@ get:
 post:
   summary: "Create User"
   operationId: createUser
+  tags:
+    - users
   requestBody:
     required: true
     content:

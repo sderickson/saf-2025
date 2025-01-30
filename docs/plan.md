@@ -4,12 +4,14 @@ Rough order of development
 
 ### Backlog
 
+- Add basic api service and db
 - Add caddy intermediary
 - Refactor auth endpoints into separate container
 - Add forgot frontend
 - Add forgot backend, printing to console
 - Add forgot integration with email service
 - Start adding tests...
+- Set up root imports generally
 
 ### Core
 

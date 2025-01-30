@@ -20,8 +20,20 @@ paths:
       $ref: "./routes/users.yaml#/get"
     post:
       $ref: "./routes/users.yaml#/post"
+  /todos:
+    get:
+      $ref: "./routes/todos.yaml#/get"
+    post:
+      $ref: "./routes/todos.yaml#/post"
+  /todos/{id}:
+    put:
+      $ref: "./routes/todos.yaml#/~1{id}/put"
+    delete:
+      $ref: "./routes/todos.yaml#/~1{id}/delete"
 
 components:
   schemas:
     User:
       $ref: "./schemas/user.yaml"
+    Todo:
+      $ref: "./schemas/todo.yaml"

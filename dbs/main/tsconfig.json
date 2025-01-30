@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "main-db": ["./index.ts"]
+    },
+    "typeRoots": ["./types", "./node_modules/@types"]
+  }
+} 
