@@ -11,7 +11,7 @@ function makeConfig() {
     plugins: [vue(), vuetify(), vueDevTools()],
     resolve: {
       alias: {
-        "vue-app": path.resolve(__dirname, "./"),
+        clients: path.resolve(__dirname, "./"),
       },
     },
     server: {

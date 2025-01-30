@@ -3,7 +3,7 @@ openapi: 3.0.0
 info:
   title: Your Product's API
   version: "1.0.0"
-  description: The API used internally by vue-app.
+  description: The API used internally by web clients.
 servers:
   - url: http://localhost:3000/api
     description: Development server

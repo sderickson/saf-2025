@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { emailRules, passwordRules } from "vue-app/auth/rules";
-import { client } from "vue-app/client";
+import { emailRules, passwordRules } from "clients/auth/rules";
+import { client } from "clients/client";
 
 async function test() {
   {

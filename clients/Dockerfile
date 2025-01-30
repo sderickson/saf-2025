@@ -5,10 +5,10 @@ WORKDIR /app
 COPY ./package*.json .
 RUN npm install
 
-COPY ./api-spec/dist ./api-spec/dist
+COPY ./specs/apis/dist ./specs/apis/dist
 
 # Vue app setup
-WORKDIR /app/vue-app
+WORKDIR /app/clients
 COPY package*.json ./
 RUN npm install
 COPY . .

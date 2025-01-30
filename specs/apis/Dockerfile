@@ -1,7 +1,7 @@
 FROM node:22-slim
 
-WORKDIR /app/api-spec
-COPY ./api-spec ./
+WORKDIR /app/specs/apis
+COPY ./specs/apis ./
 RUN npm install
 RUN npm run generate
 

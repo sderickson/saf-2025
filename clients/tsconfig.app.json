@@ -2,9 +2,9 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    // "paths": {
-    //   "vue-app/*": ["./*"]
-    // },
+    "paths": {
+      "clients/*": ["./*"]
+    },
 
     /* Linting */
     "strict": true,

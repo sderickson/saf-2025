@@ -1,5 +1,5 @@
 {
-  "name": "vue-app",
+  "name": "clients",
   "type": "module",
   "scripts": {
     "dev": "vite",

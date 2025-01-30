@@ -8,10 +8,11 @@
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [
-    "api-spec",
-    "auth-app",
-    "vue-app",
-    "auth-db"
+    "clients",
+    "dbs/auth",
+    "services/api",
+    "services/auth",
+    "specs/apis"
   ],
   "engines": {
     "node": ">=22"

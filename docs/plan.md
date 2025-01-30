@@ -4,7 +4,6 @@ Rough order of development
 
 ### Backlog
 
-- Rename api-app, db to auth-app, auth-db
 - Add caddy intermediary
 - Refactor auth endpoints into separate container
 - Add forgot frontend

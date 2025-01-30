@@ -1,26 +1,26 @@
 services:
-  vue-app:
+  clients:
     build:
       context: ./
-      dockerfile: ./vue-app/Dockerfile
+      dockerfile: ./clients/Dockerfile
     ports:
       - "5173:5173"
     volumes:
-      - ./vue-app:/app/vue-app
-      - /app/vue-app/node_modules # So HMR works
+      - ./clients:/app/clients
+      - /app/clients/node_modules # So HMR works
     command: npm run dev
-    depends_on:
-      - auth-app
+    # depends_on:
+    #   - services__auth
 
-  auth-app:
+  services__auth:
     build:
       context: ./
-      dockerfile: ./auth-app/Dockerfile
+      dockerfile: ./services/auth/Dockerfile
     ports:
       - "3000:3000"
     # need to fix db container; right now changes to db are triggering sync+restart
     volumes:
-      - ./auth-db/data:/app/auth-db/data
+      - ./dbs/auth/data:/app/dbs/auth/data
     environment:
       - SQLITE_DB_PATH=/app/data/database.sqlite
       - PORT=3000
@@ -29,32 +29,32 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ./auth-app
-          target: /app/auth-app
+          path: ./services/auth
+          target: /app/services/auth
           ignore:
-            - ./auth-app/node_modules/
+            - ./services/auth/node_modules/
 
         # ../db
         - action: sync+restart
           path: ./auth-db/src
           target: /app/db/src
 
-        # ../api-spec
+        # ../specs/apis
         - action: sync+restart
-          path: ./api-spec/dist
-          target: /app/api-spec/dist
+          path: ./specs/apis/dist
+          target: /app/specs/apis/dist
 
-  api-spec:
+  specs__apis:
     build:
       context: ./
-      dockerfile: ./api-spec/Dockerfile
+      dockerfile: ./specs/apis/Dockerfile
     ports:
       - "3001:3001"
     volumes:
-      - ./api-spec/dist:/app/api-spec/dist
+      - ./specs/apis/dist:/app/specs/apis/dist
     develop:
       watch:
         - action: sync+restart
-          path: ./api-spec/openapi.yaml
-          target: /app/api-spec/openapi.yaml
+          path: ./specs/apis/openapi.yaml
+          target: /app/specs/apis/openapi.yaml
     command: npm run generate-and-serve

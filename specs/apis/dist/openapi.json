@@ -3,7 +3,7 @@
   "info": {
     "title": "Your Product's API",
     "version": "1.0.0",
-    "description": "The API used internally by vue-app."
+    "description": "The API used internally by web clients."
   },
   "servers": [
     {

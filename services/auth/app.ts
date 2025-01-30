@@ -5,12 +5,12 @@ import morgan from "morgan";
 import cors from "cors";
 import passport from "passport";
 import { corsOptions } from "./cors-config";
-import * as db from "../auth-db";
+import * as db from "../../dbs/auth";
 import session from "express-session";
 import winston, { Logger } from "winston";
 import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
-import openApiSpec from "api-spec/dist/openapi.json";
+import openApiSpec from "../../specs/apis/dist/openapi.json";
 import { usersRouter } from "./routes/users";
 
 import { authRouter } from "./routes/auth";
