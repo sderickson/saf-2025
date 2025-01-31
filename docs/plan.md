@@ -4,9 +4,9 @@ Rough order of development
 
 ### Backlog
 
-- Add basic api service and db
-- Add caddy intermediary
-- Refactor auth endpoints into separate container
+- add workspace dependencies
+- refactor docker-compose.yaml, out into separate compose and docker files
+- create a script that generates the same files based on package.json files
 - Add forgot frontend
 - Add forgot backend, printing to console
 - Add forgot integration with email service
