@@ -20,9 +20,26 @@ interface WorkspaceInfo {
 }
 
 interface WatchConfig {
-  action: string;
+  action: "sync+restart";
   path: string;
   target: string;
+}
+
+interface DockerComposeService {
+  build: {
+    context: string;
+    dockerfile: string;
+  };
+  develop?: {
+    watch?: WatchConfig[];
+  };
+  [key: string]: any;
+}
+
+interface DockerCompose {
+  services: {
+    [key: string]: DockerComposeService;
+  };
 }
 
 function readPackageJson(filePath: string): PackageJson {
@@ -36,129 +53,126 @@ function readPackageJson(filePath: string): PackageJson {
 
 function findWorkspaces(): WorkspaceInfo[] {
   const rootPackageJson = readPackageJson("package.json");
-  const workspaces: WorkspaceInfo[] = [];
-
-  if (!rootPackageJson.workspaces) {
+  if (!rootPackageJson.workspaces?.length) {
     console.error("No workspaces found in root package.json");
     return [];
   }
 
-  for (const pattern of rootPackageJson.workspaces) {
-    const workspacePath = pattern.replace("/*", "");
-    if (fs.existsSync(path.join(workspacePath, "package.json"))) {
-      const packageJson = readPackageJson(
-        path.join(workspacePath, "package.json")
-      );
-      const dependencies = [
-        ...Object.keys(packageJson.dependencies || {}),
-        ...Object.keys(packageJson.devDependencies || {}),
-      ].filter((dep) => {
-        // Filter only workspace dependencies
-        return rootPackageJson.workspaces?.some(
+  return rootPackageJson.workspaces
+    .map((pattern) => {
+      const workspacePath = pattern.replace("/*", "");
+      const packageJsonPath = path.join(workspacePath, "package.json");
+
+      if (!fs.existsSync(packageJsonPath)) return null;
+
+      const packageJson = readPackageJson(packageJsonPath);
+      const allDeps = {
+        ...packageJson.dependencies,
+        ...packageJson.devDependencies,
+      };
+
+      const dependencies = Object.keys(allDeps).filter((dep) =>
+        rootPackageJson.workspaces?.some(
           (ws) =>
             dep ===
             readPackageJson(path.join(ws.replace("/*", ""), "package.json"))
               .name
-        );
-      });
+        )
+      );
 
-      console.log("packageJson?", packageJson);
-      workspaces.push({
+      const workspace: WorkspaceInfo = {
         name: packageJson.name,
         path: workspacePath,
         dependencies,
         files: packageJson.files,
-      });
-    }
-  }
+      };
 
-  return workspaces;
+      return workspace;
+    })
+    .filter(
+      (workspace): workspace is NonNullable<typeof workspace> =>
+        workspace !== null
+    );
 }
 
 function generateDockerfile(workspace: WorkspaceInfo): string {
-  let dockerfile = "FROM node:22-slim\n\n";
-  dockerfile += "WORKDIR /app\n\n";
-
-  // Copy package files and tsconfig first for better caching
-  dockerfile += "COPY package*.json ./\n";
-  dockerfile += "COPY tsconfig.json ./\n";
-  dockerfile += `COPY ${workspace.path}/package*.json ./${workspace.path}/\n\n`;
+  const lines = [
+    "FROM node:22-slim",
+    "",
+    "WORKDIR /app",
+    "",
+    "COPY package*.json ./",
+    "COPY tsconfig.json ./",
+    `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
+    "",
+  ];
 
   // Copy dependencies
-  for (const dep of workspace.dependencies) {
+  workspace.dependencies.forEach((dep) => {
     const depWorkspace = findWorkspaces().find((ws) => ws.name === dep);
-    if (depWorkspace) {
-      if (depWorkspace.files) {
-        for (const file of depWorkspace.files) {
-          dockerfile += `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}\n`;
-        }
-      } else {
-        dockerfile += `COPY ${depWorkspace.path} ./${depWorkspace.path}\n`;
-      }
-    }
-  }
+    if (!depWorkspace) return;
 
-  // Copy the service's own files
+    if (depWorkspace.files) {
+      depWorkspace.files.forEach((file) => {
+        lines.push(
+          `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
+        );
+      });
+    } else {
+      lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
+    }
+  });
+
+  // Copy service files
   if (workspace.files) {
-    for (const file of workspace.files) {
-      dockerfile += `COPY ${workspace.path}/${file} ./${workspace.path}/${file}\n`;
-    }
+    workspace.files.forEach((file) => {
+      lines.push(`COPY ${workspace.path}/${file} ./${workspace.path}/${file}`);
+    });
   } else {
-    dockerfile += `COPY ${workspace.path} ./${workspace.path}\n`;
+    lines.push(`COPY ${workspace.path} ./${workspace.path}`);
   }
 
-  dockerfile += "\nRUN npm install\n";
-  dockerfile += `WORKDIR /app/${workspace.path}\n`;
-  dockerfile += 'CMD ["npm", "start"]\n';
+  lines.push(
+    "",
+    "RUN npm install",
+    `WORKDIR /app/${workspace.path}`,
+    'CMD ["npm", "start"]'
+  );
 
-  return dockerfile;
+  return lines.join("\n");
 }
 
 function generateWatchPaths(workspace: WorkspaceInfo): WatchConfig[] {
   const watchPaths: WatchConfig[] = [];
 
-  // Add watch paths for dependencies
-  for (const dep of workspace.dependencies) {
-    const depWorkspace = findWorkspaces().find((ws) => ws.name === dep);
-    if (depWorkspace) {
-      if (depWorkspace.files) {
-        console.log("depWorkspace.files", depWorkspace.files);
-        for (const file of depWorkspace.files) {
-          //   const basePath = path.dirname(file);
-          watchPaths.push({
-            action: "sync+restart",
-            path: `../../${depWorkspace.path}/${file}`,
-            target: `/app/${depWorkspace.path}/${file}`,
-          });
-        }
-      } else {
-        console.log("depWorkspace.files", depWorkspace);
-        watchPaths.push({
-          action: "sync+restart",
-          path: `../../${depWorkspace.path}`,
-          target: `/app/${depWorkspace.path}`,
-        });
-      }
-    }
-  }
-
-  // Add watch paths for the service's own files
-  if (workspace.files) {
-    for (const file of workspace.files) {
-      const basePath = path.dirname(file);
-      watchPaths.push({
-        action: "sync+restart",
-        path: `.`,
-        target: `/app/${workspace.path}`,
-      });
-    }
-  } else {
+  // Helper function to add watch path
+  const addWatch = (sourcePath: string, targetPath: string) => {
     watchPaths.push({
       action: "sync+restart",
-      path: ".",
-      target: `/app/${workspace.path}`,
+      path: sourcePath,
+      target: targetPath,
     });
-  }
+  };
+
+  // Add dependency watch paths
+  workspace.dependencies.forEach((dep) => {
+    const depWorkspace = findWorkspaces().find((ws) => ws.name === dep);
+    if (!depWorkspace) return;
+
+    if (depWorkspace.files) {
+      depWorkspace.files.forEach((file) => {
+        addWatch(
+          `../../${depWorkspace.path}/${file}`,
+          `/app/${depWorkspace.path}/${file}`
+        );
+      });
+    } else {
+      addWatch(`../../${depWorkspace.path}`, `/app/${depWorkspace.path}`);
+    }
+  });
+
+  // Add service watch path
+  addWatch(".", `/app/${workspace.path}`);
 
   return watchPaths;
 }
@@ -168,14 +182,12 @@ function generateDockerCompose(workspace: WorkspaceInfo): string {
     workspace.path,
     "docker-compose.yaml.template"
   );
-  let compose: any;
+  let compose: DockerCompose;
 
   try {
     if (fs.existsSync(templatePath)) {
-      const templateContent = fs.readFileSync(templatePath, "utf8");
-      compose = yaml.parse(templateContent);
+      compose = yaml.parse(fs.readFileSync(templatePath, "utf8"));
     } else {
-      // Fallback to basic template if no template file exists
       compose = {
         services: {
           [workspace.name]: {
@@ -183,50 +195,33 @@ function generateDockerCompose(workspace: WorkspaceInfo): string {
               context: ".",
               dockerfile: path.join(workspace.path, "Dockerfile"),
             },
-            develop: {
-              watch: [],
-            },
           },
         },
       };
     }
 
-    // Ensure the service exists in the template
-    if (!compose.services[workspace.name]) {
-      compose.services[workspace.name] = {
-        build: {
-          context: ".",
-          dockerfile: path.join(workspace.path, "Dockerfile"),
-        },
-        develop: {
-          watch: [],
-        },
-      };
-    }
+    // Ensure service and watch configuration exists
+    const service = (compose.services[workspace.name] = compose.services[
+      workspace.name
+    ] || {
+      build: {
+        context: ".",
+        dockerfile: path.join(workspace.path, "Dockerfile"),
+      },
+    });
 
-    // Ensure develop.watch exists
-    if (!compose.services[workspace.name].develop) {
-      compose.services[workspace.name].develop = { watch: [] };
-    }
-    if (!compose.services[workspace.name].develop.watch) {
-      compose.services[workspace.name].develop.watch = [];
-    }
-
-    // Add or merge watch paths
-    const watchPaths = generateWatchPaths(workspace);
-    compose.services[workspace.name].develop.watch = [
-      ...compose.services[workspace.name].develop.watch,
-      ...watchPaths,
+    service.develop = service.develop || {};
+    service.develop.watch = [
+      ...(service.develop.watch || []),
+      ...generateWatchPaths(workspace),
     ];
 
-    // Remove any duplicate watch paths
-    compose.services[workspace.name].develop.watch = compose.services[
-      workspace.name
-    ].develop.watch.filter(
-      (watch: WatchConfig, index: number, self: WatchConfig[]) =>
+    // Remove duplicates
+    service.develop.watch = service.develop.watch.filter(
+      (watch, index, self) =>
         index ===
         self.findIndex(
-          (w: WatchConfig) => w.path === watch.path && w.target === watch.target
+          (w) => w.path === watch.path && w.target === watch.target
         )
     );
 
@@ -239,11 +234,11 @@ function generateDockerCompose(workspace: WorkspaceInfo): string {
 
 function main() {
   const workspaces = findWorkspaces();
+  const serviceWorkspaces = workspaces.filter((w) =>
+    w.path.startsWith("services/")
+  );
 
-  for (const workspace of workspaces) {
-    // Only generate for services
-    if (!workspace.path.startsWith("services/")) continue;
-
+  serviceWorkspaces.forEach((workspace) => {
     const dockerfilePath = path.join(workspace.path, "Dockerfile");
     const dockerComposePath = path.join(workspace.path, "docker-compose.yaml");
 
@@ -251,7 +246,7 @@ function main() {
     fs.writeFileSync(dockerComposePath, generateDockerCompose(workspace));
 
     console.log(`Generated Docker files for ${workspace.name}`);
-  }
+  });
 }
 
 main();
