@@ -5,6 +5,9 @@
   "directories": {
     "doc": "docs"
   },
+  "scripts": {
+    "generate-docker": "ts-node tools/generate-docker.ts"
+  },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [
@@ -17,5 +20,11 @@
   ],
   "engines": {
     "node": ">=22"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "yaml": "^2.3.4"
   }
 }

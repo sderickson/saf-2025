@@ -1,5 +1,5 @@
 services:
-  services__api:
+  services-api:
     build:
       context: ../..
       dockerfile: ./services/api/Dockerfile
@@ -10,15 +10,11 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: .
-          target: /app/services/api
-
-        # ../db
-        - action: sync+restart
-          path: ../../dbs/main/src
-          target: /app/dbs/main/src
-
-        # ../specs/apis
+          path: ../../dbs/main
+          target: /app/dbs/main
         - action: sync+restart
           path: ../../specs/apis/dist
-          target: /app/specs/apis/dist 
+          target: /app/specs/apis/dist
+        - action: sync+restart
+          path: .
+          target: /app/services/api

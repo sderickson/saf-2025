@@ -1,19 +1,15 @@
 FROM node:22-slim
 
-# Install build dependencies
 WORKDIR /app
-COPY ./package*.json .
-COPY ./tsconfig.json .
-COPY ./dbs/main/package*.json ./dbs/main/
-COPY ./services/api/package*.json ./services/api/
-COPY ./specs/apis/package*.json ./specs/apis/
+
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY services/api/package*.json ./services/api/
+
+COPY dbs/main ./dbs/main
+COPY specs/apis/dist ./specs/apis/dist
+COPY services/api ./services/api
 
 RUN npm install
-
-COPY ./dbs/main ./dbs/main
-COPY ./services/api ./services/api
-COPY ./specs/apis ./specs/apis
-
 WORKDIR /app/services/api
-
-EXPOSE 3002
+CMD ["npm", "start"]

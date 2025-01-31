@@ -1,5 +1,5 @@
 services:
-  services__auth:
+  services-auth:
     build:
       context: ../..
       dockerfile: ./services/auth/Dockerfile
@@ -12,15 +12,11 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: .
-          target: /app/services/auth
-
-        # ../db
-        - action: sync+restart
-          path: ../../dbs/auth/src
-          target: /app/dbs/auth/src
-
-        # ../specs/apis
+          path: ../../dbs/auth
+          target: /app/dbs/auth
         - action: sync+restart
           path: ../../specs/apis/dist
-          target: /app/specs/apis/dist 
+          target: /app/specs/apis/dist
+        - action: sync+restart
+          path: .
+          target: /app/services/auth
