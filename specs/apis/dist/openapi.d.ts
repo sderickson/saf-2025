@@ -38,6 +38,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/auth/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify Authentication Status
+         * @description Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.
+         */
+        post: operations["verifyAuth"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users": {
         parameters: {
             query?: never;
@@ -311,6 +331,40 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    verifyAuth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description User is authenticated */
+            200: {
+                headers: {
+                    /** @description The authenticated user's ID */
+                    "X-User-ID"?: string;
+                    /** @description The authenticated user's email */
+                    "X-User-Email"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description User is not authenticated */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Unauthorized */
+                        error: string;
+                    };
+                };
             };
         };
     };

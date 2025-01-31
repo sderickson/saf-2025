@@ -1,7 +1,8 @@
 {
   "name": "auth-app",
   "scripts": {
-    "start": "ts-node ./bin/www"
+    "start": "ts-node ./bin/www",
+    "healthcheck": "node ./bin/healthcheck"
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",

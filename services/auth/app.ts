@@ -35,6 +35,10 @@ declare global {
   }
 }
 
+app.get("/health", (req, res) => {
+  res.send("OK");
+});
+
 // request id generator
 app.use((req, res, next) => {
   req.id = uuidv4().slice(0, 8);
