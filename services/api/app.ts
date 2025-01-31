@@ -1,17 +1,14 @@
 import express from "express";
-import cors from "cors";
 import logger from "morgan";
 import createError from "http-errors";
 import * as OpenApiValidator from "express-openapi-validator";
 import { join } from "path";
-import corsOptions from "./cors-config";
 import todoRouter from "./routes/todos";
 
 const app = express();
 
 // Middleware setup
 app.use(logger("dev"));
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

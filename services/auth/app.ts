@@ -2,9 +2,7 @@ import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import morgan from "morgan";
-import cors from "cors";
 import passport from "passport";
-import { corsOptions } from "./cors-config";
 import * as db from "../../dbs/auth";
 import session from "express-session";
 import winston, { Logger } from "winston";
@@ -12,7 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
 import openApiSpec from "../../specs/apis/dist/openapi.json";
 import { usersRouter } from "./routes/users";
-
 import { authRouter } from "./routes/auth";
 import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
 import "./config/passport";
@@ -51,7 +48,6 @@ app.use(
     ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
   )
 );
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

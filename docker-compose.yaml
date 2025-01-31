@@ -59,7 +59,6 @@ services:
     environment:
       - PORT=3002
       - NODE_ENV=development
-      - CORS_ORIGIN=http://localhost:80 # Updated to use Caddy's port
     command: npm start
     develop:
       watch:
