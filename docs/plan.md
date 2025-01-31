@@ -4,13 +4,10 @@ Rough order of development
 
 ### Backlog
 
-- refactor docker-compose.yaml, out into separate compose and docker files
-- create a script that generates the same files based on package.json files
 - Add forgot frontend
 - Add forgot backend, printing to console
 - Add forgot integration with email service
 - Start adding tests...
-- Set up root imports generally
 
 ### Core
 
