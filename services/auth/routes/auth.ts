@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { RequestSchema, ResponseSchema } from "../openapi-types";
 import { IVerifyOptions } from "passport-local";
@@ -51,3 +51,23 @@ authRouter.post("/logout", (req, res, next) => {
     res.status(200).end();
   });
 });
+
+authRouter.post(
+  "/verify",
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.isAuthenticated()) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+      }
+
+      // Add user info to response headers for potential use by downstream services
+      res.setHeader("X-User-ID", (req.user as User)?.id || "");
+      res.setHeader("X-User-Email", (req.user as User)?.email || "");
+
+      res.status(200).end();
+    } catch (err) {
+      next(err);
+    }
+  }
+);

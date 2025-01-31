@@ -1,0 +1,31 @@
+:80 {
+	# Minimal logging configuration - only errors and warnings
+	log {
+		format console
+		level ERROR
+	}
+
+	# Route matchers
+	@auth {
+		path /api/auth/* /api/users*
+	}
+	@api {
+		path /api/*
+		not path /api/auth/* /api/users*
+	}
+
+	# Handle /api/auth and /api/users routes
+	handle @auth {
+		reverse_proxy services__auth:3000
+	}
+	handle @api {
+		forward_auth {
+			uri http://services__auth:3000/auth/verify
+			method POST
+		}
+		reverse_proxy services__api:3002
+	}
+	handle {
+		reverse_proxy clients:5173
+	}
+}

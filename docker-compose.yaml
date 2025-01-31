@@ -1,24 +1,32 @@
 services:
+  caddy:
+    image: caddy:2.9.1
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - clients
+      - services__auth
+      - services__api
+
   clients:
     build:
       context: ./
       dockerfile: ./clients/Dockerfile
-    ports:
-      - "5173:5173"
     volumes:
       - ./clients:/app/clients
       - /app/clients/node_modules # So HMR works
     command: npm run dev
-    # depends_on:
-    #   - services__auth
 
   services__auth:
     build:
       context: ./
       dockerfile: ./services/auth/Dockerfile
-    ports:
-      - "3000:3000"
-    # need to fix db container; right now changes to db are triggering sync+restart
     volumes:
       - ./dbs/auth/data:/app/dbs/auth/data
     environment:
@@ -48,14 +56,10 @@ services:
     build:
       context: ./
       dockerfile: ./services/api/Dockerfile
-    ports:
-      - "3002:3002"
-    # volumes:
-    #   - ./dbs/main/data:/app/dbs/main/data
     environment:
       - PORT=3002
       - NODE_ENV=development
-      - CORS_ORIGIN=http://localhost:5173
+      - CORS_ORIGIN=http://localhost:80 # Updated to use Caddy's port
     command: npm start
     develop:
       watch:
@@ -91,3 +95,7 @@ services:
           path: ./specs/apis/openapi.yaml
           target: /app/specs/apis/openapi.yaml
     command: npm run generate-and-serve
+
+volumes:
+  caddy_data:
+  caddy_config:
