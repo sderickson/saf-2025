@@ -1,5 +1,7 @@
 #!/usr/bin/env ts-node
 
+// Note - this script is entirely generated. But it works? It needs tests.
+
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
