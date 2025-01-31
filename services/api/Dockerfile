@@ -14,8 +14,6 @@ COPY ./dbs/main ./dbs/main
 COPY ./services/api ./services/api
 COPY ./specs/apis ./specs/apis
 
-RUN cd specs/apis ; npm install ; npm run generate
-
 WORKDIR /app/services/api
 
 EXPOSE 3002

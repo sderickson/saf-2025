@@ -12,8 +12,6 @@ services:
         - action: sync+restart
           path: .
           target: /app/services/api
-          ignore:
-            - node_modules/
 
         # ../db
         - action: sync+restart

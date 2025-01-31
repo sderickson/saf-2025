@@ -14,8 +14,6 @@ COPY ./dbs/auth ./dbs/auth
 COPY ./services/auth ./services/auth
 COPY ./specs/apis ./specs/apis
 
-RUN cd specs/apis ; npm install ; npm run generate
-
 WORKDIR /app/services/auth
 
 HEALTHCHECK --interval=5s --timeout=3s --retries=3 --start-period=10s CMD ["npm", "run", "healthcheck"]

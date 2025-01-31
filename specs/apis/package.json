@@ -12,9 +12,7 @@
         "@redocly/cli": "^1.27.2",
         "openapi-typescript": "^7.5.2",
         "serve": "^14.2.4",
-        "typescript": "^5.7.3"
-    },
-    "dependencies": {
+        "typescript": "^5.7.3",
         "yaml": "^2.7.0"
     }
 }
