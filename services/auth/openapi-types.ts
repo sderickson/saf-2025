@@ -1,4 +1,4 @@
-import { operations } from "api-spec/dist/openapi";
+import { operations } from "specs-apis/dist/openapi";
 
 export type ResponseSchema<
   O extends keyof operations,

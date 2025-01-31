@@ -1,5 +1,5 @@
 import express from "express";
-import { todos, DatabaseError, UnhandledDatabaseError } from "db-main";
+import { todos, DatabaseError, UnhandledDatabaseError } from "dbs-main";
 
 const router = express.Router();
 

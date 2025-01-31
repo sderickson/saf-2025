@@ -1,5 +1,5 @@
 {
-    "name": "db-main",
+    "name": "dbs-main",
     "main": "./index.ts",
     "exports": {
         ".": {

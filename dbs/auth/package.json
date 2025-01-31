@@ -1,5 +1,5 @@
 {
-    "name": "db-auth",
+    "name": "dbs-auth",
     "main": "./index.ts",
     "exports": {
         ".": {

@@ -6,7 +6,7 @@ defineProps<{ msg: string }>();
 const count = ref(0);
 
 import createClient from "openapi-fetch";
-import type { paths } from "api-spec/dist/openapi";
+import type { paths } from "specs-apis/dist/openapi";
 
 async function testClient() {
   const client = createClient<paths>({ baseUrl: "http://localhost:3000/" });

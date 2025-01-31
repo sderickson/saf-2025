@@ -1,5 +1,5 @@
 {
-  "name": "auth-app",
+  "name": "services-auth",
   "scripts": {
     "start": "ts-node ./bin/www",
     "healthcheck": "node ./bin/healthcheck"
@@ -18,8 +18,8 @@
     "ts-node": "^10.9.2",
     "uuid": "^11.0.4",
     "winston": "^3.17.0",
-    "db-auth": "file:../../dbs/auth",
-    "api-spec": "file:../../specs/apis"
+    "dbs-auth": "file:../../dbs/auth",
+    "specs-apis": "file:../../specs/apis"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
