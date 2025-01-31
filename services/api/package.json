@@ -13,8 +13,7 @@
     "morgan": "~1.9.1",
     "ts-node": "^10.9.2",
     "uuid": "^11.0.4",
-    "winston": "^3.17.0",
-    "main-db": "workspace:*"
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",

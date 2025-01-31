@@ -10,6 +10,7 @@
   "workspaces": [
     "clients",
     "dbs/auth",
+    "dbs/main",
     "services/api",
     "services/auth",
     "specs/apis"

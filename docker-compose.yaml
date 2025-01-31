@@ -36,8 +36,41 @@ services:
 
         # ../db
         - action: sync+restart
-          path: ./auth-db/src
-          target: /app/db/src
+          path: ./dbs/auth/src
+          target: /app/dbs/auth/src
+
+        # ../specs/apis
+        - action: sync+restart
+          path: ./specs/apis/dist
+          target: /app/specs/apis/dist
+
+  services__api:
+    build:
+      context: ./
+      dockerfile: ./services/api/Dockerfile
+    ports:
+      - "3002:3002"
+    # volumes:
+    #   - ./dbs/main/data:/app/dbs/main/data
+    environment:
+      - PORT=3002
+      - NODE_ENV=development
+      - CORS_ORIGIN=http://localhost:5173
+    command: npm start
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./services/api
+          target: /app/services/api
+          ignore:
+            - ./services/api/node_modules/
+
+        # ../db
+        - action: sync+restart
+          path: ./dbs/main/src
+          target: /app/dbs/main/src
+          ignore:
+            - ./dbs/main/node_modules/
 
         # ../specs/apis
         - action: sync+restart

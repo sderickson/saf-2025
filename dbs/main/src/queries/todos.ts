@@ -1,12 +1,7 @@
-import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+import { db } from "../instance";
 import { todos } from "../schema";
-import { dbPath } from "../../drizzle.config";
 import { DatabaseError, UnhandledDatabaseError } from "../errors";
-
-const sqlite = new Database(dbPath);
-const db = drizzle(sqlite);
+import { eq } from "drizzle-orm";
 
 export async function getAllTodos() {
   try {

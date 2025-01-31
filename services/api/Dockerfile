@@ -1,25 +1,21 @@
-FROM node:20-alpine
+FROM node:22-slim
 
+# Install build dependencies
 WORKDIR /app
+COPY ./package*.json .
+COPY ./tsconfig.json .
+COPY ./dbs/main/package*.json ./dbs/main/
+COPY ./services/api/package*.json ./services/api/
+COPY ./specs/apis/package*.json ./specs/apis/
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy source code
-COPY . .
+COPY ./dbs/main ./dbs/main
+COPY ./services/api ./services/api
+COPY ./specs/apis ./specs/apis
 
-# Create data directory for SQLite
-RUN mkdir -p /app/data
+RUN cd specs/apis ; npm install ; npm run generate
 
-# Set environment variables
-ENV NODE_ENV=production
-ENV PORT=3002
+WORKDIR /app/services/api
 
-# Expose port
 EXPOSE 3002
-
-# Start the application
-CMD ["npm", "start"] 
