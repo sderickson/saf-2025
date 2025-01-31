@@ -20,5 +20,13 @@
     },
     "engines": {
         "node": ">=22"
-    }
+    },
+    "files": [
+        "src",
+        "index.ts",
+        "drizzle.config.ts",
+        "types",
+        "migrations",
+        "tsconfig.json"
+    ]
 }
