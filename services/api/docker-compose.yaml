@@ -1,0 +1,26 @@
+services:
+  services__api:
+    build:
+      context: ../..
+      dockerfile: ./services/api/Dockerfile
+    environment:
+      - PORT=3002
+      - NODE_ENV=development
+    command: npm start
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app/services/api
+          ignore:
+            - node_modules/
+
+        # ../db
+        - action: sync+restart
+          path: ../../dbs/main/src
+          target: /app/dbs/main/src
+
+        # ../specs/apis
+        - action: sync+restart
+          path: ../../specs/apis/dist
+          target: /app/specs/apis/dist 

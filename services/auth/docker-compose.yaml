@@ -1,0 +1,29 @@
+services:
+  services__auth:
+    build:
+      context: ../..
+      dockerfile: ./services/auth/Dockerfile
+    volumes:
+      - ../../dbs/auth/data:/app/dbs/auth/data
+    environment:
+      - SQLITE_DB_PATH=/app/data/database.sqlite
+      - PORT=3000
+      - NODE_ENV=development
+    command: npm start
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app/services/auth
+          ignore:
+            - node_modules/
+
+        # ../db
+        - action: sync+restart
+          path: ../../dbs/auth/src
+          target: /app/dbs/auth/src
+
+        # ../specs/apis
+        - action: sync+restart
+          path: ../../specs/apis/dist
+          target: /app/specs/apis/dist 
