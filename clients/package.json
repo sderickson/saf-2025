@@ -9,6 +9,9 @@
     "lint:fix": "eslint --fix",
     "format": "prettier --write ."
   },
+  "dependencies": {
+    "api-spec": "file:../specs/apis"
+  },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@tanstack/vue-query": "^5.64.2",

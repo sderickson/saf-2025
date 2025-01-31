@@ -13,7 +13,8 @@
     "ts-node": "^10.9.2",
     "uuid": "^11.0.4",
     "winston": "^3.17.0",
-    "db-main": "file:../../dbs/main"
+    "db-main": "file:../../dbs/main",
+    "api-spec": "file:../../specs/apis"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",

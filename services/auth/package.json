@@ -17,7 +17,9 @@
     "passport-local": "^1.0.0",
     "ts-node": "^10.9.2",
     "uuid": "^11.0.4",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "db-auth": "file:../../dbs/auth",
+    "api-spec": "file:../../specs/apis"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
