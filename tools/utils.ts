@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as glob from "glob";
 
 export interface PackageJson {
   name: string;
@@ -46,16 +47,25 @@ export function findWorkspacePackageJsons(): string[] {
     return [];
   }
 
-  const packageJsonPaths: string[] = [];
+  const packageJsonPaths = new Set<string>();
+
   rootPackageJson.workspaces.forEach((pattern) => {
-    const workspacePath = pattern.replace("/*", "");
-    const packageJsonPath = path.join(workspacePath, "package.json");
-    if (fs.existsSync(packageJsonPath)) {
-      packageJsonPaths.push(packageJsonPath);
+    // Handle both glob patterns and direct paths
+    if (pattern.includes("*")) {
+      // It's a glob pattern
+      const matches = glob.sync(pattern + "/package.json", { absolute: false });
+      matches.forEach((match: string) => packageJsonPaths.add(match));
+    } else {
+      // It's a direct path
+      const packageJsonPath = path.join(pattern, "package.json");
+      if (fs.existsSync(packageJsonPath)) {
+        packageJsonPaths.add(packageJsonPath);
+      }
     }
   });
+  console.log("packageJsonPaths", packageJsonPaths);
 
-  return packageJsonPaths;
+  return Array.from(packageJsonPaths);
 }
 
 // Initialize workspace by finding and changing to root directory

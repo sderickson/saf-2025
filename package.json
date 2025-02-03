@@ -9,10 +9,8 @@
   "license": "MIT",
   "workspaces": [
     "clients",
-    "dbs/auth",
-    "dbs/main",
-    "services/api",
-    "services/auth",
+    "dbs/*",
+    "services/*",
     "specs/apis",
     "tools"
   ],

@@ -61,22 +61,17 @@ export function createWorkspaceContext(): WorkspaceContext {
   const packageJsonCache = new Map<string, PackageJson>();
 
   // Single pass: collect all workspaces and their package.json contents
-  rootPackageJson.workspaces.forEach((pattern) => {
-    const workspacePath = pattern.replace("/*", "");
-    const packageJsonPath = path.join(workspacePath, "package.json");
+  findWorkspacePackageJsons().forEach((packageJsonPath) => {
+    const packageJson = readPackageJson(packageJsonPath);
+    packageJsonCache.set(packageJson.name, packageJson);
 
-    if (fs.existsSync(packageJsonPath)) {
-      const packageJson = readPackageJson(packageJsonPath);
-      packageJsonCache.set(packageJson.name, packageJson);
-
-      // Create workspace entry (dependencies to be resolved)
-      workspacePackages.set(packageJson.name, {
-        name: packageJson.name,
-        path: workspacePath,
-        dependencies: [],
-        files: packageJson.files,
-      });
-    }
+    // Create workspace entry (dependencies to be resolved)
+    workspacePackages.set(packageJson.name, {
+      name: packageJson.name,
+      path: path.dirname(packageJsonPath),
+      dependencies: [],
+      files: packageJson.files,
+    });
   });
 
   // Resolve dependencies using cached package.json contents
@@ -259,6 +254,7 @@ function main() {
   serviceWorkspaces.forEach((workspace) => {
     const dockerfilePath = path.join(workspace.path, "Dockerfile");
     const dockerComposePath = path.join(workspace.path, "docker-compose.yaml");
+    console.log("writing to workspace", workspace.path);
 
     fs.writeFileSync(dockerfilePath, generateDockerfile(workspace, context));
     fs.writeFileSync(
