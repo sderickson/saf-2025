@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "generate-docker": "ts-node generate-docker.ts"
+    "generate-docker": "ts-node generate-docker.ts",
+    "clean-docker-deps": "ts-node clean-docker-deps.ts"
   },
-  "devDependencies": {
+    "devDependencies": {
     "@types/node": "^20.11.16",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "yaml": "^2.3.4"
   }
-} 
+}
