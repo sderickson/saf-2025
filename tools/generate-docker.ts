@@ -5,34 +5,15 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
+import {
+  PackageJson,
+  readPackageJson,
+  findWorkspacePackageJsons,
+  initWorkspace,
+} from "./utils";
 
-// Ensure we're running from the root directory
-function findRootDir() {
-  let currentDir = __dirname;
-  while (currentDir !== "/") {
-    if (fs.existsSync(path.join(currentDir, "package.json"))) {
-      const pkg = JSON.parse(
-        fs.readFileSync(path.join(currentDir, "package.json"), "utf8")
-      );
-      if (pkg.name === "saf-2025") {
-        return currentDir;
-      }
-    }
-    currentDir = path.dirname(currentDir);
-  }
-  throw new Error("Could not find root directory");
-}
-
-// Change to root directory
-process.chdir(findRootDir());
-
-interface PackageJson {
-  name: string;
-  workspaces?: string[];
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  files?: string[];
-}
+// Initialize workspace
+initWorkspace();
 
 interface WorkspaceInfo {
   name: string;
@@ -62,15 +43,6 @@ interface DockerCompose {
   services: {
     [key: string]: DockerComposeService;
   };
-}
-
-function readPackageJson(filePath: string): PackageJson {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
-  } catch (error) {
-    console.error(`Error reading package.json at ${filePath}:`, error);
-    return { name: "" };
-  }
 }
 
 function findWorkspaces(): WorkspaceInfo[] {
