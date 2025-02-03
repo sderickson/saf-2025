@@ -6,7 +6,6 @@ Rough order of development
 
 - Start adding tests...
   - Fix a few issues that came up when adding tests to dbs/auth
-    - Had to go to an older version of better-sqlite3 to get it to run on mac. Either get the newer version to work, or switch to libsql as the driver.
     - Also had to add build tools to the dockerfile. Can we get away without those? Docker doesn't even need to run tests, can these deps just not be installed?
     - Finally, tests depend on running NODE_ENV=test, which is not ideal. Maybe switch to having the env include the path to the sqlite file instead.
 - Add forgot frontend
