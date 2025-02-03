@@ -99,10 +99,6 @@ export function cleanAllPackageJsons(
   const absoluteKeepDevDepsPath = path.resolve(keepDevDepsPath);
   const packageJsons = findWorkspacePackageJsons();
 
-  if (dryRun) {
-    console.log("DRY RUN - No changes will be written to files");
-  }
-
   const results: CleanResults[] = [];
 
   packageJsons.forEach((packageJsonPath) => {
