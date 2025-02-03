@@ -9,11 +9,14 @@ import winston, { Logger } from "winston";
 import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
 import openApiSpec from "specs-apis/dist/openapi.json";
-import { usersRouter } from "./routes/users";
-import { authRouter } from "./routes/auth";
-import { OpenAPIV3 } from "express-openapi-validator/dist/framework/types";
+import { usersRouter } from "./routes/users.ts";
+import { authRouter } from "./routes/auth.ts";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
 import "./config/passport";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -79,6 +82,7 @@ app.use((req, _, next) => {
   req.db = db;
   next();
 });
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // winston logger injection
@@ -122,4 +126,4 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   res.send("Error");
 });
 
-module.exports = app;
+export default app;

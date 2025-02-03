@@ -1,11 +1,14 @@
-import * as users from "./src/queries/users";
-import { DatabaseError, UnhandledDatabaseError } from "./src/errors";
+import * as users from "./src/queries/users.ts";
+import { DatabaseError, UnhandledDatabaseError } from "./src/errors.ts";
 
 import session from "express-session";
 import sqlite from "better-sqlite3";
 import BetterSqlite3SessionStore from "better-sqlite3-session-store";
 import path from "path";
 const SqliteStore = BetterSqlite3SessionStore(session);
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const sessionDb = new sqlite(path.join(__dirname, "data/sessions.sqlite"));
 const sessionStore = new SqliteStore({
   client: sessionDb,

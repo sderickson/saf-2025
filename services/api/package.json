@@ -1,20 +1,22 @@
 {
   "name": "services-api",
+  "type": "module",
   "scripts": {
-    "start": "ts-node ./bin/www"
+    "start": "tsx ./bin/www"
   },
   "dependencies": {
-    "better-sqlite3": "^11.8.1",
+    "better-sqlite3": "11.8.0",
+    "dbs-main": "file:../../dbs/main",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-openapi-validator": "^5.4.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "specs-apis": "file:../../specs/apis",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "uuid": "^11.0.4",
-    "winston": "^3.17.0",
-    "dbs-main": "file:../../dbs/main",
-    "specs-apis": "file:../../specs/apis"
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.12",
@@ -24,4 +26,4 @@
     "@types/node": "^22.10.5",
     "typescript": "^5.7.3"
   }
-} 
+}

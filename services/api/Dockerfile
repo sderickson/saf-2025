@@ -14,6 +14,7 @@ COPY tsconfig.json ./
 COPY services/api/package*.json ./services/api/
 
 COPY dbs/main ./dbs/main
+COPY specs/apis/package*.json ./specs/apis/
 COPY specs/apis/dist ./specs/apis/dist
 COPY services/api ./services/api
 

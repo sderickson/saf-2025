@@ -1,6 +1,6 @@
-import { db } from "../instance";
-import { users } from "../schema";
-import { DatabaseError, handleUnknownError } from "../errors";
+import { db } from "../instance.ts";
+import { users } from "../schema.ts";
+import { DatabaseError, handleUnknownError } from "../errors.ts";
 
 type NewUser = typeof users.$inferInsert;
 type SelectUser = typeof users.$inferSelect;

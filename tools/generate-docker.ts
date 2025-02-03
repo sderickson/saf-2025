@@ -120,6 +120,9 @@ export function generateDockerfile(
     if (!depWorkspace) return;
 
     if (depWorkspace.files) {
+      lines.push(
+        `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
+      );
       depWorkspace.files.forEach((file) => {
         lines.push(
           `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
@@ -141,6 +144,9 @@ export function generateDockerfile(
 
   lines.push(
     "",
+    // "COPY tools ./tools",
+    // "RUN cd tools && npm install --omit=dev",
+    // `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
     "RUN npm install",
     `WORKDIR /app/${workspace.path}`,
     'CMD ["npm", "start"]'

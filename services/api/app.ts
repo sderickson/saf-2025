@@ -2,8 +2,11 @@ import express from "express";
 import logger from "morgan";
 import createError from "http-errors";
 import * as OpenApiValidator from "express-openapi-validator";
-import { join } from "path";
-import todoRouter from "./routes/todos";
+import { dirname, join } from "path";
+import todoRouter from "./routes/todos.ts";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
