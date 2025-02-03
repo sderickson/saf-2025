@@ -1,0 +1,14 @@
+{
+  "name": "@saf-2025/tools",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate-docker": "ts-node generate-docker.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "yaml": "^2.3.4"
+  }
+} 
