@@ -34,7 +34,7 @@ const testingPackages = [
   "testing",
 ];
 
-function isTestingPackage(packageName: string): boolean {
+export function isTestingPackage(packageName: string): boolean {
   return testingPackages.some(
     (testPkg) =>
       packageName.toLowerCase().includes(testPkg.toLowerCase()) ||
@@ -43,7 +43,7 @@ function isTestingPackage(packageName: string): boolean {
   );
 }
 
-type CleanResults = {
+export type CleanResults = {
   packageJsonPath: string;
   originalPkg: PackageJson;
   pkg: PackageJson;
@@ -51,7 +51,7 @@ type CleanResults = {
   changed: boolean;
 };
 
-function cleanPackageJson(
+export function cleanPackageJson(
   packageJsonPath: string,
   keepDevDeps: boolean = false,
   dryRun: boolean = false
@@ -92,7 +92,7 @@ function cleanPackageJson(
   };
 }
 
-function cleanAllPackageJsons(
+export function cleanAllPackageJsons(
   keepDevDepsPath: string,
   dryRun: boolean = false
 ): CleanResults[] {
@@ -141,4 +141,6 @@ function main() {
   );
 }
 
-main();
+if (require.main === module) {
+  main();
+}

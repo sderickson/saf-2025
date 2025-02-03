@@ -4,12 +4,17 @@
   "private": true,
   "scripts": {
     "generate-docker": "ts-node generate-docker.ts",
-    "clean-docker-deps": "ts-node clean-docker-deps.ts"
+    "clean-docker-deps": "ts-node clean-docker-deps.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
-    "devDependencies": {
+  "devDependencies": {
     "@types/node": "^20.11.16",
+    "@vitest/coverage-v8": "^1.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
+    "vitest": "^1.2.2",
     "yaml": "^2.3.4"
   }
 }
