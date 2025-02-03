@@ -1,22 +1,26 @@
 {
   "name": "@saf-2025/tools",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
-    "generate-docker": "ts-node generate-docker.ts",
-    "clean-docker-deps": "ts-node clean-docker-deps.ts",
+    "qt": "node -v",
+    "generate-docker": "node generate-docker.js -- --experimental-strip-types",
+    "clean-docker-deps": "node clean-docker-deps.js -- --experimental-strip-types",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "glob": "^10.3.10",
+    "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/node": "^20.11.16",
     "@vitest/coverage-v8": "^1.2.2",
-    "glob": "^10.3.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vitest": "^1.2.2",
-    "yaml": "^2.3.4"
+    "vitest": "^1.2.2"
   }
 }

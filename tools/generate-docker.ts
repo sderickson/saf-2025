@@ -5,12 +5,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
+import type { PackageJson } from "./utils.ts";
 import {
-  PackageJson,
   readPackageJson,
   findWorkspacePackageJsons,
   initWorkspace,
-} from "./utils";
+} from "./utils.ts";
 
 // Initialize workspace
 initWorkspace();
@@ -245,7 +245,7 @@ export function generateDockerCompose(
   }
 }
 
-function main() {
+export function main() {
   const context = createWorkspaceContext();
   const serviceWorkspaces = Array.from(
     context.workspacePackages.values()
@@ -264,8 +264,4 @@ function main() {
 
     console.log(`Generated Docker files for ${workspace.name}`);
   });
-}
-
-if (require.main === module) {
-  main();
 }

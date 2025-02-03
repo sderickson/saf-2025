@@ -1,13 +1,13 @@
 #!/usr/bin/env ts-node
 
 import * as path from "path";
+import type { PackageJson } from "./utils.ts";
 import {
-  PackageJson,
   readPackageJson,
   writePackageJson,
   findWorkspacePackageJsons,
   initWorkspace,
-} from "./utils";
+} from "./utils.ts";
 
 // Initialize workspace
 initWorkspace();
@@ -110,7 +110,7 @@ export function cleanAllPackageJsons(
   return results;
 }
 
-function main() {
+export function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
   const keepDevDepsPath = args.find((arg) => !arg.startsWith("--"));
@@ -135,8 +135,4 @@ function main() {
       2
     )
   );
-}
-
-if (require.main === module) {
-  main();
 }

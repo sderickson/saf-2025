@@ -2,6 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as glob from "glob";
 
+const __dirname = path.resolve();
+
 export interface PackageJson {
   name: string;
   workspaces?: string[];
