@@ -118,11 +118,11 @@ export function generateDockerfile(
 
   lines.push(
     "",
-    "# npm install for best caching, remove unnecessary testing and developer deps",
-    "COPY tools ./tools",
-    "RUN cd tools && npm install --omit=dev",
-    `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
-    "RUN npm install"
+    // "# npm install for best caching, remove unnecessary testing and developer deps",
+    // "COPY tools ./tools",
+    // "RUN cd tools && npm install --omit=dev",
+    // `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
+    "RUN npm install --omit=dev"
   );
 
   lines.push("", "# Copy source files");

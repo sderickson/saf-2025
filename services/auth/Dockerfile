@@ -9,11 +9,7 @@ COPY services/auth/package*.json ./services/auth/
 COPY dbs/auth/package*.json ./dbs/auth/
 COPY specs/apis/package*.json ./specs/apis/
 
-# npm install for best caching, remove unnecessary testing and developer deps
-COPY tools ./tools
-RUN cd tools && npm install --omit=dev
-RUN cd tools && npm run clean-docker-deps -- services/auth/package.json
-RUN npm install
+RUN npm install --omit=dev
 
 # Copy source files
 COPY dbs/auth/src ./dbs/auth/src

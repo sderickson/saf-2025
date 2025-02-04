@@ -5,7 +5,6 @@
     "start": "tsx ./bin/www"
   },
   "dependencies": {
-    "better-sqlite3": "11.8.0",
     "dbs-main": "file:../../dbs/main",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -19,7 +18,6 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.12",
     "@types/express": "^5.0.0",
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",

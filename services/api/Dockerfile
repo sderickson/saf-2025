@@ -9,11 +9,7 @@ COPY services/api/package*.json ./services/api/
 COPY dbs/main/package*.json ./dbs/main/
 COPY specs/apis/package*.json ./specs/apis/
 
-# npm install for best caching, remove unnecessary testing and developer deps
-COPY tools ./tools
-RUN cd tools && npm install --omit=dev
-RUN cd tools && npm run clean-docker-deps -- services/api/package.json
-RUN npm install
+RUN npm install --omit=dev
 
 # Copy source files
 COPY dbs/main ./dbs/main
