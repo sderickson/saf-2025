@@ -12,7 +12,7 @@ import openApiSpec from "specs-apis/dist/openapi.json";
 import { usersRouter } from "./routes/users.ts";
 import { authRouter } from "./routes/auth.ts";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
-import "./config/passport";
+import { setupPassport } from "./config/passport.js";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
@@ -74,6 +74,7 @@ app.use(
 );
 
 // Initialize Passport and restore authentication state from session
+setupPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 

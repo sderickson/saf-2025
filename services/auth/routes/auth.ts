@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { RequestSchema, ResponseSchema } from "../openapi-types";
+import { RequestSchema, ResponseSchema } from "../openapi-types.js";
 import { IVerifyOptions } from "passport-local";
 
 export interface User {

@@ -65,7 +65,6 @@ export function findWorkspacePackageJsons(): string[] {
       }
     }
   });
-  console.log("packageJsonPaths", packageJsonPaths);
 
   return Array.from(packageJsonPaths);
 }

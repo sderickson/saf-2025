@@ -1,13 +1,17 @@
 import express from "express";
-import { RequestSchema, ResponseSchema } from "../openapi-types";
+import { RequestSchema, ResponseSchema } from "../openapi-types.js";
 export const usersRouter = express.Router();
 
-usersRouter.get("/", async function (req, res) {
-  const users: ResponseSchema<"getUsers", 200> = await req.db.users.getAll();
-  res.json(users);
+usersRouter.get("/", async function (req, res, next) {
+  try {
+    const users: ResponseSchema<"getUsers", 200> = await req.db.users.getAll();
+    res.json(users);
+  } catch (e) {
+    next(e);
+  }
 });
 
-usersRouter.post("/", async function (req, res) {
+usersRouter.post("/", async function (req, res, next) {
   const createUserRequest: RequestSchema<"createUser"> = req.body;
   try {
     const result: ResponseSchema<"createUser", 201> = await req.db.users.create(
@@ -21,6 +25,6 @@ usersRouter.post("/", async function (req, res) {
     if (e instanceof req.db.users.EmailConflictError) {
       res.status(409).end();
     }
-    throw e;
+    next(e);
   }
 });
