@@ -6,10 +6,10 @@ import {
   readPackageJson,
   writePackageJson,
   findWorkspacePackageJsons,
-} from "../utils";
-
+} from "../utils.ts";
+import * as glob from "glob";
 vi.mock("fs");
-vi.mock("path");
+vi.mock("glob");
 
 describe("utils", () => {
   beforeEach(() => {
@@ -76,11 +76,11 @@ describe("utils", () => {
         return "{}";
       });
 
+      vi.spyOn(glob, "sync").mockReturnValue(["packages/package.json"]);
+
       vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
         return String(filePath).endsWith("package.json");
       });
-
-      vi.spyOn(path, "join").mockImplementation((...parts) => parts.join("/"));
 
       const result = findWorkspacePackageJsons();
       expect(result).toContain("packages/package.json");

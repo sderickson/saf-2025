@@ -8,11 +8,10 @@ import {
   generateDockerCompose,
   WorkspaceInfo,
   WorkspaceContext,
-} from "../generate-docker";
-import * as utils from "../utils";
+} from "../generate-docker.ts";
+import * as utils from "../utils.ts";
 
 vi.mock("fs");
-vi.mock("path");
 vi.mock("yaml");
 vi.mock("../utils");
 
@@ -43,18 +42,23 @@ describe("generate-docker", () => {
         },
       };
 
-      vi.spyOn(utils, "readPackageJson").mockImplementation((filePath) => {
-        if (filePath === "package.json") return mockRootPackageJson;
-        if (filePath.includes("services/api")) return mockApiPackage;
-        if (filePath.includes("dbs/auth")) return mockAuthDbPackage;
-        return { name: "" };
-      });
+      vi.spyOn(utils, "readPackageJson").mockImplementation(
+        (filePath: string) => {
+          if (filePath === "package.json") return mockRootPackageJson;
+          if (filePath.includes("services/api")) return mockApiPackage;
+          if (filePath.includes("dbs/auth")) return mockAuthDbPackage;
+          return { name: "" };
+        }
+      );
 
       vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
         return String(filePath).endsWith("package.json");
       });
 
-      vi.spyOn(path, "join").mockImplementation((...parts) => parts.join("/"));
+      vi.spyOn(utils, "findWorkspacePackageJsons").mockReturnValue([
+        "services/api/package.json",
+        "dbs/auth/package.json",
+      ]);
 
       const context = createWorkspaceContext();
       const apiWorkspace = context.workspacePackages.get("@saf-2025/api");

@@ -5,6 +5,10 @@
   "directories": {
     "doc": "docs"
   },
+  "scripts": {
+    "test": "npm run test --workspaces --if-present --parallel",
+    "test:coverage": "npm run test:coverage --workspaces --if-present --parallel"
+  },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [

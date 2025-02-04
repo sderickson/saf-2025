@@ -5,9 +5,11 @@ Rough order of development
 ### Backlog
 
 - Start adding tests...
-  - Fix a few issues that came up when adding tests to dbs/auth
-    - Also had to add build tools to the dockerfile. Can we get away without those? Docker doesn't even need to run tests, can these deps just not be installed?
-    - Finally, tests depend on running NODE_ENV=test, which is not ideal. Maybe switch to having the env include the path to the sqlite file instead.
+  - add way to run all tests
+  - dbs/main
+  - services/api
+  - services/auth
+  - clients
 - Add forgot frontend
 - Add forgot backend, printing to console
 - Add forgot integration with email service
