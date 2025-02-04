@@ -5,7 +5,6 @@ Rough order of development
 ### Backlog
 
 - Start adding tests...
-  - add way to run all tests
   - dbs/main
   - services/api
   - services/auth
