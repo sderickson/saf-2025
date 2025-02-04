@@ -5,9 +5,8 @@ Rough order of development
 ### Backlog
 
 - Start adding tests...
-  - dbs/main
-  - services/api
   - services/auth
+  - split out shared node logic, test it
   - clients
 - Add forgot frontend
 - Add forgot backend, printing to console

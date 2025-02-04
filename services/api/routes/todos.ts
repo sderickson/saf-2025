@@ -1,5 +1,10 @@
 import express from "express";
-import { todos, DatabaseError, UnhandledDatabaseError } from "dbs-main";
+import {
+  todos,
+  DatabaseError,
+  UnhandledDatabaseError,
+  TodoNotFoundError,
+} from "dbs-main";
 
 const router = express.Router();
 
@@ -8,13 +13,8 @@ router.get("/", async (req, res, next) => {
   try {
     const todoList = await todos.getAllTodos();
     res.json(todoList);
-  } catch (err: unknown) {
-    const error = err as Error;
-    if (error instanceof UnhandledDatabaseError) {
-      next(error);
-    } else {
-      next(new Error("Failed to fetch todos"));
-    }
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -24,13 +24,8 @@ router.post("/", async (req, res, next) => {
     const { title } = req.body;
     const todo = await todos.createTodo(title);
     res.status(201).json(todo);
-  } catch (err: unknown) {
-    const error = err as Error;
-    if (error instanceof UnhandledDatabaseError) {
-      next(error);
-    } else {
-      next(new Error("Failed to create todo"));
-    }
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -41,16 +36,11 @@ router.put("/:id", async (req, res, next) => {
     const { title, completed } = req.body;
     const todo = await todos.updateTodo(id, title, completed);
     res.json(todo);
-  } catch (err: unknown) {
-    const error = err as Error;
-    if (error instanceof DatabaseError) {
-      if (error.message === "Todo not found") {
-        res.status(404).json({ message: "Todo not found" });
-        return;
-      }
-      next(error);
+  } catch (error) {
+    if (error instanceof TodoNotFoundError) {
+      res.status(404).json({ message: error.message });
     } else {
-      next(new Error("Failed to update todo"));
+      next(error);
     }
   }
 });
@@ -61,16 +51,11 @@ router.delete("/:id", async (req, res, next) => {
     const id = parseInt(req.params.id, 10);
     await todos.deleteTodo(id);
     res.status(204).send();
-  } catch (err: unknown) {
-    const error = err as Error;
-    if (error instanceof DatabaseError) {
-      if (error.message === "Todo not found") {
-        res.status(404).json({ message: "Todo not found" });
-        return;
-      }
-      next(error);
+  } catch (error) {
+    if (error instanceof TodoNotFoundError) {
+      res.status(404).json({ message: error.message });
     } else {
-      next(new Error("Failed to delete todo"));
+      next(error);
     }
   }
 });

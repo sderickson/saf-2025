@@ -2,7 +2,10 @@
   "name": "services-api",
   "type": "module",
   "scripts": {
-    "start": "tsx ./bin/www"
+    "start": "tsx ./bin/www",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "dbs-main": "file:../../dbs/main",
@@ -22,6 +25,10 @@
     "@types/http-errors": "^2.0.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.5",
-    "typescript": "^5.7.3"
+    "@types/supertest": "^6.0.2",
+    "typescript": "^5.7.3",
+    "@vitest/coverage-v8": "^1.4.0",
+    "supertest": "^6.3.4",
+    "vitest": "^1.4.0"
   }
 }
