@@ -101,11 +101,31 @@ export function generateDockerfile(
     "",
     "WORKDIR /app",
     "",
+    "# Copy package.json",
     "COPY package*.json ./",
     "COPY tsconfig.json ./",
     `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
-    "",
   ];
+
+  workspace.dependencies.forEach((dep) => {
+    const depWorkspace = context.workspacePackages.get(dep);
+    if (!depWorkspace) return;
+
+    lines.push(
+      `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
+    );
+  });
+
+  lines.push(
+    "",
+    "# npm install for best caching, remove unnecessary testing and developer deps",
+    "COPY tools ./tools",
+    "RUN cd tools && npm install --omit=dev",
+    `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
+    "RUN npm install"
+  );
+
+  lines.push("", "# Copy source files");
 
   // Copy dependencies
   workspace.dependencies.forEach((dep) => {
@@ -113,9 +133,6 @@ export function generateDockerfile(
     if (!depWorkspace) return;
 
     if (depWorkspace.files) {
-      lines.push(
-        `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
-      );
       depWorkspace.files.forEach((file) => {
         lines.push(
           `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
@@ -124,6 +141,7 @@ export function generateDockerfile(
     } else {
       lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
     }
+    lines.push("");
   });
 
   // Copy service files
@@ -135,15 +153,7 @@ export function generateDockerfile(
     lines.push(`COPY ${workspace.path} ./${workspace.path}`);
   }
 
-  lines.push(
-    "",
-    "COPY tools ./tools",
-    "RUN cd tools && npm install --omit=dev",
-    `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
-    "RUN npm install",
-    `WORKDIR /app/${workspace.path}`,
-    'CMD ["npm", "start"]'
-  );
+  lines.push("", `WORKDIR /app/${workspace.path}`, 'CMD ["npm", "start"]');
 
   return lines.join("\n");
 }
