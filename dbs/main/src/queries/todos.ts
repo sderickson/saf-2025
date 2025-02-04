@@ -1,7 +1,13 @@
-import { db } from "../instance";
-import { todos } from "../schema";
-import { DatabaseError, UnhandledDatabaseError } from "../errors";
+import { db } from "../instance.js";
+import { todos } from "../schema.js";
+import { DatabaseError, UnhandledDatabaseError } from "../errors.js";
 import { eq } from "drizzle-orm";
+
+export class TodoNotFoundError extends DatabaseError {
+  constructor(id: number) {
+    super(`Todo with id ${id} not found`);
+  }
+}
 
 export async function getAllTodos() {
   try {
@@ -33,7 +39,7 @@ export async function updateTodo(
       .returning();
 
     if (result.length === 0) {
-      throw new DatabaseError("Todo not found");
+      throw new TodoNotFoundError(id);
     }
 
     return result[0];
@@ -50,7 +56,7 @@ export async function deleteTodo(id: number) {
     const result = await db.delete(todos).where(eq(todos.id, id)).returning();
 
     if (result.length === 0) {
-      throw new DatabaseError("Todo not found");
+      throw new TodoNotFoundError(id);
     }
 
     return result[0];

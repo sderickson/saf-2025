@@ -1,8 +1,13 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { createTodo, getAllTodos, updateTodo, deleteTodo } from "./todos.js";
+import {
+  createTodo,
+  getAllTodos,
+  updateTodo,
+  deleteTodo,
+  TodoNotFoundError,
+} from "./todos.js";
 import { db } from "../instance.js";
 import { todos } from "../schema.js";
-import { DatabaseError } from "../errors.js";
 
 // The table's type is inferred automatically
 type Todo = typeof todos.$inferSelect;
@@ -59,9 +64,10 @@ describe("todos queries", () => {
       });
     });
 
-    it("should throw DatabaseError when todo not found", async () => {
-      await expect(updateTodo(999, "Title", false)).rejects.toThrow(
-        DatabaseError
+    it("should throw TodoNotFoundError when todo not found", async () => {
+      const nonExistentId = 999;
+      await expect(updateTodo(nonExistentId, "Title", false)).rejects.toThrow(
+        new TodoNotFoundError(nonExistentId)
       );
     });
   });
@@ -80,8 +86,11 @@ describe("todos queries", () => {
       expect(allTodos).toHaveLength(0);
     });
 
-    it("should throw DatabaseError when todo not found", async () => {
-      await expect(deleteTodo(999)).rejects.toThrow(DatabaseError);
+    it("should throw TodoNotFoundError when todo not found", async () => {
+      const nonExistentId = 999;
+      await expect(deleteTodo(nonExistentId)).rejects.toThrow(
+        new TodoNotFoundError(nonExistentId)
+      );
     });
   });
 });
