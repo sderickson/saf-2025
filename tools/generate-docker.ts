@@ -99,13 +99,6 @@ export function generateDockerfile(
   const lines = [
     "FROM node:22-slim",
     "",
-    "# Install build dependencies",
-    "RUN apt-get update && apt-get install -y \\",
-    "    python3 \\",
-    "    make \\",
-    "    g++ \\",
-    "    && rm -rf /var/lib/apt/lists/*",
-    "",
     "WORKDIR /app",
     "",
     "COPY package*.json ./",
@@ -144,9 +137,9 @@ export function generateDockerfile(
 
   lines.push(
     "",
-    // "COPY tools ./tools",
-    // "RUN cd tools && npm install --omit=dev",
-    // `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
+    "COPY tools ./tools",
+    "RUN cd tools && npm install --omit=dev",
+    `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
     "RUN npm install",
     `WORKDIR /app/${workspace.path}`,
     'CMD ["npm", "start"]'

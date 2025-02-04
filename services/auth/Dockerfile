@@ -24,6 +24,9 @@ COPY specs/apis/package*.json ./specs/apis/
 COPY specs/apis/dist ./specs/apis/dist
 COPY services/auth ./services/auth
 
+COPY tools ./tools
+RUN cd tools && npm install --omit=dev
+RUN cd tools && npm run clean-docker-deps -- services/auth/package.json
 RUN npm install
 WORKDIR /app/services/auth
 CMD ["npm", "start"]

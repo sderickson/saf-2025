@@ -18,6 +18,9 @@ COPY specs/apis/package*.json ./specs/apis/
 COPY specs/apis/dist ./specs/apis/dist
 COPY services/api ./services/api
 
+COPY tools ./tools
+RUN cd tools && npm install --omit=dev
+RUN cd tools && npm run clean-docker-deps -- services/api/package.json
 RUN npm install
 WORKDIR /app/services/api
 CMD ["npm", "start"]

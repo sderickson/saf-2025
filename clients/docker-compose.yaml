@@ -5,5 +5,4 @@ services:
       dockerfile: ./clients/Dockerfile
     volumes:
       - .:/app/clients
-      - /app/clients/node_modules # So HMR works
     command: npm run dev 

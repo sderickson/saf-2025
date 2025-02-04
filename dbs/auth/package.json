@@ -16,6 +16,7 @@
         "@libsql/client": "^0.14.0",
         "better-sqlite3": "11.8.0",
         "better-sqlite3-session-store": "^0.1.0",
+        "drizzle-kit": "^0.30.1",
         "drizzle-orm": "^0.38.3",
         "express-session": "^1.18.1"
     },
@@ -23,7 +24,6 @@
         "@types/better-sqlite3": "^7.6.12",
         "@types/node": "^20.11.30",
         "@vitest/coverage-v8": "^1.4.0",
-        "drizzle-kit": "^0.30.1",
         "tsx": "^4.19.2",
         "vitest": "^1.4.0"
     },
