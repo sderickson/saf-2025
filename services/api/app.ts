@@ -2,8 +2,12 @@ import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { Logger } from "winston";
-import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
-import * as OpenApiValidator from "express-openapi-validator";
+import {
+  requestId,
+  httpLogger,
+  loggerInjector,
+  openApiValidator,
+} from "@saf/node-express";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import todosRouter from "./routes/todos.js";
 import dotenv from "dotenv";
@@ -43,13 +47,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(loggerInjector);
 
 // OpenAPI validation
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: path.join(__dirname, "../../specs/apis/dist/openapi.json"),
-    validateRequests: true,
-    validateResponses: true,
-  })
-);
+app.use(openApiValidator);
 
 // Routes
 app.use("/todos", todosRouter);

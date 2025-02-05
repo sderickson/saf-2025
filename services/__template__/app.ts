@@ -10,8 +10,12 @@ import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { Logger } from "winston";
-import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
-import * as OpenApiValidator from "express-openapi-validator";
+import {
+  requestId,
+  httpLogger,
+  loggerInjector,
+  openApiValidator,
+} from "@saf/node-express";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
@@ -80,13 +84,7 @@ app.use(loggerInjector);
  * OpenAPI Validation Middleware
  * Validates requests and responses against the OpenAPI specification
  */
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: path.join(__dirname, "../../specs/apis/dist/openapi.json"),
-    validateRequests: true,
-    validateResponses: true,
-  })
-);
+app.use(openApiValidator);
 
 /**
  * Routes

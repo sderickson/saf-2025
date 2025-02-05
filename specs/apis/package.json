@@ -1,5 +1,10 @@
 {
     "name": "@saf/specs-apis",
+    "version": "1.0.0",
+    "description": "Shared OpenAPI specification for SAF services",
+    "type": "module",
+    "main": "./dist/openapi.json",
+    "types": "./dist/openapi.d.ts",
     "scripts": {
         "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
         "generate:json": "redocly bundle openapi.yaml --ext json --output dist/openapi.json",

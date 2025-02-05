@@ -5,8 +5,12 @@ import passport from "passport";
 import * as db from "@saf/dbs-auth";
 import session from "express-session";
 import { Logger } from "winston";
-import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
-import * as OpenApiValidator from "express-openapi-validator";
+import {
+  requestId,
+  httpLogger,
+  loggerInjector,
+  openApiValidator,
+} from "@saf/node-express";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
@@ -69,20 +73,16 @@ app.use((req, _, next) => {
   next();
 });
 
+app.use(express.static(path.join(__dirname, "public")));
+
 // Logger injection
 app.use(loggerInjector);
 
 // OpenAPI validation
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: path.join(__dirname, "../../specs/apis/dist/openapi.json"),
-    validateRequests: true,
-    validateResponses: true,
-  })
-);
+app.use(openApiValidator);
 
 // Routes
-app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
