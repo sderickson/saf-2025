@@ -8,8 +8,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "dbs-auth": "file:../../dbs/auth",
     "argon2": "^0.40.1",
+    "dbs-auth": "file:../../dbs/auth",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "express-openapi-validator": "^5.4.2",

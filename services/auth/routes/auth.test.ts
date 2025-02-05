@@ -4,6 +4,8 @@ import request from "supertest";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
+import * as OpenApiValidator from "express-openapi-validator";
+import { join } from "path";
 import { authRouter } from "./auth.js";
 import { setupPassport } from "../config/passport.js";
 import type * as dbTypes from "dbs-auth";
@@ -59,7 +61,29 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Add OpenAPI validator middleware
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: join(process.cwd(), "../../specs/apis/openapi.yaml"),
+    validateRequests: true,
+    validateResponses: true,
+  })
+);
+
 app.use("/auth", authRouter);
+
+// Add error handler for validation errors
+app.use((err: any, req: any, res: any, next: any) => {
+  // Format validation errors
+  if (err.status === 400 && err.errors) {
+    return res.status(400).json({
+      error: "Validation error",
+      details: err.errors,
+    });
+  }
+  next(err);
+});
 
 describe("Auth Routes", () => {
   beforeEach(() => {

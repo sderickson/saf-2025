@@ -1,13 +1,37 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import express from "express";
+import * as OpenApiValidator from "express-openapi-validator";
+import { join } from "path";
 import { todos, TodoNotFoundError } from "dbs-main";
 import todosRouter from "./todos.js";
 
 // Create a basic express app for testing
 const app = express();
 app.use(express.json());
+
+// Add OpenAPI validator middleware
+app.use(
+  OpenApiValidator.middleware({
+    apiSpec: join(process.cwd(), "../../specs/apis/openapi.yaml"),
+    validateRequests: true,
+    validateResponses: true,
+  })
+);
+
 app.use("/todos", todosRouter);
+
+// Add error handler for validation errors
+app.use((err: any, req: any, res: any, next: any) => {
+  // Format validation errors
+  if (err.status === 400 && err.errors) {
+    return res.status(400).json({
+      error: "Validation error",
+      details: err.errors,
+    });
+  }
+  next(err);
+});
 
 // Mock the database functions
 vi.mock("dbs-main", async (importOriginal) => {
