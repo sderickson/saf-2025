@@ -4,9 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "qt": "node -v",
     "generate-docker": "node --experimental-strip-types generate-docker.js",
-    "clean-docker-deps": "node --experimental-strip-types clean-docker-deps.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
