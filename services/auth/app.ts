@@ -9,8 +9,7 @@ import winston, { Logger } from "winston";
 import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
 import openApiSpec from "specs-apis/dist/openapi.json";
-import { usersRouter } from "./routes/users.ts";
-import { authRouter } from "./routes/auth.ts";
+import { authRouter } from "./routes/auth.js";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
 import { setupPassport } from "./config/passport.js";
 import dotenv from "dotenv";
@@ -29,11 +28,6 @@ declare global {
       id: string;
       db: typeof db;
       log: Logger;
-    }
-    // Add User type for Passport
-    interface User {
-      id: string;
-      email: string;
     }
   }
 }
@@ -110,7 +104,6 @@ app.use(
   })
 );
 
-app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 
 app.use(function (req, res, next) {

@@ -4,6 +4,23 @@
  */
 
 export interface paths {
+    "/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Register New User */
+        post: operations["registerUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -52,24 +69,6 @@ export interface paths {
          * @description Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.
          */
         post: operations["verifyAuth"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Users */
-        get: operations["getUsers"];
-        put?: never;
-        /** Create User */
-        post: operations["createUser"];
         delete?: never;
         options?: never;
         head?: never;
@@ -228,27 +227,22 @@ export interface components {
     schemas: {
         User: components["schemas"]["user"];
         Todo: components["schemas"]["todo"];
-        LoginRequest: {
+        RegisterRequest: {
             /** Format: email */
             email: string;
             password: string;
+            name: string;
         };
-        LoginResponse: {
-            token: string;
-        };
-        user: {
-            /** Format: uuid */
+        UserResponse: {
             id: number;
             /** Format: email */
             email: string;
             name: string;
-            /** Format: date-time */
-            createdAt?: string;
         };
-        CreateUserRequest: {
+        LoginRequest: {
             /** Format: email */
             email: string;
-            name: string;
+            password: string;
         };
         todo: {
             /**
@@ -276,6 +270,15 @@ export interface components {
             /** @description Whether the todo item has been completed */
             completed: boolean;
         };
+        user: {
+            /** Format: uuid */
+            id: number;
+            /** Format: email */
+            email: string;
+            name: string;
+            /** Format: date-time */
+            createdAt?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -285,6 +288,42 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    registerUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterRequest"];
+            };
+        };
+        responses: {
+            /** @description User registered successfully */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserResponse"];
+                };
+            };
+            /** @description Email already exists */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example Email already exists */
+                        error: string;
+                    };
+                };
+            };
+        };
+    };
     loginUser: {
         parameters: {
             query?: never;
@@ -304,7 +343,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LoginResponse"];
+                    "application/json": components["schemas"]["UserResponse"];
                 };
             };
             /** @description Invalid credentials */
@@ -312,7 +351,12 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": {
+                        /** @example Invalid credentials */
+                        error: string;
+                    };
+                };
             };
         };
     };
@@ -365,57 +409,6 @@ export interface operations {
                         error: string;
                     };
                 };
-            };
-        };
-    };
-    getUsers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description List of users */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["user"][];
-                };
-            };
-        };
-    };
-    createUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateUserRequest"];
-            };
-        };
-        responses: {
-            /** @description User created */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["user"];
-                };
-            };
-            /** @description User already exists */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };

@@ -54,20 +54,10 @@ export const setupPassport = () => {
 
           // Update last login time
           const updatedUser = await users.updateLastLogin(user.id);
-          if (!updatedUser) {
-            return done(null, false, { message: "User not found" });
-          }
 
           return done(null, updatedUser);
         } catch (err) {
-          const error = err as DatabaseError;
-          if (
-            error.name === "UserNotFoundError" ||
-            error.name === "EmailAuthNotFoundError"
-          ) {
-            return done(null, false, { message: "Invalid credentials" });
-          }
-          return done(error);
+          return done(err);
         }
       }
     )

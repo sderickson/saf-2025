@@ -1,3 +1,35 @@
+register:
+  post:
+    summary: "Register New User"
+    operationId: registerUser
+    tags:
+      - auth
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RegisterRequest"
+    responses:
+      "200":
+        description: User registered successfully
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserResponse"
+      "409":
+        description: Email already exists
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - error
+              properties:
+                error:
+                  type: string
+                  example: "Email already exists"
+
 login:
   post:
     summary: "Authenticate User"
@@ -16,9 +48,19 @@ login:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginResponse"
+              $ref: "#/components/schemas/UserResponse"
       "401":
         description: Invalid credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - error
+              properties:
+                error:
+                  type: string
+                  example: "Invalid credentials"
 
 logout:
   post:
@@ -65,6 +107,22 @@ verify:
 
 components:
   schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        name:
+          type: string
+
     LoginRequest:
       type: object
       required:
@@ -77,10 +135,17 @@ components:
         password:
           type: string
 
-    LoginResponse:
+    UserResponse:
       type: object
       required:
-        - token
+        - id
+        - email
+        - name
       properties:
-        token:
+        id:
+          type: number
+        email:
+          type: string
+          format: email
+        name:
           type: string

@@ -12,6 +12,56 @@
     }
   ],
   "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register New User",
+        "operationId": "registerUser",
+        "tags": [
+          "auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "summary": "Authenticate User",
@@ -35,13 +85,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
           },
           "401": {
-            "description": "Invalid credentials"
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid credentials"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -105,62 +171,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/users": {
-      "get": {
-        "summary": "Get Users",
-        "operationId": "getUsers",
-        "tags": [
-          "users"
-        ],
-        "responses": {
-          "200": {
-            "description": "List of users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/user"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create User",
-        "operationId": "createUser",
-        "tags": [
-          "users"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "User created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/user"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "User already exists"
           }
         }
       }
@@ -278,6 +288,47 @@
       "Todo": {
         "$ref": "#/components/schemas/todo"
       },
+      "RegisterRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "name"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "LoginRequest": {
         "type": "object",
         "required": [
@@ -290,58 +341,6 @@
             "format": "email"
           },
           "password": {
-            "type": "string"
-          }
-        }
-      },
-      "LoginResponse": {
-        "type": "object",
-        "required": [
-          "token"
-        ],
-        "properties": {
-          "token": {
-            "type": "string"
-          }
-        }
-      },
-      "user": {
-        "type": "object",
-        "required": [
-          "id",
-          "email",
-          "name"
-        ],
-        "properties": {
-          "id": {
-            "type": "number",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "name": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "CreateUserRequest": {
-        "type": "object",
-        "required": [
-          "email",
-          "name"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "name": {
             "type": "string"
           }
         }
@@ -401,6 +400,31 @@
           "completed": {
             "type": "boolean",
             "description": "Whether the todo item has been completed"
+          }
+        }
+      },
+      "user": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
