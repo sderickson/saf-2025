@@ -1,12 +1,11 @@
 import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import morgan from "morgan";
 import passport from "passport";
 import * as db from "@saf/dbs-auth";
 import session from "express-session";
 import winston, { Logger } from "winston";
-import { requestId } from "@saf/node-express";
+import { requestId, httpLogger } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
@@ -38,13 +37,9 @@ app.get("/health", (req, res) => {
 // request id generator
 app.use(requestId);
 
-// 3rd party middleware
-morgan.token("id", (req: Request) => (req as any).id);
-app.use(
-  morgan(
-    ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
-  )
-);
+// HTTP request logging
+app.use(httpLogger);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

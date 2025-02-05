@@ -9,9 +9,8 @@
 import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction, Handler } from "express";
 import path from "path";
-import morgan from "morgan";
 import winston, { Logger } from "winston";
-import { requestId } from "@saf/node-express";
+import { requestId, httpLogger } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import dotenv from "dotenv";
@@ -53,15 +52,10 @@ app.get("/health", (req, res) => {
 app.use(requestId);
 
 /**
- * Logging Middleware Setup
- * Uses Morgan for HTTP logging and Winston for application logging
+ * HTTP Request Logging
+ * Uses Morgan for HTTP access logging with request ID correlation
  */
-morgan.token("id", (req: Request) => (req as any).id);
-app.use(
-  morgan(
-    ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
-  )
-);
+app.use(httpLogger);
 
 /**
  * Body Parser Middleware

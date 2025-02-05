@@ -6,7 +6,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "healthcheck": "tsx ./bin/healthcheck.ts"
+    "healthcheck": "tsx ./bin/healthcheck"
   },
   "dependencies": {
     "@saf/dbs-auth": "*",
