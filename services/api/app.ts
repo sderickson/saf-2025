@@ -1,8 +1,8 @@
 import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import winston, { Logger } from "winston";
-import { requestId, httpLogger } from "@saf/node-express";
+import { Logger } from "winston";
+import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import todosRouter from "./routes/todos.js";
@@ -39,23 +39,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// winston logger injection
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()],
-  format: winston.format.combine(
-    winston.format.colorize({ all: true }),
-    winston.format.timestamp(),
-    winston.format.printf(({ reqId, level, message, timestamp }) => {
-      return `${timestamp} <${reqId}> [${level}]: ${message}`;
-    })
-  ),
-});
-
-// Attach logger to request
-app.use((req, res, next) => {
-  req.log = logger.child({ reqId: (req as any).id });
-  next();
-});
+// Logger injection
+app.use(loggerInjector);
 
 // OpenAPI validation
 app.use(

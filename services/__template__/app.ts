@@ -7,10 +7,10 @@
  */
 
 import createError, { HttpError } from "http-errors";
-import express, { Request, Response, NextFunction, Handler } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
-import winston, { Logger } from "winston";
-import { requestId, httpLogger } from "@saf/node-express";
+import { Logger } from "winston";
+import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import dotenv from "dotenv";
@@ -71,28 +71,10 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(express.static(path.join(__dirname, "public")));
 
 /**
- * Winston Logger Setup
- * Creates a logger instance with request ID correlation
- */
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()],
-  format: winston.format.combine(
-    winston.format.colorize({ all: true }),
-    winston.format.timestamp(),
-    winston.format.printf(({ reqId, level, message, timestamp }) => {
-      return `${timestamp} <${reqId}> [${level}]: ${message}`;
-    })
-  ),
-});
-
-/**
  * Logger Injection Middleware
  * Attaches a child logger with request ID to each request
  */
-app.use((req: Request, res: Response, next: NextFunction) => {
-  req.log = logger.child({ reqId: (req as any).id });
-  next();
-});
+app.use(loggerInjector);
 
 /**
  * OpenAPI Validation Middleware

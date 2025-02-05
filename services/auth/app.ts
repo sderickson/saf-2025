@@ -4,8 +4,8 @@ import path from "path";
 import passport from "passport";
 import * as db from "@saf/dbs-auth";
 import session from "express-session";
-import winston, { Logger } from "winston";
-import { requestId, httpLogger } from "@saf/node-express";
+import { Logger } from "winston";
+import { requestId, httpLogger, loggerInjector } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
@@ -69,25 +69,8 @@ app.use((req, _, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
-
-// winston logger injection
-const logger = winston.createLogger({
-  transports: [new winston.transports.Console()],
-  format: winston.format.combine(
-    winston.format.colorize({ all: true }),
-    winston.format.timestamp(),
-    winston.format.printf(({ reqId, level, message, timestamp }) => {
-      return `${timestamp} <${reqId}> [${level}]: ${message}`;
-    })
-  ),
-});
-
-// Attach logger to request
-app.use((req, res, next) => {
-  req.log = logger.child({ reqId: (req as any).id });
-  next();
-});
+// Logger injection
+app.use(loggerInjector);
 
 // OpenAPI validation
 app.use(
@@ -99,7 +82,7 @@ app.use(
 );
 
 // Routes
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
