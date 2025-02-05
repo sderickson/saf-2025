@@ -2,10 +2,11 @@
   "name": "@saf/services-template",
   "type": "module",
   "scripts": {
-    "start": "tsx ./bin/www",
+    "start": "tsx ./bin/www.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "healthcheck": "tsx ./bin/healthcheck.ts"
   },
   "dependencies": {
     "@saf/specs-apis": "*",

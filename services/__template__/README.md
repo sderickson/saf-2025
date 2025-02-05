@@ -11,7 +11,7 @@ This is a template for creating new microservices in the SAF architecture. It pr
 - Request ID tracking
 - Error handling middleware
 - Testing setup with Vitest
-- Docker support
+- Docker support with health checks
 - Example route implementation
 
 ## Directory Structure
@@ -113,6 +113,15 @@ services/__template__/
   - For docker-compose-specific settings, create a docker-compose.yaml.template file.
   - Build: `docker-compose build your-service`
   - Run: `docker-compose up your-service (--build)`
+
+### Health Checks
+
+The service includes a health check endpoint at `/health` and Docker health check configuration:
+
+- HTTP endpoint: `GET /health` returns 200 OK when service is healthy
+- npm script: `npm run healthcheck` for container health checks
+- Docker configuration: Checks every 30s with 3s timeout
+- Health check is used by container orchestration for service monitoring
 
 ### Package Management
 
