@@ -5,12 +5,16 @@
     "exports": {
         ".": {
             "default": "./index.ts"
+        },
+        "./queries/*": {
+            "default": "./src/queries/*.ts"
         }
     },
     "scripts": {
         "test": "vitest run",
         "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage"
+        "test:coverage": "vitest run --coverage",
+        "db:generate": "drizzle-kit generate"
     },
     "dependencies": {
         "better-sqlite3": "11.8.0",

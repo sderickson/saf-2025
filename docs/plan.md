@@ -4,6 +4,11 @@ Rough order of development
 
 ### Backlog
 
+- implement auth backend fully
+  - update db schema and queries
+  - update auth service to use these
+  - add argon2 for hashing
+- maybe rename packages to have saf namespace?
 - Start adding tests...
   - services/auth
   - split out shared node logic, test it
