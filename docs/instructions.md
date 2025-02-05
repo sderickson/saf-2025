@@ -16,6 +16,7 @@ When creating a new shared library package in the monorepo (e.g. in `lib/`, `dbs
 
    - Name as `@saf/scope-package-name` (e.g. `@saf/dbs-auth`, `@saf/node-express`)
    - `type: "module"` for ES modules
+   - `main` field pointing to the entry point (e.g. `"./src/index.ts"`) - this is required for TypeScript to properly resolve types
    - Standard test commands:
      ```json
      "scripts": {

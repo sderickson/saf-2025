@@ -7,7 +7,7 @@
  */
 
 import createError, { HttpError } from "http-errors";
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, Handler } from "express";
 import path from "path";
 import morgan from "morgan";
 import winston, { Logger } from "winston";
@@ -95,7 +95,7 @@ const logger = winston.createLogger({
  * Logger Injection Middleware
  * Attaches a child logger with request ID to each request
  */
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   req.log = logger.child({ reqId: (req as any).id });
   next();
 });
