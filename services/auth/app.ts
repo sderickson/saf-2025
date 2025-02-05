@@ -1,27 +1,20 @@
-import express, { Request, Response, NextFunction } from "express";
-import path from "path";
+/**
+ * Authentication Service Application
+ *
+ * Handles user authentication and session management for the SAF architecture.
+ * Implements common middleware patterns and specific auth-related functionality.
+ */
+
+import express from "express";
 import passport from "passport";
 import * as db from "@saf/dbs-auth";
 import session from "express-session";
-import { Logger } from "winston";
 import {
-  requestId,
-  httpLogger,
-  loggerInjector,
-  openApiValidator,
-  notFoundHandler,
-  errorHandler,
+  recommendedPreMiddleware,
+  recommendedErrorHandlers,
 } from "@saf/node-express";
-import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
-import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
 import { setupPassport } from "./config/passport.js";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config();
 
 const app = express();
 
@@ -30,23 +23,15 @@ declare global {
   namespace Express {
     interface Request {
       db: typeof db;
-      log: Logger;
     }
   }
 }
 
-app.get("/health", (req, res) => {
-  res.send("OK");
-});
-
-// request id generator
-app.use(requestId);
-
-// HTTP request logging
-app.use(httpLogger);
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+/**
+ * Pre-route Middleware Stack
+ * Includes request ID, logging, body parsing, and OpenAPI validation
+ */
+app.use(recommendedPreMiddleware);
 
 // Session configuration
 app.use(
@@ -74,21 +59,16 @@ app.use((req, _, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
-
-// Logger injection
-app.use(loggerInjector);
-
-// OpenAPI validation
-app.use(openApiValidator);
-
-// Routes
+/**
+ * Routes
+ * Authentication related endpoints
+ */
 app.use("/auth", authRouter);
 
-// 404 Handler
-app.use(notFoundHandler);
-
-// Error Handler
-app.use(errorHandler);
+/**
+ * Error Handling Middleware Stack
+ * Includes 404 handler and centralized error handling
+ */
+app.use(recommendedErrorHandlers);
 
 export default app;

@@ -31,10 +31,24 @@ That need to understand the tool better might be an opportunity to optimize here
 
 In this way, perhaps you can assess the output of the AI without ever having deeply learned the tool they're using.
 
-### For Software Design
+### For Architecture, Best Practices, Tool Choices
 
-Taking it a bit of a step up building small functionality, it's been useful to lean on AI for figuring out how to refactor and structure things. `TODO`
+Mostly it's been useful to ask for suggestions or thoughts on a way of doing things. It gives good pro/cons, and when I ask for a tool with certain capabilities, it will suggest tools that fit the criteria.
 
-### For Architecture
+It's also useful for identifying things you hadn't thought about. I fed Claude my decisions.md dock and it suggested half a dozen other dimensions that I should talk about as well. This is probably just generally a useful thing for such tools: feed it a first draft and ask if there are any key points or questions to address.
 
-`TODO`
+It's also interesting, sometimes the auto complete or the code it generates is a "tell" for what would be a better way of doing things. For example, I'd ask the AI to update the package.json file, and several times it would do what I asked _and also_ add a scope to my monorepo packages. I hadn't bothered to add those but it's the industry standard. It's sort of a passive-aggressive way of showing when what you're doing is non-standard or weird, but it's helpful to keep an eye out for.
+
+### For Consistency, Refactoring, and Documentation
+
+I'm trying out incorporating **templates** and **documentation** for propagating best practices and consistency across the codebase. The process goes like this:
+
+- If I'm doing a process that I want to be repeatable, I walk the AI through it, usually having to adjust what they do.
+- After I've worked with the AI agent to fix everything, I ask the AI to document the process we just did.
+- Next time I want them to do the same process, I just ask them to follow the documentation they wrote.
+
+If the process involves some base setup, like adding a new package to the repo, I'll add a **template** folder to the repo, ask the AI to fill it based on other instances I've already created and document it fully.
+
+One way to use this **template**, is if I want to generally change the structure of that thing (like a service, or a library), I adjust the template and then ask the AI to update all the instances of that thing with the changes that were made. I just tried this, and I did have to encourage the AI to do all of it, but if there were dozens of instances, it pretty much scales? Will see.
+
+If it works, one nice thing about this is it gives more value to writing documentation! It becomes something you can feed the AI.
