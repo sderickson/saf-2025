@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@saf/specs-apis": "file:../specs/apis"
+    "@saf/specs-apis": "*"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
