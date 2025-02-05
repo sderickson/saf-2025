@@ -1,4 +1,3 @@
-import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import passport from "passport";
@@ -10,6 +9,8 @@ import {
   httpLogger,
   loggerInjector,
   openApiValidator,
+  notFoundHandler,
+  errorHandler,
 } from "@saf/node-express";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
@@ -84,28 +85,10 @@ app.use(openApiValidator);
 // Routes
 app.use("/auth", authRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+// 404 Handler
+app.use(notFoundHandler);
 
-// error handler
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  // Log error
-  if (!req.log) {
-    console.error(err.stack);
-  } else {
-    req.log.error(err.stack);
-  }
-
-  // Send error response
-  res.status(err.status || 500);
-  res.json({
-    error: {
-      message: err.message,
-      status: err.status || 500,
-    },
-  });
-});
+// Error Handler
+app.use(errorHandler);
 
 export default app;

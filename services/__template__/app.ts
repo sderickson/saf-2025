@@ -6,7 +6,6 @@
  * that should be used across all services.
  */
 
-import createError, { HttpError } from "http-errors";
 import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import { Logger } from "winston";
@@ -15,6 +14,8 @@ import {
   httpLogger,
   loggerInjector,
   openApiValidator,
+  notFoundHandler,
+  errorHandler,
 } from "@saf/node-express";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import dotenv from "dotenv";
@@ -96,30 +97,12 @@ app.use(openApiValidator);
  * 404 Handler
  * Catches requests to undefined routes
  */
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+app.use(notFoundHandler);
 
 /**
  * Error Handler
  * Central error handling middleware
  */
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  // Log error
-  if (!req.log) {
-    console.error(err.stack);
-  } else {
-    req.log.error(err.stack);
-  }
-
-  // Send error response
-  res.status(err.status || 500);
-  res.json({
-    error: {
-      message: err.message,
-      status: err.status || 500,
-    },
-  });
-});
+app.use(errorHandler);
 
 export default app;
