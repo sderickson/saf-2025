@@ -3,7 +3,7 @@ import request from "supertest";
 import express from "express";
 import * as OpenApiValidator from "express-openapi-validator";
 import { join } from "path";
-import { todos, TodoNotFoundError } from "dbs-main";
+import { todos, TodoNotFoundError } from "@saf/dbs-main";
 import todosRouter from "./todos.js";
 
 // Create a basic express app for testing
@@ -34,8 +34,8 @@ app.use((err: any, req: any, res: any, next: any) => {
 });
 
 // Mock the database functions
-vi.mock("dbs-main", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("dbs-main")>();
+vi.mock("@saf/dbs-main", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@saf/dbs-main")>();
   return {
     ...actual,
     todos: {

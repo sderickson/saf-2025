@@ -3,12 +3,12 @@ import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import morgan from "morgan";
 import passport from "passport";
-import * as db from "dbs-auth";
+import * as db from "@saf/dbs-auth";
 import session from "express-session";
 import winston, { Logger } from "winston";
 import { v4 as uuidv4 } from "uuid";
 import * as OpenApiValidator from "express-openapi-validator";
-import openApiSpec from "specs-apis/dist/openapi.json";
+import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.d.ts";
 import { setupPassport } from "./config/passport.js";
@@ -98,7 +98,7 @@ app.use((req, res, next) => {
 
 app.use(
   OpenApiValidator.middleware({
-    apiSpec: openApiSpec as OpenAPIV3.DocumentV3,
+    apiSpec: apiSpec as OpenAPIV3.DocumentV3,
     validateRequests: true,
     validateResponses: true,
   })

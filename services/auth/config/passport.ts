@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { users, DatabaseError } from "dbs-auth";
-import * as emailAuth from "dbs-auth/queries/email-auth";
+import { users, DatabaseError } from "@saf/dbs-auth";
+import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
 import { User } from "../types.js";
 

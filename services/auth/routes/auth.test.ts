@@ -8,40 +8,35 @@ import * as OpenApiValidator from "express-openapi-validator";
 import { join } from "path";
 import { authRouter } from "./auth.js";
 import { setupPassport } from "../config/passport.js";
-import type * as dbTypes from "dbs-auth";
-import type * as emailAuthTypes from "dbs-auth/queries/email-auth";
+import type * as dbTypes from "@saf/dbs-auth";
+import type * as emailAuthTypes from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
 
 // Import the mocked modules
-import { users } from "dbs-auth";
-import * as emailAuth from "dbs-auth/queries/email-auth";
+import { users } from "@saf/dbs-auth";
+import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 
-// Mock the database functions
-vi.mock("dbs-auth", async (importOriginal) => {
-  const actual = (await importOriginal()) as typeof dbTypes;
-  return {
-    users: {
-      create: vi.fn(),
-      getByEmail: vi.fn(),
-      getById: vi.fn(),
-      updateLastLogin: vi.fn(),
-      EmailConflictError: actual.users.EmailConflictError,
-      UserNotFoundError: actual.users.UserNotFoundError,
-    },
-    DatabaseError: actual.DatabaseError,
-  };
-});
-
-vi.mock("dbs-auth/queries/email-auth", async (importOriginal) => {
-  const actual = (await importOriginal()) as typeof emailAuthTypes;
-  return {
+// Mock the modules
+vi.mock("@saf/dbs-auth", () => ({
+  users: {
     create: vi.fn(),
     getByEmail: vi.fn(),
-    EmailAuthNotFoundError: actual.EmailAuthNotFoundError,
-  };
-});
+    getById: vi.fn(),
+    updateLastLogin: vi.fn(),
+    EmailConflictError: class EmailConflictError extends Error {
+      constructor() {
+        super("Email already exists");
+        this.name = "EmailConflictError";
+      }
+    },
+  },
+}));
 
-// Mock argon2
+vi.mock("@saf/dbs-auth/queries/email-auth", () => ({
+  create: vi.fn(),
+  getByEmail: vi.fn(),
+}));
+
 vi.mock("argon2", () => ({
   hash: vi.fn().mockResolvedValue("hashed-password"),
   verify: vi.fn().mockResolvedValue(true),

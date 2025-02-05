@@ -1,5 +1,5 @@
 {
-  "name": "clients",
+  "name": "@saf/clients",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "specs-apis": "file:../specs/apis"
+    "@saf/specs-apis": "file:../specs/apis"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",

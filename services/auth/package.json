@@ -1,5 +1,5 @@
 {
-  "name": "services-auth",
+  "name": "@saf/services-auth",
   "type": "module",
   "scripts": {
     "start": "tsx ./bin/www",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "argon2": "^0.40.1",
-    "dbs-auth": "file:../../dbs/auth",
+    "@saf/dbs-auth": "file:../../dbs/auth",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "express-openapi-validator": "^5.4.2",
@@ -18,7 +18,7 @@
     "morgan": "~1.9.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "specs-apis": "file:../../specs/apis",
+    "@saf/specs-apis": "file:../../specs/apis",
     "tsx": "^4.19.2",
     "uuid": "^11.0.4",
     "winston": "^3.17.0"

@@ -1,5 +1,5 @@
 {
-    "name": "specs-apis",
+    "name": "@saf/specs-apis",
     "scripts": {
         "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
         "generate:json": "redocly bundle openapi.yaml --ext json --output dist/openapi.json",

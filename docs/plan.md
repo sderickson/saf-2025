@@ -70,6 +70,7 @@ What follows can largely be done in any order.
   - API Versioning
   - Documentation
   - Dependency management
+  - Monorepo package management
 - AI+
   - Integrate with no-code tools, e.g. lovable, synthflow, repl.it, bolt.new, v0.dev
   - Try running an LLM locally, e.g. llama3 or deepseek

@@ -2,10 +2,10 @@ import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { RequestSchema, ResponseSchema } from "../openapi-types.js";
 import { IVerifyOptions } from "passport-local";
-import { users } from "dbs-auth";
-import * as emailAuth from "dbs-auth/queries/email-auth";
+import { users } from "@saf/dbs-auth";
+import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
-import { DatabaseError } from "dbs-auth";
+import { DatabaseError } from "@saf/dbs-auth";
 
 export const authRouter = express.Router();
 
