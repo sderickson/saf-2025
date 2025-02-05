@@ -2,20 +2,65 @@ import express, { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { RequestSchema, ResponseSchema } from "../openapi-types.js";
 import { IVerifyOptions } from "passport-local";
-
-export interface User {
-  id: string;
-  email: string;
-}
+import { users } from "dbs-auth";
+import * as emailAuth from "dbs-auth/queries/email-auth";
+import * as argon2 from "argon2";
+import { DatabaseError } from "dbs-auth";
 
 export const authRouter = express.Router();
+
+authRouter.post("/register", async (req, res, next) => {
+  try {
+    const registerRequest: RequestSchema<"registerUser"> = req.body;
+    const { email, password, name } = registerRequest;
+
+    // Hash the password with argon2
+    const passwordHash = await argon2.hash(password);
+
+    // Create the user
+    const user = await users.create({
+      email,
+      name,
+      createdAt: new Date(),
+    });
+
+    // Create email authentication
+    await emailAuth.create({
+      userId: user.id,
+      email: user.email,
+      passwordHash: Buffer.from(passwordHash),
+    });
+
+    // Log the user in
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      const response: ResponseSchema<"registerUser", 200> = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      };
+
+      res.status(200).json(response);
+    });
+  } catch (err) {
+    const error = err as DatabaseError;
+    if (error.name === "EmailConflictError") {
+      res.status(409).json({ error: "Email already exists" });
+      return;
+    }
+    next(err);
+  }
+});
 
 authRouter.post("/login", async function (req, res, next) {
   passport.authenticate(
     "local",
     (
       err: Error | null,
-      user: User | false,
+      user: Express.User | false,
       info: IVerifyOptions | undefined
     ) => {
       if (err) {
@@ -23,10 +68,8 @@ authRouter.post("/login", async function (req, res, next) {
       }
 
       if (!user) {
-        return res.status(401).end();
+        return res.status(401).json({ error: "Invalid credentials" });
       }
-
-      const loginRequest: RequestSchema<"loginUser"> = req.body;
 
       req.logIn(user, (err) => {
         if (err) {
@@ -34,7 +77,9 @@ authRouter.post("/login", async function (req, res, next) {
         }
 
         const response: ResponseSchema<"loginUser", 200> = {
-          token: "session-authenticated", // This is just a placeholder
+          id: user.id,
+          email: user.email,
+          name: user.name,
         };
 
         res.json(response);
@@ -61,9 +106,10 @@ authRouter.post(
         return;
       }
 
+      const user = req.user as Express.User;
       // Add user info to response headers for potential use by downstream services
-      res.setHeader("X-User-ID", (req.user as User)?.id || "");
-      res.setHeader("X-User-Email", (req.user as User)?.email || "");
+      res.setHeader("X-User-ID", user.id.toString());
+      res.setHeader("X-User-Email", user.email);
 
       res.status(200).end();
     } catch (err) {

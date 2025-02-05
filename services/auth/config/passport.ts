@@ -1,16 +1,21 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { User } from "../routes/auth.js";
+import { users, DatabaseError } from "dbs-auth";
+import * as emailAuth from "dbs-auth/queries/email-auth";
+import * as argon2 from "argon2";
+import { User } from "../types.js";
 
 export const setupPassport = () => {
   passport.serializeUser((user: User, done) => {
     done(null, user.id);
   });
 
-  passport.deserializeUser(async (id: string, done) => {
+  passport.deserializeUser(async (id: number, done) => {
     try {
-      // TODO: Replace with actual user lookup from your database
-      const user = { id, email: "user@example.com" };
+      const user = await users.getById(id);
+      if (!user) {
+        return done(null, false);
+      }
       done(null, user);
     } catch (err) {
       done(err);
@@ -25,14 +30,44 @@ export const setupPassport = () => {
       },
       async (email, password, done) => {
         try {
-          // TODO: Replace with actual user authentication logic
-          if (email === "user@example.com" && password === "password") {
-            const user = { id: "1", email };
-            return done(null, user);
+          // Get the user and their email auth
+          const user = await users.getByEmail(email);
+          if (!user) {
+            return done(null, false, { message: "Invalid credentials" });
           }
-          return done(null, false, { message: "Invalid credentials" });
+
+          const auth = await emailAuth.getByEmail(email);
+          if (!auth) {
+            return done(null, false, { message: "Invalid credentials" });
+          }
+
+          // Convert the password hash to a string for argon2 verification
+          const passwordHash = Buffer.from(
+            auth.passwordHash as Uint8Array
+          ).toString("utf-8");
+
+          // Check password using argon2
+          const isValid = await argon2.verify(passwordHash, password);
+          if (!isValid) {
+            return done(null, false, { message: "Invalid credentials" });
+          }
+
+          // Update last login time
+          const updatedUser = await users.updateLastLogin(user.id);
+          if (!updatedUser) {
+            return done(null, false, { message: "User not found" });
+          }
+
+          return done(null, updatedUser);
         } catch (err) {
-          return done(err);
+          const error = err as DatabaseError;
+          if (
+            error.name === "UserNotFoundError" ||
+            error.name === "EmailAuthNotFoundError"
+          ) {
+            return done(null, false, { message: "Invalid credentials" });
+          }
+          return done(error);
         }
       }
     )

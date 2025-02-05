@@ -122,3 +122,14 @@ export const updatePasswordHash = async function (
   }
   return result[0];
 };
+
+export const deleteAll = async function (): Promise<void> {
+  try {
+    await db.delete(emailAuth).execute();
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      handleUnknownError(e);
+    }
+    throw e;
+  }
+};

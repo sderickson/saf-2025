@@ -5,135 +5,173 @@ import session from "express-session";
 import passport from "passport";
 import { authRouter } from "./auth.js";
 import { setupPassport } from "../config/passport.js";
+import { users, DatabaseError } from "dbs-auth";
+import * as emailAuth from "dbs-auth/queries/email-auth";
+import * as argon2 from "argon2";
 
 setupPassport();
 
 describe("Auth Routes", () => {
   let app: express.Express;
-  // Create a fresh app for each test
-  app = express();
-  app.use(express.json());
-  app.use(
-    session({
-      secret: "test-secret",
-      resave: false,
-      saveUninitialized: false,
-    })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use("/auth", authRouter);
 
-  beforeEach(() => {
-    vi.clearAllMocks();
+  beforeEach(async () => {
+    // Clean up the database
+    await users.deleteAll();
+    await emailAuth.deleteAll();
+
+    // Create a fresh app for each test
+    app = express();
+    app.use(express.json());
+    app.use(
+      session({
+        secret: "test-secret",
+        resave: false,
+        saveUninitialized: false,
+      })
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use("/auth", authRouter);
+  });
+
+  describe("POST /auth/register", () => {
+    it("should register a new user successfully", async () => {
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+      };
+
+      const response = await request(app).post("/auth/register").send(userData);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({
+        email: userData.email,
+        name: userData.name,
+        id: expect.any(Number),
+      });
+
+      // Verify user was created in database
+      const user = await users.getByEmail(userData.email);
+      expect(user).toBeDefined();
+      expect(user?.name).toBe(userData.name);
+
+      // Verify email auth was created
+      const auth = await emailAuth.getByEmail(userData.email);
+      expect(auth).toBeDefined();
+      // Verify password can be checked with argon2
+      const passwordHash = Buffer.from(
+        auth!.passwordHash as Uint8Array
+      ).toString("utf-8");
+      expect(await argon2.verify(passwordHash, userData.password)).toBe(true);
+    });
+
+    it("should return 409 for duplicate email", async () => {
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+      };
+
+      // Register first user
+      await request(app).post("/auth/register").send(userData);
+
+      // Try to register with same email
+      const response = await request(app).post("/auth/register").send(userData);
+
+      expect(response.status).toBe(409);
+      expect(response.body).toEqual({ error: "Email already exists" });
+    });
   });
 
   describe("POST /auth/login", () => {
     it("should login successfully", async () => {
-      const response = await request(app)
-        .post("/auth/login")
-        .send({ email: "user@example.com", password: "password" });
+      // First register a user
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+      };
+
+      await request(app).post("/auth/register").send(userData);
+
+      // Then try to login
+      const response = await request(app).post("/auth/login").send({
+        email: userData.email,
+        password: userData.password,
+      });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual({ token: "session-authenticated" });
+      expect(response.body).toMatchObject({
+        email: userData.email,
+        name: userData.name,
+        id: expect.any(Number),
+      });
       expect(response.header["set-cookie"]).toBeDefined();
     });
 
     it("should return 401 for invalid credentials", async () => {
-      const response = await request(app)
-        .post("/auth/login")
-        .send({ email: "test@example.com", password: "wrong" });
+      const response = await request(app).post("/auth/login").send({
+        email: "test@example.com",
+        password: "wrong",
+      });
 
       expect(response.status).toBe(401);
+      expect(response.body).toEqual({ error: "Invalid credentials" });
     });
-
-    // TODO: Add error handling when passport actually uses dbs
-    // it("should handle login errors", async () => {
-    //   const error = new Error("Login failed");
-    //   const response = await request(app)
-    //     .post("/auth/login")
-    //     .send({ email: "test@example.com", password: "password" });
-
-    //   expect(response.status).toBe(500);
-    // });
   });
 
-  // describe("POST /auth/logout", () => {
-  //   it("should logout successfully", async () => {
-  //     app = express();
-  //     app.use(express.json());
-  //     app.use((req, _res, next) => {
-  //       req.logout = (cb: (err?: any) => void) => cb();
-  //       next();
-  //     });
-  //     app.use("/auth", authRouter);
+  describe("POST /auth/logout", () => {
+    it("should logout successfully", async () => {
+      // First register and login
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+      };
 
-  //     const response = await request(app).post("/auth/logout");
-  //     expect(response.status).toBe(200);
-  //   });
+      const agent = request.agent(app);
 
-  //   it("should handle logout errors", async () => {
-  //     const error = new Error("Logout failed");
-  //     app = express();
-  //     app.use(express.json());
-  //     app.use((req, _res, next) => {
-  //       req.logout = (cb: (err?: any) => void) => cb(error);
-  //       next();
-  //     });
-  //     app.use("/auth", authRouter);
+      await agent.post("/auth/register").send(userData);
 
-  //     const response = await request(app).post("/auth/logout");
-  //     expect(response.status).toBe(500);
-  //   });
-  // });
+      const response = await agent.post("/auth/logout");
+      expect(response.status).toBe(200);
 
-  // describe("POST /auth/verify", () => {
-  //   it("should verify authenticated user", async () => {
-  //     const mockUser = { id: "123", email: "test@example.com" };
-  //     app = express();
-  //     app.use(express.json());
-  //     app.use((req, _res, next) => {
-  //       req.isAuthenticated = () => true;
-  //       req.user = mockUser;
-  //       next();
-  //     });
-  //     app.use("/auth", authRouter);
+      // Verify we're logged out by trying to access a protected route
+      const verifyResponse = await agent.post("/auth/verify");
+      expect(verifyResponse.status).toBe(401);
+    });
+  });
 
-  //     const response = await request(app).post("/auth/verify");
+  describe("POST /auth/verify", () => {
+    it("should verify authenticated user", async () => {
+      // First register and login
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+        name: "Test User",
+      };
 
-  //     expect(response.status).toBe(200);
-  //     expect(response.header["x-user-id"]).toBe("123");
-  //     expect(response.header["x-user-email"]).toBe("test@example.com");
-  //   });
+      const agent = request.agent(app);
 
-  //   it("should return 401 for unauthenticated user", async () => {
-  //     app = express();
-  //     app.use(express.json());
-  //     app.use((req, _res, next) => {
-  //       req.isAuthenticated = () => false;
-  //       next();
-  //     });
-  //     app.use("/auth", authRouter);
+      const registerResponse = await agent
+        .post("/auth/register")
+        .send(userData);
 
-  //     const response = await request(app).post("/auth/verify");
+      const response = await agent.post("/auth/verify");
 
-  //     expect(response.status).toBe(401);
-  //     expect(response.body).toEqual({ error: "Unauthorized" });
-  //   });
+      expect(response.status).toBe(200);
+      expect(response.header["x-user-id"]).toBe(
+        registerResponse.body.id.toString()
+      );
+      expect(response.header["x-user-email"]).toBe(userData.email);
+    });
 
-  //   it("should handle verification errors", async () => {
-  //     app = express();
-  //     app.use(express.json());
-  //     app.use((req, _res, next) => {
-  //       req.isAuthenticated = () => {
-  //         throw new Error("Verification failed");
-  //       };
-  //       next();
-  //     });
-  //     app.use("/auth", authRouter);
+    it("should return 401 for unauthenticated user", async () => {
+      const response = await request(app).post("/auth/verify");
 
-  //     const response = await request(app).post("/auth/verify");
-  //     expect(response.status).toBe(500);
-  //   });
-  // });
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({ error: "Unauthorized" });
+    });
+  });
 });

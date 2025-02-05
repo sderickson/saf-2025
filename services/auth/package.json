@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "dbs-auth": "file:../../dbs/auth",
+    "argon2": "^0.40.1",
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "express-openapi-validator": "^5.4.2",
@@ -23,6 +24,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/argon2": "^0.15.0",
     "@types/better-sqlite3": "^7.6.12",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
