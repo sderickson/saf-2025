@@ -11,7 +11,7 @@ import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import morgan from "morgan";
 import winston, { Logger } from "winston";
-import { v4 as uuidv4 } from "uuid";
+import { requestId } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import dotenv from "dotenv";
@@ -33,7 +33,6 @@ const app = express();
 declare global {
   namespace Express {
     interface Request {
-      id: string; // Request ID for tracing
       log: Logger; // Winston logger instance
     }
   }
@@ -51,16 +50,13 @@ app.get("/health", (req, res) => {
  * Request ID Middleware
  * Generates a unique ID for each request for tracing through logs
  */
-app.use((req, res, next) => {
-  req.id = uuidv4().slice(0, 8);
-  next();
-});
+app.use(requestId);
 
 /**
  * Logging Middleware Setup
  * Uses Morgan for HTTP logging and Winston for application logging
  */
-morgan.token("id", (req: Request) => req.id);
+morgan.token("id", (req: Request) => (req as any).id);
 app.use(
   morgan(
     ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
@@ -100,7 +96,7 @@ const logger = winston.createLogger({
  * Attaches a child logger with request ID to each request
  */
 app.use((req, res, next) => {
-  req.log = logger.child({ reqId: req.id });
+  req.log = logger.child({ reqId: (req as any).id });
   next();
 });
 

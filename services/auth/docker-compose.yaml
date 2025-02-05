@@ -30,6 +30,9 @@ services:
           path: ../../dbs/auth/tsconfig.json
           target: /app/dbs/auth/tsconfig.json
         - action: sync+restart
+          path: ../../lib/node-express
+          target: /app/lib/node-express
+        - action: sync+restart
           path: ../../specs/apis/dist
           target: /app/specs/apis/dist
         - action: sync+restart

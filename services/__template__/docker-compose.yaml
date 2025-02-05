@@ -1,17 +1,10 @@
 services:
-  services-api:
+  services-template:
     build:
-      context: ../..
-      dockerfile: ./services/api/Dockerfile
-    environment:
-      - PORT=3002
-      - NODE_ENV=development
-    command: npm start
+      context: .
+      dockerfile: services/__template__/Dockerfile
     develop:
       watch:
-        - action: sync+restart
-          path: ../../dbs/main
-          target: /app/dbs/main
         - action: sync+restart
           path: ../../lib/node-express
           target: /app/lib/node-express
@@ -20,4 +13,4 @@ services:
           target: /app/specs/apis/dist
         - action: sync+restart
           path: .
-          target: /app/services/api
+          target: /app/services/__template__

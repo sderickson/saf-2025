@@ -205,6 +205,7 @@ export function generateDockerCompose(
     "docker-compose.yaml.template"
   );
   let compose: DockerCompose;
+  const serviceName = workspace.name.replace("@saf/", "");
 
   try {
     if (fs.existsSync(templatePath)) {
@@ -212,7 +213,7 @@ export function generateDockerCompose(
     } else {
       compose = {
         services: {
-          [workspace.name]: {
+          [serviceName]: {
             build: {
               context: ".",
               dockerfile: path.join(workspace.path, "Dockerfile"),
@@ -223,8 +224,8 @@ export function generateDockerCompose(
     }
 
     // Ensure service and watch configuration exists
-    const service = (compose.services[workspace.name] = compose.services[
-      workspace.name
+    const service = (compose.services[serviceName] = compose.services[
+      serviceName
     ] || {
       build: {
         context: ".",

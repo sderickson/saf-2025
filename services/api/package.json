@@ -2,19 +2,21 @@
   "name": "@saf/services-api",
   "type": "module",
   "scripts": {
-    "start": "tsx ./bin/www",
+    "start": "tsx ./bin/www.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "healthcheck": "tsx ./bin/healthcheck.ts"
   },
   "dependencies": {
     "@saf/dbs-main": "*",
+    "@saf/node-express": "*",
+    "@saf/specs-apis": "*",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-openapi-validator": "^5.4.2",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
-    "@saf/specs-apis": "*",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "uuid": "^11.0.4",

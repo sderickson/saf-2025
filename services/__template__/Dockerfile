@@ -1,29 +1,22 @@
-# Use Node.js LTS as the base image
-FROM node:20-alpine
+FROM node:22-slim
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Install app dependencies
-# Copy package files first to leverage Docker cache
+# Copy package.json
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY services/__template__/package*.json ./services/__template__/
+COPY lib/node-express/package*.json ./lib/node-express/
+COPY specs/apis/package*.json ./specs/apis/
 
-# Install dependencies
-RUN npm install
+RUN npm install --omit=dev
 
-# Bundle app source
-COPY . .
+# Copy source files
+COPY lib/node-express ./lib/node-express
 
-# Build TypeScript
-RUN npm run build
+COPY specs/apis/dist ./specs/apis/dist
 
-# Expose the service port
-EXPOSE 3000
+COPY services/__template__ ./services/__template__
 
-# Configure healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD npm run healthcheck
-
-# Start the service
-CMD [ "npm", "start" ] 
+WORKDIR /app/services/__template__
+CMD ["npm", "start"]

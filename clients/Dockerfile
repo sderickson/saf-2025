@@ -5,6 +5,7 @@ WORKDIR /app
 COPY ./package*.json .
 RUN npm install
 
+COPY ./specs/apis/package.json ./specs/apis/
 COPY ./specs/apis/dist ./specs/apis/dist
 
 # Vue app setup

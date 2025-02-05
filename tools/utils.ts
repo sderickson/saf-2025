@@ -20,7 +20,7 @@ export function findRootDir() {
       const pkg = JSON.parse(
         fs.readFileSync(path.join(currentDir, "package.json"), "utf8")
       );
-      if (pkg.name === "saf-2025") {
+      if (pkg.name === "@saf/saf-2025") {
         return currentDir;
       }
     }

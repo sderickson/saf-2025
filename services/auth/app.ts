@@ -6,7 +6,7 @@ import passport from "passport";
 import * as db from "@saf/dbs-auth";
 import session from "express-session";
 import winston, { Logger } from "winston";
-import { v4 as uuidv4 } from "uuid";
+import { requestId } from "@saf/node-express";
 import * as OpenApiValidator from "express-openapi-validator";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" assert { type: "json" };
 import { authRouter } from "./routes/auth.js";
@@ -25,7 +25,6 @@ const app = express();
 declare global {
   namespace Express {
     interface Request {
-      id: string;
       db: typeof db;
       log: Logger;
     }
@@ -37,13 +36,10 @@ app.get("/health", (req, res) => {
 });
 
 // request id generator
-app.use((req, res, next) => {
-  req.id = uuidv4().slice(0, 8);
-  next();
-});
+app.use(requestId);
 
 // 3rd party middleware
-morgan.token("id", (req: Request) => req.id);
+morgan.token("id", (req: Request) => (req as any).id);
 app.use(
   morgan(
     ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
@@ -91,33 +87,47 @@ const logger = winston.createLogger({
     })
   ),
 });
+
+// Attach logger to request
 app.use((req, res, next) => {
-  req.log = logger.child({ reqId: req.id });
+  req.log = logger.child({ reqId: (req as any).id });
   next();
 });
 
+// OpenAPI validation
 app.use(
   OpenApiValidator.middleware({
-    apiSpec: apiSpec as OpenAPIV3.DocumentV3,
+    apiSpec: path.join(__dirname, "../../specs/apis/dist/openapi.json"),
     validateRequests: true,
     validateResponses: true,
   })
 );
 
-app.use("/api/auth", authRouter);
+// Routes
+app.use("/auth", authRouter);
 
+// catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
+// error handler
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+  // Log error
   if (!req.log) {
     console.error(err.stack);
   } else {
     req.log.error(err.stack);
   }
+
+  // Send error response
   res.status(err.status || 500);
-  res.send("Error");
+  res.json({
+    error: {
+      message: err.message,
+      status: err.status || 500,
+    },
+  });
 });
 
 export default app;

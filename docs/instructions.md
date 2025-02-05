@@ -2,4 +2,70 @@
 
 Documentation for each workflow at the monorepo level.
 
-## Create a new service
+## Create a new library package
+
+When creating a new shared library package in the monorepo (e.g. in `lib/`, `dbs/`, etc.):
+
+1. Create the package directory structure:
+
+   ```bash
+   mkdir -p path/to/your-package/src
+   ```
+
+2. Create `package.json` with:
+
+   - Name as `@saf/scope-package-name` (e.g. `@saf/dbs-auth`, `@saf/node-express`)
+   - `type: "module"` for ES modules
+   - Standard test commands:
+     ```json
+     "scripts": {
+       "test": "vitest run",
+       "test:watch": "vitest",
+       "test:coverage": "vitest run --coverage"
+     }
+     ```
+   - Required dependencies and devDependencies
+   - Use `peerDependencies` for shared framework dependencies
+
+3. Create `tsconfig.json` that extends the root config:
+
+   ```json
+   {
+     "extends": "../../tsconfig.json",
+     "include": ["src/**/*"],
+     "exclude": ["node_modules", "dist", "**/*.test.ts"]
+   }
+   ```
+
+4. Create `vitest.config.mts`:
+
+   ```typescript
+   import { defineConfig } from "vitest/config";
+
+   export default defineConfig({
+     test: {
+       globals: true,
+       environment: "node",
+     },
+   });
+   ```
+
+5. Create a README.md with:
+
+   - Package description
+   - Note about workspace installation
+   - Usage examples
+   - Development instructions
+
+6. Organize source code:
+
+   - Place implementation in `src/`
+   - Use `src/index.ts` as the package entry point
+   - Place tests alongside source files with `.test.ts` suffix
+   - Group related functionality in subdirectories
+
+7. Add test dependencies:
+   - `vitest` for testing
+   - `@vitest/coverage-v8` for coverage reporting
+
+Note: The package will be automatically included in the workspace through patterns like `"lib/*"`, `"dbs/*"` in the root package.json. No build step is needed as we use ts-node throughout the monorepo.
