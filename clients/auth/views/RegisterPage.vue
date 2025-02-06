@@ -14,7 +14,11 @@ const confirmPasswordRules = [
 ];
 
 const register = () => {
-  console.log("register", email.value, password.value, { valid: valid.value });
+  // const { mutate: register, isPending } = useRegister({
+  //   email: email.value,
+  //   password: password.value,
+  //   name: name.value,
+  // });
 };
 </script>
 

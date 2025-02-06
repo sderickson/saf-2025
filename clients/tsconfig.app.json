@@ -21,6 +21,6 @@
     "landing/**/*.ts",
     "landing/**/*.vue",
     "*.ts",
-    "*.vue",
+    "*.vue", "api/client.ts",
   ]
 }

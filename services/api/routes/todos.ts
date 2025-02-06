@@ -1,7 +1,6 @@
 import express from "express";
 import { todos, TodoNotFoundError } from "@saf/dbs-main";
-import type { MainDatabaseError } from "@saf/dbs-main";
-
+import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
 const router = express.Router();
 
 // Get all todos
@@ -17,8 +16,9 @@ router.get("/", async (req, res, next) => {
 // Create a new todo
 router.post("/", async (req, res, next) => {
   try {
-    const { title } = req.body;
-    const todo = await todos.createTodo(title);
+    const { title } = req.body as RequestSchema<"createTodo">;
+    const todo: ResponseSchema<"createTodo", 201> =
+      await todos.createTodo(title);
     res.status(201).json(todo);
   } catch (error) {
     next(error);
@@ -28,9 +28,13 @@ router.post("/", async (req, res, next) => {
 // Update a todo
 router.put("/:id", async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    const { title, completed } = req.body;
-    const todo = await todos.updateTodo(id, title, completed);
+    const id = parseInt((req.params as RequestSchema<"updateTodo">).id, 10);
+    const { title, completed } = req.body as RequestSchema<"updateTodo">;
+    const todo: ResponseSchema<"updateTodo", 200> = await todos.updateTodo(
+      id,
+      title,
+      completed
+    );
     res.json(todo);
   } catch (error) {
     if (error instanceof TodoNotFoundError) {
@@ -44,8 +48,8 @@ router.put("/:id", async (req, res, next) => {
 // Delete a todo
 router.delete("/:id", async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    await todos.deleteTodo(id);
+    const id = parseInt((req.params as RequestSchema<"deleteTodo">).id, 10);
+    const todo: ResponseSchema<"deleteTodo", 204> = await todos.deleteTodo(id);
     res.status(204).send();
   } catch (error) {
     if (error instanceof TodoNotFoundError) {

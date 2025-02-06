@@ -1,4 +1,4 @@
-import type { operations } from "@saf/specs-apis/dist/openapi.js";
+import type { operations } from "./dist/openapi.d.ts";
 
 export type ResponseSchema<
   O extends keyof operations,
