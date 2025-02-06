@@ -7,6 +7,8 @@ export {
 } from "./middleware/openapi.ts";
 export { notFoundHandler, errorHandler } from "./middleware/errors.ts";
 export { healthRouter } from "./middleware/health.ts";
+export { healthcheck } from "./bin/healthcheck.ts";
+export { startServer } from "./bin/www.ts";
 import dotenv from "dotenv";
 
 // Recommended middleware bundles
