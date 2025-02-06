@@ -3,6 +3,7 @@
     "main": "./index.ts",
     "type": "module",
     "scripts": {
+        "generate": "drizzle-kit generate",
         "test": "vitest run",
         "test:watch": "vitest",
         "test:coverage": "vitest run --coverage"

@@ -1,7 +1,8 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
-// Example table - replace with your own schema
-export const examples = sqliteTable("examples", {
+// All tables should be defined here. Alternatively if this document becomes too long,
+// tables can be defined in separate files in a `schemas` directory.
+export const exampleTable = sqliteTable("examples", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   description: text("description"),

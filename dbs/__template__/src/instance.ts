@@ -10,9 +10,15 @@ const sqlite =
     ? new Database(":memory:")
     : new Database(getDbPath());
 
+// the db is a singleton for the process.
+// db should only be used for tests of this library, and not accessible outside
 export const db = drizzle(sqlite, { schema });
 
+// Any pragmas should be set here
 sqlite.exec("PRAGMA foreign_keys = ON;");
 
 // Run migrations for both test and production environments
+// This template adheres to "Option 4" from https://orm.drizzle.team/docs/migrations
+// where the migrations are generated from the schema, checked into the repo, and
+// applied to the database during runtime.
 migrate(db, { migrationsFolder: getMigrationsPath() });

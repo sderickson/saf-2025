@@ -1,8 +1,11 @@
 import { eq } from "drizzle-orm";
 import { db } from "../instance.ts";
-import { examples } from "../schema.ts";
+import { exampleTable } from "../schema.ts";
 import { DatabaseError } from "../errors.ts";
 
+/**
+ * Errors thrown by queries should be defined in the query file itself, and exported by the library.
+ */
 export class ExampleNotFoundError extends DatabaseError {
   constructor(id: number) {
     super(`Example with id ${id} not found`);
@@ -10,14 +13,10 @@ export class ExampleNotFoundError extends DatabaseError {
   }
 }
 
-export interface CreateExample {
-  name: string;
-  description?: string;
-}
-
-export async function create(data: CreateExample) {
+// Types should, where possible, be based on drizzle's inferred types.
+export async function create(data: typeof exampleTable.$inferInsert) {
   const result = await db
-    .insert(examples)
+    .insert(exampleTable)
     .values({
       ...data,
       createdAt: new Date(),
@@ -28,25 +27,32 @@ export async function create(data: CreateExample) {
   return result;
 }
 
+// "Get" queries should return undefined if the item is not found, not throw an error.
+// This allows for better error handling in the calling code.
 export async function get(id: number) {
   const result = await db
     .select()
-    .from(examples)
-    .where(eq(examples.id, id))
+    .from(exampleTable)
+    .where(eq(exampleTable.id, id))
     .get();
 
   return result;
 }
 
 export async function list() {
-  return await db.select().from(examples).all();
+  return await db.select().from(exampleTable).all();
 }
 
-export async function update(id: number, data: Partial<CreateExample>) {
+// Unsafe queries *should* throw an error if the item is not found, since the operation
+// could not be completed as expected.
+export async function update(
+  id: number,
+  data: Partial<typeof exampleTable.$inferInsert>
+) {
   const result = await db
-    .update(examples)
+    .update(exampleTable)
     .set(data)
-    .where(eq(examples.id, id))
+    .where(eq(exampleTable.id, id))
     .returning()
     .get();
 
@@ -59,8 +65,8 @@ export async function update(id: number, data: Partial<CreateExample>) {
 
 export async function remove(id: number) {
   const result = await db
-    .delete(examples)
-    .where(eq(examples.id, id))
+    .delete(exampleTable)
+    .where(eq(exampleTable.id, id))
     .returning()
     .get();
 
