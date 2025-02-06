@@ -26,5 +26,6 @@ COPY specs/apis/dist ./specs/apis/dist
 
 COPY services/auth ./services/auth
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]
 WORKDIR /app/services/auth
 CMD ["npm", "start"]

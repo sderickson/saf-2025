@@ -116,14 +116,7 @@ export function generateDockerfile(
     );
   });
 
-  lines.push(
-    "",
-    // "# npm install for best caching, remove unnecessary testing and developer deps",
-    // "COPY tools ./tools",
-    // "RUN cd tools && npm install --omit=dev",
-    // `RUN cd tools && npm run clean-docker-deps -- ${workspace.path}/package.json`,
-    "RUN npm install --omit=dev"
-  );
+  lines.push("", "RUN npm install --omit=dev");
 
   lines.push("", "# Copy source files");
 
@@ -153,7 +146,12 @@ export function generateDockerfile(
     lines.push(`COPY ${workspace.path} ./${workspace.path}`);
   }
 
-  lines.push("", `WORKDIR /app/${workspace.path}`, 'CMD ["npm", "start"]');
+  lines.push(
+    "",
+    'HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]',
+    `WORKDIR /app/${workspace.path}`,
+    'CMD ["npm", "start"]'
+  );
 
   return lines.join("\n");
 }
