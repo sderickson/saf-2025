@@ -1,10 +1,11 @@
 import { eq } from "drizzle-orm";
 import { db } from "../instance.ts";
 import { exampleTable } from "../schema.ts";
+import { queryWrapper } from "@saf/drizzle-sqlite3";
 import { TemplateDatabaseError } from "../errors.ts";
-
 /**
  * Errors thrown by queries should be defined in the query file itself, and exported by the library.
+ * These must extend HandledDatabaseError, so that queryWrapper will rethrow them.
  */
 export class ExampleNotFoundError extends TemplateDatabaseError {
   constructor(id: number) {
@@ -14,22 +15,25 @@ export class ExampleNotFoundError extends TemplateDatabaseError {
 }
 
 // Types should, where possible, be based on drizzle's inferred types.
-export async function create(data: typeof exampleTable.$inferInsert) {
-  const result = await db
-    .insert(exampleTable)
-    .values({
-      ...data,
-      createdAt: new Date(),
-    })
-    .returning()
-    .get();
+// All queries should be wrapped in queryWrapper, for consistent error handling.
+export const create = queryWrapper(
+  async (data: typeof exampleTable.$inferInsert) => {
+    const result = await db
+      .insert(exampleTable)
+      .values({
+        ...data,
+        createdAt: new Date(),
+      })
+      .returning()
+      .get();
 
-  return result;
-}
+    return result;
+  }
+);
 
 // "Get" queries should return undefined if the item is not found, not throw an error.
 // This allows for better error handling in the calling code.
-export async function get(id: number) {
+export const get = queryWrapper(async (id: number) => {
   const result = await db
     .select()
     .from(exampleTable)
@@ -41,33 +45,32 @@ export async function get(id: number) {
   }
 
   return result;
-}
+});
 
-export async function list() {
+export const list = queryWrapper(async () => {
   return await db.select().from(exampleTable).all();
-}
+});
 
 // Unsafe queries *should* throw an error if the item is not found, since the operation
 // could not be completed as expected.
-export async function update(
-  id: number,
-  data: Partial<typeof exampleTable.$inferInsert>
-) {
-  const result = await db
-    .update(exampleTable)
-    .set(data)
-    .where(eq(exampleTable.id, id))
-    .returning()
-    .get();
+export const update = queryWrapper(
+  async (id: number, data: Partial<typeof exampleTable.$inferInsert>) => {
+    const result = await db
+      .update(exampleTable)
+      .set(data)
+      .where(eq(exampleTable.id, id))
+      .returning()
+      .get();
 
-  if (!result) {
-    throw new ExampleNotFoundError(id);
+    if (!result) {
+      throw new ExampleNotFoundError(id);
+    }
+
+    return result;
   }
+);
 
-  return result;
-}
-
-export async function remove(id: number) {
+export const remove = queryWrapper(async (id: number) => {
   const result = await db
     .delete(exampleTable)
     .where(eq(exampleTable.id, id))
@@ -79,4 +82,4 @@ export async function remove(id: number) {
   }
 
   return result;
-}
+});

@@ -75,12 +75,22 @@ Note: The package will be automatically included in the workspace through patter
 
 When writing code in this monorepo:
 
-1. Always use `.ts` file extensions for TypeScript files, never `.js`. This includes:
+1. File naming and imports:
 
-   - Source files
-   - Configuration files (use `.mts` for module config files)
-   - Test files
-   - Scripts and utilities
+   - Always use `.ts` extension for TypeScript files
+   - For imports in this monorepo:
+
+     ```typescript
+     // Use .ts extension in import statements since we use Node's experimental
+     // type stripping without transpilation
+     import { something } from "./other-file.ts";
+
+     // Note: This is different from traditional TypeScript setups where .js would be used
+     // We can use .ts directly because Node executes the TypeScript files directly
+     ```
+
+   - Use `.mts` for module configuration files (e.g. `vitest.config.mts`)
+   - Use `.ts` for all other TypeScript files including tests
 
 2. Use proper type imports:
 

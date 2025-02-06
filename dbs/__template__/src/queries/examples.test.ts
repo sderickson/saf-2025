@@ -57,9 +57,10 @@ describe("examples", () => {
       expect(result).toEqual(created);
     });
 
-    it("should return undefined for non-existent example", async () => {
-      const result = await exampleQueries.get(999);
-      expect(result).toBeUndefined();
+    it("should throw ExampleNotFoundError for non-existent example", async () => {
+      await expect(exampleQueries.get(999)).rejects.toThrow(
+        exampleQueries.ExampleNotFoundError
+      );
     });
   });
 
@@ -118,8 +119,9 @@ describe("examples", () => {
       const removed = await exampleQueries.remove(created.id);
 
       expect(removed).toEqual(created);
-      const result = await exampleQueries.get(created.id);
-      expect(result).toBeUndefined();
+      await expect(exampleQueries.get(created.id)).rejects.toThrow(
+        exampleQueries.ExampleNotFoundError
+      );
     });
 
     it("should throw ExampleNotFoundError for non-existent example", async () => {
