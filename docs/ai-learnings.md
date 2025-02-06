@@ -34,6 +34,8 @@ I'm kind of curious what a better approach would be here. If the AI were a junio
 
 Well, maybe there is. I'm experimenting with writing documentation, and using that to feed into AI. So for example I might have a "using-vuetify.md" file which includes things like "do this not that" and everytime I want the agent to build something with vuetify I'll say "make sure to build based on using-vuetify.md guidelines". So I can gradually train the agent in this way.
 
+> Aside: interesting... so I used "instructions.md" as context for Claude to make a new library and it still gave files the ".js" extension for imports. I pointed out the instructions said _right there_ to use ".ts". Then Claude was like "well actually..." because of how Node works. Then I was like "well actually..." and pointed out we're using experimental type stripping with Node, so Node works differently and expects ".ts" extensions. It finally agreed with me and put that context into the instructions. So, just as in real-life coaching, maybe it sticks better if you help them understand the why? Will see next time Claude generates something.
+
 This approach still requires you to build your own deep understanding of tools like vuetify, and it's interesting to think about how to sidestep that. Can I write a website with vuetify without even having skimmed the docs? It's hard to imagine, but if one can reduce the depth of knowledge of all the tools involved in building a website that is necessary to be effective, by using an AI for deep knowledge, then you can go a fair bit faster I think. Then the skill/knowledge you need is reduced to:
 
 - Can you tell what the code is doing? Either through the names/docs of the library itself, or with added comments.
@@ -47,7 +49,7 @@ For deciding what goes into my app base, mostly the agent has been useful to ask
 
 It's also useful for identifying things you hadn't thought about. I fed Claude my decisions.md dock and it suggested half a dozen other dimensions that I should talk about as well. This is probably just generally a useful thing for such tools: feed it a first draft and ask if there are any key points or questions to address. Brainstorming just generally seems like a good use of AI.
 
-It's also interesting, sometimes the auto complete or the code it generates is a "tell" for what would be a better way of doing things. For example, I'd ask the AI to update the package.json file, and several times it would do what I asked _and also_ add a scope to my monorepo packages. I hadn't bothered to add those but it's the industry standard. It's sort of a passive-aggressive way of showing when what you're doing is non-standard or weird, but it's helpful to keep an eye out for. And anyway I got tired of it trying to put those in and relented, and just added them so I'd stop fighting with it.
+It's also interesting, sometimes the auto complete or the code it generates is a "tell" for what would be a better way of doing things. For example, I'd ask the AI to update the package.json file, and several times it would do what I asked _and also_ add a scope to my monorepo packages. I hadn't bothered to add those but it's the industry standard. It's sort of a passive-aggressive way of showing when what you're doing is non-standard or weird, but it's helpful to keep an eye out for. And anyway I got tired of it trying to put those in and relented, and just added them so I'd stop fighting with it. This also happened with whether to throw errors for db library getById functions.
 
 ### ...For Consistency, Refactoring, and Documentation
 
@@ -72,7 +74,7 @@ I think AI is actually going to improve the quality of code and software general
 - If code is well structured, the agent can mimick it. Good code begets good code, bad begets bad.
 - If behavior is well tested, you can have some assurance the agent isn't breaking something unnecessarily, and the agent can more readily fix issues by running tests and fixing breakages.
 - If processes are well documented, the agent can follow those instructions with less hand-holding by developers.
-- If modules are well organized, the agent can make changes more easily because with proper separation of concerns, it requires less context to do the right thing.
+- If modules are well organized and scoped, the agent can make changes more easily because with proper separation of concerns, it requires less context to do the right thing.
 - If services are open, the agent can read the documentation and build a custom connector for that service and guide the user on how to set it up, encouraging greater use and investment.
 - If approaches become industry standards and are widely available and used, then AI models can be trained and will generally output better results.
 
