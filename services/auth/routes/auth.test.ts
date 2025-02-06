@@ -88,13 +88,11 @@ describe("Auth Routes", () => {
       const userData = {
         email: "test@example.com",
         password: "password123",
-        name: "Test User",
       };
 
       const createdUser = {
         id: 1,
         email: userData.email,
-        name: userData.name,
         createdAt: new Date(),
         lastLoginAt: null,
       };
@@ -111,13 +109,11 @@ describe("Auth Routes", () => {
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
         email: userData.email,
-        name: userData.name,
         id: createdUser.id,
       });
 
       expect(users.create).toHaveBeenCalledWith({
         email: userData.email,
-        name: userData.name,
         createdAt: expect.any(Date),
       });
 
@@ -134,7 +130,6 @@ describe("Auth Routes", () => {
       const userData = {
         email: "test@example.com",
         password: "password123",
-        name: "Test User",
       };
 
       (users.create as Mock).mockRejectedValue(new users.EmailConflictError());
@@ -156,7 +151,6 @@ describe("Auth Routes", () => {
       const user = {
         id: 1,
         email: userData.email,
-        name: "Test User",
         createdAt: new Date(),
         lastLoginAt: null,
       };
@@ -181,7 +175,6 @@ describe("Auth Routes", () => {
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
         email: userData.email,
-        name: user.name,
         id: user.id,
       });
       expect(response.header["set-cookie"]).toBeDefined();
@@ -215,7 +208,6 @@ describe("Auth Routes", () => {
       const user = {
         id: 1,
         email: userData.email,
-        name: "Test User",
         createdAt: new Date(),
         lastLoginAt: null,
       };
@@ -248,7 +240,6 @@ describe("Auth Routes", () => {
       const user = {
         id: 1,
         email: userData.email,
-        name: "Test User",
         createdAt: new Date(),
         lastLoginAt: null,
       };
@@ -289,7 +280,6 @@ describe("Auth Routes", () => {
       const user = {
         id: 1,
         email: userData.email,
-        name: "Test User",
         createdAt: new Date(),
         lastLoginAt: null,
       };

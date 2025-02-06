@@ -13,7 +13,7 @@ export const authRouter = express.Router();
 authRouter.post("/register", async (req, res, next) => {
   try {
     const registerRequest: RequestSchema<"registerUser"> = req.body;
-    const { email, password, name } = registerRequest;
+    const { email, password } = registerRequest;
 
     // Hash the password with argon2
     const passwordHash = await argon2.hash(password);
@@ -21,7 +21,6 @@ authRouter.post("/register", async (req, res, next) => {
     // Create the user
     const user = await users.create({
       email,
-      name,
       createdAt: new Date(),
     });
 
@@ -41,7 +40,6 @@ authRouter.post("/register", async (req, res, next) => {
       const response: ResponseSchema<"registerUser", 200> = {
         id: user.id,
         email: user.email,
-        name: user.name,
       };
 
       res.status(200).json(response);
@@ -80,7 +78,6 @@ authRouter.post("/login", async function (req, res, next) {
         const response: ResponseSchema<"loginUser", 200> = {
           id: user.id,
           email: user.email,
-          name: user.name,
         };
 
         res.json(response);

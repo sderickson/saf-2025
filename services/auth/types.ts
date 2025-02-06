@@ -4,7 +4,6 @@ declare global {
     interface User {
       id: number;
       email: string;
-      name: string;
       createdAt: Date;
       lastLoginAt: Date | null;
     }

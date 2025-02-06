@@ -112,7 +112,6 @@ components:
       required:
         - email
         - password
-        - name
       properties:
         email:
           type: string
@@ -120,8 +119,6 @@ components:
         password:
           type: string
           minLength: 8
-        name:
-          type: string
 
     LoginRequest:
       type: object
@@ -140,12 +137,9 @@ components:
       required:
         - id
         - email
-        - name
       properties:
         id:
           type: number
         email:
           type: string
           format: email
-        name:
-          type: string

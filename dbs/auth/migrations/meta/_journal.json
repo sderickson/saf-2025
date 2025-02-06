@@ -15,6 +15,13 @@
       "when": 1738706444835,
       "tag": "0001_lush_black_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1738873621731,
+      "tag": "0002_skinny_stephen_strange",
+      "breakpoints": true
     }
   ]
 }

@@ -20,7 +20,6 @@ describe("users queries", () => {
   describe("create", () => {
     it("should create a new user", async () => {
       const newUser = {
-        name: "Test User",
         email: "test@example.com",
         createdAt: new Date(),
       };
@@ -37,7 +36,6 @@ describe("users queries", () => {
 
     it("should throw EmailConflictError for duplicate email", async () => {
       const user = {
-        name: "Test User",
         email: "test@example.com",
         createdAt: new Date(),
       };
