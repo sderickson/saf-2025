@@ -4,7 +4,7 @@ import express from "express";
 import * as OpenApiValidator from "express-openapi-validator";
 import { join } from "path";
 import { todos, TodoNotFoundError } from "@saf/dbs-main";
-import todosRouter from "./todos.js";
+import todosRouter from "./todos.ts";
 
 // Create a basic express app for testing
 const app = express();

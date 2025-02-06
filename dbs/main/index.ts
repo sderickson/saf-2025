@@ -1,3 +1,3 @@
-export * from "./src/errors.js";
-export * as todos from "./src/queries/todos.js";
-export { TodoNotFoundError } from "./src/queries/todos.js";
+export * from "./src/errors.ts";
+export * as todos from "./src/queries/todos.ts";
+export { TodoNotFoundError } from "./src/queries/todos.ts";

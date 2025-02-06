@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { users, DatabaseError } from "@saf/dbs-auth";
 import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
-import { User } from "../types.js";
+import type { User } from "../types.ts";
 
 export const setupPassport = () => {
   passport.serializeUser((user: User, done) => {

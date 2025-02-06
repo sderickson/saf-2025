@@ -2,7 +2,7 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import type { IVerifyOptions } from "passport-local";
-import { RequestSchema, ResponseSchema } from "../openapi-types.js";
+import type { RequestSchema, ResponseSchema } from "../openapi-types.ts";
 import { users } from "@saf/dbs-auth";
 import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";

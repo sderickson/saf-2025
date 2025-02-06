@@ -6,10 +6,8 @@ import session from "express-session";
 import passport from "passport";
 import * as OpenApiValidator from "express-openapi-validator";
 import { join } from "path";
-import { authRouter } from "./auth.js";
-import { setupPassport } from "../config/passport.js";
-import type * as dbTypes from "@saf/dbs-auth";
-import type * as emailAuthTypes from "@saf/dbs-auth/queries/email-auth";
+import { authRouter } from "./auth.ts";
+import { setupPassport } from "../config/passport.ts";
 import * as argon2 from "argon2";
 
 // Import the mocked modules

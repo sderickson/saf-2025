@@ -6,10 +6,10 @@ import {
   updateForgotPasswordToken,
   updatePasswordHash,
   EmailAuthNotFoundError,
-} from "./email-auth.js";
-import { create as createUser } from "./users.js";
-import { db } from "../instance.js";
-import { emailAuth, users } from "../schema.js";
+} from "./email-auth.ts";
+import { create as createUser } from "./users.ts";
+import { db } from "../instance.ts";
+import { emailAuth, users } from "../schema.ts";
 
 describe("email-auth queries", () => {
   // Clean up the database before each test

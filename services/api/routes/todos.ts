@@ -1,10 +1,6 @@
 import express from "express";
-import {
-  todos,
-  DatabaseError,
-  UnhandledDatabaseError,
-  TodoNotFoundError,
-} from "@saf/dbs-main";
+import { todos, TodoNotFoundError } from "@saf/dbs-main";
+import type { DatabaseError, UnhandledDatabaseError } from "@saf/dbs-main";
 
 const router = express.Router();
 

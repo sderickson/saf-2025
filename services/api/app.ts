@@ -10,7 +10,7 @@ import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
 } from "@saf/node-express";
-import todosRouter from "./routes/todos.js";
+import todosRouter from "./routes/todos.ts";
 
 const app = express();
 

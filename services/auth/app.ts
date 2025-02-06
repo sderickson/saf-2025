@@ -13,8 +13,8 @@ import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
 } from "@saf/node-express";
-import { authRouter } from "./routes/auth.js";
-import { setupPassport } from "./config/passport.js";
+import { authRouter } from "./routes/auth.ts";
+import { setupPassport } from "./config/passport.ts";
 
 const app = express();
 

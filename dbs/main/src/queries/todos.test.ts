@@ -5,9 +5,9 @@ import {
   updateTodo,
   deleteTodo,
   TodoNotFoundError,
-} from "./todos.js";
-import { db } from "../instance.js";
-import { todos } from "../schema.js";
+} from "./todos.ts";
+import { db } from "../instance.ts";
+import { todos } from "../schema.ts";
 
 // The table's type is inferred automatically
 type Todo = typeof todos.$inferSelect;

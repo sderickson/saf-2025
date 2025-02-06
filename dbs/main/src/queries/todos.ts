@@ -1,6 +1,6 @@
-import { db } from "../instance.js";
-import { todos } from "../schema.js";
-import { DatabaseError, UnhandledDatabaseError } from "../errors.js";
+import { db } from "../instance.ts";
+import { todos } from "../schema.ts";
+import { DatabaseError, UnhandledDatabaseError } from "../errors.ts";
 import { eq } from "drizzle-orm";
 
 export class TodoNotFoundError extends DatabaseError {

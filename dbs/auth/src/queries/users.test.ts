@@ -7,9 +7,9 @@ import {
   updateLastLogin,
   EmailConflictError,
   UserNotFoundError,
-} from "./users.js";
-import { db } from "../instance.js";
-import { users } from "../schema.js";
+} from "./users.ts";
+import { db } from "../instance.ts";
+import { users } from "../schema.ts";
 
 describe("users queries", () => {
   // Clean up the database before each test
