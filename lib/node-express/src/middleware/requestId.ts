@@ -1,5 +1,4 @@
-import { Handler } from "express";
-import { v4 as uuidv4 } from "uuid";
+import type { Handler } from "express";
 
 // Extend Express Request type to include id property
 declare global {

@@ -2,11 +2,11 @@
   "name": "@saf/services-template",
   "type": "module",
   "scripts": {
-    "start": "tsx ./bin/www.ts",
+    "start": "node  --experimental-strip-types ./bin/www",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "healthcheck": "tsx ./bin/healthcheck.ts"
+    "healthcheck": "node --experimental-strip-types ./bin/healthcheck"
   },
   "dependencies": {
     "@saf/node-express": "*",

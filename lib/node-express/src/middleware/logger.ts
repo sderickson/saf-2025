@@ -1,6 +1,6 @@
-import { Handler } from "express";
+import type { Handler } from "express";
 import winston, { Logger } from "winston";
-import "../types.js";
+import "../types.ts";
 
 /**
  * Creates a Winston logger instance with standard configuration.

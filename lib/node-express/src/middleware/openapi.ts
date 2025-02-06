@@ -1,7 +1,7 @@
 import * as OpenApiValidator from "express-openapi-validator";
-import { OpenApiRequestHandler } from "express-openapi-validator/dist/framework/types.js";
-import apiSpec from "@saf/specs-apis/dist/openapi.json";
-import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.js";
+import type { OpenApiRequestHandler } from "express-openapi-validator/dist/framework/types.ts";
+import apiSpec from "@saf/specs-apis/dist/openapi.json" with { type: "json" };
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.ts";
 
 /**
  * Default OpenAPI validation middleware using the shared specification from @saf/specs-apis.
@@ -9,7 +9,7 @@ import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.j
  */
 export const openApiValidator: OpenApiRequestHandler[] =
   OpenApiValidator.middleware({
-    apiSpec: apiSpec as OpenAPIV3.DocumentV3,
+    apiSpec: apiSpec as any,
     validateRequests: true,
     validateResponses: true,
   });

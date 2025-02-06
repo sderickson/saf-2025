@@ -1,10 +1,11 @@
-import { Handler, json, urlencoded } from "express";
-import { requestId } from "./requestId.js";
-import { httpLogger } from "./httpLogger.js";
-import { loggerInjector } from "./logger.js";
-import { openApiValidator } from "./openapi.js";
-import { notFoundHandler, errorHandler } from "./errors.js";
-import { healthRouter } from "./health.js";
+import type { Handler } from "express";
+import { json, urlencoded } from "express";
+import { requestId } from "./requestId.ts";
+import { httpLogger } from "./httpLogger.ts";
+import { loggerInjector } from "./logger.ts";
+import { openApiValidator } from "./openapi.ts";
+import { notFoundHandler, errorHandler } from "./errors.ts";
+import { healthRouter } from "./health.ts";
 
 /**
  * Recommended pre-route middleware stack.

@@ -1,18 +1,18 @@
-export { requestId } from "./middleware/requestId.js";
-export { httpLogger } from "./middleware/httpLogger.js";
-export { createLogger, loggerInjector, logger } from "./middleware/logger.js";
+export { requestId } from "./middleware/requestId.ts";
+export { httpLogger } from "./middleware/httpLogger.ts";
+export { createLogger, loggerInjector, logger } from "./middleware/logger.ts";
 export {
   openApiValidator,
   createOpenApiValidator,
-} from "./middleware/openapi.js";
-export { notFoundHandler, errorHandler } from "./middleware/errors.js";
-export { healthRouter } from "./middleware/health.js";
+} from "./middleware/openapi.ts";
+export { notFoundHandler, errorHandler } from "./middleware/errors.ts";
+export { healthRouter } from "./middleware/health.ts";
 import dotenv from "dotenv";
 
 // Recommended middleware bundles
 export {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
-} from "./middleware/composition.js";
+} from "./middleware/composition.ts";
 
 dotenv.config();

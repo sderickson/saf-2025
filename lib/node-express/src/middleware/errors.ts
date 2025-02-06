@@ -1,5 +1,5 @@
 import createError, { HttpError } from "http-errors";
-import { Request, Response, NextFunction, Handler } from "express";
+import type { Request, Response, NextFunction, Handler } from "express";
 
 /**
  * 404 Handler
