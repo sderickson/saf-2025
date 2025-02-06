@@ -24,7 +24,9 @@ export function queryWrapper<T, A extends any[]>(
       if (error instanceof HandledDatabaseError) {
         throw error;
       }
-      console.error(error);
+      if (process.env.NODE_ENV !== "test") {
+        console.error(error);
+      }
       throw new UnhandledDatabaseError();
     }
   };
