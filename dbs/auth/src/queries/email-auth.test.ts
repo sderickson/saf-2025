@@ -60,8 +60,10 @@ describe("email-auth queries", () => {
       expect(auth).toEqual(created);
     });
 
-    it("should return undefined when email not found", async () => {
-      expect(await getByEmail("nonexistent@example.com")).toBeUndefined();
+    it("should throw EmailAuthNotFoundError when email not found", async () => {
+      await expect(getByEmail("nonexistent@example.com")).rejects.toThrow(
+        EmailAuthNotFoundError
+      );
     });
   });
 

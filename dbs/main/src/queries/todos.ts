@@ -1,37 +1,26 @@
 import { db } from "../instance.ts";
 import { todos } from "../schema.ts";
-import { DatabaseError, UnhandledDatabaseError } from "../errors.ts";
+import { MainDatabaseError } from "../errors.ts";
+import { queryWrapper } from "@saf/drizzle-sqlite3";
 import { eq } from "drizzle-orm";
 
-export class TodoNotFoundError extends DatabaseError {
+export class TodoNotFoundError extends MainDatabaseError {
   constructor(id: number) {
     super(`Todo with id ${id} not found`);
   }
 }
 
-export async function getAllTodos() {
-  try {
-    return await db.select().from(todos).orderBy(todos.created_at);
-  } catch (error) {
-    throw new UnhandledDatabaseError(error);
-  }
-}
+export const getAllTodos = queryWrapper(async () => {
+  return await db.select().from(todos).orderBy(todos.created_at);
+});
 
-export async function createTodo(title: string) {
-  try {
-    const result = await db.insert(todos).values({ title }).returning();
-    return result[0];
-  } catch (error) {
-    throw new UnhandledDatabaseError(error);
-  }
-}
+export const createTodo = queryWrapper(async (title: string) => {
+  const result = await db.insert(todos).values({ title }).returning();
+  return result[0];
+});
 
-export async function updateTodo(
-  id: number,
-  title: string,
-  completed: boolean
-) {
-  try {
+export const updateTodo = queryWrapper(
+  async (id: number, title: string, completed: boolean) => {
     const result = await db
       .update(todos)
       .set({ title, completed })
@@ -43,27 +32,15 @@ export async function updateTodo(
     }
 
     return result[0];
-  } catch (error) {
-    if (error instanceof DatabaseError) {
-      throw error;
-    }
-    throw new UnhandledDatabaseError(error);
   }
-}
+);
 
-export async function deleteTodo(id: number) {
-  try {
-    const result = await db.delete(todos).where(eq(todos.id, id)).returning();
+export const deleteTodo = queryWrapper(async (id: number) => {
+  const result = await db.delete(todos).where(eq(todos.id, id)).returning();
 
-    if (result.length === 0) {
-      throw new TodoNotFoundError(id);
-    }
-
-    return result[0];
-  } catch (error) {
-    if (error instanceof DatabaseError) {
-      throw error;
-    }
-    throw new UnhandledDatabaseError(error);
+  if (result.length === 0) {
+    throw new TodoNotFoundError(id);
   }
-}
+
+  return result[0];
+});

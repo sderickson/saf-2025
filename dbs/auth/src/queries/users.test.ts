@@ -92,9 +92,10 @@ describe("users queries", () => {
       expect(result).toEqual(created);
     });
 
-    it("should return undefined when email not found", async () => {
-      const result = await getByEmail("nonexistent@example.com");
-      expect(result).toBeUndefined();
+    it("should throw UserNotFoundError when email not found", async () => {
+      await expect(getByEmail("nonexistent@example.com")).rejects.toThrow(
+        UserNotFoundError
+      );
     });
   });
 
@@ -112,8 +113,8 @@ describe("users queries", () => {
       expect(result).toEqual(created);
     });
 
-    it("should return undefined when id not found", async () => {
-      expect(await getById(999)).toBeUndefined();
+    it("should throw UserNotFoundError when id not found", async () => {
+      await expect(getById(999)).rejects.toThrow(UserNotFoundError);
     });
   });
 

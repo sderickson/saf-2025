@@ -17,6 +17,7 @@
         "db:generate": "drizzle-kit generate"
     },
     "dependencies": {
+        "@saf/drizzle-sqlite3": "workspace:*",
         "better-sqlite3": "11.8.0",
         "better-sqlite3-session-store": "^0.1.0",
         "drizzle-kit": "^0.30.1",

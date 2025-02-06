@@ -1,13 +1,8 @@
-export class DatabaseError extends Error {
+import { HandledDatabaseError } from "@saf/drizzle-sqlite3";
+
+export class MainDatabaseError extends HandledDatabaseError {
   constructor(message: string) {
     super(message);
-    this.name = "DatabaseError";
-  }
-}
-
-export class UnhandledDatabaseError extends DatabaseError {
-  constructor(error: unknown) {
-    super(`Unhandled database error: ${error}`);
-    this.name = "UnhandledDatabaseError";
+    this.name = "MainDatabaseError";
   }
 }
