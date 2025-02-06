@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { emailRules, passwordRules } from "../rules";
+import { useRegister } from "../../api/auth";
 
 const passwordVisible = ref(false);
 const email = ref("");
@@ -8,18 +9,31 @@ const password = ref("");
 const confirmPassword = ref("");
 const valid = ref(null);
 
+const {
+  mutate: register,
+  isPending,
+  isError,
+  error,
+  isSuccess,
+} = useRegister();
+
+watch(isSuccess, (success) => {
+  if (success) {
+    window.location.href = "/app/";
+  }
+});
+
+const handleRegister = () => {
+  register({
+    email: email.value,
+    password: password.value,
+  });
+};
+
 const confirmPasswordRules = [
   (value: string) => !!value || "Please confirm your password",
   (value: string) => value === password.value || "Passwords must match",
 ];
-
-const register = () => {
-  // const { mutate: register, isPending } = useRegister({
-  //   email: email.value,
-  //   password: password.value,
-  //   name: name.value,
-  // });
-};
 </script>
 
 <template>
@@ -70,11 +84,21 @@ const register = () => {
           size="large"
           variant="tonal"
           block
-          :disabled="!valid"
-          @click="register"
+          :disabled="!valid || isPending"
+          :loading="isPending"
+          @click="handleRegister"
         >
           Register
         </v-btn>
+
+        <v-alert
+          v-if="isError && error?.message"
+          type="error"
+          variant="outlined"
+          class="mb-3"
+        >
+          {{ error.message }}
+        </v-alert>
 
         <v-card-text class="text-center">
           <router-link class="text-blue text-decoration-none" to="/login">

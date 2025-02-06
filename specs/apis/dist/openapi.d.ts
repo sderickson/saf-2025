@@ -231,13 +231,11 @@ export interface components {
             /** Format: email */
             email: string;
             password: string;
-            name: string;
         };
         UserResponse: {
             id: number;
             /** Format: email */
             email: string;
-            name: string;
         };
         LoginRequest: {
             /** Format: email */

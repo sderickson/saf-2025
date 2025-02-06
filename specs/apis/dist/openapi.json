@@ -292,8 +292,7 @@
         "type": "object",
         "required": [
           "email",
-          "password",
-          "name"
+          "password"
         ],
         "properties": {
           "email": {
@@ -303,9 +302,6 @@
           "password": {
             "type": "string",
             "minLength": 8
-          },
-          "name": {
-            "type": "string"
           }
         }
       },
@@ -313,8 +309,7 @@
         "type": "object",
         "required": [
           "id",
-          "email",
-          "name"
+          "email"
         ],
         "properties": {
           "id": {
@@ -323,9 +318,6 @@
           "email": {
             "type": "string",
             "format": "email"
-          },
-          "name": {
-            "type": "string"
           }
         }
       },
