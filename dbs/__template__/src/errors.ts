@@ -10,10 +10,4 @@ export class TemplateDatabaseError extends HandledDatabaseError {
   }
 }
 
-// Example of a specific error type
-export class ExampleNotFoundError extends TemplateDatabaseError {
-  constructor(id: number) {
-    super(`Example with id ${id} not found`);
-    this.name = "ExampleNotFoundError";
-  }
-}
+// Specific error types should tend to live in the query files that throw them.
