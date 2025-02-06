@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 import { db } from "../instance.ts";
 import { exampleTable } from "../schema.ts";
-import { DatabaseError } from "../errors.ts";
+import { TemplateDatabaseError } from "../errors.ts";
 
 /**
  * Errors thrown by queries should be defined in the query file itself, and exported by the library.
  */
-export class ExampleNotFoundError extends DatabaseError {
+export class ExampleNotFoundError extends TemplateDatabaseError {
   constructor(id: number) {
     super(`Example with id ${id} not found`);
     this.name = "ExampleNotFoundError";
@@ -35,6 +35,10 @@ export async function get(id: number) {
     .from(exampleTable)
     .where(eq(exampleTable.id, id))
     .get();
+
+  if (!result) {
+    throw new ExampleNotFoundError(id);
+  }
 
   return result;
 }
