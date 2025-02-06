@@ -18,13 +18,13 @@ import { healthRouter } from "./health.ts";
  * 6. Health check endpoint (/health)
  */
 export const recommendedPreMiddleware: Handler[] = [
+  healthRouter, // before httpLogger to avoid polluting logs
   requestId,
   httpLogger,
   // Built-in Express middleware
   json(),
   urlencoded({ extended: false }),
   loggerInjector,
-  healthRouter,
   ...openApiValidator,
 ];
 
