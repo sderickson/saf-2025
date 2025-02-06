@@ -70,3 +70,47 @@ When creating a new shared library package in the monorepo (e.g. in `lib/`, `dbs
    - `@vitest/coverage-v8` for coverage reporting
 
 Note: The package will be automatically included in the workspace through patterns like `"lib/*"`, `"dbs/*"` in the root package.json. No build step is needed as we use ts-node throughout the monorepo.
+
+## TypeScript Best Practices
+
+When writing code in this monorepo:
+
+1. Always use `.ts` file extensions for TypeScript files, never `.js`. This includes:
+
+   - Source files
+   - Configuration files (use `.mts` for module config files)
+   - Test files
+   - Scripts and utilities
+
+2. Use proper type imports:
+
+   - Use `import type` for type-only imports to improve build performance and clarity:
+
+     ```typescript
+     // Do this:
+     import type { Request, Response } from "express";
+
+     // Not this:
+     import { Request, Response } from "express";
+     ```
+
+   - Exception: When the import is used both as a type and value, use regular import
+
+3. Prefer explicit typing:
+
+   - Add return types to functions
+   - Define interfaces/types for complex objects
+   - Use type parameters for generics
+   - Only use type inference when the types are obvious and simple
+
+4. Configuration:
+
+   - All TypeScript configuration should extend from the root `tsconfig.json`
+   - Keep strict mode enabled
+   - Use `paths` aliases defined in root config for clean imports
+
+5. Common patterns:
+   - Use interface for extendable object types
+   - Use type for unions, intersections, and mapped types
+   - Leverage utility types (Pick, Omit, Partial, etc.)
+   - Use const assertions for literal types
