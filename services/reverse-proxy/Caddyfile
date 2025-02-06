@@ -1,4 +1,9 @@
 :80 {
+	# Add unique request ID header to all requests
+	header {
+		+X-Request-ID {http.request.uuid}
+	}
+
 	# Minimal logging configuration - only errors and warnings
 	log {
 		format console
@@ -16,16 +21,23 @@
 
 	# Handle /api/auth and /api/users routes
 	handle @auth {
-		reverse_proxy services-auth:3000
+		reverse_proxy services-auth:3000 {
+			header_up X-Request-ID {http.request.uuid}
+		}
 	}
 	handle @api {
 		forward_auth {
 			uri http://services-auth:3000/auth/verify
 			method POST
+			header_up X-Request-ID {http.request.uuid}
 		}
-		reverse_proxy services-api:3002
+		reverse_proxy services-api:3000 {
+			header_up X-Request-ID {http.request.uuid}
+		}
 	}
 	handle {
-		reverse_proxy clients:5173
+		reverse_proxy clients:5173 {
+			header_up X-Request-ID {http.request.uuid}
+		}
 	}
 }

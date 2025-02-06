@@ -8,7 +8,7 @@ import morgan from "morgan";
  */
 export const httpLogger: Handler = (() => {
   // Define custom token for request ID
-  morgan.token("id", (req) => (req as any).id);
+  morgan.token("id", (req) => (req as any).shortId);
 
   // Return configured morgan middleware
   return morgan(

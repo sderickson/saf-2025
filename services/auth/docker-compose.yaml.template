@@ -6,6 +6,5 @@ services:
     volumes:
       - ../../dbs/auth/data:/app/dbs/auth/data
     environment:
-      - PORT=3000
       - NODE_ENV=development
     command: npm start

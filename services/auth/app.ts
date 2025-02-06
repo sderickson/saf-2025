@@ -63,7 +63,7 @@ app.use((req, _, next) => {
  * Routes
  * Authentication related endpoints
  */
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
 /**
  * Error Handling Middleware Stack

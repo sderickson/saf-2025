@@ -4,7 +4,6 @@ services:
       context: ../..
       dockerfile: ./services/api/Dockerfile
     environment:
-      - PORT=3002
       - NODE_ENV=development
     command: npm start
     develop:

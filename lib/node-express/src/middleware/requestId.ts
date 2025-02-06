@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     interface Request {
       id: string;
+      shortId: string;
     }
   }
 }
@@ -16,6 +17,11 @@ declare global {
  * This ID can be used for request tracing and logging correlation.
  */
 export const requestId: Handler = (req, res, next): void => {
-  req.id = uuidv4().slice(0, 8);
+  if (!req.headers || !req.headers["x-request-id"]) {
+    req.id = "no-request-id";
+  } else {
+    req.id = req.headers["x-request-id"] as string;
+    req.shortId = req.id.slice(0, 8);
+  }
   next();
 };

@@ -33,8 +33,7 @@ Once all of this is done, should start using this in actual applications.
   - Domain, CDN
 - Testing
   - Vitest FE Unit
-  - Vitest BE Unit
-  - Vitest BE Integration (w/SQLite)
+  - ✓ Vitest BE Unit
   - Integrate with GitHub Actions
 - Observability
   - LGTM

@@ -27,7 +27,7 @@ const defaultLogger = createLogger();
  * The logger is available at req.log.
  */
 export const loggerInjector: Handler = (req, _res, next) => {
-  req.log = defaultLogger.child({ reqId: (req as any).id });
+  req.log = defaultLogger.child({ reqId: (req as any).shortId });
   next();
 };
 
