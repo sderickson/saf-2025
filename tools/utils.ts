@@ -30,6 +30,9 @@ export function findRootDir() {
 }
 
 export function readPackageJson(filePath: string): PackageJson {
+  if (filePath[0] !== "/") {
+    throw new Error("File path must be absolute");
+  }
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch (error) {
@@ -42,8 +45,8 @@ export function writePackageJson(filePath: string, content: PackageJson) {
   fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
 }
 
-export function findWorkspacePackageJsons(): string[] {
-  const rootPackageJson = readPackageJson("package.json");
+export function findWorkspacePackageJsons(packageJsonPath: string): string[] {
+  const rootPackageJson = readPackageJson(packageJsonPath);
   if (!rootPackageJson.workspaces?.length) {
     console.error("No workspaces found in root package.json");
     return [];
@@ -55,7 +58,9 @@ export function findWorkspacePackageJsons(): string[] {
     // Handle both glob patterns and direct paths
     if (pattern.includes("*")) {
       // It's a glob pattern
-      const matches = glob.sync(pattern + "/package.json", { absolute: false });
+      const rootDir = path.dirname(packageJsonPath);
+      const patternPath = path.join(rootDir, pattern, "package.json");
+      const matches = glob.sync(patternPath);
       matches.forEach((match: string) => packageJsonPaths.add(match));
     } else {
       // It's a direct path
@@ -67,9 +72,4 @@ export function findWorkspacePackageJsons(): string[] {
   });
 
   return Array.from(packageJsonPaths);
-}
-
-// Initialize workspace by finding and changing to root directory
-export function initWorkspace() {
-  process.chdir(findRootDir());
 }

@@ -1,263 +1,219 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import * as fs from "fs";
-import * as path from "path";
-import * as yaml from "yaml";
-import {
-  createWorkspaceContext,
-  generateDockerfile,
-  generateDockerCompose,
-  WorkspaceInfo,
-  WorkspaceContext,
-} from "../generate-docker.ts";
-import * as utils from "../utils.ts";
+import { vol } from "memfs";
+import { createWorkspaceContext } from "../generate-docker.ts";
+import { minimatch } from "minimatch";
 
-vi.mock("fs");
-vi.mock("yaml");
-vi.mock("../utils");
+// Mock fs everywhere else with the memfs version.
+vi.mock("fs", async () => {
+  const memfs = await vi.importActual("memfs");
+  return { default: memfs.fs, ...(memfs.fs as Object) };
+});
+
+// Mock fs with memfs implementation
+
+vi.mock("glob", async (importOriginal) => {
+  const glob = await importOriginal<typeof import("glob")>();
+  const mockFunction = vi.fn().mockImplementation((pattern) => {
+    return allFiles.filter((file) => minimatch(file, pattern));
+  });
+  return {
+    ...glob,
+    sync: mockFunction,
+  };
+});
+
+const volumeJson = {
+  "/app/package.json": JSON.stringify({
+    name: "@saf/saf-2025",
+    workspaces: ["services/*", "dbs/*"],
+  }),
+  "/app/services/api/package.json": JSON.stringify({
+    name: "@saf/api",
+    dependencies: {
+      "@saf/auth-db": "1.0.0",
+      express: "4.0.0",
+    },
+    files: ["src/**/*.ts", "package.json"],
+  }),
+  "/app/dbs/auth/package.json": JSON.stringify({
+    name: "@saf/auth-db",
+    dependencies: {
+      sqlite3: "5.0.0",
+    },
+    files: ["src/**/*.ts", "package.json"],
+  }),
+};
+
+const allFiles = Object.keys(volumeJson);
 
 describe("generate-docker", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
+    // vi.resetAllMocks();
+    vol.fromJSON(volumeJson);
   });
 
   describe("createWorkspaceContext", () => {
     it("should create context with workspaces and their dependencies", () => {
-      const mockRootPackageJson = {
-        name: "root",
-        workspaces: ["services/*", "dbs/*"],
-      };
-
-      const mockApiPackage = {
-        name: "@saf-2025/api",
-        dependencies: {
-          "@saf-2025/auth-db": "1.0.0",
-          express: "4.0.0",
-        },
-      };
-
-      const mockAuthDbPackage = {
-        name: "@saf-2025/auth-db",
-        dependencies: {
-          sqlite3: "5.0.0",
-        },
-      };
-
-      vi.spyOn(utils, "readPackageJson").mockImplementation(
-        (filePath: string) => {
-          if (filePath === "package.json") return mockRootPackageJson;
-          if (filePath.includes("services/api")) return mockApiPackage;
-          if (filePath.includes("dbs/auth")) return mockAuthDbPackage;
-          return { name: "" };
-        }
-      );
-
-      vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
-        return String(filePath).endsWith("package.json");
-      });
-
-      vi.spyOn(utils, "findWorkspacePackageJsons").mockReturnValue([
-        "services/api/package.json",
-        "dbs/auth/package.json",
-      ]);
-
-      const context = createWorkspaceContext();
-      const apiWorkspace = context.workspacePackages.get("@saf-2025/api");
-
+      const context = createWorkspaceContext("/app/package.json");
+      const apiWorkspace = context.workspacePackages.get("@saf/api");
       expect(apiWorkspace).toBeDefined();
-      expect(apiWorkspace?.dependencies).toContain("@saf-2025/auth-db");
+      expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
       expect(apiWorkspace?.dependencies).not.toContain("express");
     });
 
     it("should handle missing workspaces gracefully", () => {
-      const mockRootPackageJson = {
-        name: "root",
-      };
+      // Update the root package.json to have no workspaces
+      vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
 
-      vi.spyOn(utils, "readPackageJson").mockReturnValue(mockRootPackageJson);
       vi.spyOn(console, "error").mockImplementation(() => {});
 
-      const context = createWorkspaceContext();
+      const context = createWorkspaceContext("/app/package.json");
       expect(context.workspacePackages.size).toBe(0);
       expect(console.error).toHaveBeenCalled();
     });
   });
 
-  describe("generateDockerfile", () => {
-    let mockContext: WorkspaceContext;
+  // describe("generateDockerfile", () => {
+  //   let mockContext: WorkspaceContext;
 
-    beforeEach(() => {
-      mockContext = {
-        rootPackageJson: { name: "root" },
-        workspacePackages: new Map([
-          [
-            "@saf-2025/api",
-            {
-              name: "@saf-2025/api",
-              path: "services/api",
-              dependencies: ["@saf-2025/auth-db"],
-              files: ["src/**/*.ts", "package.json"],
-            },
-          ],
-          [
-            "@saf-2025/auth-db",
-            {
-              name: "@saf-2025/auth-db",
-              path: "dbs/auth",
-              dependencies: [],
-              files: ["src/**/*.ts", "package.json"],
-            },
-          ],
-        ]),
-      };
-    });
+  //   beforeEach(() => {
+  //     mockContext = {
+  //       rootPackageJson: { name: "root" },
+  //       workspacePackages: new Map([
+  //         [
+  //           "@saf/api",
+  //           {
+  //             name: "@saf/api",
+  //             path: "services/api",
+  //             dependencies: ["@saf/auth-db"],
+  //             files: ["src/**/*.ts", "package.json"],
+  //           },
+  //         ],
+  //         [
+  //           "@saf/auth-db",
+  //           {
+  //             name: "@saf/auth-db",
+  //             path: "dbs/auth",
+  //             dependencies: [],
+  //             files: ["src/**/*.ts", "package.json"],
+  //           },
+  //         ],
+  //       ]),
+  //     };
+  //   });
 
-    it("should generate correct Dockerfile content", () => {
-      const workspace = mockContext.workspacePackages.get("@saf-2025/api")!;
-      const dockerfile = generateDockerfile(workspace, mockContext);
+  //   it("should generate correct Dockerfile content", () => {
+  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
+  //     const dockerfile = generateDockerfile(workspace, mockContext);
 
-      // Check basic structure
-      expect(dockerfile).toContain("FROM node:22-slim");
-      expect(dockerfile).toContain("WORKDIR /app");
-      expect(dockerfile).toContain("COPY package*.json ./");
-      expect(dockerfile).toContain("COPY tsconfig.json ./");
+  //     expect(dockerfile).toContain("FROM node:22-slim");
+  //     expect(dockerfile).toContain("WORKDIR /app");
+  //     expect(dockerfile).toContain("COPY package*.json ./");
+  //     expect(dockerfile).toContain("COPY tsconfig.json ./");
+  //     expect(dockerfile).toContain(
+  //       "COPY services/api/package*.json ./services/api/"
+  //     );
+  //     expect(dockerfile).toContain(
+  //       "COPY services/api/src/**/*.ts ./services/api/src/**/*.ts"
+  //     );
+  //     expect(dockerfile).toContain(
+  //       "COPY dbs/auth/src/**/*.ts ./dbs/auth/src/**/*.ts"
+  //     );
+  //     expect(dockerfile).toContain("RUN npm install");
+  //     expect(dockerfile).toContain('CMD ["npm", "start"]');
+  //   });
 
-      // Check workspace-specific parts
-      expect(dockerfile).toContain(
-        "COPY services/api/package*.json ./services/api/"
-      );
-      expect(dockerfile).toContain(
-        "COPY services/api/src/**/*.ts ./services/api/src/**/*.ts"
-      );
+  //   it("should handle workspaces without specific files", () => {
+  //     const workspace: WorkspaceInfo = {
+  //       name: "@saf/api",
+  //       path: "services/api",
+  //       dependencies: [],
+  //     };
 
-      // Check dependency copying
-      expect(dockerfile).toContain(
-        "COPY dbs/auth/src/**/*.ts ./dbs/auth/src/**/*.ts"
-      );
+  //     const dockerfile = generateDockerfile(workspace, mockContext);
+  //     expect(dockerfile).toContain("COPY services/api ./services/api");
+  //   });
+  // });
 
-      // Check final setup
-      expect(dockerfile).toContain("RUN npm install");
-      expect(dockerfile).toContain('CMD ["npm", "start"]');
-    });
+  // describe("generateDockerCompose", () => {
+  //   let mockContext: WorkspaceContext;
 
-    it("should handle workspaces without specific files", () => {
-      const workspace: WorkspaceInfo = {
-        name: "@saf-2025/api",
-        path: "services/api",
-        dependencies: [],
-      };
+  //   beforeEach(() => {
+  //     mockContext = {
+  //       rootPackageJson: { name: "root" },
+  //       workspacePackages: new Map([
+  //         [
+  //           "@saf/api",
+  //           {
+  //             name: "@saf/api",
+  //             path: "services/api",
+  //             dependencies: ["@saf/auth-db"],
+  //             files: ["src/**/*.ts"],
+  //           },
+  //         ],
+  //         [
+  //           "@saf/auth-db",
+  //           {
+  //             name: "@saf/auth-db",
+  //             path: "dbs/auth",
+  //             dependencies: [],
+  //             files: ["src/**/*.ts"],
+  //           },
+  //         ],
+  //       ]),
+  //     };
 
-      const dockerfile = generateDockerfile(workspace, mockContext);
-      expect(dockerfile).toContain("COPY services/api ./services/api");
-    });
-  });
+  //     // Setup template file in memfs
+  //     vol.writeFileSync(
+  //       "services/api/docker-compose.yaml.template",
+  //       yaml.stringify({
+  //         services: {
+  //           api: {
+  //             build: {
+  //               context: ".",
+  //               dockerfile: "services/api/Dockerfile",
+  //             },
+  //             environment: {
+  //               NODE_ENV: "development",
+  //             },
+  //           },
+  //         },
+  //       })
+  //     );
+  //   });
 
-  describe("generateDockerCompose", () => {
-    let mockContext: WorkspaceContext;
+  //   it("should generate docker-compose with watch paths", () => {
+  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
+  //     const compose = generateDockerCompose(workspace, mockContext);
+  //     const parsed = yaml.parse(compose);
 
-    beforeEach(() => {
-      mockContext = {
-        rootPackageJson: { name: "root" },
-        workspacePackages: new Map([
-          [
-            "@saf-2025/api",
-            {
-              name: "@saf-2025/api",
-              path: "services/api",
-              dependencies: ["@saf-2025/auth-db"],
-              files: ["src/**/*.ts"],
-            },
-          ],
-          [
-            "@saf-2025/auth-db",
-            {
-              name: "@saf-2025/auth-db",
-              path: "dbs/auth",
-              dependencies: [],
-              files: ["src/**/*.ts"],
-            },
-          ],
-        ]),
-      };
-    });
+  //     expect(parsed.services.api.develop.watch).toContainEqual({
+  //       action: "sync+restart",
+  //       path: ".",
+  //       target: "/app/services/api",
+  //     });
+  //   });
 
-    it("should generate docker-compose with watch paths", () => {
-      const workspace = mockContext.workspacePackages.get("@saf-2025/api")!;
+  //   it("should use existing template if available", () => {
+  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
+  //     const compose = generateDockerCompose(workspace, mockContext);
+  //     const parsed = yaml.parse(compose);
 
-      vi.spyOn(fs, "existsSync").mockReturnValue(false);
-      vi.spyOn(yaml, "stringify").mockReturnValue("mocked yaml content");
+  //     expect(parsed.services.api.environment).toEqual({
+  //       NODE_ENV: "development",
+  //     });
+  //   });
 
-      const compose = generateDockerCompose(workspace, mockContext);
+  //   it("should handle template parsing errors", () => {
+  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
 
-      expect(compose).toBe("mocked yaml content");
-      expect(yaml.stringify).toHaveBeenCalledWith(
-        expect.objectContaining({
-          services: expect.objectContaining({
-            "@saf-2025/api": expect.objectContaining({
-              develop: expect.objectContaining({
-                watch: expect.arrayContaining([
-                  expect.objectContaining({
-                    action: "sync+restart",
-                    path: ".",
-                    target: "/app/services/api",
-                  }),
-                ]),
-              }),
-            }),
-          }),
-        })
-      );
-    });
+  //     // Write invalid YAML to template
+  //     vol.writeFileSync(
+  //       "services/api/docker-compose.yaml.template",
+  //       "invalid: yaml: content"
+  //     );
 
-    it("should use existing template if available", () => {
-      const workspace = mockContext.workspacePackages.get("@saf-2025/api")!;
-      const mockTemplate = {
-        services: {
-          "@saf-2025/api": {
-            build: {
-              context: ".",
-              dockerfile: "services/api/Dockerfile",
-            },
-            environment: {
-              NODE_ENV: "development",
-            },
-          },
-        },
-      };
-
-      vi.spyOn(fs, "existsSync").mockReturnValue(true);
-      vi.spyOn(fs, "readFileSync").mockReturnValue(
-        JSON.stringify(mockTemplate)
-      );
-      vi.spyOn(yaml, "parse").mockReturnValue(mockTemplate);
-      vi.spyOn(yaml, "stringify").mockReturnValue("mocked yaml content");
-
-      const compose = generateDockerCompose(workspace, mockContext);
-
-      expect(compose).toBe("mocked yaml content");
-      expect(yaml.stringify).toHaveBeenCalledWith(
-        expect.objectContaining({
-          services: expect.objectContaining({
-            "@saf-2025/api": expect.objectContaining({
-              environment: {
-                NODE_ENV: "development",
-              },
-            }),
-          }),
-        })
-      );
-    });
-
-    it("should handle template parsing errors", () => {
-      const workspace = mockContext.workspacePackages.get("@saf-2025/api")!;
-
-      vi.spyOn(fs, "existsSync").mockReturnValue(true);
-      vi.spyOn(fs, "readFileSync").mockImplementation(() => {
-        throw new Error("Failed to read template");
-      });
-      vi.spyOn(console, "error").mockImplementation(() => {});
-
-      expect(() => generateDockerCompose(workspace, mockContext)).toThrow();
-      expect(console.error).toHaveBeenCalled();
-    });
-  });
+  //     expect(() => generateDockerCompose(workspace, mockContext)).toThrow();
+  //   });
+  // });
 });

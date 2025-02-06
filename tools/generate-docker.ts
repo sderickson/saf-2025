@@ -6,14 +6,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
 import type { PackageJson } from "./utils.ts";
-import {
-  readPackageJson,
-  findWorkspacePackageJsons,
-  initWorkspace,
-} from "./utils.ts";
-
-// Initialize workspace
-initWorkspace();
+import { readPackageJson, findWorkspacePackageJsons } from "./utils.ts";
 
 export interface WorkspaceInfo {
   name: string;
@@ -50,8 +43,10 @@ export interface WorkspaceContext {
   workspacePackages: Map<string, WorkspaceInfo>;
 }
 
-export function createWorkspaceContext(): WorkspaceContext {
-  const rootPackageJson = readPackageJson("package.json");
+export function createWorkspaceContext(
+  startingPackage: string
+): WorkspaceContext {
+  const rootPackageJson = readPackageJson(startingPackage);
   if (!rootPackageJson.workspaces?.length) {
     console.error("No workspaces found in root package.json");
     return { rootPackageJson, workspacePackages: new Map() };
@@ -61,7 +56,7 @@ export function createWorkspaceContext(): WorkspaceContext {
   const packageJsonCache = new Map<string, PackageJson>();
 
   // Single pass: collect all workspaces and their package.json contents
-  findWorkspacePackageJsons().forEach((packageJsonPath) => {
+  findWorkspacePackageJsons(startingPackage).forEach((packageJsonPath) => {
     const packageJson = readPackageJson(packageJsonPath);
     packageJsonCache.set(packageJson.name, packageJson);
 
@@ -254,7 +249,10 @@ export function generateDockerCompose(
 }
 
 export function main() {
-  const context = createWorkspaceContext();
+  // Initialize workspace
+
+  const thisPackagePath = path.join(process.cwd(), "package.json");
+  const context = createWorkspaceContext(thisPackagePath);
   const serviceWorkspaces = Array.from(
     context.workspacePackages.values()
   ).filter((w) => w.path.startsWith("services/"));
