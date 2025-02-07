@@ -5,7 +5,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
-import type { PackageJson } from "./types.ts";
+import type { DockerCompose, PackageJson, WatchConfig } from "./types.ts";
 import {
   readPackageJson,
   readProject,
@@ -84,105 +84,113 @@ export function generateDockerfile(
   return lines.join("\n");
 }
 
-// export function generateWatchPaths(
-//   workspace: WorkspaceInfo,
-//   context: WorkspaceContext
-// ): WatchConfig[] {
-//   const watchPaths: WatchConfig[] = [];
+export function generateWatchPaths(
+  packageJsonPath: string,
+  dependencies: Map<string, PackageJson>,
+  context: Context
+): WatchConfig[] {
+  const watchPaths: WatchConfig[] = [];
 
-//   // Helper function to add watch path
-//   const addWatch = (sourcePath: string, targetPath: string) => {
-//     watchPaths.push({
-//       action: "sync+restart",
-//       path: sourcePath,
-//       target: targetPath,
-//     });
-//   };
+  // Helper function to add watch path
+  const addWatch = (sourcePath: string, targetPath: string) => {
+    watchPaths.push({
+      action: "sync+restart",
+      path: sourcePath,
+      target: targetPath,
+    });
+  };
 
-//   // Add dependency watch paths
-//   workspace.dependencies.forEach((dep) => {
-//     const depWorkspace = context.workspacePackages.get(dep);
-//     if (!depWorkspace) return;
-//     console.log("depWorkspace", depWorkspace);
-//     console.log("context.rootPackageJson", context.rootPackageJson);
+  // Add dependency watch paths
+  Array.from(dependencies.keys()).forEach((depPath) => {
+    const dep = dependencies.get(depPath)!;
+    const depWorkspacePath = getRelativePath(depPath, context.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
+    if (dep.files) {
+      dep.files.forEach((file) => {
+        // TODO - don't rely on that every package is two levels deep
+        addWatch(
+          `../../${depWorkspaceDir}/${file}`,
+          `/app/${depWorkspaceDir}/${file}`
+        );
+      });
+    } else {
+      addWatch(`../../${depWorkspaceDir}`, `/app/${depWorkspaceDir}`);
+    }
+  });
 
-//     if (depWorkspace.files) {
-//       depWorkspace.files.forEach((file) => {
-//         // TODO - don't rely on that every package is two levels deep
-//         addWatch(
-//           `../../${depWorkspace.path}/${file}`,
-//           `/app/${depWorkspace.path}/${file}`
-//         );
-//       });
-//     } else {
-//       addWatch(`../../${depWorkspace.path}`, `/app/${depWorkspace.path}`);
-//     }
-//   });
+  const workspacePath = getRelativePath(packageJsonPath, context.project);
+  const workspaceDir = path.dirname(workspacePath);
+  // Add service watch path
+  addWatch(".", `/app/${workspaceDir}`);
 
-//   // Add service watch path
-//   addWatch(".", `/app/${workspace.path}`);
+  return watchPaths;
+}
 
-//   return watchPaths;
-// }
+export function generateDockerCompose(
+  packageJsonPath: string,
+  context: Context
+): string {
+  const relativePath = getRelativePath(packageJsonPath, context.project);
+  const workspaceDir = path.dirname(packageJsonPath);
+  const relativeWorkspaceDir = path.dirname(relativePath);
+  const workspacePackageJson =
+    context.project.workspacePackages.get(packageJsonPath)!;
+  const templatePath = path.join(workspaceDir, "docker-compose.yaml.template");
+  const dependencies = getInternalDependencies(
+    packageJsonPath,
+    context.project
+  );
 
-// export function generateDockerCompose(
-//   workspace: WorkspaceInfo,
-//   context: WorkspaceContext
-// ): string {
-//   const templatePath = path.join(
-//     workspace.path,
-//     "docker-compose.yaml.template"
-//   );
-//   let compose: DockerCompose;
-//   const serviceName = workspace.name.replace("@saf/", "");
+  let compose: DockerCompose;
+  const serviceName = workspacePackageJson.name.replace("@saf/", "");
 
-//   try {
-//     if (fs.existsSync(templatePath)) {
-//       compose = yaml.parse(fs.readFileSync(templatePath, "utf8"));
-//     } else {
-//       compose = {
-//         services: {
-//           [serviceName]: {
-//             build: {
-//               context: ".",
-//               dockerfile: path.join(workspace.path, "Dockerfile"),
-//             },
-//           },
-//         },
-//       };
-//     }
+  try {
+    if (context.io.fs.existsSync(templatePath)) {
+      compose = yaml.parse(context.io.fs.readFileSync(templatePath));
+    } else {
+      compose = {
+        services: {
+          [serviceName]: {
+            build: {
+              context: ".",
+              dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
+            },
+          },
+        },
+      };
+    }
 
-//     // Ensure service and watch configuration exists
-//     const service = (compose.services[serviceName] = compose.services[
-//       serviceName
-//     ] || {
-//       build: {
-//         context: ".",
-//         dockerfile: path.join(workspace.path, "Dockerfile"),
-//       },
-//     });
+    // Ensure service and watch configuration exists
+    const service = (compose.services[serviceName] = compose.services[
+      serviceName
+    ] || {
+      build: {
+        context: ".",
+        dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
+      },
+    });
 
-//     service.develop = service.develop || {};
-//     service.develop.watch = [
-//       ...(service.develop.watch || []),
-//       ...generateWatchPaths(workspace, context),
-//     ];
+    service.develop = service.develop || {};
+    service.develop.watch = [
+      ...(service.develop.watch || []),
+      ...generateWatchPaths(packageJsonPath, dependencies, context),
+    ];
 
-//     // Remove duplicates
-//     service.develop.watch = service.develop.watch.filter(
-//       (watch, index, self) =>
-//         index ===
-//         self.findIndex(
-//           (w) => w.path === watch.path && w.target === watch.target
-//         )
-//     );
+    // Remove duplicates
+    service.develop.watch = service.develop.watch.filter(
+      (watch, index, self) =>
+        index ===
+        self.findIndex(
+          (w) => w.path === watch.path && w.target === watch.target
+        )
+    );
 
-//     return yaml.stringify(compose);
-//   } catch (error) {
-//     console.error(`Error processing template for ${workspace.name}:`, error);
-//     throw error;
-//   }
-// }
+    return yaml.stringify(compose);
+  } catch (error) {
+    console.error(`Error processing template for ${packageJsonPath}:`, error);
+    throw error;
+  }
+}
 
 // export function main() {
 //   // Initialize workspace

@@ -1,9 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { vol } from "memfs";
 import { readProject } from "../utils.ts";
-import { generateDockerfile } from "../generate-docker.ts";
+import {
+  generateDockerCompose,
+  generateDockerfile,
+} from "../generate-docker.ts";
 import { makeIO, volumeJson } from "./mocks.ts";
 import type { IO, PackageJson, Project } from "../types.ts";
+import * as yaml from "yaml";
 
 describe("generate-docker", () => {
   let io: IO;
@@ -82,33 +86,48 @@ describe("generate-docker", () => {
   });
 });
 
-// describe("generateDockerCompose", () => {
-//   it("should generate docker-compose with watch paths", () => {
-//     const context = addWorkspaceContext("/saf/package.json", ctx);
-//     const workspace = context.workspace?.workspacePackages.get("@saf/api")!;
-//     const compose = generateDockerCompose(workspace, context.workspace!);
-//     const parsed = yaml.parse(compose);
-//     expect(parsed.services.api.develop.watch).toContainEqual({
-//       action: "sync+restart",
-//       path: ".",
-//       target: "/saf/services/api",
-//     });
-//   });
-//   // it("should use existing template if available", () => {
-//   //   const workspace = mockContext.workspacePackages.get("@saf/api")!;
-//   //   const compose = generateDockerCompose(workspace, mockContext);
-//   //   const parsed = yaml.parse(compose);
-//   //   expect(parsed.services.api.environment).toEqual({
-//   //     NODE_ENV: "development",
-//   //   });
-//   // });
-//   // it("should handle template parsing errors", () => {
-//   //   const workspace = mockContext.workspacePackages.get("@saf/api")!;
-//   //   // Write invalid YAML to template
-//   //   vol.writeFileSync(
-//   //     "/app/services/api/docker-compose.yaml.template",
-//   //     "invalid: yaml: content"
-//   //   );
-//   //   expect(() => generateDockerCompose(workspace, mockContext)).toThrow();
-//   // });
-// });
+describe("generateDockerCompose", () => {
+  let io: IO;
+  beforeEach(() => {
+    vol.fromJSON(volumeJson);
+    io = makeIO();
+  });
+
+  it("should generate docker-compose with watch paths", () => {
+    const project = readProject("/saf/package.json", io);
+    const compose = generateDockerCompose("/saf/services/api/package.json", {
+      project,
+      io,
+    });
+    const parsed = yaml.parse(compose);
+    expect(parsed.services.api.develop.watch).toContainEqual({
+      action: "sync+restart",
+      path: ".",
+      target: "/app/services/api",
+    });
+  });
+  it("should use existing template if available", () => {
+    const project = readProject("/saf/package.json", io);
+    const compose = generateDockerCompose("/saf/services/api/package.json", {
+      project,
+      io,
+    });
+    const parsed = yaml.parse(compose);
+    expect(parsed.services.api.environment).toEqual({
+      NODE_ENV: "development",
+    });
+  });
+  it("should handle template parsing errors", () => {
+    const project = readProject("/saf/package.json", io);
+    vol.writeFileSync(
+      "/saf/services/api/docker-compose.yaml.template",
+      "invalid: yaml: content"
+    );
+    expect(() =>
+      generateDockerCompose("/saf/services/api/package.json", {
+        project,
+        io,
+      })
+    ).toThrow();
+  });
+});
