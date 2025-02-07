@@ -1,35 +1,36 @@
-// import { describe, it, expect, beforeEach, vi } from "vitest";
-// import { vol } from "memfs";
-// import { createWorkspaceContext } from "../generate-docker.ts";
-// import { minimatch } from "minimatch";
-// import { volumeJson } from "../__mocks__/fs.ts";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { vol } from "memfs";
+import { addWorkspaceContext } from "../generate-docker.ts";
+import { makeContext, volumeJson } from "./mocks.ts";
+import type { Context } from "../types.ts";
+describe("generate-docker", () => {
+  let ctx: Context;
+  beforeEach(() => {
+    vol.fromJSON(volumeJson);
+    ctx = makeContext();
+  });
 
-// vi.mock("fs");
-// describe("generate-docker", () => {
-//   beforeEach(() => {
-//     vol.fromJSON(volumeJson);
-//   });
+  describe("createWorkspaceContext", () => {
+    it("should create context with workspaces and their dependencies", () => {
+      const context = addWorkspaceContext("/app/package.json", ctx);
+      console.log(context);
+      const apiWorkspace = context.workspace?.workspacePackages.get("@saf/api");
+      expect(apiWorkspace).toBeDefined();
+      expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
+      expect(apiWorkspace?.dependencies).not.toContain("express");
+    });
 
-//   describe("createWorkspaceContext", () => {
-//     it("should create context with workspaces and their dependencies", () => {
-//       const context = createWorkspaceContext("/app/package.json");
-//       const apiWorkspace = context.workspacePackages.get("@saf/api");
-//       expect(apiWorkspace).toBeDefined();
-//       expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
-//       expect(apiWorkspace?.dependencies).not.toContain("express");
-//     });
+    it("should handle missing workspaces gracefully", () => {
+      // Update the root package.json to have no workspaces
+      vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
 
-//     it("should handle missing workspaces gracefully", () => {
-//       // Update the root package.json to have no workspaces
-//       vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
+      vi.spyOn(console, "error").mockImplementation(() => {});
 
-//       vi.spyOn(console, "error").mockImplementation(() => {});
-
-//       const context = createWorkspaceContext("/app/package.json");
-//       expect(context.workspacePackages.size).toBe(0);
-//       expect(console.error).toHaveBeenCalled();
-//     });
-//   });
+      const context = addWorkspaceContext("/app/package.json", ctx);
+      expect(context.workspace?.workspacePackages.size).toBe(0);
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
 
   // describe("generateDockerfile", () => {
   //   let mockContext: WorkspaceContext;

@@ -6,7 +6,7 @@ import {
   readPackageJson,
   writePackageJson,
 } from "../utils.ts";
-import { globMock, volumeJson } from "./mocks.ts";
+import { makeContext, volumeJson } from "./mocks.ts";
 import type { Context, PackageJson } from "../types.ts";
 vi.mock("fs");
 
@@ -15,16 +15,7 @@ describe("utils", () => {
   beforeEach(() => {
     vol.fromJSON(volumeJson);
     vi.resetAllMocks();
-    ctx = {
-      startingPackage: "/app/package.json",
-      fs: {
-        readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
-        existsSync: (string) => fs.existsSync(string),
-        writeFileSync: (string, content) => fs.writeFileSync(string, content),
-      },
-      glob: globMock,
-      workspace: undefined,
-    };
+    ctx = makeContext();
   });
   describe("findRootDir", () => {
     it("should find the root directory", () => {
