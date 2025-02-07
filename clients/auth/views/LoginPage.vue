@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { emailRules, passwordRules } from "clients/auth/rules";
-import { client } from "clients/api/client";
+import { client } from "clients/requests/client";
 
 async function test() {
   {
@@ -15,7 +15,7 @@ async function test() {
     // Testing session
   }
   {
-    const { data, error } = await client.GET("/users");
+    const { data, error } = await client.GET("/todos");
     console.log(data, error);
   }
 }
@@ -34,7 +34,7 @@ const login = async () => {
     },
   });
   console.log(data, error);
-  // console.log("login", email.value, password.value, { valid: valid.value });
+  console.log("login", email.value, password.value, { valid: valid.value });
 };
 </script>
 

@@ -1,5 +1,5 @@
 import * as users from "./src/queries/users.ts";
-import { DatabaseError, UnhandledDatabaseError } from "./src/errors.ts";
+import { AuthDatabaseError } from "./src/errors.ts";
 
 import session from "express-session";
 import sqlite from "better-sqlite3";
@@ -18,4 +18,4 @@ const sessionStore = new SqliteStore({
   },
 });
 
-export { users, DatabaseError, UnhandledDatabaseError, sessionStore };
+export { users, AuthDatabaseError, sessionStore };

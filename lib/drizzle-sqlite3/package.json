@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "drizzle-orm": "^0.29.3",
-    "better-sqlite3": "^9.4.1"
+    "better-sqlite3": "^11.8.0"
   },
   "peerDependencies": {
     "drizzle-orm": "^0.29.3",
-    "better-sqlite3": "^9.4.1"
+    "better-sqlite3": "^11.8.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.9",
