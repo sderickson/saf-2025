@@ -1,6 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fs, vol } from "memfs";
-import { findRootDir, readPackageJson, writePackageJson } from "../utils.ts";
+import {
+  findRootDir,
+  findWorkspacePackageJsons,
+  readPackageJson,
+  writePackageJson,
+} from "../utils.ts";
 import { globMock, volumeJson } from "./mocks.ts";
 import type { Context, PackageJson } from "../types.ts";
 vi.mock("fs");
@@ -53,37 +58,22 @@ describe("utils", () => {
       );
     });
   });
-  // // describe("findWorkspacePackageJsons", () => {
-  // //   it("should find all workspace package.json files", () => {
-  // //     const mockRootPackageJson: PackageJson = {
-  // //       name: "root",
-  // //       workspaces: ["packages/*", "tools"],
-  // //     };
-  // //     vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
-  // //       if (filePath === "package.json") {
-  // //         return JSON.stringify(mockRootPackageJson);
-  // //       }
-  // //       return "{}";
-  // //     });
-  // //     vi.spyOn(glob, "sync").mockReturnValue(["packages/package.json"]);
-  // //     vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
-  // //       return String(filePath).endsWith("package.json");
-  // //     });
-  // //     const result = findWorkspacePackageJsons();
-  // //     expect(result).toContain("packages/package.json");
-  // //     expect(result).toContain("tools/package.json");
-  // //   });
-  // //   it("should handle missing workspaces gracefully", () => {
-  // //     const mockRootPackageJson: PackageJson = {
-  // //       name: "root",
-  // //     };
-  // //     vi.spyOn(fs, "readFileSync").mockReturnValue(
-  // //       JSON.stringify(mockRootPackageJson)
-  // //     );
-  // //     vi.spyOn(console, "error").mockImplementation(() => {});
-  // //     const result = findWorkspacePackageJsons();
-  // //     expect(result).toEqual([]);
-  // //     expect(console.error).toHaveBeenCalled();
-  // //   });
-  // });
+  describe("findWorkspacePackageJsons", () => {
+    it("should find all workspace package.json files", () => {
+      const result = findWorkspacePackageJsons("/app/package.json", ctx);
+      expect(result).toContain("/app/services/api/package.json");
+      expect(result).toContain("/app/dbs/auth/package.json");
+    });
+    it("should handle missing workspaces gracefully", () => {
+      vol.fromJSON({
+        "/app/package.json": JSON.stringify({
+          name: "root",
+        }),
+      });
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      const result = findWorkspacePackageJsons("/app/package.json", ctx);
+      expect(result).toEqual([]);
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
 });

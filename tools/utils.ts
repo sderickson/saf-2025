@@ -39,31 +39,34 @@ export function writePackageJson(
   ctx.fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
 }
 
-// export function findWorkspacePackageJsons(packageJsonPath: string): string[] {
-//   const rootPackageJson = readPackageJson(packageJsonPath);
-//   if (!rootPackageJson.workspaces?.length) {
-//     console.error("No workspaces found in root package.json");
-//     return [];
-//   }
+export function findWorkspacePackageJsons(
+  packageJsonPath: string,
+  ctx: Context
+): string[] {
+  const rootPackageJson = readPackageJson(packageJsonPath, ctx);
+  if (!rootPackageJson.workspaces?.length) {
+    console.error("No workspaces found in root package.json");
+    return [];
+  }
 
-//   const packageJsonPaths = new Set<string>();
+  const packageJsonPaths = new Set<string>();
 
-//   rootPackageJson.workspaces.forEach((pattern) => {
-//     // Handle both glob patterns and direct paths
-//     if (pattern.includes("*")) {
-//       // It's a glob pattern
-//       const rootDir = path.dirname(packageJsonPath);
-//       const patternPath = path.join(rootDir, pattern, "package.json");
-//       const matches = glob.sync(patternPath);
-//       matches.forEach((match: string) => packageJsonPaths.add(match));
-//     } else {
-//       // It's a direct path
-//       const packageJsonPath = path.join(pattern, "package.json");
-//       if (fs.existsSync(packageJsonPath)) {
-//         packageJsonPaths.add(packageJsonPath);
-//       }
-//     }
-//   });
+  rootPackageJson.workspaces.forEach((pattern) => {
+    // Handle both glob patterns and direct paths
+    if (pattern.includes("*")) {
+      // It's a glob pattern
+      const rootDir = path.dirname(packageJsonPath);
+      const patternPath = path.join(rootDir, pattern, "package.json");
+      const matches = ctx.glob(patternPath);
+      matches.forEach((match: string) => packageJsonPaths.add(match));
+    } else {
+      // It's a direct path
+      const packageJsonPath = path.join(pattern, "package.json");
+      if (fs.existsSync(packageJsonPath)) {
+        packageJsonPaths.add(packageJsonPath);
+      }
+    }
+  });
 
-//   return Array.from(packageJsonPaths);
-// }
+  return Array.from(packageJsonPaths);
+}
