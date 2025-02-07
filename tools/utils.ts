@@ -31,9 +31,13 @@ export function readPackageJson(filePath: string, ctx: Context): PackageJson {
   }
 }
 
-// export function writePackageJson(filePath: string, content: PackageJson) {
-//   fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
-// }
+export function writePackageJson(
+  filePath: string,
+  content: PackageJson,
+  ctx: Context
+) {
+  ctx.fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
+}
 
 // export function findWorkspacePackageJsons(packageJsonPath: string): string[] {
 //   const rootPackageJson = readPackageJson(packageJsonPath);

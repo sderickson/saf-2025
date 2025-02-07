@@ -47,6 +47,7 @@ export interface Context {
   fs: {
     readFileSync: (path: string) => string;
     existsSync: (path: string) => boolean;
+    writeFileSync: (path: string, content: string) => void;
   };
   glob: (pattern: string) => string[];
 }

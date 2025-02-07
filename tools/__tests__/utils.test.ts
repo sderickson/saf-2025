@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fs, vol } from "memfs";
-import { findRootDir, readPackageJson } from "../utils.ts";
+import { findRootDir, readPackageJson, writePackageJson } from "../utils.ts";
 import { globMock, volumeJson } from "./mocks.ts";
-import type { Context } from "../types.ts";
+import type { Context, PackageJson } from "../types.ts";
 vi.mock("fs");
 
 describe("utils", () => {
@@ -15,6 +15,7 @@ describe("utils", () => {
       fs: {
         readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
         existsSync: (string) => fs.existsSync(string),
+        writeFileSync: (string, content) => fs.writeFileSync(string, content),
       },
       glob: globMock,
       workspace: undefined,
@@ -40,22 +41,18 @@ describe("utils", () => {
       expect(console.error).toHaveBeenCalled();
     });
   });
-  // // describe("writePackageJson", () => {
-  // //   it("should write formatted package.json", () => {
-  // //     const mockPackageJson: PackageJson = {
-  // //       name: "test-package",
-  // //       dependencies: { "dep-1": "1.0.0" },
-  // //     };
-  // //     const writeFileSpy = vi
-  // //       .spyOn(fs, "writeFileSync")
-  // //       .mockImplementation(() => {});
-  // //     writePackageJson("package.json", mockPackageJson);
-  // //     expect(writeFileSpy).toHaveBeenCalledWith(
-  // //       "package.json",
-  // //       JSON.stringify(mockPackageJson, null, 2) + "\n"
-  // //     );
-  // //   });
-  // // });
+  describe("writePackageJson", () => {
+    it("should write formatted package.json", () => {
+      const mockPackageJson: PackageJson = {
+        name: "test-package",
+        dependencies: { "dep-1": "1.0.0" },
+      };
+      writePackageJson("/app/package.json", mockPackageJson, ctx);
+      expect(fs.readFileSync("/app/package.json", "utf8")).toEqual(
+        JSON.stringify(mockPackageJson, null, 2) + "\n"
+      );
+    });
+  });
   // // describe("findWorkspacePackageJsons", () => {
   // //   it("should find all workspace package.json files", () => {
   // //     const mockRootPackageJson: PackageJson = {
