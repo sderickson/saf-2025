@@ -19,6 +19,7 @@ describe("utils", () => {
     vi.resetAllMocks();
     io = makeIO();
   });
+
   describe("findRootDir", () => {
     it("should find the root directory", () => {
       const result = findRootDir("/saf/package.json", io);
@@ -26,7 +27,6 @@ describe("utils", () => {
     });
   });
 
-  beforeEach(() => {});
   describe("readPackageJson", () => {
     it("should read and parse package.json", () => {
       const result = readPackageJson("/saf/package.json", io);

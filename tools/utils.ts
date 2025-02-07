@@ -102,11 +102,13 @@ export function getInternalDependencies(
         const dependencyPackageJson = project.workspacePackages.get(
           dependencyPackageJsonPath
         )!;
-        internalDependencies.set(
-          dependencyPackageJsonPath,
-          dependencyPackageJson
-        );
-        stack.push(dependencyPackageJsonPath);
+        if (!internalDependencies.has(dependencyPackageJsonPath)) {
+          internalDependencies.set(
+            dependencyPackageJsonPath,
+            dependencyPackageJson
+          );
+          stack.push(dependencyPackageJsonPath);
+        }
       }
     }
   }
