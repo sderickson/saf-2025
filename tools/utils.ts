@@ -1,26 +1,15 @@
-import * as fs from "fs";
 import * as path from "path";
-import * as glob from "glob";
-
-const __dirname = path.resolve();
-
-export interface PackageJson {
-  name: string;
-  workspaces?: string[];
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-  files?: string[];
-}
+import type { PackageJson, Context, IO, Project } from "./types.ts";
 
 // Ensure we're running from the root directory
-export function findRootDir() {
-  let currentDir = __dirname;
+export function findRootDir(startingPackage: string, io: IO) {
+  let currentDir = path.dirname(startingPackage);
   while (currentDir !== "/") {
-    if (fs.existsSync(path.join(currentDir, "package.json"))) {
+    if (io.fs.existsSync(path.join(currentDir, "package.json"))) {
       const pkg = JSON.parse(
-        fs.readFileSync(path.join(currentDir, "package.json"), "utf8")
+        io.fs.readFileSync(path.join(currentDir, "package.json"))
       );
-      if (pkg.name === "@saf/saf-2025") {
+      if (pkg.workspaces?.length) {
         return currentDir;
       }
     }
@@ -29,47 +18,106 @@ export function findRootDir() {
   throw new Error("Could not find root directory");
 }
 
-export function readPackageJson(filePath: string): PackageJson {
+export function readPackageJson(filePath: string, io: IO): PackageJson {
+  if (filePath[0] !== "/") {
+    throw new Error("File path must be absolute");
+  }
   try {
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return JSON.parse(io.fs.readFileSync(filePath));
   } catch (error) {
     console.error(`Error reading package.json at ${filePath}:`, error);
     return { name: "" };
   }
 }
 
-export function writePackageJson(filePath: string, content: PackageJson) {
-  fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
+export function writePackageJson(
+  filePath: string,
+  content: PackageJson,
+  io: IO
+) {
+  io.fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
 }
 
-export function findWorkspacePackageJsons(): string[] {
-  const rootPackageJson = readPackageJson("package.json");
-  if (!rootPackageJson.workspaces?.length) {
+export function readProject(packageJsonPath: string, io: IO): Project {
+  const project: Project = {
+    rootDir: path.dirname(packageJsonPath),
+    rootPackageJson: readPackageJson(packageJsonPath, io),
+    workspacePackages: new Map(),
+  };
+
+  if (!project.rootPackageJson.workspaces?.length) {
     console.error("No workspaces found in root package.json");
-    return [];
+    return project;
   }
 
   const packageJsonPaths = new Set<string>();
 
-  rootPackageJson.workspaces.forEach((pattern) => {
+  project.rootPackageJson.workspaces.forEach((pattern) => {
     // Handle both glob patterns and direct paths
     if (pattern.includes("*")) {
       // It's a glob pattern
-      const matches = glob.sync(pattern + "/package.json", { absolute: false });
+      const rootDir = path.dirname(packageJsonPath);
+      const patternPath = path.join(rootDir, pattern, "package.json");
+      const matches = io.glob(patternPath);
       matches.forEach((match: string) => packageJsonPaths.add(match));
     } else {
       // It's a direct path
-      const packageJsonPath = path.join(pattern, "package.json");
-      if (fs.existsSync(packageJsonPath)) {
+      const packageJsonPath = path.join(
+        project.rootDir,
+        pattern,
+        "package.json"
+      );
+      if (io.fs.existsSync(packageJsonPath)) {
         packageJsonPaths.add(packageJsonPath);
       }
     }
   });
 
-  return Array.from(packageJsonPaths);
+  packageJsonPaths.forEach((packageJsonPath) => {
+    const packageJson = readPackageJson(packageJsonPath, io);
+    project.workspacePackages.set(packageJsonPath, packageJson);
+  });
+
+  return project;
 }
 
-// Initialize workspace by finding and changing to root directory
-export function initWorkspace() {
-  process.chdir(findRootDir());
+export function getInternalDependencies(
+  packageJsonPath: string,
+  project: Project
+): Map<string, PackageJson> {
+  const packageNameToPath = new Map<string, string>();
+  for (const [path, packageJson] of project.workspacePackages.entries()) {
+    packageNameToPath.set(packageJson.name, path);
+  }
+
+  // collect all dependencies as package paths and their package.json
+  const stack: string[] = [packageJsonPath];
+  const internalDependencies = new Map<string, PackageJson>();
+  while (stack.length) {
+    const packageJsonPath = stack.pop()!;
+    const packageJson = project.workspacePackages.get(packageJsonPath)!;
+    for (const dependency of Object.keys(packageJson.dependencies ?? {})) {
+      if (dependency.startsWith("@saf/")) {
+        const dependencyPackageJsonPath = packageNameToPath.get(dependency)!;
+        const dependencyPackageJson = project.workspacePackages.get(
+          dependencyPackageJsonPath
+        )!;
+        if (!internalDependencies.has(dependencyPackageJsonPath)) {
+          internalDependencies.set(
+            dependencyPackageJsonPath,
+            dependencyPackageJson
+          );
+          stack.push(dependencyPackageJsonPath);
+        }
+      }
+    }
+  }
+
+  return internalDependencies;
+}
+
+export function getRelativePath(packageJsonPath: string, project: Project) {
+  const rootDir = project.rootDir;
+  const relativePath = path.relative(rootDir, packageJsonPath);
+  return relativePath.replace(/\\/g, "/");
 }

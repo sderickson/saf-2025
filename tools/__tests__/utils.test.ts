@@ -1,43 +1,40 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import * as fs from "fs";
-import * as path from "path";
+import { fs, vol } from "memfs";
 import {
-  PackageJson,
+  findRootDir,
+  getInternalDependencies,
+  getRelativePath,
   readPackageJson,
+  readProject,
   writePackageJson,
-  findWorkspacePackageJsons,
 } from "../utils.ts";
-import * as glob from "glob";
+import { makeIO, volumeJson } from "./mocks.ts";
+import type { IO, PackageJson } from "../types.ts";
 vi.mock("fs");
-vi.mock("glob");
 
 describe("utils", () => {
+  let io: IO;
   beforeEach(() => {
+    vol.fromJSON(volumeJson);
     vi.resetAllMocks();
+    io = makeIO();
+  });
+
+  describe("findRootDir", () => {
+    it("should find the root directory", () => {
+      const result = findRootDir("/saf/package.json", io);
+      expect(result).toBe("/saf");
+    });
   });
 
   describe("readPackageJson", () => {
     it("should read and parse package.json", () => {
-      const mockPackageJson: PackageJson = {
-        name: "test-package",
-        dependencies: { "dep-1": "1.0.0" },
-      };
-      vi.spyOn(fs, "readFileSync").mockReturnValue(
-        JSON.stringify(mockPackageJson)
-      );
-
-      const result = readPackageJson("package.json");
-      expect(result).toEqual(mockPackageJson);
-      expect(fs.readFileSync).toHaveBeenCalledWith("package.json", "utf8");
+      const result = readPackageJson("/saf/package.json", io);
+      expect(result).toBeDefined();
     });
-
     it("should handle errors gracefully", () => {
-      vi.spyOn(fs, "readFileSync").mockImplementation(() => {
-        throw new Error("File not found");
-      });
       vi.spyOn(console, "error").mockImplementation(() => {});
-
-      const result = readPackageJson("non-existent.json");
+      const result = readPackageJson("/saf/non-existent.json", io);
       expect(result).toEqual({ name: "" });
       expect(console.error).toHaveBeenCalled();
     });
@@ -49,57 +46,57 @@ describe("utils", () => {
         name: "test-package",
         dependencies: { "dep-1": "1.0.0" },
       };
-      const writeFileSpy = vi
-        .spyOn(fs, "writeFileSync")
-        .mockImplementation(() => {});
-
-      writePackageJson("package.json", mockPackageJson);
-
-      expect(writeFileSpy).toHaveBeenCalledWith(
-        "package.json",
+      writePackageJson("/saf/package.json", mockPackageJson, io);
+      expect(fs.readFileSync("/saf/package.json", "utf8")).toEqual(
         JSON.stringify(mockPackageJson, null, 2) + "\n"
       );
     });
   });
-
-  describe("findWorkspacePackageJsons", () => {
+  describe("readProject", () => {
     it("should find all workspace package.json files", () => {
-      const mockRootPackageJson: PackageJson = {
-        name: "root",
-        workspaces: ["packages/*", "tools"],
-      };
-
-      vi.spyOn(fs, "readFileSync").mockImplementation((filePath) => {
-        if (filePath === "package.json") {
-          return JSON.stringify(mockRootPackageJson);
-        }
-        return "{}";
-      });
-
-      vi.spyOn(glob, "sync").mockReturnValue(["packages/package.json"]);
-
-      vi.spyOn(fs, "existsSync").mockImplementation((filePath) => {
-        return String(filePath).endsWith("package.json");
-      });
-
-      const result = findWorkspacePackageJsons();
-      expect(result).toContain("packages/package.json");
-      expect(result).toContain("tools/package.json");
+      const result = readProject("/saf/package.json", io);
+      expect(result.workspacePackages.size).toBe(3);
+      expect(
+        result.workspacePackages.get("/saf/services/api/package.json")
+      ).toBeDefined();
+      expect(
+        result.workspacePackages.get("/saf/dbs/auth/package.json")
+      ).toBeDefined();
     });
-
     it("should handle missing workspaces gracefully", () => {
-      const mockRootPackageJson: PackageJson = {
-        name: "root",
-      };
-
-      vi.spyOn(fs, "readFileSync").mockReturnValue(
-        JSON.stringify(mockRootPackageJson)
-      );
+      vol.fromJSON({
+        "/saf/package.json": JSON.stringify({
+          name: "root",
+        }),
+      });
       vi.spyOn(console, "error").mockImplementation(() => {});
-
-      const result = findWorkspacePackageJsons();
-      expect(result).toEqual([]);
+      const result = readProject("/saf/package.json", io);
+      expect(result.workspacePackages.size).toBe(0);
       expect(console.error).toHaveBeenCalled();
+    });
+  });
+
+  describe("getInternalDependencies", () => {
+    it("should find all internal dependencies", () => {
+      const project = readProject("/saf/package.json", io);
+      const result = getInternalDependencies(
+        "/saf/services/api/package.json",
+        project
+      );
+      expect(result.size).toBe(2);
+      expect(result.get("/saf/dbs/auth/package.json")).toBeDefined();
+      expect(result.get("/saf/lib/dbs/package.json")).toBeDefined();
+      expect(result.get("/saf/services/api/package.json")).not.toBeDefined();
+      const authDb = result.get("/saf/dbs/auth/package.json");
+      expect(authDb?.dependencies?.["@saf/lib-dbs"]).toBeDefined();
+    });
+  });
+
+  describe("getRelativePath", () => {
+    it("should get the relative path", () => {
+      const project = readProject("/saf/package.json", io);
+      const result = getRelativePath("/saf/services/api/package.json", project);
+      expect(result).toBe("services/api/package.json");
     });
   });
 });

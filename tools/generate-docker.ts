@@ -5,97 +5,26 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
-import type { PackageJson } from "./utils.ts";
+import * as glob from "glob";
+import type { DockerCompose, PackageJson, WatchConfig } from "./types.ts";
 import {
   readPackageJson,
-  findWorkspacePackageJsons,
-  initWorkspace,
+  readProject,
+  getInternalDependencies,
+  getRelativePath,
+  findRootDir,
 } from "./utils.ts";
-
-// Initialize workspace
-initWorkspace();
-
-export interface WorkspaceInfo {
-  name: string;
-  path: string;
-  dependencies: string[]; // internal, mono-repo dependencies
-  files?: string[];
-}
-
-export interface WatchConfig {
-  action: "sync+restart";
-  path: string;
-  target: string;
-}
-
-export interface DockerComposeService {
-  build: {
-    context: string;
-    dockerfile: string;
-  };
-  develop?: {
-    watch?: WatchConfig[];
-  };
-  [key: string]: any;
-}
-
-export interface DockerCompose {
-  services: {
-    [key: string]: DockerComposeService;
-  };
-}
-
-export interface WorkspaceContext {
-  rootPackageJson: PackageJson;
-  workspacePackages: Map<string, WorkspaceInfo>;
-}
-
-export function createWorkspaceContext(): WorkspaceContext {
-  const rootPackageJson = readPackageJson("package.json");
-  if (!rootPackageJson.workspaces?.length) {
-    console.error("No workspaces found in root package.json");
-    return { rootPackageJson, workspacePackages: new Map() };
-  }
-
-  const workspacePackages = new Map<string, WorkspaceInfo>();
-  const packageJsonCache = new Map<string, PackageJson>();
-
-  // Single pass: collect all workspaces and their package.json contents
-  findWorkspacePackageJsons().forEach((packageJsonPath) => {
-    const packageJson = readPackageJson(packageJsonPath);
-    packageJsonCache.set(packageJson.name, packageJson);
-
-    // Create workspace entry (dependencies to be resolved)
-    workspacePackages.set(packageJson.name, {
-      name: packageJson.name,
-      path: path.dirname(packageJsonPath),
-      dependencies: [],
-      files: packageJson.files,
-    });
-  });
-
-  // Resolve dependencies using cached package.json contents
-  for (const [name, workspace] of workspacePackages) {
-    const packageJson = packageJsonCache.get(name);
-    if (!packageJson) continue;
-
-    const allDeps = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
-    };
-
-    workspace.dependencies = Object.keys(allDeps).filter((dep) =>
-      workspacePackages.has(dep)
-    );
-  }
-
-  return { rootPackageJson, workspacePackages };
-}
+import type { Context } from "./types.ts";
 
 export function generateDockerfile(
-  workspace: WorkspaceInfo,
-  context: WorkspaceContext
+  packageJsonPath: string,
+  ctx: Context
 ): string {
+  const packageJson = ctx.project.workspacePackages.get(packageJsonPath)!;
+  const dependencies = getInternalDependencies(packageJsonPath, ctx.project);
+  const workspacePath = getRelativePath(packageJsonPath, ctx.project);
+  const workspaceDir = path.dirname(workspacePath);
+
   const lines = [
     "FROM node:22-slim",
     "",
@@ -104,16 +33,16 @@ export function generateDockerfile(
     "# Copy package.json",
     "COPY package*.json ./",
     "COPY tsconfig.json ./",
-    `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
+    `COPY ${workspaceDir}/package*.json ./${workspaceDir}/`,
   ];
 
-  workspace.dependencies.forEach((dep) => {
-    const depWorkspace = context.workspacePackages.get(dep);
-    if (!depWorkspace) return;
+  dependencies.forEach((dep, depPath) => {
+    // const depWorkspace = dep.workspacePackages.get(dep);
+    // if (!depWorkspace) return;
+    const depWorkspacePath = getRelativePath(depPath, ctx.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
 
-    lines.push(
-      `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
-    );
+    lines.push(`COPY ${depWorkspaceDir}/package*.json ./${depWorkspaceDir}/`);
   });
 
   lines.push("", "RUN npm install --omit=dev");
@@ -121,35 +50,36 @@ export function generateDockerfile(
   lines.push("", "# Copy source files");
 
   // Copy dependencies
-  workspace.dependencies.forEach((dep) => {
-    const depWorkspace = context.workspacePackages.get(dep);
-    if (!depWorkspace) return;
+  dependencies.forEach((dep, depPath) => {
+    if (!dep) return;
+    const depWorkspacePath = getRelativePath(depPath, ctx.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
 
-    if (depWorkspace.files) {
-      depWorkspace.files.forEach((file) => {
+    if (dep.files) {
+      dep.files.forEach((file) => {
         lines.push(
-          `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
+          `COPY ${depWorkspaceDir}/${file} ./${depWorkspaceDir}/${file}`
         );
       });
     } else {
-      lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
+      lines.push(`COPY ${depWorkspaceDir} ./${depWorkspaceDir}`);
     }
     lines.push("");
   });
 
   // Copy service files
-  if (workspace.files) {
-    workspace.files.forEach((file) => {
-      lines.push(`COPY ${workspace.path}/${file} ./${workspace.path}/${file}`);
+  if (packageJson.files) {
+    packageJson.files.forEach((file) => {
+      lines.push(`COPY ${workspaceDir}/${file} ./${workspaceDir}/${file}`);
     });
   } else {
-    lines.push(`COPY ${workspace.path} ./${workspace.path}`);
+    lines.push(`COPY ${workspaceDir} ./${workspaceDir}`);
   }
 
   lines.push(
     "",
     'HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]',
-    `WORKDIR /app/${workspace.path}`,
+    `WORKDIR /app/${workspaceDir}`,
     'CMD ["npm", "start"]'
   );
 
@@ -157,8 +87,9 @@ export function generateDockerfile(
 }
 
 export function generateWatchPaths(
-  workspace: WorkspaceInfo,
-  context: WorkspaceContext
+  packageJsonPath: string,
+  dependencies: Map<string, PackageJson>,
+  context: Context
 ): WatchConfig[] {
   const watchPaths: WatchConfig[] = [];
 
@@ -172,49 +103,59 @@ export function generateWatchPaths(
   };
 
   // Add dependency watch paths
-  workspace.dependencies.forEach((dep) => {
-    const depWorkspace = context.workspacePackages.get(dep);
-    if (!depWorkspace) return;
-
-    if (depWorkspace.files) {
-      depWorkspace.files.forEach((file) => {
+  Array.from(dependencies.keys()).forEach((depPath) => {
+    const dep = dependencies.get(depPath)!;
+    const depWorkspacePath = getRelativePath(depPath, context.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
+    if (dep.files) {
+      dep.files.forEach((file) => {
+        // TODO - don't rely on that every package is two levels deep
         addWatch(
-          `../../${depWorkspace.path}/${file}`,
-          `/app/${depWorkspace.path}/${file}`
+          `../../${depWorkspaceDir}/${file}`,
+          `/app/${depWorkspaceDir}/${file}`
         );
       });
     } else {
-      addWatch(`../../${depWorkspace.path}`, `/app/${depWorkspace.path}`);
+      addWatch(`../../${depWorkspaceDir}`, `/app/${depWorkspaceDir}`);
     }
   });
 
+  const workspacePath = getRelativePath(packageJsonPath, context.project);
+  const workspaceDir = path.dirname(workspacePath);
   // Add service watch path
-  addWatch(".", `/app/${workspace.path}`);
+  addWatch(".", `/app/${workspaceDir}`);
 
   return watchPaths;
 }
 
 export function generateDockerCompose(
-  workspace: WorkspaceInfo,
-  context: WorkspaceContext
+  packageJsonPath: string,
+  context: Context
 ): string {
-  const templatePath = path.join(
-    workspace.path,
-    "docker-compose.yaml.template"
+  const relativePath = getRelativePath(packageJsonPath, context.project);
+  const workspaceDir = path.dirname(packageJsonPath);
+  const relativeWorkspaceDir = path.dirname(relativePath);
+  const workspacePackageJson =
+    context.project.workspacePackages.get(packageJsonPath)!;
+  const templatePath = path.join(workspaceDir, "docker-compose.yaml.template");
+  const dependencies = getInternalDependencies(
+    packageJsonPath,
+    context.project
   );
+
   let compose: DockerCompose;
-  const serviceName = workspace.name.replace("@saf/", "");
+  const serviceName = workspacePackageJson.name.replace("@saf/", "");
 
   try {
-    if (fs.existsSync(templatePath)) {
-      compose = yaml.parse(fs.readFileSync(templatePath, "utf8"));
+    if (context.io.fs.existsSync(templatePath)) {
+      compose = yaml.parse(context.io.fs.readFileSync(templatePath));
     } else {
       compose = {
         services: {
           [serviceName]: {
             build: {
               context: ".",
-              dockerfile: path.join(workspace.path, "Dockerfile"),
+              dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
             },
           },
         },
@@ -227,14 +168,14 @@ export function generateDockerCompose(
     ] || {
       build: {
         context: ".",
-        dockerfile: path.join(workspace.path, "Dockerfile"),
+        dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
       },
     });
 
     service.develop = service.develop || {};
     service.develop.watch = [
       ...(service.develop.watch || []),
-      ...generateWatchPaths(workspace, context),
+      ...generateWatchPaths(packageJsonPath, dependencies, context),
     ];
 
     // Remove duplicates
@@ -248,28 +189,49 @@ export function generateDockerCompose(
 
     return yaml.stringify(compose);
   } catch (error) {
-    console.error(`Error processing template for ${workspace.name}:`, error);
+    console.error(`Error processing template for ${packageJsonPath}:`, error);
     throw error;
   }
 }
 
 export function main() {
-  const context = createWorkspaceContext();
-  const serviceWorkspaces = Array.from(
-    context.workspacePackages.values()
-  ).filter((w) => w.path.startsWith("services/"));
+  const thisPackagePath = path.join(process.cwd(), "package.json");
+  const io = {
+    fs: {
+      readFileSync: (path: string) => fs.readFileSync(path, "utf8"),
+      writeFileSync: (path: string, content: string) =>
+        fs.writeFileSync(path, content),
+      existsSync: (path: string) => fs.existsSync(path),
+    },
+    glob: (pattern: string) => glob.sync(pattern),
+  };
+  const rootDir = findRootDir(thisPackagePath, io);
+  const projectPackagePath = path.join(rootDir, "package.json");
+  const project = readProject(projectPackagePath, io);
 
-  serviceWorkspaces.forEach((workspace) => {
-    const dockerfilePath = path.join(workspace.path, "Dockerfile");
-    const dockerComposePath = path.join(workspace.path, "docker-compose.yaml");
-    console.log("writing to workspace", workspace.path);
+  const servicePackagePaths = Array.from(
+    project.workspacePackages.keys()
+  ).filter((w) => w.includes("/services/"));
 
-    fs.writeFileSync(dockerfilePath, generateDockerfile(workspace, context));
+  servicePackagePaths.forEach((servicePackagePath) => {
+    const workspaceDir = path.dirname(servicePackagePath);
+    const dockerfilePath = path.join(workspaceDir, "Dockerfile");
+    const dockerComposePath = path.join(workspaceDir, "docker-compose.yaml");
+
+    const context = {
+      project,
+      io,
+    };
+
+    fs.writeFileSync(
+      dockerfilePath,
+      generateDockerfile(servicePackagePath, context)
+    );
     fs.writeFileSync(
       dockerComposePath,
-      generateDockerCompose(workspace, context)
+      generateDockerCompose(servicePackagePath, context)
     );
 
-    console.log(`Generated Docker files for ${workspace.name}`);
+    console.log(`Generated Docker files for ${workspaceDir}`);
   });
 }

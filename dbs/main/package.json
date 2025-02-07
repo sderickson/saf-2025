@@ -13,7 +13,7 @@
         "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
-        "@saf/drizzle-sqlite3": "workspace:*",
+        "@saf/drizzle-sqlite3": "*",
         "better-sqlite3": "11.8.0",
         "drizzle-kit": "^0.30.1",
         "drizzle-orm": "^0.38.3"

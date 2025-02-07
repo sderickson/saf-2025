@@ -18,5 +18,8 @@ services:
           path: ../../specs/apis/dist
           target: /app/specs/apis/dist
         - action: sync+restart
+          path: ../../lib/drizzle-sqlite3
+          target: /app/lib/drizzle-sqlite3
+        - action: sync+restart
           path: .
           target: /app/services/api
