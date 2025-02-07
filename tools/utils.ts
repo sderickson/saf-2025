@@ -8,7 +8,7 @@ export function findRootDir(ctx: Context) {
   while (currentDir !== "/") {
     if (ctx.fs.existsSync(path.join(currentDir, "package.json"))) {
       const pkg = JSON.parse(
-        ctx.fs.readFileSync(path.join(currentDir, "package.json"), "utf8")
+        ctx.fs.readFileSync(path.join(currentDir, "package.json"))
       );
       if (pkg.workspaces?.length) {
         return currentDir;
@@ -19,19 +19,17 @@ export function findRootDir(ctx: Context) {
   throw new Error("Could not find root directory");
 }
 
-// export function readPackageJson(filePath: string): PackageJson {
-//   console.log("fs", fs);
-
-//   if (filePath[0] !== "/") {
-//     throw new Error("File path must be absolute");
-//   }
-//   try {
-//     return JSON.parse(fs.readFileSync(filePath, "utf8"));
-//   } catch (error) {
-//     console.error(`Error reading package.json at ${filePath}:`, error);
-//     return { name: "" };
-//   }
-// }
+export function readPackageJson(filePath: string, ctx: Context): PackageJson {
+  if (filePath[0] !== "/") {
+    throw new Error("File path must be absolute");
+  }
+  try {
+    return JSON.parse(ctx.fs.readFileSync(filePath));
+  } catch (error) {
+    console.error(`Error reading package.json at ${filePath}:`, error);
+    return { name: "" };
+  }
+}
 
 // export function writePackageJson(filePath: string, content: PackageJson) {
 //   fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");

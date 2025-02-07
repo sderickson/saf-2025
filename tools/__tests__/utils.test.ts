@@ -1,52 +1,45 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { fs } from "memfs";
-import { findRootDir } from "../utils.ts";
-import { globMock } from "./mocks.ts";
+import { fs, vol } from "memfs";
+import { findRootDir, readPackageJson } from "../utils.ts";
+import { globMock, volumeJson } from "./mocks.ts";
 import type { Context } from "../types.ts";
 vi.mock("fs");
 
 describe("utils", () => {
+  let ctx: Context;
+  beforeEach(() => {
+    vol.fromJSON(volumeJson);
+    vi.resetAllMocks();
+    ctx = {
+      startingPackage: "/app/package.json",
+      fs: {
+        readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
+        existsSync: (string) => fs.existsSync(string),
+      },
+      glob: globMock,
+      workspace: undefined,
+    };
+  });
   describe("findRootDir", () => {
     it("should find the root directory", () => {
-      const ctx: Context = {
-        startingPackage: "/app/package.json",
-        fs: {
-          readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
-          existsSync: (string) => fs.existsSync(string),
-        },
-        glob: globMock,
-        workspace: undefined,
-      };
       const result = findRootDir(ctx);
       expect(result).toBe("/app");
     });
   });
 
-  // beforeEach(() => {
-  // });
-  // describe("readPackageJson", () => {
-  //   it("should read and parse package.json", () => {
-  //     // const mockPackageJson: PackageJson = {
-  //     //   name: "test-package",
-  //     //   dependencies: { "dep-1": "1.0.0" },
-  //     // };
-  //     // vi.spyOn(fs, "readFileSync").mockReturnValue(
-  //     //   JSON.stringify(mockPackageJson)
-  //     // );
-  //     const result = readPackageJson("/app/package.json");
-  //     expect(result).toBeDefined();
-  //     // expect(fs.readFileSync).toHaveBeenCalledWith("/app/package.json", "utf8");
-  //   });
-  //   // it("should handle errors gracefully", () => {
-  //   //   vi.spyOn(fs, "readFileSync").mockImplementation(() => {
-  //   //     throw new Error("File not found");
-  //   //   });
-  //   //   vi.spyOn(console, "error").mockImplementation(() => {});
-  //   //   const result = readPackageJson("non-existent.json");
-  //   //   expect(result).toEqual({ name: "" });
-  //   //   expect(console.error).toHaveBeenCalled();
-  //   // });
-  // });
+  beforeEach(() => {});
+  describe("readPackageJson", () => {
+    it("should read and parse package.json", () => {
+      const result = readPackageJson("/app/package.json", ctx);
+      expect(result).toBeDefined();
+    });
+    it("should handle errors gracefully", () => {
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      const result = readPackageJson("/app/non-existent.json", ctx);
+      expect(result).toEqual({ name: "" });
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
   // // describe("writePackageJson", () => {
   // //   it("should write formatted package.json", () => {
   // //     const mockPackageJson: PackageJson = {
