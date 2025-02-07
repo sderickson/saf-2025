@@ -2,11 +2,11 @@ import { minimatch } from "minimatch";
 import { vol, fs } from "memfs";
 import { Context } from "../types.ts";
 export const volumeJson = {
-  "/app/package.json": JSON.stringify({
+  "/saf/package.json": JSON.stringify({
     name: "@saf/saf-2025",
     workspaces: ["services/*", "dbs/*"],
   }),
-  "/app/services/api/package.json": JSON.stringify({
+  "/saf/services/api/package.json": JSON.stringify({
     name: "@saf/api",
     dependencies: {
       "@saf/auth-db": "1.0.0",
@@ -14,12 +14,29 @@ export const volumeJson = {
     },
     files: ["src/**/*.ts", "package.json"],
   }),
-  "/app/dbs/auth/package.json": JSON.stringify({
+  "/saf/services/api/docker-compose.yaml.template": JSON.stringify({
+    services: {
+      api: {
+        build: {
+          context: ".",
+          dockerfile: "services/api/Dockerfile",
+        },
+        environment: {
+          NODE_ENV: "development",
+        },
+      },
+    },
+  }),
+  "/saf/dbs/auth/package.json": JSON.stringify({
     name: "@saf/auth-db",
     dependencies: {
       sqlite3: "5.0.0",
+      "@saf/lib-dbs": "1.0.0",
     },
     files: ["src/**/*.ts", "package.json"],
+  }),
+  "/saf/lib/dbs/package.json": JSON.stringify({
+    name: "@saf/lib-dbs",
   }),
 };
 
@@ -33,7 +50,7 @@ export const globMock = (pattern: string) => {
 
 export const makeContext = (): Context => {
   return {
-    startingPackage: "/app/package.json",
+    startingPackage: "/saf/package.json",
     fs: {
       readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
       existsSync: (string) => fs.existsSync(string),

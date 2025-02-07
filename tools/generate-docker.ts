@@ -5,7 +5,13 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
-import type { PackageJson, WorkspaceContext, WorkspaceInfo } from "./types.ts";
+import type {
+  DockerCompose,
+  PackageJson,
+  WatchConfig,
+  WorkspaceContext,
+  WorkspaceInfo,
+} from "./types.ts";
 import { readPackageJson, findWorkspacePackageJsons } from "./utils.ts";
 import { Context } from "./types.ts";
 
@@ -149,9 +155,12 @@ export function generateDockerfile(
 //   workspace.dependencies.forEach((dep) => {
 //     const depWorkspace = context.workspacePackages.get(dep);
 //     if (!depWorkspace) return;
+//     console.log("depWorkspace", depWorkspace);
+//     console.log("context.rootPackageJson", context.rootPackageJson);
 
 //     if (depWorkspace.files) {
 //       depWorkspace.files.forEach((file) => {
+//         // TODO - don't rely on that every package is two levels deep
 //         addWatch(
 //           `../../${depWorkspace.path}/${file}`,
 //           `/app/${depWorkspace.path}/${file}`

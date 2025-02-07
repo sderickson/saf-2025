@@ -1,8 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { vol } from "memfs";
-import { addWorkspaceContext, generateDockerfile } from "../generate-docker.ts";
+import {
+  addWorkspaceContext,
+  generateDockerCompose,
+  generateDockerfile,
+} from "../generate-docker.ts";
 import { makeContext, volumeJson } from "./mocks.ts";
 import type { Context, WorkspaceContext, WorkspaceInfo } from "../types.ts";
+import * as yaml from "yaml";
 describe("generate-docker", () => {
   let ctx: Context;
   beforeEach(() => {
@@ -12,7 +17,7 @@ describe("generate-docker", () => {
 
   describe("createWorkspaceContext", () => {
     it("should create context with workspaces and their dependencies", () => {
-      const context = addWorkspaceContext("/app/package.json", ctx);
+      const context = addWorkspaceContext("/saf/package.json", ctx);
       const apiWorkspace = context.workspace?.workspacePackages.get("@saf/api");
       expect(apiWorkspace).toBeDefined();
       expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
@@ -21,7 +26,7 @@ describe("generate-docker", () => {
 
     it("should handle missing workspaces gracefully", () => {
       // Update the root package.json to have no workspaces
-      vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
+      vol.writeFileSync("/saf/package.json", JSON.stringify({ name: "root" }));
 
       vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -94,84 +99,33 @@ describe("generate-docker", () => {
   });
 
   // describe("generateDockerCompose", () => {
-  //   let mockContext: WorkspaceContext;
-
-  //   beforeEach(() => {
-  //     mockContext = {
-  //       rootPackageJson: { name: "root" },
-  //       workspacePackages: new Map([
-  //         [
-  //           "@saf/api",
-  //           {
-  //             name: "@saf/api",
-  //             path: "services/api",
-  //             dependencies: ["@saf/auth-db"],
-  //             files: ["src/**/*.ts"],
-  //           },
-  //         ],
-  //         [
-  //           "@saf/auth-db",
-  //           {
-  //             name: "@saf/auth-db",
-  //             path: "dbs/auth",
-  //             dependencies: [],
-  //             files: ["src/**/*.ts"],
-  //           },
-  //         ],
-  //       ]),
-  //     };
-
-  //     // Setup template file in memfs
-  //     vol.writeFileSync(
-  //       "services/api/docker-compose.yaml.template",
-  //       yaml.stringify({
-  //         services: {
-  //           api: {
-  //             build: {
-  //               context: ".",
-  //               dockerfile: "services/api/Dockerfile",
-  //             },
-  //             environment: {
-  //               NODE_ENV: "development",
-  //             },
-  //           },
-  //         },
-  //       })
-  //     );
-  //   });
-
   //   it("should generate docker-compose with watch paths", () => {
-  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
-  //     const compose = generateDockerCompose(workspace, mockContext);
+  //     const context = addWorkspaceContext("/saf/package.json", ctx);
+  //     const workspace = context.workspace?.workspacePackages.get("@saf/api")!;
+  //     const compose = generateDockerCompose(workspace, context.workspace!);
   //     const parsed = yaml.parse(compose);
-
   //     expect(parsed.services.api.develop.watch).toContainEqual({
   //       action: "sync+restart",
   //       path: ".",
-  //       target: "/app/services/api",
+  //       target: "/saf/services/api",
   //     });
   //   });
-
-  //   it("should use existing template if available", () => {
-  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
-  //     const compose = generateDockerCompose(workspace, mockContext);
-  //     const parsed = yaml.parse(compose);
-
-  //     expect(parsed.services.api.environment).toEqual({
-  //       NODE_ENV: "development",
-  //     });
-  //   });
-
-  //   it("should handle template parsing errors", () => {
-  //     const workspace = mockContext.workspacePackages.get("@saf/api")!;
-
-  //     // Write invalid YAML to template
-  //     vol.writeFileSync(
-  //       "services/api/docker-compose.yaml.template",
-  //       "invalid: yaml: content"
-  //     );
-
-  //     expect(() => generateDockerCompose(workspace, mockContext)).toThrow();
-  //   });
+  //   // it("should use existing template if available", () => {
+  //   //   const workspace = mockContext.workspacePackages.get("@saf/api")!;
+  //   //   const compose = generateDockerCompose(workspace, mockContext);
+  //   //   const parsed = yaml.parse(compose);
+  //   //   expect(parsed.services.api.environment).toEqual({
+  //   //     NODE_ENV: "development",
+  //   //   });
+  //   // });
+  //   // it("should handle template parsing errors", () => {
+  //   //   const workspace = mockContext.workspacePackages.get("@saf/api")!;
+  //   //   // Write invalid YAML to template
+  //   //   vol.writeFileSync(
+  //   //     "/app/services/api/docker-compose.yaml.template",
+  //   //     "invalid: yaml: content"
+  //   //   );
+  //   //   expect(() => generateDockerCompose(workspace, mockContext)).toThrow();
+  //   // });
   // });
 });
