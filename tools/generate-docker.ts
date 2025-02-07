@@ -5,77 +5,17 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
-import type {
-  DockerCompose,
-  PackageJson,
-  WatchConfig,
-  WorkspaceContext,
-  WorkspaceInfo,
-} from "./types.ts";
-import { readPackageJson, findWorkspacePackageJsons } from "./utils.ts";
+import type { PackageJson } from "./types.ts";
+import { readPackageJson, readProject } from "./utils.ts";
 import { Context } from "./types.ts";
 
-export function addWorkspaceContext(
-  startingPackage: string,
-  ctx: Context
-): Context {
-  const rootPackageJson = readPackageJson(startingPackage, ctx);
-  if (!rootPackageJson.workspaces?.length) {
-    console.error("No workspaces found in root package.json");
-    return {
-      ...ctx,
-      workspace: {
-        rootPackageJson,
-        workspacePackages: new Map(),
-      },
-    };
-  }
-
-  const workspacePackages = new Map<string, WorkspaceInfo>();
-  const packageJsonCache = new Map<string, PackageJson>();
-
-  // Single pass: collect all workspaces and their package.json contents
-  findWorkspacePackageJsons(startingPackage, ctx).forEach((packageJsonPath) => {
-    const packageJson = readPackageJson(packageJsonPath, ctx);
-    packageJsonCache.set(packageJson.name, packageJson);
-
-    // Create workspace entry (dependencies to be resolved)
-    workspacePackages.set(packageJson.name, {
-      name: packageJson.name,
-      path: path.dirname(packageJsonPath),
-      dependencies: [],
-      files: packageJson.files,
-    });
-  });
-
-  // Resolve dependencies using cached package.json contents
-  for (const [name, workspace] of workspacePackages) {
-    const packageJson = packageJsonCache.get(name);
-    if (!packageJson) continue;
-
-    const allDeps = {
-      ...packageJson.dependencies,
-      ...packageJson.devDependencies,
-    };
-
-    workspace.dependencies = Object.keys(allDeps).filter((dep) =>
-      workspacePackages.has(dep)
-    );
-  }
-
-  return {
-    ...ctx,
-    workspace: {
-      rootPackageJson,
-      workspacePackages,
-    },
-  };
-}
-
 export function generateDockerfile(
-  workspace: WorkspaceInfo,
-  workspaceContext: WorkspaceContext
+  packageJsonPath: string,
+  ctx: Context
 ): string {
+  const packageJson = ctx.project.workspacePackages.get(packageJsonPath)!;
+  const dependencies = getDependencies(packageJsonPath, packageJson);
+
   const lines = [
     "FROM node:22-slim",
     "",

@@ -6,13 +6,6 @@ export interface PackageJson {
   files?: string[];
 }
 
-export interface WorkspaceInfo {
-  name: string;
-  path: string;
-  dependencies: string[]; // internal, mono-repo dependencies
-  files?: string[];
-}
-
 export interface WatchConfig {
   action: "sync+restart";
   path: string;
@@ -36,18 +29,22 @@ export interface DockerCompose {
   };
 }
 
-export interface WorkspaceContext {
+export interface Project {
+  rootDir: string;
   rootPackageJson: PackageJson;
-  workspacePackages: Map<string, WorkspaceInfo>;
+  workspacePackages: Map<string, PackageJson>;
 }
 
-export interface Context {
-  startingPackage: string;
-  workspace: WorkspaceContext | undefined;
+export interface IO {
   fs: {
     readFileSync: (path: string) => string;
     existsSync: (path: string) => boolean;
     writeFileSync: (path: string, content: string) => void;
   };
   glob: (pattern: string) => string[];
+}
+
+export interface Context {
+  project: Project;
+  io: IO;
 }

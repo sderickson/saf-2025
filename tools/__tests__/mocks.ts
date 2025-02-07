@@ -1,10 +1,10 @@
 import { minimatch } from "minimatch";
 import { vol, fs } from "memfs";
-import { Context } from "../types.ts";
+import { IO } from "../types.ts";
 export const volumeJson = {
   "/saf/package.json": JSON.stringify({
     name: "@saf/saf-2025",
-    workspaces: ["services/*", "dbs/*"],
+    workspaces: ["services/*", "dbs/*", "lib/*"],
   }),
   "/saf/services/api/package.json": JSON.stringify({
     name: "@saf/api",
@@ -37,6 +37,7 @@ export const volumeJson = {
   }),
   "/saf/lib/dbs/package.json": JSON.stringify({
     name: "@saf/lib-dbs",
+    dependencies: {},
   }),
 };
 
@@ -48,15 +49,13 @@ export const globMock = (pattern: string) => {
   return allFiles.filter((file) => minimatch(file, pattern));
 };
 
-export const makeContext = (): Context => {
+export const makeIO = (): IO => {
   return {
-    startingPackage: "/saf/package.json",
     fs: {
       readFileSync: (string) => fs.readFileSync(string, "utf8").toString(),
       existsSync: (string) => fs.existsSync(string),
       writeFileSync: (string, content) => fs.writeFileSync(string, content),
     },
     glob: globMock,
-    workspace: undefined,
   };
 };

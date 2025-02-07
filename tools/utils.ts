@@ -1,14 +1,14 @@
 import * as path from "path";
-import type { PackageJson, Context } from "./types.ts";
+import type { PackageJson, Context, IO, Project } from "./types.ts";
 import { fs } from "memfs";
 
 // Ensure we're running from the root directory
-export function findRootDir(ctx: Context) {
-  let currentDir = path.dirname(ctx.startingPackage);
+export function findRootDir(startingPackage: string, io: IO) {
+  let currentDir = path.dirname(startingPackage);
   while (currentDir !== "/") {
-    if (ctx.fs.existsSync(path.join(currentDir, "package.json"))) {
+    if (io.fs.existsSync(path.join(currentDir, "package.json"))) {
       const pkg = JSON.parse(
-        ctx.fs.readFileSync(path.join(currentDir, "package.json"))
+        io.fs.readFileSync(path.join(currentDir, "package.json"))
       );
       if (pkg.workspaces?.length) {
         return currentDir;
@@ -19,12 +19,12 @@ export function findRootDir(ctx: Context) {
   throw new Error("Could not find root directory");
 }
 
-export function readPackageJson(filePath: string, ctx: Context): PackageJson {
+export function readPackageJson(filePath: string, io: IO): PackageJson {
   if (filePath[0] !== "/") {
     throw new Error("File path must be absolute");
   }
   try {
-    return JSON.parse(ctx.fs.readFileSync(filePath));
+    return JSON.parse(io.fs.readFileSync(filePath));
   } catch (error) {
     console.error(`Error reading package.json at ${filePath}:`, error);
     return { name: "" };
@@ -34,30 +34,32 @@ export function readPackageJson(filePath: string, ctx: Context): PackageJson {
 export function writePackageJson(
   filePath: string,
   content: PackageJson,
-  ctx: Context
+  io: IO
 ) {
-  ctx.fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
+  io.fs.writeFileSync(filePath, JSON.stringify(content, null, 2) + "\n");
 }
 
-export function findWorkspacePackageJsons(
-  packageJsonPath: string,
-  ctx: Context
-): string[] {
-  const rootPackageJson = readPackageJson(packageJsonPath, ctx);
-  if (!rootPackageJson.workspaces?.length) {
+export function readProject(packageJsonPath: string, io: IO): Project {
+  const project: Project = {
+    rootDir: path.dirname(packageJsonPath),
+    rootPackageJson: readPackageJson(packageJsonPath, io),
+    workspacePackages: new Map(),
+  };
+
+  if (!project.rootPackageJson.workspaces?.length) {
     console.error("No workspaces found in root package.json");
-    return [];
+    return project;
   }
 
   const packageJsonPaths = new Set<string>();
 
-  rootPackageJson.workspaces.forEach((pattern) => {
+  project.rootPackageJson.workspaces.forEach((pattern) => {
     // Handle both glob patterns and direct paths
     if (pattern.includes("*")) {
       // It's a glob pattern
       const rootDir = path.dirname(packageJsonPath);
       const patternPath = path.join(rootDir, pattern, "package.json");
-      const matches = ctx.glob(patternPath);
+      const matches = io.glob(patternPath);
       matches.forEach((match: string) => packageJsonPaths.add(match));
     } else {
       // It's a direct path
@@ -68,5 +70,38 @@ export function findWorkspacePackageJsons(
     }
   });
 
-  return Array.from(packageJsonPaths);
+  packageJsonPaths.forEach((packageJsonPath) => {
+    const packageJson = readPackageJson(packageJsonPath, io);
+    project.workspacePackages.set(packageJsonPath, packageJson);
+  });
+
+  return project;
+}
+
+export function getInternalDependencies(
+  packageJsonPath: string,
+  project: Project
+): Map<string, PackageJson> {
+  // make a map of package names to package paths
+  const packageNameToPath = new Map<string, string>();
+  for (const [path, packageJson] of project.workspacePackages.entries()) {
+    packageNameToPath.set(packageJson.name, path);
+  }
+
+  // collect all dependencies as package paths and their package.json
+  const stack: string[] = [packageJsonPath];
+  const internalDependencies = new Map<string, PackageJson>();
+  while (stack.length) {
+    const packageJsonPath = stack.pop()!;
+    const packageJson = project.workspacePackages.get(packageJsonPath)!;
+    for (const dependency of Object.keys(packageJson.dependencies ?? {})) {
+      if (dependency.startsWith("@saf/")) {
+        const dependencyPackageJsonPath = packageNameToPath.get(dependency)!;
+        internalDependencies.set(dependencyPackageJsonPath, packageJson);
+        stack.push(dependencyPackageJsonPath);
+      }
+    }
+  }
+
+  return internalDependencies;
 }
