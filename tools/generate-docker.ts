@@ -66,69 +66,69 @@ export function addWorkspaceContext(
   };
 }
 
-// export function generateDockerfile(
-//   workspace: WorkspaceInfo,
-//   context: WorkspaceContext
-// ): string {
-//   const lines = [
-//     "FROM node:22-slim",
-//     "",
-//     "WORKDIR /app",
-//     "",
-//     "# Copy package.json",
-//     "COPY package*.json ./",
-//     "COPY tsconfig.json ./",
-//     `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
-//   ];
+export function generateDockerfile(
+  workspace: WorkspaceInfo,
+  workspaceContext: WorkspaceContext
+): string {
+  const lines = [
+    "FROM node:22-slim",
+    "",
+    "WORKDIR /app",
+    "",
+    "# Copy package.json",
+    "COPY package*.json ./",
+    "COPY tsconfig.json ./",
+    `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
+  ];
 
-//   workspace.dependencies.forEach((dep) => {
-//     const depWorkspace = context.workspacePackages.get(dep);
-//     if (!depWorkspace) return;
+  workspace.dependencies.forEach((dep) => {
+    const depWorkspace = workspaceContext.workspacePackages.get(dep);
+    if (!depWorkspace) return;
 
-//     lines.push(
-//       `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
-//     );
-//   });
+    lines.push(
+      `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
+    );
+  });
 
-//   lines.push("", "RUN npm install --omit=dev");
+  lines.push("", "RUN npm install --omit=dev");
 
-//   lines.push("", "# Copy source files");
+  lines.push("", "# Copy source files");
 
-//   // Copy dependencies
-//   workspace.dependencies.forEach((dep) => {
-//     const depWorkspace = context.workspacePackages.get(dep);
-//     if (!depWorkspace) return;
+  // Copy dependencies
+  workspace.dependencies.forEach((dep) => {
+    const depWorkspace = workspaceContext.workspacePackages.get(dep);
+    if (!depWorkspace) return;
 
-//     if (depWorkspace.files) {
-//       depWorkspace.files.forEach((file) => {
-//         lines.push(
-//           `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
-//         );
-//       });
-//     } else {
-//       lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
-//     }
-//     lines.push("");
-//   });
+    if (depWorkspace.files) {
+      depWorkspace.files.forEach((file) => {
+        lines.push(
+          `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
+        );
+      });
+    } else {
+      lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
+    }
+    lines.push("");
+  });
 
-//   // Copy service files
-//   if (workspace.files) {
-//     workspace.files.forEach((file) => {
-//       lines.push(`COPY ${workspace.path}/${file} ./${workspace.path}/${file}`);
-//     });
-//   } else {
-//     lines.push(`COPY ${workspace.path} ./${workspace.path}`);
-//   }
+  // Copy service files
+  if (workspace.files) {
+    workspace.files.forEach((file) => {
+      lines.push(`COPY ${workspace.path}/${file} ./${workspace.path}/${file}`);
+    });
+  } else {
+    lines.push(`COPY ${workspace.path} ./${workspace.path}`);
+  }
 
-//   lines.push(
-//     "",
-//     'HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]',
-//     `WORKDIR /app/${workspace.path}`,
-//     'CMD ["npm", "start"]'
-//   );
+  lines.push(
+    "",
+    'HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]',
+    `WORKDIR /app/${workspace.path}`,
+    'CMD ["npm", "start"]'
+  );
 
-//   return lines.join("\n");
-// }
+  return lines.join("\n");
+}
 
 // export function generateWatchPaths(
 //   workspace: WorkspaceInfo,
