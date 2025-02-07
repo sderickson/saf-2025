@@ -5,14 +5,16 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
+import * as glob from "glob";
 import type { DockerCompose, PackageJson, WatchConfig } from "./types.ts";
 import {
   readPackageJson,
   readProject,
   getInternalDependencies,
   getRelativePath,
+  findRootDir,
 } from "./utils.ts";
-import { Context } from "./types.ts";
+import type { Context } from "./types.ts";
 
 export function generateDockerfile(
   packageJsonPath: string,
@@ -192,26 +194,44 @@ export function generateDockerCompose(
   }
 }
 
-// export function main() {
-//   // Initialize workspace
+export function main() {
+  const thisPackagePath = path.join(process.cwd(), "package.json");
+  const io = {
+    fs: {
+      readFileSync: (path: string) => fs.readFileSync(path, "utf8"),
+      writeFileSync: (path: string, content: string) =>
+        fs.writeFileSync(path, content),
+      existsSync: (path: string) => fs.existsSync(path),
+    },
+    glob: (pattern: string) => glob.sync(pattern),
+  };
+  const rootDir = findRootDir(thisPackagePath, io);
+  const projectPackagePath = path.join(rootDir, "package.json");
+  const project = readProject(projectPackagePath, io);
 
-//   const thisPackagePath = path.join(process.cwd(), "package.json");
-//   const context = createWorkspaceContext(thisPackagePath);
-//   const serviceWorkspaces = Array.from(
-//     context.workspacePackages.values()
-//   ).filter((w) => w.path.startsWith("services/"));
+  const servicePackagePaths = Array.from(
+    project.workspacePackages.keys()
+  ).filter((w) => w.includes("/services/"));
 
-//   serviceWorkspaces.forEach((workspace) => {
-//     const dockerfilePath = path.join(workspace.path, "Dockerfile");
-//     const dockerComposePath = path.join(workspace.path, "docker-compose.yaml");
-//     console.log("writing to workspace", workspace.path);
+  servicePackagePaths.forEach((servicePackagePath) => {
+    const workspaceDir = path.dirname(servicePackagePath);
+    const dockerfilePath = path.join(workspaceDir, "Dockerfile");
+    const dockerComposePath = path.join(workspaceDir, "docker-compose.yaml");
 
-//     fs.writeFileSync(dockerfilePath, generateDockerfile(workspace, context));
-//     fs.writeFileSync(
-//       dockerComposePath,
-//       generateDockerCompose(workspace, context)
-//     );
+    const context = {
+      project,
+      io,
+    };
 
-//     console.log(`Generated Docker files for ${workspace.name}`);
-//   });
-// }
+    fs.writeFileSync(
+      dockerfilePath,
+      generateDockerfile(servicePackagePath, context)
+    );
+    fs.writeFileSync(
+      dockerComposePath,
+      generateDockerCompose(servicePackagePath, context)
+    );
+
+    console.log(`Generated Docker files for ${workspaceDir}`);
+  });
+}

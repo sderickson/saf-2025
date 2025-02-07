@@ -1,6 +1,5 @@
 import * as path from "path";
 import type { PackageJson, Context, IO, Project } from "./types.ts";
-import { fs } from "memfs";
 
 // Ensure we're running from the root directory
 export function findRootDir(startingPackage: string, io: IO) {
@@ -63,8 +62,12 @@ export function readProject(packageJsonPath: string, io: IO): Project {
       matches.forEach((match: string) => packageJsonPaths.add(match));
     } else {
       // It's a direct path
-      const packageJsonPath = path.join(pattern, "package.json");
-      if (fs.existsSync(packageJsonPath)) {
+      const packageJsonPath = path.join(
+        project.rootDir,
+        pattern,
+        "package.json"
+      );
+      if (io.fs.existsSync(packageJsonPath)) {
         packageJsonPaths.add(packageJsonPath);
       }
     }
@@ -82,7 +85,6 @@ export function getInternalDependencies(
   packageJsonPath: string,
   project: Project
 ): Map<string, PackageJson> {
-  // make a map of package names to package paths
   const packageNameToPath = new Map<string, string>();
   for (const [path, packageJson] of project.workspacePackages.entries()) {
     packageNameToPath.set(packageJson.name, path);
