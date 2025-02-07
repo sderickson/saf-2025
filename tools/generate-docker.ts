@@ -8,41 +8,6 @@ import * as yaml from "yaml";
 import type { PackageJson } from "./utils.ts";
 import { readPackageJson, findWorkspacePackageJsons } from "./utils.ts";
 
-export interface WorkspaceInfo {
-  name: string;
-  path: string;
-  dependencies: string[]; // internal, mono-repo dependencies
-  files?: string[];
-}
-
-export interface WatchConfig {
-  action: "sync+restart";
-  path: string;
-  target: string;
-}
-
-export interface DockerComposeService {
-  build: {
-    context: string;
-    dockerfile: string;
-  };
-  develop?: {
-    watch?: WatchConfig[];
-  };
-  [key: string]: any;
-}
-
-export interface DockerCompose {
-  services: {
-    [key: string]: DockerComposeService;
-  };
-}
-
-export interface WorkspaceContext {
-  rootPackageJson: PackageJson;
-  workspacePackages: Map<string, WorkspaceInfo>;
-}
-
 export function createWorkspaceContext(
   startingPackage: string
 ): WorkspaceContext {

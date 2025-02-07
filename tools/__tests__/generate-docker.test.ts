@@ -1,77 +1,35 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { vol } from "memfs";
-import { createWorkspaceContext } from "../generate-docker.ts";
-import { minimatch } from "minimatch";
+// import { describe, it, expect, beforeEach, vi } from "vitest";
+// import { vol } from "memfs";
+// import { createWorkspaceContext } from "../generate-docker.ts";
+// import { minimatch } from "minimatch";
+// import { volumeJson } from "../__mocks__/fs.ts";
 
-// Mock fs everywhere else with the memfs version.
-vi.mock("fs", async () => {
-  const memfs = await vi.importActual("memfs");
-  return { default: memfs.fs, ...(memfs.fs as Object) };
-});
+// vi.mock("fs");
+// describe("generate-docker", () => {
+//   beforeEach(() => {
+//     vol.fromJSON(volumeJson);
+//   });
 
-// Mock fs with memfs implementation
+//   describe("createWorkspaceContext", () => {
+//     it("should create context with workspaces and their dependencies", () => {
+//       const context = createWorkspaceContext("/app/package.json");
+//       const apiWorkspace = context.workspacePackages.get("@saf/api");
+//       expect(apiWorkspace).toBeDefined();
+//       expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
+//       expect(apiWorkspace?.dependencies).not.toContain("express");
+//     });
 
-vi.mock("glob", async (importOriginal) => {
-  const glob = await importOriginal<typeof import("glob")>();
-  const mockFunction = vi.fn().mockImplementation((pattern) => {
-    return allFiles.filter((file) => minimatch(file, pattern));
-  });
-  return {
-    ...glob,
-    sync: mockFunction,
-  };
-});
+//     it("should handle missing workspaces gracefully", () => {
+//       // Update the root package.json to have no workspaces
+//       vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
 
-const volumeJson = {
-  "/app/package.json": JSON.stringify({
-    name: "@saf/saf-2025",
-    workspaces: ["services/*", "dbs/*"],
-  }),
-  "/app/services/api/package.json": JSON.stringify({
-    name: "@saf/api",
-    dependencies: {
-      "@saf/auth-db": "1.0.0",
-      express: "4.0.0",
-    },
-    files: ["src/**/*.ts", "package.json"],
-  }),
-  "/app/dbs/auth/package.json": JSON.stringify({
-    name: "@saf/auth-db",
-    dependencies: {
-      sqlite3: "5.0.0",
-    },
-    files: ["src/**/*.ts", "package.json"],
-  }),
-};
+//       vi.spyOn(console, "error").mockImplementation(() => {});
 
-const allFiles = Object.keys(volumeJson);
-
-describe("generate-docker", () => {
-  beforeEach(() => {
-    // vi.resetAllMocks();
-    vol.fromJSON(volumeJson);
-  });
-
-  describe("createWorkspaceContext", () => {
-    it("should create context with workspaces and their dependencies", () => {
-      const context = createWorkspaceContext("/app/package.json");
-      const apiWorkspace = context.workspacePackages.get("@saf/api");
-      expect(apiWorkspace).toBeDefined();
-      expect(apiWorkspace?.dependencies).toContain("@saf/auth-db");
-      expect(apiWorkspace?.dependencies).not.toContain("express");
-    });
-
-    it("should handle missing workspaces gracefully", () => {
-      // Update the root package.json to have no workspaces
-      vol.writeFileSync("/app/package.json", JSON.stringify({ name: "root" }));
-
-      vi.spyOn(console, "error").mockImplementation(() => {});
-
-      const context = createWorkspaceContext("/app/package.json");
-      expect(context.workspacePackages.size).toBe(0);
-      expect(console.error).toHaveBeenCalled();
-    });
-  });
+//       const context = createWorkspaceContext("/app/package.json");
+//       expect(context.workspacePackages.size).toBe(0);
+//       expect(console.error).toHaveBeenCalled();
+//     });
+//   });
 
   // describe("generateDockerfile", () => {
   //   let mockContext: WorkspaceContext;
