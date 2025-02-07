@@ -3,6 +3,7 @@ import { fs, vol } from "memfs";
 import {
   findRootDir,
   getInternalDependencies,
+  getRelativePath,
   readPackageJson,
   readProject,
   writePackageJson,
@@ -85,6 +86,17 @@ describe("utils", () => {
       expect(result.size).toBe(2);
       expect(result.get("/saf/dbs/auth/package.json")).toBeDefined();
       expect(result.get("/saf/lib/dbs/package.json")).toBeDefined();
+      expect(result.get("/saf/services/api/package.json")).not.toBeDefined();
+      const authDb = result.get("/saf/dbs/auth/package.json");
+      expect(authDb?.dependencies?.["@saf/lib-dbs"]).toBeDefined();
+    });
+  });
+
+  describe("getRelativePath", () => {
+    it("should get the relative path", () => {
+      const project = readProject("/saf/package.json", io);
+      const result = getRelativePath("/saf/services/api/package.json", project);
+      expect(result).toBe("services/api/package.json");
     });
   });
 });

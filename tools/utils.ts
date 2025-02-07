@@ -97,11 +97,23 @@ export function getInternalDependencies(
     for (const dependency of Object.keys(packageJson.dependencies ?? {})) {
       if (dependency.startsWith("@saf/")) {
         const dependencyPackageJsonPath = packageNameToPath.get(dependency)!;
-        internalDependencies.set(dependencyPackageJsonPath, packageJson);
+        const dependencyPackageJson = project.workspacePackages.get(
+          dependencyPackageJsonPath
+        )!;
+        internalDependencies.set(
+          dependencyPackageJsonPath,
+          dependencyPackageJson
+        );
         stack.push(dependencyPackageJsonPath);
       }
     }
   }
 
   return internalDependencies;
+}
+
+export function getRelativePath(packageJsonPath: string, project: Project) {
+  const rootDir = project.rootDir;
+  const relativePath = path.relative(rootDir, packageJsonPath);
+  return relativePath.replace(/\\/g, "/");
 }

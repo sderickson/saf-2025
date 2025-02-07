@@ -6,7 +6,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "yaml";
 import type { PackageJson } from "./types.ts";
-import { readPackageJson, readProject } from "./utils.ts";
+import {
+  readPackageJson,
+  readProject,
+  getInternalDependencies,
+  getRelativePath,
+} from "./utils.ts";
 import { Context } from "./types.ts";
 
 export function generateDockerfile(
@@ -14,7 +19,9 @@ export function generateDockerfile(
   ctx: Context
 ): string {
   const packageJson = ctx.project.workspacePackages.get(packageJsonPath)!;
-  const dependencies = getDependencies(packageJsonPath, packageJson);
+  const dependencies = getInternalDependencies(packageJsonPath, ctx.project);
+  const workspacePath = getRelativePath(packageJsonPath, ctx.project);
+  const workspaceDir = path.dirname(workspacePath);
 
   const lines = [
     "FROM node:22-slim",
@@ -24,16 +31,16 @@ export function generateDockerfile(
     "# Copy package.json",
     "COPY package*.json ./",
     "COPY tsconfig.json ./",
-    `COPY ${workspace.path}/package*.json ./${workspace.path}/`,
+    `COPY ${workspaceDir}/package*.json ./${workspaceDir}/`,
   ];
 
-  workspace.dependencies.forEach((dep) => {
-    const depWorkspace = workspaceContext.workspacePackages.get(dep);
-    if (!depWorkspace) return;
+  dependencies.forEach((dep, depPath) => {
+    // const depWorkspace = dep.workspacePackages.get(dep);
+    // if (!depWorkspace) return;
+    const depWorkspacePath = getRelativePath(depPath, ctx.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
 
-    lines.push(
-      `COPY ${depWorkspace.path}/package*.json ./${depWorkspace.path}/`
-    );
+    lines.push(`COPY ${depWorkspaceDir}/package*.json ./${depWorkspaceDir}/`);
   });
 
   lines.push("", "RUN npm install --omit=dev");
@@ -41,35 +48,36 @@ export function generateDockerfile(
   lines.push("", "# Copy source files");
 
   // Copy dependencies
-  workspace.dependencies.forEach((dep) => {
-    const depWorkspace = workspaceContext.workspacePackages.get(dep);
-    if (!depWorkspace) return;
+  dependencies.forEach((dep, depPath) => {
+    if (!dep) return;
+    const depWorkspacePath = getRelativePath(depPath, ctx.project);
+    const depWorkspaceDir = path.dirname(depWorkspacePath);
 
-    if (depWorkspace.files) {
-      depWorkspace.files.forEach((file) => {
+    if (dep.files) {
+      dep.files.forEach((file) => {
         lines.push(
-          `COPY ${depWorkspace.path}/${file} ./${depWorkspace.path}/${file}`
+          `COPY ${depWorkspaceDir}/${file} ./${depWorkspaceDir}/${file}`
         );
       });
     } else {
-      lines.push(`COPY ${depWorkspace.path} ./${depWorkspace.path}`);
+      lines.push(`COPY ${depWorkspaceDir} ./${depWorkspaceDir}`);
     }
     lines.push("");
   });
 
   // Copy service files
-  if (workspace.files) {
-    workspace.files.forEach((file) => {
-      lines.push(`COPY ${workspace.path}/${file} ./${workspace.path}/${file}`);
+  if (packageJson.files) {
+    packageJson.files.forEach((file) => {
+      lines.push(`COPY ${workspaceDir}/${file} ./${workspaceDir}/${file}`);
     });
   } else {
-    lines.push(`COPY ${workspace.path} ./${workspace.path}`);
+    lines.push(`COPY ${workspaceDir} ./${workspaceDir}`);
   }
 
   lines.push(
     "",
     'HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]',
-    `WORKDIR /app/${workspace.path}`,
+    `WORKDIR /app/${workspaceDir}`,
     'CMD ["npm", "start"]'
   );
 
