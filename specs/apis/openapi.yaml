@@ -31,6 +31,14 @@ paths:
       $ref: "./routes/todos.yaml#/~1{id}/put"
     delete:
       $ref: "./routes/todos.yaml#/~1{id}/delete"
+  /examples:
+    get:
+      $ref: "./routes/example.yaml#/get"
+    post:
+      $ref: "./routes/example.yaml#/post"
+  /examples/{id}:
+    get:
+      $ref: "./routes/example.yaml#/~1{id}/get"
 
 components:
   schemas:

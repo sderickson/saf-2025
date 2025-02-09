@@ -11,7 +11,7 @@ import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
 } from "@saf/node-express";
-
+import exampleRouter from "./routes/example.ts";
 const app = express();
 
 /**
@@ -24,7 +24,7 @@ app.use(recommendedPreMiddleware);
  * Routes
  * Import and use your route handlers here
  */
-// app.use("/api/resource", resourceRouter);
+app.use("/api/examples", exampleRouter);
 
 /**
  * Error Handling Middleware Stack
