@@ -13,6 +13,7 @@ import {
   getInternalDependencies,
   getRelativePath,
   findRootDir,
+  getRelativePathBetween,
 } from "./utils.ts";
 import type { Context } from "./types.ts";
 
@@ -92,6 +93,7 @@ export function generateWatchPaths(
   context: Context
 ): WatchConfig[] {
   const watchPaths: WatchConfig[] = [];
+  const rootDir = context.project.rootDir;
 
   // Helper function to add watch path
   const addWatch = (sourcePath: string, targetPath: string) => {
@@ -109,14 +111,18 @@ export function generateWatchPaths(
     const depWorkspaceDir = path.dirname(depWorkspacePath);
     if (dep.files) {
       dep.files.forEach((file) => {
-        // TODO - don't rely on that every package is two levels deep
-        addWatch(
-          `../../${depWorkspaceDir}/${file}`,
-          `/app/${depWorkspaceDir}/${file}`
+        const relPath = getRelativePathBetween(
+          packageJsonPath,
+          path.join(rootDir, depWorkspaceDir)
         );
+        addWatch(`${relPath}/${file}`, `/app/${depWorkspaceDir}/${file}`);
       });
     } else {
-      addWatch(`../../${depWorkspaceDir}`, `/app/${depWorkspaceDir}`);
+      const relPath = getRelativePathBetween(
+        packageJsonPath,
+        path.join(rootDir, depWorkspaceDir)
+      );
+      addWatch(`${relPath}`, `/app/${depWorkspaceDir}`);
     }
   });
 
@@ -150,15 +156,30 @@ export function generateDockerCompose(
     if (context.io.fs.existsSync(templatePath)) {
       compose = yaml.parse(context.io.fs.readFileSync(templatePath));
     } else {
+      const relPath = getRelativePathBetween(
+        packageJsonPath,
+        context.project.rootDir
+      );
       compose = {
         services: {
           [serviceName]: {
             build: {
-              context: ".",
+              context: relPath,
               dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
             },
           },
         },
+      };
+    }
+
+    // Ensure build is set
+    if (!compose.services[serviceName].build) {
+      compose.services[serviceName].build = {
+        context: getRelativePathBetween(
+          packageJsonPath,
+          context.project.rootDir
+        ),
+        dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
       };
     }
 
@@ -167,10 +188,21 @@ export function generateDockerCompose(
       serviceName
     ] || {
       build: {
-        context: ".",
+        context: getRelativePathBetween(
+          packageJsonPath,
+          context.project.rootDir
+        ),
         dockerfile: path.join(relativeWorkspaceDir, "Dockerfile"),
       },
     });
+
+    // Add default environment variables if not already set
+    service.environment = service.environment || [];
+    if (
+      !service.environment.some((value: string) => value.includes("NODE_ENV"))
+    ) {
+      service.environment.push("NODE_ENV=development");
+    }
 
     service.develop = service.develop || {};
     service.develop.watch = [

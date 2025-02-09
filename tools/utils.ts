@@ -121,3 +121,12 @@ export function getRelativePath(packageJsonPath: string, project: Project) {
   const relativePath = path.relative(rootDir, packageJsonPath);
   return relativePath.replace(/\\/g, "/");
 }
+
+export function getRelativePathBetween(from: string, to: string): string {
+  // If paths are files, use their parent directories
+  const fromDir = path.extname(from) ? path.dirname(from) : from;
+  const toDir = path.extname(to) ? path.dirname(to) : to;
+
+  // Calculate relative path and normalize slashes
+  return path.relative(fromDir, toDir).replace(/\\/g, "/");
+}

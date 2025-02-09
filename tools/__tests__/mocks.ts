@@ -17,13 +17,7 @@ export const volumeJson = {
   "/saf/services/api/docker-compose.yaml.template": JSON.stringify({
     services: {
       api: {
-        build: {
-          context: ".",
-          dockerfile: "services/api/Dockerfile",
-        },
-        environment: {
-          NODE_ENV: "development",
-        },
+        environment: ["PORT=4000"],
       },
     },
   }),

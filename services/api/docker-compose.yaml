@@ -1,11 +1,12 @@
 services:
   services-api:
+    volumes:
+      - ../../dbs/main/data:/app/dbs/main/data
     build:
       context: ../..
-      dockerfile: ./services/api/Dockerfile
+      dockerfile: services/api/Dockerfile
     environment:
       - NODE_ENV=development
-    command: npm start
     develop:
       watch:
         - action: sync+restart

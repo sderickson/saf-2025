@@ -1,10 +1,4 @@
 services:
   services-auth:
-    build:
-      context: ../..
-      dockerfile: ./services/auth/Dockerfile
     volumes:
       - ../../dbs/auth/data:/app/dbs/auth/data
-    environment:
-      - NODE_ENV=development
-    command: npm start
