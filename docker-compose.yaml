@@ -4,3 +4,4 @@ include:
   - services/api/docker-compose.yaml
   - services/reverse-proxy/docker-compose.yaml
   - specs/apis/docker-compose.yaml
+  - services/__template__/docker-compose.yaml

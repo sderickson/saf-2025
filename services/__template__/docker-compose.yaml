@@ -1,8 +1,10 @@
 services:
   services-template:
     build:
-      context: .
+      context: ../..
       dockerfile: services/__template__/Dockerfile
+    environment:
+      - NODE_ENV=development
     develop:
       watch:
         - action: sync+restart

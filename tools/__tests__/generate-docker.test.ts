@@ -113,9 +113,7 @@ describe("generateDockerCompose", () => {
       io,
     });
     const parsed = yaml.parse(compose);
-    expect(parsed.services.api.environment).toEqual({
-      NODE_ENV: "development",
-    });
+    expect(parsed.services.api.environment).toContainEqual("PORT=4000");
   });
   it("should handle template parsing errors", () => {
     const project = readProject("/saf/package.json", io);
@@ -129,5 +127,25 @@ describe("generateDockerCompose", () => {
         io,
       })
     ).toThrow();
+  });
+  it("should add default environment variables if not already set", () => {
+    const project = readProject("/saf/package.json", io);
+    const compose = generateDockerCompose("/saf/services/api/package.json", {
+      project,
+      io,
+    });
+    const parsed = yaml.parse(compose);
+    expect(parsed.services.api.environment).toContainEqual(
+      "NODE_ENV=development"
+    );
+  });
+  it("should set build context if not set", () => {
+    const project = readProject("/saf/package.json", io);
+    const compose = generateDockerCompose("/saf/services/api/package.json", {
+      project,
+      io,
+    });
+    const parsed = yaml.parse(compose);
+    expect(parsed.services.api.build.context).toBe("../..");
   });
 });
