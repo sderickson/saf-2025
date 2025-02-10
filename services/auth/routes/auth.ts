@@ -6,7 +6,7 @@ import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
 import { users } from "@saf/dbs-auth";
 import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
-import type { DatabaseError } from "@saf/dbs-auth";
+import type { AuthDatabaseError } from "@saf/dbs-auth";
 
 export const authRouter = express.Router();
 
@@ -45,7 +45,7 @@ authRouter.post("/register", async (req, res, next) => {
       res.status(200).json(response);
     });
   } catch (err) {
-    const error = err as DatabaseError;
+    const error = err as AuthDatabaseError;
     if (error.name === "EmailConflictError") {
       res.status(409).json({ error: "Email already exists" });
       return;

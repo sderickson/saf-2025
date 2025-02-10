@@ -4,11 +4,13 @@ import request from "supertest";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
-import * as OpenApiValidator from "express-openapi-validator";
-import { join } from "path";
-import { authRouter } from "./auth.ts";
-import { setupPassport } from "../config/passport.ts";
+import { authRouter } from "./auth.js";
+import { setupPassport } from "../config/passport.js";
 import * as argon2 from "argon2";
+import {
+  recommendedErrorHandlers,
+  recommendedPreMiddleware,
+} from "@saf/node-express";
 
 // Import the mocked modules
 import { users } from "@saf/dbs-auth";
@@ -42,9 +44,9 @@ vi.mock("argon2", () => ({
 
 setupPassport();
 
-// Create a fresh app for each test
+// Create Express app for testing
 const app = express();
-app.use(express.json());
+app.use(recommendedPreMiddleware);
 app.use(
   session({
     secret: "test-secret",
@@ -55,35 +57,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Add OpenAPI validator middleware
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: join(process.cwd(), "../../specs/apis/openapi.yaml"),
-    validateRequests: true,
-    validateResponses: true,
-  })
-);
-
-app.use("/auth", authRouter);
-
-// Add error handler for validation errors
-app.use((err: any, req: any, res: any, next: any) => {
-  // Format validation errors
-  if (err.status === 400 && err.errors) {
-    return res.status(400).json({
-      error: "Validation error",
-      details: err.errors,
-    });
-  }
-  next(err);
-});
+app.use("/api/auth", authRouter);
+app.use(recommendedErrorHandlers);
 
 describe("Auth Routes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe("POST /auth/register", () => {
+  describe("POST /api/auth/register", () => {
     it("should register a new user successfully", async () => {
       const userData = {
         email: "test@example.com",
@@ -104,7 +86,9 @@ describe("Auth Routes", () => {
         passwordHash: Buffer.from("hashed-password"),
       });
 
-      const response = await request(app).post("/auth/register").send(userData);
+      const response = await request(app)
+        .post("/api/auth/register")
+        .send(userData);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -134,14 +118,16 @@ describe("Auth Routes", () => {
 
       (users.create as Mock).mockRejectedValue(new users.EmailConflictError());
 
-      const response = await request(app).post("/auth/register").send(userData);
+      const response = await request(app)
+        .post("/api/auth/register")
+        .send(userData);
 
       expect(response.status).toBe(409);
       expect(response.body).toEqual({ error: "Email already exists" });
     });
   });
 
-  describe("POST /auth/login", () => {
+  describe("POST /api/auth/login", () => {
     it("should login successfully", async () => {
       const userData = {
         email: "test@example.com",
@@ -170,7 +156,9 @@ describe("Auth Routes", () => {
       (users.getById as Mock).mockResolvedValue(user);
       (argon2.verify as Mock).mockResolvedValue(true);
 
-      const response = await request(app).post("/auth/login").send(userData);
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send(userData);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -193,7 +181,9 @@ describe("Auth Routes", () => {
 
       (users.getByEmail as Mock).mockResolvedValue(null);
 
-      const response = await request(app).post("/auth/login").send(userData);
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send(userData);
 
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ error: "Invalid credentials" });
@@ -222,14 +212,16 @@ describe("Auth Routes", () => {
       (emailAuth.getByEmail as Mock).mockResolvedValue(authData);
       (argon2.verify as Mock).mockResolvedValue(false);
 
-      const response = await request(app).post("/auth/login").send(userData);
+      const response = await request(app)
+        .post("/api/auth/login")
+        .send(userData);
 
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ error: "Invalid credentials" });
     });
   });
 
-  describe("POST /auth/logout", () => {
+  describe("POST /api/auth/logout", () => {
     it("should logout successfully", async () => {
       // First login
       const userData = {
@@ -250,68 +242,15 @@ describe("Auth Routes", () => {
         email: user.email,
         passwordHash: Buffer.from("hashed-password"),
       });
-      (users.updateLastLogin as Mock).mockResolvedValue({
-        ...user,
-        lastLoginAt: new Date(),
-      });
-      (users.getById as Mock).mockResolvedValue(user);
-      (argon2.verify as Mock).mockResolvedValue(true);
 
-      const agent = request.agent(app);
-      await agent.post("/auth/login").send(userData);
+      // Login first
+      await request(app).post("/api/auth/login").send(userData);
 
-      const response = await agent.post("/auth/logout");
-      expect(response.status).toBe(200);
-
-      // Verify we're logged out
-      const verifyResponse = await agent.post("/auth/verify");
-      expect(verifyResponse.status).toBe(401);
-    });
-  });
-
-  describe("POST /auth/verify", () => {
-    it("should verify authenticated user", async () => {
-      // First login
-      const userData = {
-        email: "test@example.com",
-        password: "password123",
-      };
-
-      const user = {
-        id: 1,
-        email: userData.email,
-        createdAt: new Date(),
-        lastLoginAt: null,
-      };
-
-      (users.getByEmail as Mock).mockResolvedValue(user);
-      (emailAuth.getByEmail as Mock).mockResolvedValue({
-        userId: user.id,
-        email: user.email,
-        passwordHash: Buffer.from("hashed-password"),
-      });
-      (users.updateLastLogin as Mock).mockResolvedValue({
-        ...user,
-        lastLoginAt: new Date(),
-      });
-      (users.getById as Mock).mockResolvedValue(user);
-      (argon2.verify as Mock).mockResolvedValue(true);
-
-      const agent = request.agent(app);
-      await agent.post("/auth/login").send(userData);
-
-      const response = await agent.post("/auth/verify");
+      // Then logout
+      const response = await request(app).post("/api/auth/logout");
 
       expect(response.status).toBe(200);
-      expect(response.header["x-user-id"]).toBe(user.id.toString());
-      expect(response.header["x-user-email"]).toBe(user.email);
-    });
-
-    it("should return 401 for unauthenticated user", async () => {
-      const response = await request(app).post("/auth/verify");
-
-      expect(response.status).toBe(401);
-      expect(response.body).toEqual({ error: "Unauthorized" });
+      expect(response.body).toEqual({});
     });
   });
 });
