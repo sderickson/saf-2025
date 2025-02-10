@@ -16,5 +16,5 @@ export {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
 } from "./middleware/composition.ts";
-
+export { createHandler } from "./handler.ts";
 dotenv.config();

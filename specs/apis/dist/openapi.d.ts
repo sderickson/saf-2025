@@ -132,7 +132,9 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
@@ -178,14 +180,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
                 /** @description Todo item not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
@@ -212,10 +218,126 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/examples": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get all examples */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List of examples */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Example"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a new example */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateExampleRequest"];
+                };
+            };
+            responses: {
+                /** @description Created example */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Example"];
+                    };
+                };
+                /** @description Validation error */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/examples/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get example by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Example item */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Example"];
+                    };
+                };
+                /** @description Example not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -236,6 +358,12 @@ export interface components {
             id: number;
             /** Format: email */
             email: string;
+        };
+        error: {
+            /** @description A human-readable error message */
+            message: string;
+            /** @description An optional machine-readable error code */
+            code?: string;
         };
         LoginRequest: {
             /** Format: email */
@@ -267,6 +395,15 @@ export interface components {
             title: string;
             /** @description Whether the todo item has been completed */
             completed: boolean;
+        };
+        Example: {
+            id: number;
+            name: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateExampleRequest: {
+            name: string;
         };
         user: {
             /** Format: uuid */
@@ -314,10 +451,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Email already exists */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };
@@ -350,10 +484,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Invalid credentials */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };
@@ -402,10 +533,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Unauthorized */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };

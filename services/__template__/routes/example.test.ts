@@ -12,78 +12,25 @@
  * by the route handlers.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import request from "supertest";
-import express, { ErrorRequestHandler } from "express";
-import * as OpenApiValidator from "express-openapi-validator";
-import { join } from "path";
-import winston from "winston";
+import express from "express";
 import exampleRouter from "./example.js";
+import {
+  recommendedErrorHandlers,
+  recommendedPreMiddleware,
+} from "@saf/node-express";
 
 // Create Express app for testing
 const app = express();
-app.use(express.json());
-
-// Create a mock logger
-const mockLogger = winston.createLogger({
-  transports: [
-    new winston.transports.Console({
-      silent: true, // Suppress logs during tests
-    }),
-  ],
-});
-
-// Add mock logger middleware
-app.use((req, res, next) => {
-  req.log = mockLogger;
-  next();
-});
-
-// Add OpenAPI validator middleware
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: join(process.cwd(), "../../specs/apis/routes/example.yaml"),
-    validateRequests: true,
-    validateResponses: true,
-  })
-);
-
-// Add routes
-app.use("/example", exampleRouter);
-
-// Error handler for validation errors
-const validationErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  if (err.status === 400 && err.errors) {
-    res.status(400).json({
-      error: "Validation error",
-      details: err.errors,
-    });
-    return;
-  }
-  if (err.status === 404) {
-    res.status(404).json({
-      message: err.message,
-    });
-    return;
-  }
-  next(err);
-};
-
-// Final error handler
-const finalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message,
-    error: err.name,
-  });
-};
-
-app.use(validationErrorHandler);
-app.use(finalErrorHandler);
+app.use(recommendedPreMiddleware);
+app.use("/api/examples", exampleRouter);
+app.use(recommendedErrorHandlers);
 
 describe("Example Routes", () => {
-  describe("GET /example", () => {
+  describe("GET /examples", () => {
     it("should return list of examples", async () => {
-      const response = await request(app).get("/example");
+      const response = await request(app).get("/api/examples");
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
@@ -100,7 +47,7 @@ describe("Example Routes", () => {
     it("should create new example", async () => {
       const newItem = { name: "Test Example" };
 
-      const response = await request(app).post("/example").send(newItem);
+      const response = await request(app).post("/api/examples").send(newItem);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -111,18 +58,19 @@ describe("Example Routes", () => {
     });
 
     it("should validate request body", async () => {
-      const response = await request(app).post("/example").send({});
+      const response = await request(app).post("/api/examples").send({});
 
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
-        error: "Validation error",
+        message: "request/body must have required property 'name'",
+        status: 400,
       });
     });
   });
 
   describe("GET /example/:id", () => {
     it("should return example by id", async () => {
-      const response = await request(app).get("/example/1");
+      const response = await request(app).get("/api/examples/1");
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -133,11 +81,12 @@ describe("Example Routes", () => {
     });
 
     it("should return 404 for non-existent example", async () => {
-      const response = await request(app).get("/example/999");
+      const response = await request(app).get("/api/examples/999");
 
       expect(response.status).toBe(404);
       expect(response.body).toMatchObject({
         message: "Item not found",
+        status: 404,
       });
     });
   });

@@ -55,6 +55,10 @@ post:
             $ref: "../schemas/todo.yaml"
     "400":
       description: Invalid request body
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
 
 /{id}:
   parameters:
@@ -85,8 +89,16 @@ post:
               $ref: "../schemas/todo.yaml"
       "404":
         description: Todo item not found
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"
       "400":
         description: Invalid request body
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"
 
   delete:
     summary: Delete a todo
@@ -97,3 +109,7 @@ post:
         description: Todo item successfully deleted
       "404":
         description: Todo item not found
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"

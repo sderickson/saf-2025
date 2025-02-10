@@ -29,9 +29,7 @@ export const errorHandler = (
   // Send error response
   res.status(err.status || 500);
   res.json({
-    error: {
-      message: err.message,
-      status: err.status || 500,
-    },
+    message: err.message,
+    status: err.status || 500,
   });
 };

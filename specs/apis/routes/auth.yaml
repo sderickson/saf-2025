@@ -22,13 +22,7 @@ register:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - error
-              properties:
-                error:
-                  type: string
-                  example: "Email already exists"
+              $ref: "../schemas/error.yaml"
 
 login:
   post:
@@ -54,13 +48,7 @@ login:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - error
-              properties:
-                error:
-                  type: string
-                  example: "Invalid credentials"
+              $ref: "../schemas/error.yaml"
 
 logout:
   post:
@@ -97,13 +85,7 @@ verify:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - error
-              properties:
-                error:
-                  type: string
-                  example: "Unauthorized"
+              $ref: "../schemas/error.yaml"
 
 components:
   schemas:

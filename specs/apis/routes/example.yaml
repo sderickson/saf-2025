@@ -1,72 +1,3 @@
-openapi: 3.0.0
-info:
-  title: Example API
-  version: 1.0.0
-  description: Example API specification for the template service
-
-paths:
-  /example:
-    get:
-      summary: Get all examples
-      responses:
-        "200":
-          description: List of examples
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Example"
-    post:
-      summary: Create a new example
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - name
-              properties:
-                name:
-                  type: string
-      responses:
-        "201":
-          description: Created example
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Example"
-        "400":
-          description: Validation error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
-  /example/{id}:
-    get:
-      summary: Get example by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Example item
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Example"
-        "404":
-          description: Example not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-
 components:
   schemas:
     Example:
@@ -84,16 +15,75 @@ components:
           type: string
           format: date-time
 
-    Error:
+    CreateExampleRequest:
       type: object
       required:
-        - message
+        - name
       properties:
-        message:
+        name:
           type: string
-        error:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
+
+get:
+  summary: Get all examples
+  tags:
+    - examples
+  responses:
+    "200":
+      description: List of examples
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Example"
+
+post:
+  summary: Create a new example
+  tags:
+    - examples
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/CreateExampleRequest"
+  responses:
+    "201":
+      description: Created example
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Example"
+    "400":
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
+
+/{id}:
+  parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The example item ID
+
+  get:
+    summary: Get example by ID
+    tags:
+      - examples
+    responses:
+      "200":
+        description: Example item
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Example"
+      "404":
+        description: Example not found
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"
