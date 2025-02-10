@@ -11,7 +11,7 @@
 
 import express from "express";
 import createError from "http-errors";
-
+import { createHandler } from "@saf/node-express";
 const router = express.Router();
 
 /**
@@ -19,8 +19,9 @@ const router = express.Router();
  *
  * Example of a simple GET endpoint that returns a list of items
  */
-router.get("/", async (req, res, next) => {
-  try {
+router.get(
+  "/",
+  createHandler(async (req, res, next) => {
     // Log the request
     req.log.info("Fetching example items");
 
@@ -39,18 +40,17 @@ router.get("/", async (req, res, next) => {
     ];
 
     res.json(items);
-  } catch (error) {
-    next(error);
-  }
-});
+  })
+);
 
 /**
  * POST /example
  *
  * Example of a POST endpoint that creates a new item
  */
-router.post("/", async (req, res, next) => {
-  try {
+router.post(
+  "/",
+  createHandler(async (req, res, next) => {
     const { name } = req.body;
 
     // Log the request
@@ -64,35 +64,36 @@ router.post("/", async (req, res, next) => {
     };
 
     res.status(201).json(newItem);
-  } catch (error) {
-    next(error);
-  }
-});
+  })
+);
 
 /**
  * GET /example/:id
  *
  * Example of a GET endpoint with URL parameters and error handling
  */
-router.get("/:id", async (req, res, next) => {
-  const id = parseInt(req.params.id, 10);
+router.get(
+  "/:id",
+  createHandler(async (req, res, next) => {
+    const id = parseInt(req.params.id, 10);
 
-  // Log the request
-  req.log.info(`Fetching example item: ${id}`);
+    // Log the request
+    req.log.info(`Fetching example item: ${id}`);
 
-  // Example of error handling
-  if (id === 999) {
-    return next(createError(404, "Item not found"));
-  }
+    // Example of error handling
+    if (id === 999) {
+      return next(createError(404, "Item not found"));
+    }
 
-  // Example response
-  const item = {
-    id,
-    name: "Example Item",
-    createdAt: new Date().toISOString(),
-  };
+    // Example response
+    const item = {
+      id,
+      name: "Example Item",
+      createdAt: new Date().toISOString(),
+    };
 
-  res.json(item);
-});
+    res.json(item);
+  })
+);
 
 export default router;
