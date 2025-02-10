@@ -109,7 +109,7 @@
       }
     },
     "/auth/verify": {
-      "post": {
+      "get": {
         "summary": "Verify Authentication Status",
         "description": "Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.",
         "operationId": "verifyAuth",
@@ -455,8 +455,7 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid",
+            "type": "integer",
             "description": "Unique identifier for the todo item"
           },
           "title": {
@@ -543,8 +542,7 @@
         ],
         "properties": {
           "id": {
-            "type": "number",
-            "format": "uuid"
+            "type": "number"
           },
           "email": {
             "type": "string",

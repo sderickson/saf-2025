@@ -6,6 +6,7 @@ import App from "./CoreProductApp.vue";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { router } from "./router";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 
 const vuetify = createVuetify({
   icons: {
@@ -18,4 +19,8 @@ const vuetify = createVuetify({
 });
 
 const app = createApp(App);
-app.use(vuetify).use(router).mount("#app");
+app
+  .use(vuetify)
+  .use(router)
+  .use(VueQueryPlugin, { enableDevtoolsV6Plugin: true })
+  .mount("#app");

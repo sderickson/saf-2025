@@ -105,7 +105,7 @@ authRouter.post(
   })
 );
 
-authRouter.post(
+authRouter.get(
   "/verify",
   createHandler(async (req: Request, res: Response, next: NextFunction) => {
     if (!req.isAuthenticated()) {

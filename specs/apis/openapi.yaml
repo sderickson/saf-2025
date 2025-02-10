@@ -19,8 +19,8 @@ paths:
     post:
       $ref: "./routes/auth.yaml#/logout/post"
   /auth/verify:
-    post:
-      $ref: "./routes/auth.yaml#/verify/post"
+    get:
+      $ref: "./routes/auth.yaml#/verify/get"
   /todos:
     get:
       $ref: "./routes/todos.yaml#/get"

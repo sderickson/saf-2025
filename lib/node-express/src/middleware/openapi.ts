@@ -6,7 +6,7 @@ import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.t
 
 const validateResponses: ValidateResponseOpts = {
   onError: (error, body, req) => {
-    req.log.error("Validation error:", error.message);
+    req.log.error("Validation error:", error);
   },
 };
 
@@ -19,6 +19,15 @@ export const openApiValidator: OpenApiRequestHandler[] =
     apiSpec: apiSpec as any,
     validateRequests: true,
     validateResponses: validateResponses,
+    formats: [
+      {
+        name: "date-time",
+        type: "string",
+        validate: (value: string) => {
+          return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value);
+        },
+      },
+    ],
   });
 
 /**

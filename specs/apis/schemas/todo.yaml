@@ -6,8 +6,7 @@ required:
   - created_at
 properties:
   id:
-    type: string
-    format: uuid
+    type: integer
     description: Unique identifier for the todo item
   title:
     type: string

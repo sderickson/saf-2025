@@ -28,7 +28,6 @@
 	handle @api {
 		forward_auth services-auth:3000 {
 			uri /api/auth/verify
-			method POST
 			header_up X-Request-ID {http.request.uuid}
 		}
 		reverse_proxy services-api:3000 {
