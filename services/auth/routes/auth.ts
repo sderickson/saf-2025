@@ -109,7 +109,7 @@ authRouter.post(
   "/verify",
   createHandler(async (req: Request, res: Response, next: NextFunction) => {
     if (!req.isAuthenticated()) {
-      res.status(401).json({ error: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized" });
       return;
     }
 
