@@ -13,7 +13,7 @@ export const openApiValidator: OpenApiRequestHandler[] =
     validateRequests: true,
     validateResponses: {
       onError: (error, body, req) => {
-        console.log("Validation error:", error.message);
+        req.log.error("Validation error:", error.message);
       },
     },
   });
