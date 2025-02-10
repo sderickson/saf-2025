@@ -23,20 +23,6 @@ components:
         name:
           type: string
 
-    Error:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-        error:
-          type: string
-        details:
-          type: array
-          items:
-            type: object
-
 get:
   summary: Get all examples
   tags:
@@ -73,7 +59,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/Error"
+            $ref: "../schemas/error.yaml"
 
 /{id}:
   parameters:
@@ -100,4 +86,4 @@ post:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Error"
+              $ref: "../schemas/error.yaml"

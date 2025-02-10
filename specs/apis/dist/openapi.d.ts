@@ -132,7 +132,9 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
@@ -178,14 +180,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
                 /** @description Todo item not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
@@ -212,7 +218,9 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["error"];
+                    };
                 };
             };
         };
@@ -279,7 +287,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Error"];
+                        "application/json": components["schemas"]["error"];
                     };
                 };
             };
@@ -322,7 +330,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["Error"];
+                        "application/json": components["schemas"]["error"];
                     };
                 };
             };
@@ -350,6 +358,12 @@ export interface components {
             id: number;
             /** Format: email */
             email: string;
+        };
+        error: {
+            /** @description A human-readable error message */
+            message: string;
+            /** @description An optional machine-readable error code */
+            code?: string;
         };
         LoginRequest: {
             /** Format: email */
@@ -390,11 +404,6 @@ export interface components {
         };
         CreateExampleRequest: {
             name: string;
-        };
-        Error: {
-            message: string;
-            error?: string;
-            details?: Record<string, never>[];
         };
         user: {
             /** Format: uuid */
@@ -442,10 +451,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Email already exists */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };
@@ -478,10 +484,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Invalid credentials */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };
@@ -530,10 +533,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @example Unauthorized */
-                        error: string;
-                    };
+                    "application/json": components["schemas"]["error"];
                 };
             };
         };

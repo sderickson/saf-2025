@@ -8,7 +8,11 @@ import "../types.ts";
  */
 export const createLogger = (): Logger => {
   return winston.createLogger({
-    transports: [new winston.transports.Console()],
+    transports: [
+      new winston.transports.Console({
+        silent: process.env.NODE_ENV === "test",
+      }),
+    ],
     format: winston.format.combine(
       winston.format.colorize({ all: true }),
       winston.format.timestamp(),

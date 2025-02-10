@@ -45,16 +45,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "error"
-                  ],
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Email already exists"
-                    }
-                  }
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -95,16 +86,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "error"
-                  ],
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Invalid credentials"
-                    }
-                  }
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -158,16 +140,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "error"
-                  ],
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "Unauthorized"
-                    }
-                  }
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -224,7 +197,14 @@
             }
           },
           "400": {
-            "description": "Invalid request body"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       }
@@ -257,10 +237,24 @@
             }
           },
           "400": {
-            "description": "Invalid request body"
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Todo item not found"
+            "description": "Todo item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       },
@@ -274,7 +268,14 @@
             "description": "Todo item successfully deleted"
           },
           "404": {
-            "description": "Todo item not found"
+            "description": "Todo item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       }
@@ -332,7 +333,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -362,7 +363,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -409,6 +410,22 @@
           "email": {
             "type": "string",
             "format": "email"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A human-readable error message"
+          },
+          "code": {
+            "type": "string",
+            "description": "An optional machine-readable error code"
           }
         }
       },
@@ -514,26 +531,6 @@
         "properties": {
           "name": {
             "type": "string"
-          }
-        }
-      },
-      "Error": {
-        "type": "object",
-        "required": [
-          "message"
-        ],
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "error": {
-            "type": "string"
-          },
-          "details": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
           }
         }
       },

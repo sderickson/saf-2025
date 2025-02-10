@@ -75,28 +75,24 @@ router.post("/", async (req, res, next) => {
  * Example of a GET endpoint with URL parameters and error handling
  */
 router.get("/:id", async (req, res, next) => {
-  try {
-    const id = parseInt(req.params.id, 10);
+  const id = parseInt(req.params.id, 10);
 
-    // Log the request
-    req.log.info(`Fetching example item: ${id}`);
+  // Log the request
+  req.log.info(`Fetching example item: ${id}`);
 
-    // Example of error handling
-    if (id === 999) {
-      throw createError(404, "Item not found");
-    }
-
-    // Example response
-    const item = {
-      id,
-      name: "Example Item",
-      createdAt: new Date().toISOString(),
-    };
-
-    res.json(item);
-  } catch (error) {
-    next(error);
+  // Example of error handling
+  if (id === 999) {
+    return next(createError(404, "Item not found"));
   }
+
+  // Example response
+  const item = {
+    id,
+    name: "Example Item",
+    createdAt: new Date().toISOString(),
+  };
+
+  res.json(item);
 });
 
 export default router;

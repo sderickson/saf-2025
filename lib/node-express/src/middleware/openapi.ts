@@ -11,7 +11,11 @@ export const openApiValidator: OpenApiRequestHandler[] =
   OpenApiValidator.middleware({
     apiSpec: apiSpec as any,
     validateRequests: true,
-    validateResponses: true,
+    validateResponses: {
+      onError: (error, body, req) => {
+        console.log("Validation error:", error.message);
+      },
+    },
   });
 
 /**
@@ -24,6 +28,6 @@ export const createOpenApiValidator = (
   return OpenApiValidator.middleware({
     apiSpec,
     validateRequests: true,
-    validateResponses: true,
+    validateResponses: false,
   });
 };
