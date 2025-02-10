@@ -1,5 +1,5 @@
 :80 {
-	# Add unique request ID header to all requests
+	# Add unique request ID header to all requests?
 	header {
 		+X-Request-ID {http.request.uuid}
 	}
@@ -12,22 +12,22 @@
 
 	# Route matchers
 	@auth {
-		path /api/auth/* /api/users*
+		path /api/auth/*
 	}
 	@api {
 		path /api/*
-		not path /api/auth/* /api/users*
+		not path /api/auth/*
 	}
 
-	# Handle /api/auth and /api/users routes
+	# Handle /api/auth routes
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
 		}
 	}
 	handle @api {
-		forward_auth {
-			uri http://services-auth:3000/auth/verify
+		forward_auth services-auth:3000 {
+			uri /api/auth/verify
 			method POST
 			header_up X-Request-ID {http.request.uuid}
 		}
