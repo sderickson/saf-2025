@@ -32,7 +32,7 @@ vi.mock("@saf/dbs-main", async (importOriginal) => {
 const convertTimestamps = (todo: Todo) => {
   return {
     ...todo,
-    createdAt: todo.createdAt.toISOString(),
+    createdAt: new Date(todo.createdAt).toISOString(),
   };
 };
 
