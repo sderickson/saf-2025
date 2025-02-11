@@ -1,16 +1,25 @@
 import { defineConfig } from "drizzle-kit";
 import path from "path";
 import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-export const dbPath = path.join(__dirname, "data/main.sqlite");
-export const migrationsPath = path.join(__dirname, "./migrations");
+
+const getDirname = () => {
+  const __filename = fileURLToPath(import.meta.url);
+  return path.dirname(__filename);
+};
+
+export const getDbPath = () => {
+  return path.join(getDirname(), "data/main.sqlite");
+};
+
+export const getMigrationsPath = () => {
+  return path.join(getDirname(), "./migrations");
+};
 
 export default defineConfig({
-  out: migrationsPath,
+  out: "./migrations",
   schema: "./src/schema.ts",
   dialect: "sqlite",
   dbCredentials: {
-    url: dbPath,
+    url: "./data/main.sqlite",
   },
 });

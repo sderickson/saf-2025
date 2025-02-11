@@ -381,7 +381,7 @@ export interface components {
              * Format: date-time
              * @description When the todo item was created
              */
-            created_at: string;
+            createdAt: string;
         };
         CreateTodoRequest: {
             /** @description The title/description of the todo item */

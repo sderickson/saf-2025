@@ -3,7 +3,7 @@ required:
   - id
   - title
   - completed
-  - created_at
+  - createdAt
 properties:
   id:
     type: integer
@@ -14,7 +14,7 @@ properties:
   completed:
     type: boolean
     description: Whether the todo item has been completed
-  created_at:
+  createdAt:
     type: string
     format: date-time
     description: When the todo item was created

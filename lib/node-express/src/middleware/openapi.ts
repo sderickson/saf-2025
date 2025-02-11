@@ -19,15 +19,6 @@ export const openApiValidator: OpenApiRequestHandler[] =
     apiSpec: apiSpec as any,
     validateRequests: true,
     validateResponses: validateResponses,
-    formats: [
-      {
-        name: "date-time",
-        type: "string",
-        validate: (value: string) => {
-          return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value);
-        },
-      },
-    ],
   });
 
 /**

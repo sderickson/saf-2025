@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import request from "supertest";
 import express from "express";
 import { todos, TodoNotFoundError } from "@saf/dbs-main";
+import type { Todo } from "@saf/dbs-main";
 import todosRouter from "./todos.js";
 import {
   recommendedErrorHandlers,
@@ -28,6 +29,13 @@ vi.mock("@saf/dbs-main", async (importOriginal) => {
   };
 });
 
+const convertTimestamps = (todo: Todo) => {
+  return {
+    ...todo,
+    createdAt: todo.createdAt.toISOString(),
+  };
+};
+
 describe("Todos Routes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -40,13 +48,13 @@ describe("Todos Routes", () => {
           id: 1,
           title: "Test Todo 1",
           completed: false,
-          created_at: new Date().toISOString(),
+          createdAt: new Date(),
         },
         {
           id: 2,
           title: "Test Todo 2",
           completed: true,
-          created_at: new Date().toISOString(),
+          createdAt: new Date(),
         },
       ];
       vi.mocked(todos.getAllTodos).mockResolvedValue(mockTodos);
@@ -54,7 +62,7 @@ describe("Todos Routes", () => {
       const response = await request(app).get("/api/todos");
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockTodos);
+      expect(response.body).toEqual(mockTodos.map(convertTimestamps));
       expect(todos.getAllTodos).toHaveBeenCalledOnce();
     });
 
@@ -76,14 +84,14 @@ describe("Todos Routes", () => {
         id: 1,
         title: "New Todo",
         completed: false,
-        created_at: new Date().toISOString(),
+        createdAt: new Date(),
       };
       vi.mocked(todos.createTodo).mockResolvedValue(createdTodo);
 
       const response = await request(app).post("/api/todos").send(newTodo);
 
       expect(response.status).toBe(201);
-      expect(response.body).toEqual(createdTodo);
+      expect(response.body).toEqual(convertTimestamps(createdTodo));
       expect(todos.createTodo).toHaveBeenCalledWith(newTodo.title);
     });
 
@@ -107,7 +115,7 @@ describe("Todos Routes", () => {
       const updatedTodo = {
         id: todoId,
         ...updateData,
-        created_at: new Date().toISOString(),
+        createdAt: new Date(),
       };
       vi.mocked(todos.updateTodo).mockResolvedValue(updatedTodo);
 
@@ -116,7 +124,7 @@ describe("Todos Routes", () => {
         .send(updateData);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(updatedTodo);
+      expect(response.body).toEqual(convertTimestamps(updatedTodo));
       expect(todos.updateTodo).toHaveBeenCalledWith(
         todoId,
         updateData.title,
@@ -146,7 +154,7 @@ describe("Todos Routes", () => {
         id: todoId,
         title: "Deleted Todo",
         completed: false,
-        created_at: new Date().toISOString(),
+        createdAt: new Date(),
       };
       vi.mocked(todos.deleteTodo).mockResolvedValue(deletedTodo);
 
