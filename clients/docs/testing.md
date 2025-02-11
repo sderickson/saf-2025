@@ -142,7 +142,7 @@ const fillForm = async (
    - Checking validation messages
    - After any state changes
 
-2. Use `$nextTick` after state changes:
+2. Use a single `$nextTick` after state changes:
 
    ```typescript
    await input.setValue("value");
@@ -150,12 +150,10 @@ const fillForm = async (
    expect(wrapper.text()).toContain("Validation message");
    ```
 
-3. Sometimes multiple ticks are needed for Vuetify:
-   ```typescript
-   await input.setValue("value");
-   await wrapper.vm.$nextTick();
-   await wrapper.vm.$nextTick(); // Sometimes needed for Vuetify validation
-   ```
+3. Common misconceptions:
+   - Multiple `$nextTick` calls are not needed - a single call is sufficient
+   - Adding more `$nextTick` calls won't fix timing issues
+   - If a test is flaky, look for other causes like missing awaits on events or setValue calls
 
 ### 5. Validation Testing
 
