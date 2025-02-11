@@ -117,9 +117,6 @@ describe("RegisterPage", () => {
 
     await passwordInput.setValue("short");
     await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
     expect(wrapper.text()).toContain("Password must be at least");
 
     await passwordInput.setValue("validpassword123");
