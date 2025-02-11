@@ -1,40 +1,26 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { emailRules, passwordRules } from "clients/auth/rules";
-import { client } from "clients/requests/client";
+import { emailRules, passwordRules } from "../rules";
+import { useLogin } from "../../requests/auth";
 
-async function test() {
-  {
-    const { data, error } = await client.POST("/auth/login", {
-      body: {
-        email: "user@example.com",
-        password: "password",
-      },
-    });
-    console.log(data, error);
-    // Testing session
-  }
-  {
-    const { data, error } = await client.GET("/todos");
-    console.log(data, error);
-  }
-}
-test();
+const { mutate: login, isError, error, isPending } = useLogin();
 
-const passwordVisible = ref(false);
 const email = ref("");
 const password = ref("");
-const valid = ref(null);
+const valid = ref(false);
+const passwordVisible = ref(false);
 
-const login = async () => {
-  const { data, error } = await client.POST("/auth/login", {
-    body: {
-      email: email.value,
-      password: password.value,
+const handleLogin = () => {
+  if (!valid.value) return;
+
+  login(
+    { email: email.value, password: password.value },
+    {
+      onSuccess: () => {
+        window.location.href = "/app/";
+      },
     },
-  });
-  console.log(data, error);
-  console.log("login", email.value, password.value, { valid: valid.value });
+  );
 };
 </script>
 
@@ -51,14 +37,14 @@ const login = async () => {
           prepend-inner-icon="mdi-email-outline"
           variant="outlined"
           :rules="emailRules"
+          :disabled="isPending"
           autofocus
-        ></v-text-field>
+        />
 
         <div
           class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between"
         >
           Password
-
           <router-link
             class="text-caption text-decoration-none text-blue"
             to="/forgot"
@@ -71,21 +57,33 @@ const login = async () => {
           v-model="password"
           :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
           :type="passwordVisible ? 'text' : 'password'"
-          :rules="passwordRules"
           density="compact"
           placeholder="Enter your password"
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
+          :rules="passwordRules"
+          :disabled="isPending"
           @click:append-inner="passwordVisible = !passwordVisible"
-        ></v-text-field>
+        />
+
+        <v-alert
+          v-if="isError && error?.message"
+          type="error"
+          variant="tonal"
+          class="mb-3"
+        >
+          {{ error.message }}
+        </v-alert>
+
         <v-btn
-          class="my-5"
+          block
+          class="mb-8"
           color="blue"
           size="large"
           variant="tonal"
-          block
+          :loading="isPending"
           :disabled="!valid"
-          @click="login"
+          @click="handleLogin"
         >
           Log In
         </v-btn>

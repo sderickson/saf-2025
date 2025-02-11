@@ -17,11 +17,14 @@ const {
   isSuccess,
 } = useRegister();
 
-watch(isSuccess, (success) => {
-  if (success) {
-    window.location.href = "/app/";
-  }
-});
+watch(
+  () => isSuccess.value,
+  (success) => {
+    if (success) {
+      window.location.href = "/app/";
+    }
+  },
+);
 
 const handleRegister = () => {
   register({
