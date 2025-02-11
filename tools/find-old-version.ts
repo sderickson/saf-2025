@@ -2,20 +2,14 @@ import fs from "fs";
 import path from "path";
 import https from "https";
 import util from "util";
+// Function to get latest version from npm registry
+import semver from "semver";
 
 // Convert callbacks to promises
 const readFile = util.promisify(fs.readFile);
 const readdir = util.promisify(fs.readdir);
 
-// Function to get latest version from npm registry
-const pThrottle = require('p-throttle');
-
-const throttledGetLatestVersion = pThrottle(
-  (packageName: string) => _getLatestVersion(packageName),
-  { limit: 10, interval: 1000 }
-);
-
-async function _getLatestVersion(packageName: string) {
+async function getLatestVersion(packageName: string) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: "registry.npmjs.org",
@@ -42,9 +36,6 @@ async function _getLatestVersion(packageName: string) {
       .on("error", reject);
   });
 }
-
-// Function to compare versions
-import semver from 'semver';
 
 function isMajorBehind(current: string, latest: string) {
   if (!current || !latest) return false;
