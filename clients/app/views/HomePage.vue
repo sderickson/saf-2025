@@ -94,7 +94,7 @@ function handleDeleteTodo(id: number) {
         </template>
       </v-list-item>
 
-      <v-list-item v-if="todos?.length === 0">
+      <v-list-item v-if="!isLoading && todos?.length === 0">
         <v-list-item-title class="text-center text-grey">
           No todos yet. Add one above!
         </v-list-item-title>
