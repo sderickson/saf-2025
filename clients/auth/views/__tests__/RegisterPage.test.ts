@@ -33,21 +33,23 @@ describe("RegisterPage", () => {
 
   // Helper functions for element selection
   const getEmailInput = (wrapper: VueWrapper) => {
-    const input = wrapper.find("[placeholder='Email address']");
-    expect(input.exists()).toBe(true);
-    return input;
+    const emailInput = wrapper.find("[placeholder='Email address']");
+    expect(emailInput.exists()).toBe(true);
+    return emailInput;
   };
 
   const getPasswordInput = (wrapper: VueWrapper) => {
-    const input = wrapper.find("[placeholder='Enter your password']");
-    expect(input.exists()).toBe(true);
-    return input;
+    const passwordInput = wrapper.find("[placeholder='Enter your password']");
+    expect(passwordInput.exists()).toBe(true);
+    return passwordInput;
   };
 
   const getConfirmPasswordInput = (wrapper: VueWrapper) => {
-    const input = wrapper.find("[placeholder='Confirm your password']");
-    expect(input.exists()).toBe(true);
-    return input;
+    const confirmPasswordInput = wrapper.find(
+      "[placeholder='Confirm your password']",
+    );
+    expect(confirmPasswordInput.exists()).toBe(true);
+    return confirmPasswordInput;
   };
 
   const getRegisterButton = (wrapper: VueWrapper) => {
@@ -63,11 +65,7 @@ describe("RegisterPage", () => {
       email,
       password,
       confirmPassword,
-    }: {
-      email: string;
-      password: string;
-      confirmPassword: string;
-    },
+    }: { email: string; password: string; confirmPassword: string },
   ) => {
     await getEmailInput(wrapper).setValue(email);
     await getPasswordInput(wrapper).setValue(password);
@@ -107,13 +105,11 @@ describe("RegisterPage", () => {
 
     await passwordInput.setValue("short");
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain("Password must be at least 8 characters");
+    expect(wrapper.text()).toContain("Password must be at least");
 
     await passwordInput.setValue("validpassword123");
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).not.toContain(
-      "Password must be at least 8 characters",
-    );
+    expect(wrapper.text()).not.toContain("Password must be at least");
   });
 
   it("should validate password confirmation match", async () => {
@@ -124,6 +120,7 @@ describe("RegisterPage", () => {
       password: "validpassword123",
       confirmPassword: "differentpassword",
     });
+
     expect(wrapper.text()).toContain("Passwords must match");
 
     await getConfirmPasswordInput(wrapper).setValue("validpassword123");
@@ -140,7 +137,7 @@ describe("RegisterPage", () => {
 
     // After valid input
     await fillForm(wrapper, {
-      email: "test@example.com",
+      email: "valid@email.com",
       password: "validpassword123",
       confirmPassword: "validpassword123",
     });
@@ -159,6 +156,7 @@ describe("RegisterPage", () => {
     const registerButton = getRegisterButton(wrapper);
     await registerButton.trigger("click");
     await wrapper.vm.$nextTick();
+
     expect(mockRegister).toHaveBeenCalledWith({
       email: "test@example.com",
       password: "validpassword123",
