@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { client } from "./client";
 
 interface Todo {
-  id: string;
+  id: number;
   title: string;
   completed: boolean;
   created_at: string;
@@ -45,7 +45,7 @@ export function useCreateTodo() {
 export function useUpdateTodo() {
   const queryClient = useQueryClient();
 
-  return useMutation<Todo, Error, { id: string; todo: UpdateTodoRequest }>({
+  return useMutation<Todo, Error, { id: number; todo: UpdateTodoRequest }>({
     mutationFn: async ({ id, todo }) => {
       const { data } = await client.PUT(`/todos/${id}` as "/todos/{id}", {
         body: todo,
@@ -62,7 +62,7 @@ export function useUpdateTodo() {
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
 
-  return useMutation<void, Error, string>({
+  return useMutation<void, Error, number>({
     mutationFn: async (id) => {
       await client.DELETE(`/todos/${id}` as "/todos/{id}", {});
     },

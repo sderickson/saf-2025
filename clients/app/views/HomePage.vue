@@ -19,14 +19,14 @@ function handleCreateTodo() {
   newTodoTitle.value = "";
 }
 
-function toggleTodo(id: string, todo: { title: string; completed: boolean }) {
+function toggleTodo(id: number, todo: { title: string; completed: boolean }) {
   updateTodo({
     id,
     todo: { ...todo, completed: !todo.completed },
   });
 }
 
-function handleDeleteTodo(id: string) {
+function handleDeleteTodo(id: number) {
   deleteTodo(id);
 }
 </script>
@@ -36,29 +36,25 @@ function handleDeleteTodo(id: string) {
     <h1 class="text-h4 mb-6">Todo List</h1>
 
     <!-- Add new todo -->
-    <v-form @submit.prevent="handleCreateTodo" class="mb-6">
-      <v-row>
-        <v-col cols="12" sm="8" md="6">
-          <v-text-field
-            v-model="newTodoTitle"
-            label="New Todo"
-            placeholder="What needs to be done?"
-            hide-details
-            @keyup.enter="handleCreateTodo"
+    <v-form class="mb-6" @submit.prevent="handleCreateTodo">
+      <v-text-field
+        v-model="newTodoTitle"
+        label="New Todo"
+        placeholder="What needs to be done?"
+        hide-details
+        @keyup.enter="handleCreateTodo"
+      >
+        <template #append>
+          <v-btn
+            color="primary"
+            :disabled="!newTodoTitle.trim()"
+            icon
+            @click="handleCreateTodo"
           >
-            <template v-slot:append>
-              <v-btn
-                color="primary"
-                @click="handleCreateTodo"
-                :disabled="!newTodoTitle.trim()"
-                icon
-              >
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </template>
-          </v-text-field>
-        </v-col>
-      </v-row>
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+      </v-text-field>
     </v-form>
 
     <!-- Loading state -->
@@ -73,11 +69,11 @@ function handleDeleteTodo(id: string) {
         :key="todo.id"
         :class="{ 'bg-grey-lighten-3': todo.completed }"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-checkbox
             v-model="todo.completed"
-            @change="toggleTodo(todo.id, todo)"
             hide-details
+            @change="toggleTodo(todo.id, todo)"
           />
         </template>
 
@@ -87,13 +83,13 @@ function handleDeleteTodo(id: string) {
           {{ todo.title }}
         </v-list-item-title>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
             icon="mdi-delete"
             variant="text"
             color="error"
-            @click="handleDeleteTodo(todo.id)"
             size="small"
+            @click="handleDeleteTodo(todo.id)"
           />
         </template>
       </v-list-item>
@@ -107,9 +103,4 @@ function handleDeleteTodo(id: string) {
   </v-container>
 </template>
 
-<style scoped>
-.v-list {
-  max-width: 800px;
-  margin: 0 auto;
-}
-</style>
+<style scoped></style>
