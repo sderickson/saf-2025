@@ -4,11 +4,11 @@ Rough order of development
 
 ### Backlog
 
-- Start adding tests...
-  - clients
-- Add forgot frontend
-- Add forgot backend, printing to console
-- Add forgot integration with email service
+- Set up the remaining SUSI flows
+- Add FE unit tests
+- Add E2E tests
+- Add forgot email flow
+- Add verify email flow
 
 ### Core
 

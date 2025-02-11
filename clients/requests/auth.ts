@@ -4,14 +4,26 @@ import type { RequestSchema } from "@saf/specs-apis";
 
 export const useLogin = () => {
   return useMutation({
-    mutationFn: (body: RequestSchema<"loginUser">) =>
-      client.POST("/auth/login", { body }),
+    mutationFn: async (body: RequestSchema<"loginUser">) => {
+      const { data, error } = await client.POST("/auth/login", { body });
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      return data;
+    },
   });
 };
 
 export const useLogout = () => {
   return useMutation({
-    mutationFn: () => client.POST("/auth/logout"),
+    mutationFn: async () => {
+      const { error } = await client.POST("/auth/logout");
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+    },
   });
 };
 

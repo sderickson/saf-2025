@@ -6,6 +6,10 @@ import { RouterView } from "vue-router";
   <v-app>
     <v-app-bar>
       <v-app-bar-title>Core Product</v-app-bar-title>
+      <v-spacer />
+      <v-btn href="/auth/logout" prepend-icon="mdi-logout" variant="text">
+        Logout
+      </v-btn>
     </v-app-bar>
 
     <v-main>
