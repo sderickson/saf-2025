@@ -36,22 +36,17 @@ describe("LoginPage", () => {
     mockMutate.mockClear();
   });
 
-  // Helper functions to get elements
-  const getInputByLabel = (wrapper: VueWrapper, label: string) => {
-    const field = wrapper
-      .findAll(".v-field")
-      .find(
-        (field: DOMWrapper<HTMLElement>) =>
-          field.find("label").text() === label,
-      );
-    return field?.find("input");
+  const getEmailInput = (wrapper: VueWrapper) => {
+    const emailInput = wrapper.find("[placeholder='Email address']");
+    expect(emailInput.exists()).toBe(true);
+    return emailInput;
   };
 
-  const getEmailInput = (wrapper: VueWrapper) =>
-    getInputByLabel(wrapper, "Email address");
-
-  const getPasswordInput = (wrapper: VueWrapper) =>
-    getInputByLabel(wrapper, "Password");
+  const getPasswordInput = (wrapper: VueWrapper) => {
+    const passwordInput = wrapper.find("[placeholder='Enter your password']");
+    expect(passwordInput.exists()).toBe(true);
+    return passwordInput;
+  };
 
   const getLoginButton = (wrapper: VueWrapper) =>
     wrapper

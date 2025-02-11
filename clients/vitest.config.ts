@@ -12,7 +12,17 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
-      exclude: ["node_modules/", "dist/"],
+      exclude: [
+        // main and router files don't need to be unit tested
+        // prefer e2e tests for those.
+        "**/main.ts",
+        "**/router.ts",
+
+        // Clearly these don't need to be unit tested
+        "*.config.*",
+        "**/*.d.ts",
+        "**/__mocks__",
+      ],
     },
     deps: {
       inline: ["vuetify"],
