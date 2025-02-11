@@ -12,7 +12,7 @@
     "@saf/node-express": "*",
     "@saf/specs-apis": "*",
     "express": "^4.21.2",
-    "http-errors": "~1.6.3",
+    "http-errors": "^2.0.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2"
   },
@@ -22,7 +22,7 @@
     "@types/node": "^22.10.5",
     "@types/supertest": "^6.0.2",
     "@vitest/coverage-v8": "^3.0.5",
-    "supertest": "^6.3.4",
+    "supertest": "^7.0.0",
     "typescript": "^5.7.3",
     "vitest": "^3.0.5"
   }
