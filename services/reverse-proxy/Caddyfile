@@ -1,5 +1,5 @@
 :80 {
-	# Add unique request ID header to all requests?
+	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
 	}
