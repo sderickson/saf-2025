@@ -53,7 +53,9 @@ export function useDeleteTodo() {
 
   return useMutation<void, Error, number>({
     mutationFn: async (id) => {
-      await client.DELETE(`/todos/${id}` as "/todos/{id}", {});
+      const { data } = await client.DELETE(`/todos/${id}` as "/todos/{id}", {});
+      if (!data) throw new Error("Failed to delete todo");
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos"] });
