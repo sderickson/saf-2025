@@ -34,11 +34,14 @@ async function getLatestVersion(packageName: string) {
 }
 
 // Function to compare versions
+import semver from 'semver';
+
 function isMajorBehind(current: string, latest: string) {
   if (!current || !latest) return false;
-  const [currentMajor] = current.replace(/^\^|~/, "").split(".");
-  const [latestMajor] = latest.split(".");
-  return parseInt(currentMajor) < parseInt(latestMajor);
+  const cleanCurrent = semver.valid(semver.coerce(current));
+  const cleanLatest = semver.valid(semver.coerce(latest));
+  if (!cleanCurrent || !cleanLatest) return false;
+  return semver.major(cleanCurrent) < semver.major(cleanLatest);
 }
 
 // Main function to check package.json files
