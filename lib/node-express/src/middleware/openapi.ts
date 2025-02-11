@@ -6,7 +6,7 @@ import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.t
 
 const validateResponses: ValidateResponseOpts = {
   onError: (error, body, req) => {
-    req.log.error("Validation error:", error.message);
+    req.log.error("Validation error:", error);
   },
 };
 

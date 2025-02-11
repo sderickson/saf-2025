@@ -10,7 +10,8 @@
     "scripts": {
         "test": "vitest run",
         "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage"
+        "test:coverage": "vitest run --coverage",
+        "db:generate": "drizzle-kit generate"
     },
     "dependencies": {
         "@saf/drizzle-sqlite3": "*",
@@ -26,5 +27,13 @@
     },
     "engines": {
         "node": ">=22"
-    }
+    },
+    "files": [
+        "src",
+        "index.ts",
+        "drizzle.config.ts",
+        "types",
+        "migrations",
+        "tsconfig.json"
+    ]
 }

@@ -62,13 +62,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /**
          * Verify Authentication Status
          * @description Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.
          */
-        post: operations["verifyAuth"];
+        get: operations["verifyAuth"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -371,11 +371,8 @@ export interface components {
             password: string;
         };
         todo: {
-            /**
-             * Format: uuid
-             * @description Unique identifier for the todo item
-             */
-            id: string;
+            /** @description Unique identifier for the todo item */
+            id: number;
             /** @description The title/description of the todo item */
             title: string;
             /** @description Whether the todo item has been completed */
@@ -384,7 +381,7 @@ export interface components {
              * Format: date-time
              * @description When the todo item was created
              */
-            created_at: string;
+            createdAt: string;
         };
         CreateTodoRequest: {
             /** @description The title/description of the todo item */
@@ -406,7 +403,6 @@ export interface components {
             name: string;
         };
         user: {
-            /** Format: uuid */
             id: number;
             /** Format: email */
             email: string;

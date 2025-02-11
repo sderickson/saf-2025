@@ -27,9 +27,7 @@ describe("todos queries", () => {
         title,
         completed: false,
         id: expect.any(Number),
-        created_at: expect.stringMatching(
-          /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
-        ), // SQLite timestamp format
+        createdAt: expect.any(Date),
       });
     });
   });

@@ -61,7 +61,7 @@ logout:
         description: Successful logout
 
 verify:
-  post:
+  get:
     summary: "Verify Authentication Status"
     description: "Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services."
     operationId: verifyAuth

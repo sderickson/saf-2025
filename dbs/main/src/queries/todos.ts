@@ -10,17 +10,22 @@ export class TodoNotFoundError extends MainDatabaseError {
   }
 }
 
-export const getAllTodos = queryWrapper(async () => {
-  return await db.select().from(todos).orderBy(todos.created_at);
+export type Todo = typeof todos.$inferSelect;
+
+export const getAllTodos = queryWrapper(async (): Promise<Todo[]> => {
+  return await db.select().from(todos).orderBy(todos.createdAt);
 });
 
-export const createTodo = queryWrapper(async (title: string) => {
-  const result = await db.insert(todos).values({ title }).returning();
+export const createTodo = queryWrapper(async (title: string): Promise<Todo> => {
+  const result = await db
+    .insert(todos)
+    .values({ title, createdAt: new Date() })
+    .returning();
   return result[0];
 });
 
 export const updateTodo = queryWrapper(
-  async (id: number, title: string, completed: boolean) => {
+  async (id: number, title: string, completed: boolean): Promise<Todo> => {
     const result = await db
       .update(todos)
       .set({ title, completed })
@@ -35,7 +40,7 @@ export const updateTodo = queryWrapper(
   }
 );
 
-export const deleteTodo = queryWrapper(async (id: number) => {
+export const deleteTodo = queryWrapper(async (id: number): Promise<Todo> => {
   const result = await db.delete(todos).where(eq(todos.id, id)).returning();
 
   if (result.length === 0) {
