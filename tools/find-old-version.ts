@@ -8,7 +8,14 @@ const readFile = util.promisify(fs.readFile);
 const readdir = util.promisify(fs.readdir);
 
 // Function to get latest version from npm registry
-async function getLatestVersion(packageName: string) {
+const pThrottle = require('p-throttle');
+
+const throttledGetLatestVersion = pThrottle(
+  (packageName: string) => _getLatestVersion(packageName),
+  { limit: 10, interval: 1000 }
+);
+
+async function _getLatestVersion(packageName: string) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: "registry.npmjs.org",
@@ -18,6 +25,9 @@ async function getLatestVersion(packageName: string) {
 
     https
       .get(options, (res: any) => {
+        if (res.statusCode === 429) {
+          return resolve(null); // Rate limited
+        }
         let data = "";
         res.on("data", (chunk: any) => (data += chunk));
         res.on("end", () => {
