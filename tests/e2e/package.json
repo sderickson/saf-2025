@@ -2,7 +2,12 @@
   "name": "@saf/tests-e2e",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test",
+    "report": "npx playwright show-report",
+    "test:ui": "npx playwright test --ui",
+    "codegen": "npx playwright codegen"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
