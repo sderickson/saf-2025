@@ -10,26 +10,10 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ../../dbs/auth/src
-          target: /app/dbs/auth/src
-        - action: sync+restart
-          path: ../../dbs/auth/index.ts
-          target: /app/dbs/auth/index.ts
-        - action: sync+restart
-          path: ../../dbs/auth/drizzle.config.ts
-          target: /app/dbs/auth/drizzle.config.ts
-        - action: sync+restart
-          path: ../../dbs/auth/types
-          target: /app/dbs/auth/types
-        - action: sync+restart
-          path: ../../dbs/auth/migrations
-          target: /app/dbs/auth/migrations
-        - action: sync+restart
-          path: ../../dbs/auth/tsconfig.json
-          target: /app/dbs/auth/tsconfig.json
-        - action: sync+restart
-          path: ../../dbs/auth/data
-          target: /app/dbs/auth/data
+          path: ../../dbs/auth
+          target: /app/dbs/auth
+          ignore:
+            - data
         - action: sync+restart
           path: ../../lib/node-express
           target: /app/lib/node-express

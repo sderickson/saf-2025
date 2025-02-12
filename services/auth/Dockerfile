@@ -14,13 +14,7 @@ COPY lib/drizzle-sqlite3/package*.json ./lib/drizzle-sqlite3/
 RUN npm install --omit=dev
 
 # Copy source files
-COPY dbs/auth/src ./dbs/auth/src
-COPY dbs/auth/index.ts ./dbs/auth/index.ts
-COPY dbs/auth/drizzle.config.ts ./dbs/auth/drizzle.config.ts
-COPY dbs/auth/types ./dbs/auth/types
-COPY dbs/auth/migrations ./dbs/auth/migrations
-COPY dbs/auth/tsconfig.json ./dbs/auth/tsconfig.json
-COPY dbs/auth/data ./dbs/auth/data
+COPY dbs/auth ./dbs/auth
 
 COPY lib/node-express ./lib/node-express
 
