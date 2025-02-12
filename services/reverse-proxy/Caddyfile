@@ -7,24 +7,24 @@
 	# Minimal logging configuration - only errors and warnings
 	log {
 		format console
-		level ERROR
 	}
 
 	# Route matchers
 	@auth {
-		path /api/auth
+		host api.docker.localhost
+		path /auth*
 	}
 	@api {
-		path /api
-		not path /api/auth
+		host api.docker.localhost
+		not path /auth*
 	}
 
-	# Handle /api/auth routes
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
 		}
 	}
+
 	handle @api {
 		forward_auth services-auth:3000 {
 			uri /api/auth/verify

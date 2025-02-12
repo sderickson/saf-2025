@@ -24,7 +24,7 @@ app.use(recommendedPreMiddleware);
  * Routes
  * API endpoints for various resources
  */
-app.use("/api/todos", todosRouter);
+app.use("/todos", todosRouter);
 
 /**
  * Error Handling Middleware Stack

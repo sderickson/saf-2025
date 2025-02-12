@@ -61,6 +61,7 @@ authRouter.post(
 authRouter.post(
   "/login",
   createHandler(async function (req, res, next) {
+    req.log.info("login --------------------------");
     passport.authenticate(
       "local",
       (
