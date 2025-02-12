@@ -7,7 +7,6 @@ export const useLogin = () => {
     mutationFn: async (body: RequestSchema<"loginUser">) => {
       const { data, error } = await client.POST("/auth/login", { body });
       if (error) {
-        console.log(error);
         throw error;
       }
       return data;
@@ -20,7 +19,6 @@ export const useLogout = () => {
     mutationFn: async () => {
       const { error } = await client.POST("/auth/logout");
       if (error) {
-        console.log(error);
         throw error;
       }
     },
@@ -34,7 +32,6 @@ export const useRegister = () => {
         body,
       });
       if (error) {
-        console.log(error);
         throw error;
       }
 

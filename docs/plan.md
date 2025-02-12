@@ -4,9 +4,10 @@ Rough order of development
 
 ### Backlog
 
-- Set up the remaining SUSI flows
-- Add FE unit tests
-- Add E2E tests
+- Add unit tests to /requests
+- Move to sub-domains, using docker.localhost
+- Add playwright tests
+- Add GitHub actions for tests
 - Add forgot email flow
 - Add verify email flow
 
