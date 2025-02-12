@@ -35,6 +35,10 @@
 		not path /auth*
 	}
 
+	@api-specs {
+		host api.specs.docker.localhost
+	}
+
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
@@ -53,7 +57,11 @@
 			header_up Host {http.request.host}
 		}
 	}
-	
+
+	handle @api-specs {
+		reverse_proxy specs-apis:3000
+	}
+
 	handle {
 		reverse_proxy clients:5173 {
 			header_up X-Request-ID {http.request.uuid}
