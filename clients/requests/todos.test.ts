@@ -40,7 +40,6 @@ describe("todo requests", () => {
       app.unmount();
 
       expect(mockGET).toHaveBeenCalledWith("/todos");
-      console.log(Object.keys(result));
       expect(result.data.value).toEqual(mockTodos);
     });
 
