@@ -6,7 +6,8 @@
     "test": "npx playwright test",
     "report": "npx playwright show-report",
     "test:ui": "npx playwright test --ui",
-    "codegen": "npx playwright codegen"
+    "codegen": "npx playwright codegen",
+    "dev-clean-slate": "docker compose -f ../../docker-compose.yaml -f ../../docker-compose.playwright.yaml up"
   },
   "keywords": [],
   "author": "",

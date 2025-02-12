@@ -76,7 +76,6 @@ export default defineConfig({
   webServer: {
     command: "npm run dev-clean-slate",
     url: "http://localhost",
-    cwd: path.resolve(__dirname, "../../"),
     reuseExistingServer: false,
   },
 });
