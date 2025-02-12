@@ -20,6 +20,7 @@ COPY dbs/main/drizzle.config.ts ./dbs/main/drizzle.config.ts
 COPY dbs/main/types ./dbs/main/types
 COPY dbs/main/migrations ./dbs/main/migrations
 COPY dbs/main/tsconfig.json ./dbs/main/tsconfig.json
+COPY dbs/main/data ./dbs/main/data
 
 COPY lib/node-express ./lib/node-express
 

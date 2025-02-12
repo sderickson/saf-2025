@@ -39,6 +39,7 @@
         "drizzle.config.ts",
         "types",
         "migrations",
-        "tsconfig.json"
+        "tsconfig.json",
+        "data"
     ]
 }

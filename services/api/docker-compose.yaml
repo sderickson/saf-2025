@@ -28,6 +28,9 @@ services:
           path: ../../dbs/main/tsconfig.json
           target: /app/dbs/main/tsconfig.json
         - action: sync+restart
+          path: ../../dbs/main/data
+          target: /app/dbs/main/data
+        - action: sync+restart
           path: ../../lib/node-express
           target: /app/lib/node-express
         - action: sync+restart

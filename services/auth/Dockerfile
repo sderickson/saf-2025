@@ -20,6 +20,7 @@ COPY dbs/auth/drizzle.config.ts ./dbs/auth/drizzle.config.ts
 COPY dbs/auth/types ./dbs/auth/types
 COPY dbs/auth/migrations ./dbs/auth/migrations
 COPY dbs/auth/tsconfig.json ./dbs/auth/tsconfig.json
+COPY dbs/auth/data ./dbs/auth/data
 
 COPY lib/node-express ./lib/node-express
 
