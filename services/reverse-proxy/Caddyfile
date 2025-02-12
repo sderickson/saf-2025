@@ -12,11 +12,11 @@
 
 	# Route matchers
 	@auth {
-		path /api/auth/*
+		path /api/auth
 	}
 	@api {
-		path /api/*
-		not path /api/auth/*
+		path /api
+		not path /api/auth
 	}
 
 	# Handle /api/auth routes
