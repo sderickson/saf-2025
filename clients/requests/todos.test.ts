@@ -1,0 +1,144 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo } from "./todos";
+import { client } from "./client";
+import { withVueQuery } from "./test-utils";
+
+// Mock the client
+vi.mock("./client", () => ({
+  client: {
+    GET: vi.fn(),
+    POST: vi.fn(),
+    PUT: vi.fn(),
+    DELETE: vi.fn(),
+  },
+}));
+
+describe("todo requests", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
+  const mockPOST = client.POST as ReturnType<typeof vi.fn>;
+  const mockPUT = client.PUT as ReturnType<typeof vi.fn>;
+  const mockDELETE = client.DELETE as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    mockGET.mockClear();
+    mockPOST.mockClear();
+    mockPUT.mockClear();
+    mockDELETE.mockClear();
+  });
+
+  describe("useTodos", () => {
+    it("should fetch todos", async () => {
+      const mockTodos = [
+        { id: 1, title: "Test Todo", completed: false },
+        { id: 2, title: "Another Todo", completed: true },
+      ];
+      mockGET.mockResolvedValueOnce({ data: mockTodos });
+
+      const [result, app] = withVueQuery(() => useTodos());
+      await result.suspense();
+      app.unmount();
+
+      expect(mockGET).toHaveBeenCalledWith("/todos");
+      console.log(Object.keys(result));
+      expect(result.data.value).toEqual(mockTodos);
+    });
+
+    it("should return empty array when no todos exist", async () => {
+      mockGET.mockResolvedValueOnce({ data: null });
+
+      const [result, app] = withVueQuery(() => useTodos());
+      await result.suspense();
+      app.unmount();
+
+      expect(mockGET).toHaveBeenCalledWith("/todos");
+      expect(result.data.value).toEqual([]);
+    });
+  });
+
+  describe("useCreateTodo", () => {
+    const newTodo = {
+      title: "New Todo",
+      completed: false,
+    };
+
+    it("should create a new todo", async () => {
+      const mockResponse = { id: 1, ...newTodo };
+      mockPOST.mockResolvedValueOnce({ data: mockResponse });
+
+      const [result, app] = withVueQuery(() => useCreateTodo());
+      const response = await result.mutateAsync(newTodo);
+      app.unmount();
+
+      expect(mockPOST).toHaveBeenCalledWith("/todos", { body: newTodo });
+      expect(response).toEqual(mockResponse);
+    });
+
+    it("should throw error when creation fails", async () => {
+      mockPOST.mockResolvedValueOnce({ data: null });
+
+      const [result, app] = withVueQuery(() => useCreateTodo());
+      await expect(result.mutateAsync(newTodo)).rejects.toThrow(
+        "Failed to create todo",
+      );
+      app.unmount();
+    });
+  });
+
+  describe("useUpdateTodo", () => {
+    const todoUpdate = {
+      id: 1,
+      todo: {
+        title: "Updated Todo",
+        completed: true,
+      },
+    };
+
+    it("should update a todo", async () => {
+      const mockResponse = { id: todoUpdate.id, ...todoUpdate.todo };
+      mockPUT.mockResolvedValueOnce({ data: mockResponse });
+
+      const [result, app] = withVueQuery(() => useUpdateTodo());
+      const response = await result.mutateAsync(todoUpdate);
+      app.unmount();
+
+      expect(mockPUT).toHaveBeenCalledWith("/todos/1", {
+        body: todoUpdate.todo,
+      });
+      expect(response).toEqual(mockResponse);
+    });
+
+    it("should throw error when update fails", async () => {
+      mockPUT.mockResolvedValueOnce({ data: null });
+
+      const [result, app] = withVueQuery(() => useUpdateTodo());
+      await expect(result.mutateAsync(todoUpdate)).rejects.toThrow(
+        "Failed to update todo",
+      );
+      app.unmount();
+    });
+  });
+
+  describe("useDeleteTodo", () => {
+    const todoId = 1;
+
+    it("should delete a todo", async () => {
+      mockDELETE.mockResolvedValueOnce({ data: {} });
+
+      const [result, app] = withVueQuery(() => useDeleteTodo());
+      await result.mutateAsync(todoId);
+      app.unmount();
+
+      expect(mockDELETE).toHaveBeenCalledWith("/todos/1", {});
+    });
+
+    it("should throw error when deletion fails", async () => {
+      mockDELETE.mockResolvedValueOnce({ data: null });
+
+      const [result, app] = withVueQuery(() => useDeleteTodo());
+      await expect(result.mutateAsync(todoId)).rejects.toThrow(
+        "Failed to delete todo",
+      );
+      app.unmount();
+    });
+  });
+});
