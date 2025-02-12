@@ -6,8 +6,27 @@
 
 	# Minimal logging configuration - only errors and warnings
 	log {
+		level ERROR
 		format console
 	}
+
+
+	# Handle OPTIONS requests for CORS
+	@options {
+		method OPTIONS
+	}
+	handle @options {
+		header {
+			Access-Control-Allow-Origin "http://docker.localhost"
+			Vary Origin
+			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+			Access-Control-Allow-Headers "Content-Type, Authorization, X-Request-ID"
+			Access-Control-Allow-Credentials "true"
+			Access-Control-Max-Age "3600"
+		}
+		respond 204
+	}
+
 
 	# Route matchers
 	@auth {
@@ -22,21 +41,26 @@
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 	}
 
 	handle @api {
 		forward_auth services-auth:3000 {
-			uri /api/auth/verify
+			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 		reverse_proxy services-api:3000 {
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 	}
+	
 	handle {
 		reverse_proxy clients:5173 {
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 	}
 }

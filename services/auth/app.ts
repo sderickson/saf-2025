@@ -43,7 +43,8 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === "production" ? "lax" : "strict",
+      sameSite: "strict",
+      domain: ".docker.localhost", // Allow cookies to be shared across subdomains
     },
   })
 );
