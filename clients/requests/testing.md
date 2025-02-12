@@ -162,6 +162,7 @@ See complete examples in:
    - Test successful data fetching
    - Test empty/null responses
    - Test error handling
+   - Test query caching behavior
 
 2. **Mutation Testing**:
 
@@ -169,8 +170,99 @@ See complete examples in:
    - Test error cases
    - Verify correct endpoint and payload
    - Test response handling
+   - Test query cache invalidation
 
 3. **Setup/Teardown**:
    - Mock HTTP methods
    - Clear mocks between tests
    - Clean up Vue instances
+
+## Testing Query Cache Behavior
+
+Vue Query maintains a cache of query results and automatically invalidates it when mutations occur. Here's how to test this behavior:
+
+### 1. Testing Query Caching
+
+When testing caching behavior, it's important to configure the QueryClient properly:
+
+```typescript
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnMount: false, // Prevent automatic refetching
+      staleTime: Infinity, // Consider data as never stale
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
+```
+
+Then test the caching behavior:
+
+```typescript
+it("should cache query results", async () => {
+  // Set up initial query response
+  mockGET.mockResolvedValue({ data: mockData });
+
+  // First query
+  const [result1, app1] = withVueQuery(() => useMyQuery(), queryClient);
+  await result1.suspense();
+  expect(mockGET).toHaveBeenCalledTimes(1);
+
+  // Second query should use cache
+  const [result2, app2] = withVueQuery(() => useMyQuery(), queryClient);
+  await result2.suspense();
+  expect(mockGET).toHaveBeenCalledTimes(1); // Still only called once
+
+  // Verify both queries have the same data
+  expect(result1.data.value).toEqual(mockData);
+  expect(result2.data.value).toEqual(mockData);
+
+  // Clean up
+  app1.unmount();
+  app2.unmount();
+});
+```
+
+### 2. Testing Cache Invalidation
+
+When testing mutations that should invalidate the query cache:
+
+```typescript
+it("should invalidate cache after mutation", async () => {
+  // Set up and execute initial query
+  mockGET.mockResolvedValue({ data: mockData });
+  const [queryResult, queryApp] = withVueQuery(() => useMyQuery(), queryClient);
+  await queryResult.suspense();
+  expect(mockGET).toHaveBeenCalledTimes(1);
+
+  // Perform mutation
+  const [mutationResult, mutationApp] = withVueQuery(
+    () => useMyMutation(),
+    queryClient,
+  );
+  await mutationResult.mutateAsync(mutationData);
+
+  // Wait for cache invalidation and verify refetch
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(mockGET).toHaveBeenCalledTimes(2);
+
+  // Clean up
+  queryApp.unmount();
+  mutationApp.unmount();
+});
+```
+
+Key Points:
+
+- Configure QueryClient with appropriate settings for testing cache behavior
+- Use `mockResolvedValue` instead of `mockResolvedValueOnce` when you expect multiple calls
+- Add a small delay after mutation to allow for cache invalidation
+- Keep track of both query and mutation app instances for cleanup
+- Verify the number of times the query endpoint is called
+- Share the same QueryClient instance between related queries and mutations
+
+See `todos.test.ts` for complete examples of testing cache behavior with create, update, and delete operations.

@@ -1,15 +1,23 @@
 import { createApp } from "vue";
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
 
-export function withVueQuery(composable: () => unknown) {
+export function withVueQuery(
+  composable: () => unknown,
+  queryClient?: QueryClient,
+) {
   let result;
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      mutations: {
-        retry: false,
+  const client =
+    queryClient ??
+    new QueryClient({
+      defaultOptions: {
+        mutations: {
+          retry: false,
+        },
+        queries: {
+          retry: false,
+        },
       },
-    },
-  });
+    });
 
   const app = createApp({
     setup() {
@@ -18,8 +26,8 @@ export function withVueQuery(composable: () => unknown) {
     },
   });
 
-  app.use(VueQueryPlugin, { queryClient });
+  app.use(VueQueryPlugin, { queryClient: client });
   app.mount(document.createElement("div"));
 
-  return [result, app] as const;
+  return [result, app, client] as const;
 }
