@@ -4,5 +4,3 @@ WORKDIR /app/specs/apis
 COPY ./specs/apis ./
 RUN npm install
 RUN npm run generate
-
-EXPOSE 3000

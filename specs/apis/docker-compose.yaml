@@ -1,10 +1,8 @@
 services:
-  specs__apis:
+  specs-apis:
     build:
       context: ../..
       dockerfile: ./specs/apis/Dockerfile
-    ports:
-      - "3001:3001"
     volumes:
       - ./dist:/app/specs/apis/dist
     develop:

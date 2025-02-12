@@ -6,6 +6,7 @@ import { loggerInjector } from "./logger.ts";
 import { openApiValidator } from "./openapi.ts";
 import { notFoundHandler, errorHandler } from "./errors.ts";
 import { healthRouter } from "./health.ts";
+import { corsMiddleware } from "./cors.ts";
 
 /**
  * Recommended pre-route middleware stack.
@@ -25,6 +26,7 @@ export const recommendedPreMiddleware: Handler[] = [
   json(),
   urlencoded({ extended: false }),
   loggerInjector,
+  corsMiddleware,
   ...openApiValidator,
 ];
 

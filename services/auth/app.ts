@@ -43,7 +43,8 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === "production" ? "lax" : "strict",
+      sameSite: "strict",
+      domain: ".docker.localhost", // Allow cookies to be shared across subdomains
     },
   })
 );
@@ -63,7 +64,7 @@ app.use((req, _, next) => {
  * Routes
  * Authentication related endpoints
  */
-app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
 
 /**
  * Error Handling Middleware Stack

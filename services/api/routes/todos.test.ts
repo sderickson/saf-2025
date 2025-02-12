@@ -12,7 +12,7 @@ import {
 // Create Express app for testing
 const app = express();
 app.use(recommendedPreMiddleware);
-app.use("/api/todos", todosRouter);
+app.use("/todos", todosRouter);
 app.use(recommendedErrorHandlers);
 
 // Mock the database functions
@@ -41,7 +41,7 @@ describe("Todos Routes", () => {
     vi.clearAllMocks();
   });
 
-  describe("GET /api/todos", () => {
+  describe("GET /todos", () => {
     it("should return all todos", async () => {
       const mockTodos = [
         {
@@ -59,7 +59,7 @@ describe("Todos Routes", () => {
       ];
       vi.mocked(todos.getAllTodos).mockResolvedValue(mockTodos);
 
-      const response = await request(app).get("/api/todos");
+      const response = await request(app).get("/todos");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockTodos.map(convertTimestamps));
@@ -71,13 +71,13 @@ describe("Todos Routes", () => {
         new Error("Database error")
       );
 
-      const response = await request(app).get("/api/todos");
+      const response = await request(app).get("/todos");
 
       expect(response.status).toBe(500);
     });
   });
 
-  describe("POST /api/todos", () => {
+  describe("POST /todos", () => {
     it("should create a new todo", async () => {
       const newTodo = { title: "New Todo" };
       const createdTodo = {
@@ -88,7 +88,7 @@ describe("Todos Routes", () => {
       };
       vi.mocked(todos.createTodo).mockResolvedValue(createdTodo);
 
-      const response = await request(app).post("/api/todos").send(newTodo);
+      const response = await request(app).post("/todos").send(newTodo);
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual(convertTimestamps(createdTodo));
@@ -101,14 +101,14 @@ describe("Todos Routes", () => {
       );
 
       const response = await request(app)
-        .post("/api/todos")
+        .post("/todos")
         .send({ title: "New Todo" });
 
       expect(response.status).toBe(500);
     });
   });
 
-  describe("PUT /api/todos/:id", () => {
+  describe("PUT /todos/:id", () => {
     it("should update a todo", async () => {
       const todoId = 1;
       const updateData = { title: "Updated Todo", completed: true };
@@ -120,7 +120,7 @@ describe("Todos Routes", () => {
       vi.mocked(todos.updateTodo).mockResolvedValue(updatedTodo);
 
       const response = await request(app)
-        .put(`/api/todos/${todoId}`)
+        .put(`/todos/${todoId}`)
         .send(updateData);
 
       expect(response.status).toBe(200);
@@ -139,7 +139,7 @@ describe("Todos Routes", () => {
       );
 
       const response = await request(app)
-        .put(`/api/todos/${todoId}`)
+        .put(`/todos/${todoId}`)
         .send({ title: "Updated Todo", completed: true });
 
       expect(response.status).toBe(404);
@@ -147,7 +147,7 @@ describe("Todos Routes", () => {
     });
   });
 
-  describe("DELETE /api/todos/:id", () => {
+  describe("DELETE /todos/:id", () => {
     it("should delete a todo", async () => {
       const todoId = 1;
       const deletedTodo = {
@@ -158,7 +158,7 @@ describe("Todos Routes", () => {
       };
       vi.mocked(todos.deleteTodo).mockResolvedValue(deletedTodo);
 
-      const response = await request(app).delete(`/api/todos/${todoId}`);
+      const response = await request(app).delete(`/todos/${todoId}`);
 
       expect(response.status).toBe(204);
       expect(todos.deleteTodo).toHaveBeenCalledWith(todoId);
@@ -170,7 +170,7 @@ describe("Todos Routes", () => {
         new TodoNotFoundError(todoId)
       );
 
-      const response = await request(app).delete(`/api/todos/${todoId}`);
+      const response = await request(app).delete(`/todos/${todoId}`);
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({ message: "Todo with id 999 not found" });
