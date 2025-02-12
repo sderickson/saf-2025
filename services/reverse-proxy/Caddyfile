@@ -42,7 +42,6 @@
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
-			header_up Host {http.request.host}
 		}
 	}
 
@@ -50,11 +49,9 @@
 		forward_auth services-auth:3000 {
 			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
-			header_up Host {http.request.host}
 		}
 		reverse_proxy services-api:3000 {
 			header_up X-Request-ID {http.request.uuid}
-			header_up Host {http.request.host}
 		}
 	}
 
@@ -63,9 +60,6 @@
 	}
 
 	handle {
-		reverse_proxy clients:5173 {
-			header_up X-Request-ID {http.request.uuid}
-			header_up Host {http.request.host}
-		}
+		reverse_proxy clients:5173
 	}
 }
