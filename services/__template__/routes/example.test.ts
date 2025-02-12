@@ -24,13 +24,13 @@ import {
 // Create Express app for testing
 const app = express();
 app.use(recommendedPreMiddleware);
-app.use("/api/examples", exampleRouter);
+app.use("/examples", exampleRouter);
 app.use(recommendedErrorHandlers);
 
 describe("Example Routes", () => {
   describe("GET /examples", () => {
     it("should return list of examples", async () => {
-      const response = await request(app).get("/api/examples");
+      const response = await request(app).get("/examples");
 
       expect(response.status).toBe(200);
       expect(Array.isArray(response.body)).toBe(true);
@@ -47,7 +47,7 @@ describe("Example Routes", () => {
     it("should create new example", async () => {
       const newItem = { name: "Test Example" };
 
-      const response = await request(app).post("/api/examples").send(newItem);
+      const response = await request(app).post("/examples").send(newItem);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -58,7 +58,7 @@ describe("Example Routes", () => {
     });
 
     it("should validate request body", async () => {
-      const response = await request(app).post("/api/examples").send({});
+      const response = await request(app).post("/examples").send({});
 
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({
@@ -70,7 +70,7 @@ describe("Example Routes", () => {
 
   describe("GET /example/:id", () => {
     it("should return example by id", async () => {
-      const response = await request(app).get("/api/examples/1");
+      const response = await request(app).get("/examples/1");
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -81,7 +81,7 @@ describe("Example Routes", () => {
     });
 
     it("should return 404 for non-existent example", async () => {
-      const response = await request(app).get("/api/examples/999");
+      const response = await request(app).get("/examples/999");
 
       expect(response.status).toBe(404);
       expect(response.body).toMatchObject({

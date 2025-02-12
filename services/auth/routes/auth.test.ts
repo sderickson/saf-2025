@@ -57,7 +57,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
 app.use(recommendedErrorHandlers);
 
 describe("Auth Routes", () => {
@@ -65,7 +65,7 @@ describe("Auth Routes", () => {
     vi.clearAllMocks();
   });
 
-  describe("POST /api/auth/register", () => {
+  describe("POST /auth/register", () => {
     it("should register a new user successfully", async () => {
       const userData = {
         email: "test@example.com",
@@ -86,9 +86,7 @@ describe("Auth Routes", () => {
         passwordHash: Buffer.from("hashed-password"),
       });
 
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send(userData);
+      const response = await request(app).post("/auth/register").send(userData);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -118,16 +116,14 @@ describe("Auth Routes", () => {
 
       (users.create as Mock).mockRejectedValue(new users.EmailConflictError());
 
-      const response = await request(app)
-        .post("/api/auth/register")
-        .send(userData);
+      const response = await request(app).post("/auth/register").send(userData);
 
       expect(response.status).toBe(409);
       expect(response.body).toEqual({ message: "Email already exists" });
     });
   });
 
-  describe("POST /api/auth/login", () => {
+  describe("POST /auth/login", () => {
     it("should login successfully", async () => {
       const userData = {
         email: "test@example.com",
@@ -156,9 +152,7 @@ describe("Auth Routes", () => {
       (users.getById as Mock).mockResolvedValue(user);
       (argon2.verify as Mock).mockResolvedValue(true);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send(userData);
+      const response = await request(app).post("/auth/login").send(userData);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -181,9 +175,7 @@ describe("Auth Routes", () => {
 
       (users.getByEmail as Mock).mockResolvedValue(null);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send(userData);
+      const response = await request(app).post("/auth/login").send(userData);
 
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ message: "Invalid credentials" });
@@ -212,16 +204,14 @@ describe("Auth Routes", () => {
       (emailAuth.getByEmail as Mock).mockResolvedValue(authData);
       (argon2.verify as Mock).mockResolvedValue(false);
 
-      const response = await request(app)
-        .post("/api/auth/login")
-        .send(userData);
+      const response = await request(app).post("/auth/login").send(userData);
 
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ message: "Invalid credentials" });
     });
   });
 
-  describe("POST /api/auth/logout", () => {
+  describe("POST /auth/logout", () => {
     it("should logout successfully", async () => {
       // First login
       const userData = {
@@ -244,10 +234,10 @@ describe("Auth Routes", () => {
       });
 
       // Login first
-      await request(app).post("/api/auth/login").send(userData);
+      await request(app).post("/auth/login").send(userData);
 
       // Then logout
-      const response = await request(app).post("/api/auth/logout");
+      const response = await request(app).post("/auth/logout");
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({});
