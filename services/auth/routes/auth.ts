@@ -50,7 +50,7 @@ authRouter.post(
     } catch (err) {
       const error = err as AuthDatabaseError;
       if (error.name === "EmailConflictError") {
-        res.status(409).json({ error: "Email already exists" });
+        res.status(409).json({ message: "Email already exists" });
         return;
       }
       next(err);
@@ -73,7 +73,7 @@ authRouter.post(
         }
 
         if (!user) {
-          return res.status(401).json({ error: "Invalid credentials" });
+          return res.status(401).json({ message: "Invalid credentials" });
         }
 
         req.logIn(user, (err) => {

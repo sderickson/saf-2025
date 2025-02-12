@@ -123,7 +123,7 @@ describe("Auth Routes", () => {
         .send(userData);
 
       expect(response.status).toBe(409);
-      expect(response.body).toEqual({ error: "Email already exists" });
+      expect(response.body).toEqual({ message: "Email already exists" });
     });
   });
 
@@ -186,7 +186,7 @@ describe("Auth Routes", () => {
         .send(userData);
 
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ error: "Invalid credentials" });
+      expect(response.body).toEqual({ message: "Invalid credentials" });
     });
 
     it("should return 401 for wrong password", async () => {
@@ -217,7 +217,7 @@ describe("Auth Routes", () => {
         .send(userData);
 
       expect(response.status).toBe(401);
-      expect(response.body).toEqual({ error: "Invalid credentials" });
+      expect(response.body).toEqual({ message: "Invalid credentials" });
     });
   });
 

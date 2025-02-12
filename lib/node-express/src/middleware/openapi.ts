@@ -1,14 +1,7 @@
 import * as OpenApiValidator from "express-openapi-validator";
-import type { ValidateResponseOpts } from "express-openapi-validator/dist/framework/types.ts";
 import type { OpenApiRequestHandler } from "express-openapi-validator/dist/framework/types.ts";
 import apiSpec from "@saf/specs-apis/dist/openapi.json" with { type: "json" };
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.ts";
-
-const validateResponses: ValidateResponseOpts = {
-  onError: (error, body, req) => {
-    req.log.error("Validation error:", error);
-  },
-};
 
 /**
  * Default OpenAPI validation middleware using the shared specification from @saf/specs-apis.
@@ -18,7 +11,7 @@ export const openApiValidator: OpenApiRequestHandler[] =
   OpenApiValidator.middleware({
     apiSpec: apiSpec as any,
     validateRequests: true,
-    validateResponses: validateResponses,
+    validateResponses: true,
   });
 
 /**
@@ -31,6 +24,6 @@ export const createOpenApiValidator = (
   return OpenApiValidator.middleware({
     apiSpec,
     validateRequests: true,
-    validateResponses: validateResponses,
+    validateResponses: true,
   });
 };
