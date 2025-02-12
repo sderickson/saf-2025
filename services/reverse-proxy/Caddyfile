@@ -18,8 +18,11 @@
 	handle @options {
 		header {
 			Access-Control-Allow-Origin "http://docker.localhost"
+			Vary Origin
 			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+			Access-Control-Allow-Headers "Content-Type, Authorization, X-Request-ID"
 			Access-Control-Allow-Credentials "true"
+			Access-Control-Max-Age "3600"
 		}
 		respond 204
 	}
@@ -35,13 +38,10 @@
 		not path /auth*
 	}
 
-	@api-specs {
-		host api.specs.docker.localhost
-	}
-
 	handle @auth {
 		reverse_proxy services-auth:3000 {
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 	}
 
@@ -49,17 +49,18 @@
 		forward_auth services-auth:3000 {
 			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 		reverse_proxy services-api:3000 {
 			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
 		}
 	}
-
-	handle @api-specs {
-		reverse_proxy specs-apis:3000
-	}
-
+	
 	handle {
-		reverse_proxy clients:5173
+		reverse_proxy clients:5173 {
+			header_up X-Request-ID {http.request.uuid}
+			header_up Host {http.request.host}
+		}
 	}
 }
