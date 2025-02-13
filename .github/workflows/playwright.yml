@@ -22,11 +22,15 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./services/api
           push: true
-          tags: "latest"
+          tags: "services-api:latest"
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Build all services
+        run: docker compose build
+        working-directory: ./
+
       # - name: Install Playwright Browsers
       #   run: npx playwright install --with-deps
       # - name: Run Playwright tests
