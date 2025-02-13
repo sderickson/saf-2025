@@ -10,6 +10,7 @@ export interface WatchConfig {
   action: "sync+restart";
   path: string;
   target: string;
+  ignore?: string[];
 }
 
 export interface DockerComposeService {

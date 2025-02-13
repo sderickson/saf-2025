@@ -8,7 +8,6 @@ import * as yaml from "yaml";
 import * as glob from "glob";
 import type { DockerCompose, PackageJson, WatchConfig } from "./types.ts";
 import {
-  readPackageJson,
   readProject,
   getInternalDependencies,
   getRelativePath,
@@ -97,11 +96,17 @@ export function generateWatchPaths(
 
   // Helper function to add watch path
   const addWatch = (sourcePath: string, targetPath: string) => {
-    watchPaths.push({
+    const watch: WatchConfig = {
       action: "sync+restart",
       path: sourcePath,
       target: targetPath,
-    });
+    };
+    // bit of a hack to ignore data folders in dbs libraries
+    // TODO - figure out a better way to handle this
+    if (sourcePath.includes("/dbs/")) {
+      watch.ignore = ["data"];
+    }
+    watchPaths.push(watch);
   };
 
   // Add dependency watch paths

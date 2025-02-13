@@ -19,7 +19,9 @@
 		header {
 			Access-Control-Allow-Origin "http://docker.localhost"
 			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+			Access-Control-Allow-Headers "Content-Type"
 			Access-Control-Allow-Credentials "true"
+			Access-Control-Max-Age "3600"
 		}
 		respond 204
 	}
@@ -33,10 +35,6 @@
 	@api {
 		host api.docker.localhost
 		not path /auth*
-	}
-
-	@api-specs {
-		host api.specs.docker.localhost
 	}
 
 	handle @auth {
@@ -54,11 +52,7 @@
 			header_up X-Request-ID {http.request.uuid}
 		}
 	}
-
-	handle @api-specs {
-		reverse_proxy specs-apis:3000
-	}
-
+	
 	handle {
 		reverse_proxy clients:5173
 	}

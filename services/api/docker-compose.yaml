@@ -10,23 +10,10 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ../../dbs/main/src
-          target: /app/dbs/main/src
-        - action: sync+restart
-          path: ../../dbs/main/index.ts
-          target: /app/dbs/main/index.ts
-        - action: sync+restart
-          path: ../../dbs/main/drizzle.config.ts
-          target: /app/dbs/main/drizzle.config.ts
-        - action: sync+restart
-          path: ../../dbs/main/types
-          target: /app/dbs/main/types
-        - action: sync+restart
-          path: ../../dbs/main/migrations
-          target: /app/dbs/main/migrations
-        - action: sync+restart
-          path: ../../dbs/main/tsconfig.json
-          target: /app/dbs/main/tsconfig.json
+          path: ../../dbs/main
+          target: /app/dbs/main
+          ignore:
+            - data
         - action: sync+restart
           path: ../../lib/node-express
           target: /app/lib/node-express

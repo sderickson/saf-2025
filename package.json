@@ -7,7 +7,8 @@
   },
   "scripts": {
     "test": "npm run test --workspaces --if-present --parallel",
-    "test:coverage": "npm run test:coverage --workspaces --if-present --parallel"
+    "test:coverage": "npm run test:coverage --workspaces --if-present --parallel",
+    "dev": "docker compose up"
   },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",

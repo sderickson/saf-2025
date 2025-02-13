@@ -4,9 +4,6 @@ Rough order of development
 
 ### Backlog
 
-- Add unit tests to /requests
-- Move to sub-domains, using docker.localhost
-- Add playwright tests
 - Add GitHub actions for tests
 - Add forgot email flow
 - Add verify email flow
@@ -26,7 +23,7 @@ Once all of this is done, should start using this in actual applications.
   - Experiment with GitHub Actions, hosting services and products, settle on one
   - Domain, CDN
 - Testing
-  - Vitest FE Unit
+  - ✓ Vitest FE Unit
   - ✓ Vitest BE Unit
   - Integrate with GitHub Actions
 - Observability
@@ -53,7 +50,7 @@ What follows can largely be done in any order.
   - i18n
 - Testing+
   - Storybook
-  - Playwright
+  - ✓ Playwright
   - Nock
 - Infra+
   - Kubernetes
@@ -67,4 +64,4 @@ What follows can largely be done in any order.
 - AI+
   - Integrate with no-code tools, e.g. lovable, synthflow, repl.it, bolt.new, v0.dev
   - Try running an LLM locally, e.g. llama3 or deepseek
-  - Add code review like CodeRabbit
+  - ✓ Add code review like CodeRabbit
