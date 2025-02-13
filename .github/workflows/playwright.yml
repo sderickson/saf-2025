@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build docker-compose
-        run: docker buildx bake --file docker-compose.yml --file docker-compose-cache.json
+        run: docker buildx bake --file docker-compose.yaml --file docker-compose-cache.json
         working-directory: ./
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
