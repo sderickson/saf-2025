@@ -22,7 +22,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ./services/api
+          context: .
+          file: ./services/api/Dockerfile
           push: true
           tags: "services-api:latest"
           cache-from: type=gha
