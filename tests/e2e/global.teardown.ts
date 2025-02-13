@@ -10,18 +10,21 @@ teardown("shut down docker compose", async () => {
   });
   console.log("=== Docker Teardown Start ===");
   console.log("Shutting down docker containers...");
-  exec("docker compose down", (error, stdout, stderr) => {
+  const result = exec("docker compose down", (error) => {
     if (error) {
       console.error("Docker teardown failed:", error.message);
-      console.error("stderr:", stderr);
       reject(error);
       return;
     }
-    if (stdout) console.log("stdout:", stdout);
-    if (stderr) console.log("stderr:", stderr);
     console.log("Docker teardown complete!");
     console.log("=== Docker Teardown End ===");
     resolve();
+  });
+  result.stderr?.on("data", (data) => {
+    process.stderr.write(data);
+  });
+  result.stdout?.on("data", (data) => {
+    process.stdout.write(data);
   });
   await promise;
 });

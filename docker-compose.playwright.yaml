@@ -1,7 +1,0 @@
-services:
-  services-auth:
-    volumes: !reset []
-    develop: !reset null
-  services-api:
-    volumes: !reset []
-    develop: !reset null
