@@ -1,6 +1,5 @@
 services:
   specs-apis:
-    image: specs-apis:latest
     build:
       context: ../..
       dockerfile: ./specs/apis/Dockerfile

@@ -1,6 +1,5 @@
 services:
   services-auth:
-    image: services-auth:latest
     volumes:
       - ../../dbs/auth/data:/app/dbs/auth/data
     build:
