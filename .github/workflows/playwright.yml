@@ -19,11 +19,13 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - name: Install dependencies
         run: npm ci
-      - name: Expose GitHub Runtime
-        uses: crazy-max/ghaction-github-runtime@v3
-      - name: Build docker-compose
-        run: docker buildx bake --load --push --cache-to type=gha --cache-from type=gha --file docker-compose.yaml --file docker-compose-cache.json
-        working-directory: ./
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       # - name: Install Playwright Browsers
       #   run: npx playwright install --with-deps
       # - name: Run Playwright tests
