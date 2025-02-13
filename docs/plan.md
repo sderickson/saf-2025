@@ -42,8 +42,8 @@ What follows can largely be done in any order.
   - Uploads
   - Rate limiting
 - Frontend+
-  - Tanstack Query
-  - Vue Router
+  - ✓ Tanstack Query
+  - ✓ Vue Router
   - Sentry, Error boundaries
   - ✓ Design system, components
   - Analytics et al
@@ -56,7 +56,7 @@ What follows can largely be done in any order.
   - Kubernetes
   - Secret management
 - Workflow+
-  - Code formatting, quality, ESLint
+  - ✓ Code formatting, quality, ESLint
   - API Versioning
   - Documentation
   - Dependency management
