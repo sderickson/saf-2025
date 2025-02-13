@@ -1,5 +1,6 @@
 services:
   clients:
+    image: clients:latest
     build:
       context: ..
       dockerfile: ./clients/Dockerfile

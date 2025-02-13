@@ -1,5 +1,6 @@
 services:
   services-api:
+    image: services-api:latest
     volumes:
       - ../../dbs/main/data:/app/dbs/main/data
     build:
