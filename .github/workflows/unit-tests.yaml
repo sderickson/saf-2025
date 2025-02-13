@@ -16,5 +16,7 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Install this one dep
+        run: npm install @rollup/rollup-linux-x64-gnu
       - name: Run Unit Tests
         run: npm run test
