@@ -14,7 +14,7 @@ describe("requestId middleware", () => {
 
     requestId(req, res, next);
 
-    expect(req.id).toBe("1234567890");
+    expect(req.id).toBe("1234567890-break!");
     expect(next).toHaveBeenCalled();
   });
 });
