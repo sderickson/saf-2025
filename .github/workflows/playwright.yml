@@ -31,7 +31,7 @@ jobs:
           context: .
           file: ./services/api/Dockerfile
           push: true
-          tags: "services-api:latest"
+          tags: "sderickson/saf-services-api:latest"
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: Pre-build images
