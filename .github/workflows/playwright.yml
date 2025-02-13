@@ -20,6 +20,12 @@ jobs:
       - name: Build auth service
         run: docker compose build services-auth
         working-directory: ./
+      - name: Build api service
+        run: docker compose build services-api
+        working-directory: ./
+      - name: Build clients
+        run: docker compose build clients
+        working-directory: ./
       # - name: Install Playwright Browsers
       #   run: npx playwright install --with-deps
       # - name: Run Playwright tests
