@@ -5,6 +5,7 @@ on:
 jobs:
   test:
     timeout-minutes: 60
+
     runs-on: ubuntu-latest
     defaults:
       run:
