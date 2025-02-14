@@ -3,7 +3,8 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "paths": {
-      "clients/*": ["./*"]
+      "clients/*": ["./*"],
+      "@saf/specs-apis/*": ["../specs/apis/dist/*"]
     },
 
     /* Linting */

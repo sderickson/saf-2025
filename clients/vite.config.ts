@@ -4,14 +4,33 @@ import vuetify from "vite-plugin-vuetify";
 import vueDevTools from "vite-plugin-vue-devtools";
 import type { ProxyOptions } from "vite";
 import path from "path";
+import ignore from "rollup-plugin-ignore";
 const DEBUG_PROXY = true;
+
+console.log("ENV", process.env);
+
+// const isDev = process.env.NODE_ENV === "development";
+// const port = isDev ? 5173 : ;
 
 function makeConfig() {
   return defineConfig({
+    base: "http://localhost:5173",
+    appType: "mpa",
     plugins: [vue(), vuetify(), vueDevTools()],
+    build: {
+      rollupOptions: {
+        input: {
+          app: path.resolve(__dirname, "app/index.html"),
+          auth: path.resolve(__dirname, "auth/index.html"),
+          landing: path.resolve(__dirname, "index.html"),
+        },
+        plugins: [ignore(["**/*.test.ts"])],
+      },
+    },
     resolve: {
       alias: {
         clients: path.resolve(__dirname, "./"),
+        "@saf/specs-apis": path.resolve(__dirname, "../specs/apis/dist"),
       },
     },
     server: {
@@ -60,11 +79,14 @@ const getTimeFormatted = () => {
 };
 
 const proxyLogger: ProxyOptions["configure"] = (proxy, _options) => {
+  console.log("Proxy config", proxy, _options);
   if (DEBUG_PROXY) {
     proxy.on("error", (err, _req, _res) => {
+      console.error("Proxy error", err);
       log("Proxy error", err);
     });
     proxy.on("proxyRes", (proxyRes, req, _res) => {
+      console.log("Proxy response", proxyRes, req, _res);
       if ("originalUrl" in req) {
         log(
           "Proxy",
