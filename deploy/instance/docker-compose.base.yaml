@@ -24,27 +24,6 @@ services:
       dockerfile: services/api/Dockerfile
     environment:
       - NODE_ENV=${NODE_ENV}
-    develop:
-      watch:
-        - action: sync+restart
-          path: ../../dbs/main
-          target: /app/dbs/main
-          ignore:
-            - data
-        - action: sync+restart
-          path: ../../lib/node-express
-          target: /app/lib/node-express
-        - action: sync+restart
-          path: ../../specs/apis/dist
-          target: /app/specs/apis/dist
-        - action: sync+restart
-          path: ../../lib/drizzle-sqlite3
-          target: /app/lib/drizzle-sqlite3
-        - action: sync+restart
-          path: .
-          target: /app/services/api
-
-
 
   services-auth:
     volumes:
@@ -54,25 +33,6 @@ services:
       dockerfile: services/auth/Dockerfile
     environment:
       - NODE_ENV=${NODE_ENV}
-    develop:
-      watch:
-        - action: sync+restart
-          path: ../../dbs/auth
-          target: /app/dbs/auth
-          ignore:
-            - data
-        - action: sync+restart
-          path: ../../lib/node-express
-          target: /app/lib/node-express
-        - action: sync+restart
-          path: ../../specs/apis/dist
-          target: /app/specs/apis/dist
-        - action: sync+restart
-          path: ../../lib/drizzle-sqlite3
-          target: /app/lib/drizzle-sqlite3
-        - action: sync+restart
-          path: .
-          target: /app/services/auth
     
   specs-apis:
     build:
@@ -80,11 +40,6 @@ services:
       dockerfile: ./specs/apis/Dockerfile
     volumes:
       - ./dist:/app/specs/apis/dist
-    develop:
-      watch:
-        - action: sync+restart
-          path: ./openapi.yaml
-          target: /app/specs/apis/openapi.yaml
     command: npm run generate-and-serve 
 
 volumes:

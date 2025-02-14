@@ -2,3 +2,52 @@ services:
   caddy:
     ports:
       - "80:80"
+
+  services-api:
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../../dbs/main
+          target: /app/dbs/main
+          ignore:
+            - data
+        - action: sync+restart
+          path: ../../lib/node-express
+          target: /app/lib/node-express
+        - action: sync+restart
+          path: ../../specs/apis/dist
+          target: /app/specs/apis/dist
+        - action: sync+restart
+          path: ../../lib/drizzle-sqlite3
+          target: /app/lib/drizzle-sqlite3
+        - action: sync+restart
+          path: .
+          target: /app/services/api
+
+  services-auth:
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../../dbs/auth
+          target: /app/dbs/auth
+          ignore:
+            - data
+        - action: sync+restart
+          path: ../../lib/node-express
+          target: /app/lib/node-express
+        - action: sync+restart
+          path: ../../specs/apis/dist
+          target: /app/specs/apis/dist
+        - action: sync+restart
+          path: ../../lib/drizzle-sqlite3
+          target: /app/lib/drizzle-sqlite3
+        - action: sync+restart
+          path: ../../services/auth
+          target: /app/services/auth
+
+  specs-apis:
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./openapi.yaml
+          target: /app/specs/apis/openapi.yaml
