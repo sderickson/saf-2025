@@ -26,4 +26,3 @@ FROM caddy:2.9.1
 WORKDIR /app/
 COPY --from=builder /app/clients/dist /app/
 COPY --from=builder /app/clients/Caddyfile /etc/caddy/Caddyfile
-EXPOSE 3050
