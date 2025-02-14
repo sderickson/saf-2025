@@ -1,7 +1,8 @@
-:80 {
+docker.localhost, api.docker.localhost, api.specs.docker.localhost {
 	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
+		+X-Domain "{$DOMAIN}"
 	}
 
 	# Minimal logging configuration - only errors and warnings
@@ -10,14 +11,14 @@
 		format console
 	}
 
-
 	# Handle OPTIONS requests for CORS
 	@options {
 		method OPTIONS
 	}
 	handle @options {
 		header {
-			Access-Control-Allow-Origin "http://docker.localhost"
+			Access-Control-Allow-Origin "http://{$DOMAIN}"
+			Vary "Origin"
 			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
 			Access-Control-Allow-Headers "Content-Type"
 			Access-Control-Allow-Credentials "true"
@@ -26,14 +27,13 @@
 		respond 204
 	}
 
-
 	# Route matchers
 	@auth {
-		host api.docker.localhost
+		host api.{$DOMAIN}
 		path /auth*
 	}
 	@api {
-		host api.docker.localhost
+		host api.{$DOMAIN}
 		not path /auth*
 	}
 
@@ -52,7 +52,7 @@
 			header_up X-Request-ID {http.request.uuid}
 		}
 	}
-	
+
 	handle {
 		reverse_proxy clients:5173
 	}

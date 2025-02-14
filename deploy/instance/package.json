@@ -1,0 +1,6 @@
+{
+  "name": "@saf-2025/deploy-instance",
+  "scripts": {
+    "dev": "docker compose -f docker-compose.base.yaml up -d"
+  }
+}
