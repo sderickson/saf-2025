@@ -1,4 +1,4 @@
-docker.localhost, api.docker.localhost, api.specs.docker.localhost {
+http://docker.localhost, http://api.docker.localhost, http://api.specs.docker.localhost {
 	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
@@ -18,7 +18,6 @@ docker.localhost, api.docker.localhost, api.specs.docker.localhost {
 	handle @options {
 		header {
 			Access-Control-Allow-Origin "http://{$DOMAIN}"
-			Vary "Origin"
 			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
 			Access-Control-Allow-Headers "Content-Type"
 			Access-Control-Allow-Credentials "true"

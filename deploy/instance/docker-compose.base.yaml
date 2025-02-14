@@ -10,7 +10,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     environment:
-      - DOMAIN=docker.localhost
+      - DOMAIN=${DOMAIN}
 
   clients:
     build:
@@ -27,7 +27,7 @@ services:
       context: ../..
       dockerfile: services/api/Dockerfile
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
     develop:
       watch:
         - action: sync+restart
@@ -57,7 +57,7 @@ services:
       context: ../..
       dockerfile: services/auth/Dockerfile
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
     develop:
       watch:
         - action: sync+restart

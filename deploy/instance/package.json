@@ -1,6 +1,8 @@
 {
   "name": "@saf-2025/deploy-instance",
   "scripts": {
-    "dev": "docker compose -f docker-compose.base.yaml up -d"
+    "dev": "docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up",
+    "prod": "docker compose --env-file .env.prod -f docker-compose.base.yaml -f docker-compose.prod.yaml up",
+    "test": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up"
   }
 }
