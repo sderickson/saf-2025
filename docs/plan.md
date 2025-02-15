@@ -21,6 +21,28 @@ At that point, the workflow should just work, to ssh into the instance, install 
 
 ### Backlog
 
+- This branch
+
+  - Update build-prod script to build all images
+  - Add package script: Publish images to github registry
+  - Test deleting all images locally and seeing if running prod works
+  - Be able to SSH into instance locally
+  - Create bootstrap script - installs docker, adds read-only token
+  - Add initial-deploy script
+    - Make sure site works
+  - Add blue-green deploy script
+    - Make sure site never goes down
+  - Add workflow which ssh's into the virtual instance
+  - Update to build/publish images
+  - Update to run bootstrap script after build/publish
+  - Switch workflow to be on main branch
+  - Add docs for how to set up a deployment
+  - Merge branch
+
+- next branch
+
+  - Create new script in deploy/instance which generates all the docker files from package files
+
 - Deployments
   - Buy domain
   - Create DO droplet
