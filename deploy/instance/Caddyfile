@@ -1,4 +1,4 @@
-http://{$DOMAIN}, http://api.{$DOMAIN}, http://api.specs.{$DOMAIN} {
+{$PROTOCOL}://{$DOMAIN}, {$PROTOCOL}://api.{$DOMAIN}, {$PROTOCOL}://api.specs.{$DOMAIN} {
 	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
@@ -47,5 +47,8 @@ http://{$DOMAIN}, http://api.{$DOMAIN}, http://api.specs.{$DOMAIN} {
 
 	handle {
 		{$DISABLE_VITE_DEV_SERVER} reverse_proxy clients:5173
+		encode gzip
+		root * /srv
+		file_server browse
 	}
 }

@@ -1,16 +1,19 @@
-FROM node:22-slim
+# syntax=docker/dockerfile:labs
+FROM node:22-slim AS builder
 
-# Mono-repo setup
+# Copy package.json
 WORKDIR /app
 COPY ./package*.json .
-RUN npm install
+COPY ./tsconfig.json .
+COPY ./specs/apis/package*.json ./specs/apis/
+COPY ./clients/package*.json ./clients/
 
-COPY ./specs/apis/package.json ./specs/apis/
-COPY ./specs/apis/dist ./specs/apis/dist
+RUN npm install --omit=dev
+RUN npm install @rollup/rollup-linux-arm64-gnu
 
-# Vue app setup
+# Copy source files
+COPY ./specs/apis/ ./specs/apis/
+COPY --exclude=**/*.test.ts --exclude=vitest.config.ts ./clients/ ./clients/
+
+# # Vue app setup
 WORKDIR /app/clients
-COPY package*.json ./
-RUN npm install
-COPY . .
-EXPOSE 5173

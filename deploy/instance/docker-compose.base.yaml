@@ -1,13 +1,16 @@
+# common elements between dev, test and prod
 services:
   caddy:
-    image: caddy:2.9.1
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     environment:
       - DOMAIN=${DOMAIN}
-    
+      - PROTOCOL=${PROTOCOL}
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
   services-api:
     volumes:
       - ../../dbs/main/data:/app/dbs/main/data

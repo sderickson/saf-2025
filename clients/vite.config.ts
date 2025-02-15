@@ -9,6 +9,7 @@ const DEBUG_PROXY = true;
 
 function makeConfig() {
   return defineConfig({
+    base: "/",
     appType: "mpa",
     plugins: [vue(), vuetify(), vueDevTools()],
     build: {

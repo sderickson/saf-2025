@@ -1,0 +1,9 @@
+FROM clients:builder AS builder
+
+RUN ls dist
+RUN ls .
+
+FROM caddy:2.9.1
+
+COPY --from=builder /app/clients/dist /srv
+COPY --from=builder /app/clients/Caddyfile /etc/caddy/Caddyfile
