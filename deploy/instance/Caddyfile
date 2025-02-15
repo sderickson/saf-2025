@@ -46,9 +46,20 @@
 	}
 
 	handle {
+		# For development, defer to the Vite dev server
 		{$DISABLE_VITE_DEV_SERVER} reverse_proxy clients:5173
+
+		# For production, serve the static files
 		encode gzip
 		root * /srv
-		file_server browse
+		file_server {
+			pass_thru
+		}
+		handle /auth/* {
+			try_files /auth/index.html
+		}
+		handle /app/* {
+			try_files /app/index.html
+		}
 	}
 }
