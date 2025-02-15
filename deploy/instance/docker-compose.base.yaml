@@ -7,14 +7,6 @@ services:
       - caddy_config:/config
     environment:
       - DOMAIN=${DOMAIN}
-
-  clients:
-    build:
-      context: ../..
-      dockerfile: ./clients/Dockerfile
-    volumes:
-      - ../../clients:/app/clients
-    command: npm run dev 
     
   services-api:
     volumes:

@@ -4,3 +4,5 @@ services:
       - "80:80"
       - "443:443"
       - "443:443/udp"
+    environment:
+      - DISABLE_VITE_DEV_SERVER=#

@@ -2,3 +2,10 @@ services:
   caddy:
     ports:
       - "80:80"
+
+
+  clients:
+    build:
+      context: ../..
+      dockerfile: ./clients/Dockerfile
+    command: npm run dev 

@@ -46,6 +46,6 @@ http://{$DOMAIN}, http://api.{$DOMAIN}, http://api.specs.{$DOMAIN} {
 	}
 
 	handle {
-		reverse_proxy clients:5173
+		{$DISABLE_VITE_DEV_SERVER} reverse_proxy clients:5173
 	}
 }

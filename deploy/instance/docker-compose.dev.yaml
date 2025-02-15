@@ -3,6 +3,15 @@ services:
     ports:
       - "80:80"
 
+
+  clients:
+    build:
+      context: ../..
+      dockerfile: ./clients/Dockerfile
+    volumes:
+      - ../../clients:/app/clients
+    command: npm run dev 
+  
   services-api:
     develop:
       watch:
