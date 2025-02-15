@@ -1,8 +1,7 @@
-http://docker.localhost, http://api.docker.localhost, http://api.specs.docker.localhost {
+http://{$DOMAIN}, http://api.{$DOMAIN}, http://specs.api.{$DOMAIN} {
 	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
-		+X-Domain "{$DOMAIN}"
 	}
 
 	# Minimal logging configuration - only errors and warnings

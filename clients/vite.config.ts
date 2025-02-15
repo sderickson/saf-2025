@@ -14,7 +14,6 @@ console.log("ENV", process.env);
 
 function makeConfig() {
   return defineConfig({
-    base: "http://localhost:5173",
     appType: "mpa",
     plugins: [vue(), vuetify(), vueDevTools()],
     build: {

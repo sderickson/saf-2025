@@ -1,12 +1,43 @@
-localhost {
-  handle {
-    respond "Hello, world!"
-  }
-  # encode gzip
+localhost, {$DOMAIN}, www.{$DOMAIN}, api.{$DOMAIN}, specs.api.{$DOMAIN} {
+	header {
+		+X-Request-ID {http.request.uuid}
+	}
 
-	# handle {
-	# 	root * /app/dist
-	# 	try_files {path} /index.html
-	# 	file_server
-	# }
+	# Minimal logging configuration - only errors and warnings
+	log {
+		level ERROR
+		format console
+	}
+
+	# Route matchers
+	@auth {
+		host api.{$DOMAIN}
+		path /auth*
+	}
+	@api {
+		host api.{$DOMAIN}
+		not path /auth*
+	}
+
+	handle @auth {
+		reverse_proxy services-auth:3000 {
+			header_up X-Request-ID {http.request.uuid}
+		}
+	}
+
+	handle @api {
+		forward_auth services-auth:3000 {
+			uri /auth/verify
+			header_up X-Request-ID {http.request.uuid}
+		}
+		reverse_proxy services-api:3000 {
+			header_up X-Request-ID {http.request.uuid}
+		}
+	}
+
+	handle {
+		encode gzip
+		root * /srv
+		file_server browse
+	}
 }
