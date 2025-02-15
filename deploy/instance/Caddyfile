@@ -1,4 +1,4 @@
-http://{$DOMAIN}, http://api.{$DOMAIN}, http://specs.api.{$DOMAIN} {
+http://{$DOMAIN}, http://api.{$DOMAIN}, http://api.specs.{$DOMAIN} {
 	# Add unique request ID header to all requests
 	header {
 		+X-Request-ID {http.request.uuid}
@@ -10,21 +10,6 @@ http://{$DOMAIN}, http://api.{$DOMAIN}, http://specs.api.{$DOMAIN} {
 		format console
 	}
 
-	# Handle OPTIONS requests for CORS
-	@options {
-		method OPTIONS
-	}
-	handle @options {
-		header {
-			Access-Control-Allow-Origin "http://{$DOMAIN}"
-			Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-			Access-Control-Allow-Headers "Content-Type"
-			Access-Control-Allow-Credentials "true"
-			Access-Control-Max-Age "3600"
-		}
-		respond 204
-	}
-
 	# Route matchers
 	@auth {
 		host api.{$DOMAIN}
@@ -33,6 +18,9 @@ http://{$DOMAIN}, http://api.{$DOMAIN}, http://specs.api.{$DOMAIN} {
 	@api {
 		host api.{$DOMAIN}
 		not path /auth*
+	}
+	@specs {
+		host api.specs.{$DOMAIN}
 	}
 
 	handle @auth {
@@ -47,6 +35,12 @@ http://{$DOMAIN}, http://api.{$DOMAIN}, http://specs.api.{$DOMAIN} {
 			header_up X-Request-ID {http.request.uuid}
 		}
 		reverse_proxy services-api:3000 {
+			header_up X-Request-ID {http.request.uuid}
+		}
+	}
+
+	handle @specs {
+		reverse_proxy specs-apis:3000 {
 			header_up X-Request-ID {http.request.uuid}
 		}
 	}

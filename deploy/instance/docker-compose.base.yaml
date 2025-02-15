@@ -39,7 +39,7 @@ services:
       context: ../..
       dockerfile: ./specs/apis/Dockerfile
     volumes:
-      - ./dist:/app/specs/apis/dist
+      - ../../specs/apis/dist:/app/specs/apis/dist
     command: npm run generate-and-serve 
 
 volumes:

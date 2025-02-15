@@ -7,11 +7,6 @@ import path from "path";
 import ignore from "rollup-plugin-ignore";
 const DEBUG_PROXY = true;
 
-console.log("ENV", process.env);
-
-// const isDev = process.env.NODE_ENV === "development";
-// const port = isDev ? 5173 : ;
-
 function makeConfig() {
   return defineConfig({
     appType: "mpa",
