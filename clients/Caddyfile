@@ -1,4 +1,4 @@
-localhost, {$DOMAIN}, www.{$DOMAIN}, api.{$DOMAIN}, specs.api.{$DOMAIN} {
+{$DOMAIN}, www.{$DOMAIN}, api.{$DOMAIN}, specs.api.{$DOMAIN} {
 	header {
 		+X-Request-ID {http.request.uuid}
 	}
