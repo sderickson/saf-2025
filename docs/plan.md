@@ -24,6 +24,7 @@ At that point, the workflow should just work, to ssh into the instance, install 
 - This branch
 
   - Update build-prod script to build all images
+  - Optimize dockerfiles with multi-stage builds
   - Add package script: Publish images to github registry
   - Test deleting all images locally and seeing if running prod works
   - Be able to SSH into instance locally

@@ -11,7 +11,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.prod
+
+  clients:
+    image: sderickson/saf-clients:latest
+    build:
+      context: ../..
+      dockerfile: ./clients/Dockerfile
+
   services-api:
+    image: sderickson/saf-services-api:latest
     volumes:
       - ../../dbs/main/data:/app/dbs/main/data
     build:
@@ -21,6 +29,7 @@ services:
       - NODE_ENV=${NODE_ENV}
 
   services-auth:
+    image: sderickson/saf-services-auth:latest
     volumes:
       - ../../dbs/auth/data:/app/dbs/auth/data
     build:
@@ -30,6 +39,7 @@ services:
       - NODE_ENV=${NODE_ENV}
     
   specs-apis:
+    image: sderickson/saf-specs-apis:latest
     build:
       context: ../..
       dockerfile: ./specs/apis/Dockerfile

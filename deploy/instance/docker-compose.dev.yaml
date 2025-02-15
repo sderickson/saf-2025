@@ -5,9 +5,6 @@ services:
 
 
   clients:
-    build:
-      context: ../..
-      dockerfile: ./clients/Dockerfile
     volumes:
       - ../../clients:/app/clients
     command: npm run dev 

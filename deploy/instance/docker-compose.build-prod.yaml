@@ -1,7 +1,3 @@
 services:
   clients:
-    image: clients:builder
-    build:
-      context: ../..
-      dockerfile: ./clients/Dockerfile
     command: npm run build
