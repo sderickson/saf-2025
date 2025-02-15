@@ -74,14 +74,11 @@ const getTimeFormatted = () => {
 };
 
 const proxyLogger: ProxyOptions["configure"] = (proxy, _options) => {
-  console.log("Proxy config", proxy, _options);
   if (DEBUG_PROXY) {
     proxy.on("error", (err, _req, _res) => {
-      console.error("Proxy error", err);
       log("Proxy error", err);
     });
     proxy.on("proxyRes", (proxyRes, req, _res) => {
-      console.log("Proxy response", proxyRes, req, _res);
       if ("originalUrl" in req) {
         log(
           "Proxy",

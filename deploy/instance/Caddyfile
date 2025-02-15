@@ -1,3 +1,17 @@
+(serve_prod_spas) {
+	encode gzip
+	root * /srv
+	file_server {
+		pass_thru
+	}
+	handle /auth/* {
+		try_files /auth/index.html
+	}
+	handle /app/* {
+		try_files /app/index.html
+	}
+}
+
 {$PROTOCOL}://{$DOMAIN}, {$PROTOCOL}://api.{$DOMAIN}, {$PROTOCOL}://api.specs.{$DOMAIN} {
 	# Add unique request ID header to all requests
 	header {
@@ -50,16 +64,6 @@
 		{$DISABLE_VITE_DEV_SERVER} reverse_proxy clients:5173
 
 		# For production, serve the static files
-		encode gzip
-		root * /srv
-		file_server {
-			pass_thru
-		}
-		handle /auth/* {
-			try_files /auth/index.html
-		}
-		handle /app/* {
-			try_files /app/index.html
-		}
+		{$DISABLE_CADDY_PROD_SERVER} import serve_prod_spas
 	}
 }
