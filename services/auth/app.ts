@@ -41,7 +41,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.PROTOCOL === "https",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: "strict",
       domain: ".docker.localhost", // Allow cookies to be shared across subdomains
