@@ -21,6 +21,7 @@ const corsMiddleware = cors({
     callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
+  maxAge: 600,
 });
 corsRouter.options("*", corsMiddleware);
 corsRouter.use(corsMiddleware);
