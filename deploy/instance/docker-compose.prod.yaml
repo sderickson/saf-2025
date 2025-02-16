@@ -1,8 +1,15 @@
 services:
+  clients: null
   caddy:
+    cap_add:
+      - NET_ADMIN
+    image: sderickson/saf-caddy:latest
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     environment:
       - DISABLE_VITE_DEV_SERVER=#
+    build:
+      context: .
+      dockerfile: Dockerfile.prod

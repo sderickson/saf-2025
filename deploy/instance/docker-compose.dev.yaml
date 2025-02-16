@@ -1,7 +1,5 @@
 services:
   caddy:
-    ports:
-      - "80:80"
     environment:
       - DISABLE_CADDY_PROD_SERVER=#
 

@@ -1,8 +1,0 @@
-services:
-  clients:
-    build:
-      context: ..
-      dockerfile: ./clients/Dockerfile
-    volumes:
-      - .:/app/clients
-    command: npm run dev 

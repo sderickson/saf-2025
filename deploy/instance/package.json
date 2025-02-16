@@ -4,6 +4,6 @@
     "dev": "docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up --watch",
     "prod": "docker compose --env-file .env.prod -f docker-compose.base.yaml -f docker-compose.prod.yaml up",
     "test": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
-    "build-prod": "docker compose --env-file .env.prod -f docker-compose.base.yaml -f docker-compose.build-prod.yaml build"
+    "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.base.yaml -f docker-compose.prod.yaml up"
   }
 }

@@ -1,12 +1,7 @@
 services:
   caddy:
-    ports:
-      - "80:80"
     environment:
       - DISABLE_CADDY_PROD_SERVER=#
 
   clients:
-    build:
-      context: ../..
-      dockerfile: ./clients/Dockerfile
     command: npm run dev 
