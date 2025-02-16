@@ -5,7 +5,7 @@ const domains = ["docker.localhost", "localhost", "saf-demo.online"];
 
 const subdomains = ["", "www.", "specs.api."];
 
-const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+const protocol = process.env.PROTOCOL;
 
 const whitelist = new Set(
   domains.flatMap((domain) =>

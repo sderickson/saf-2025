@@ -27,6 +27,7 @@ services:
       dockerfile: services/api/Dockerfile
     environment:
       - NODE_ENV=${NODE_ENV}
+      - PROTOCOL=${PROTOCOL}
 
   services-auth:
     image: sderickson/saf-services-auth:latest
@@ -37,6 +38,7 @@ services:
       dockerfile: services/auth/Dockerfile
     environment:
       - NODE_ENV=${NODE_ENV}
+      - PROTOCOL=${PROTOCOL}
     
   specs-apis:
     image: sderickson/saf-specs-apis:latest
