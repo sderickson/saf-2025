@@ -2,21 +2,23 @@ services:
   caddy:
     cap_add:
       - NET_ADMIN
-    image: ghcr.io/sderickson/saf-services-api:latest
+    image: ghcr.io/sderickson/saf-caddy:latest
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     environment:
       - DISABLE_VITE_DEV_SERVER=#
-    # TODO: Figure out how to build separately
-    # build:
-    #   context: ../..
-    #   dockerfile: deploy/instance/Dockerfile.prod
+      - DOMAIN=${DOMAIN}
+      - PROTOCOL=${PROTOCOL}
     volumes:
       - ./config:/etc/caddy/
       - caddy_data:/data
       - caddy_config:/config
+    # TODO: Figure out how to build separately
+    # build:
+    #   context: ../..
+    #   dockerfile: deploy/instance/Dockerfile.prod
 
   services-api:
     image: ghcr.io/sderickson/saf-services-api:latest

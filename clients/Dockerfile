@@ -9,7 +9,8 @@ COPY ./specs/apis/package*.json ./specs/apis/
 COPY ./clients/package*.json ./clients/
 
 RUN npm install --omit=dev
-RUN npm install @rollup/rollup-linux-arm64-gnu
+# RUN npm install @rollup/rollup-linux-arm64-gnu
+RUN npm install @rollup/rollup-linux-x64-gnu
 
 # Copy source files
 COPY ./specs/apis/ ./specs/apis/

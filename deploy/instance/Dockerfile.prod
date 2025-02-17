@@ -1,4 +1,4 @@
-FROM sderickson/saf-clients:latest AS builder
+FROM saf-clients:latest AS builder
 
 RUN npm run build
 
