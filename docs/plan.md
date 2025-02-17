@@ -23,8 +23,6 @@ At that point, the workflow should just work, to ssh into the instance, install 
 
 - This branch
 
-  - Add package script: Publish images to github registry
-  - Be able to SSH into instance locally
   - Create bootstrap script - installs docker, adds read-only token
   - Add initial-deploy script
     - Make sure site works

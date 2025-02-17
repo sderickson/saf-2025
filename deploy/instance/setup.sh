@@ -1,4 +1,5 @@
 # This script will be the first thing that runs on a new instance
+echo "Hello world!"
 
 # Install docker if it's not already installed
 
