@@ -15,13 +15,14 @@ services:
       - clients
 
   clients:
-    image: sderickson/saf-clients:latest
+    # Named for local dev, but doesn't get published; not needed for prod
+    image: saf-clients:latest
     build:
       context: ../..
       dockerfile: ./clients/Dockerfile
 
   services-api:
-    image: sderickson/saf-services-api:latest
+    image: ghcr.io/sderickson/saf-services-api:latest
     volumes:
       - ../../dbs/main/data:/app/dbs/main/data
     build:
@@ -32,7 +33,7 @@ services:
       - PROTOCOL=${PROTOCOL}
 
   services-auth:
-    image: sderickson/saf-services-auth:latest
+    image: ghcr.io/sderickson/saf-services-auth:latest
     volumes:
       - ../../dbs/auth/data:/app/dbs/auth/data
     build:
@@ -43,7 +44,6 @@ services:
       - PROTOCOL=${PROTOCOL}
     
   specs-apis:
-    image: sderickson/saf-specs-apis:latest
     build:
       context: ../..
       dockerfile: ./specs/apis/Dockerfile

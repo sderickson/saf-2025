@@ -11,5 +11,5 @@ services:
     environment:
       - DISABLE_VITE_DEV_SERVER=#
     build:
-      context: .
-      dockerfile: Dockerfile.prod
+      context: ../..
+      dockerfile: deploy/instance/Dockerfile.prod
