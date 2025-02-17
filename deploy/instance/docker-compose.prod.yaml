@@ -1,15 +1,39 @@
 services:
-  clients: null
   caddy:
     cap_add:
       - NET_ADMIN
-    image: sderickson/saf-caddy:latest
+    image: ghcr.io/sderickson/saf-services-api:latest
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     environment:
       - DISABLE_VITE_DEV_SERVER=#
-    build:
-      context: ../..
-      dockerfile: deploy/instance/Dockerfile.prod
+    # TODO: Figure out how to build separately
+    # build:
+    #   context: ../..
+    #   dockerfile: deploy/instance/Dockerfile.prod
+    volumes:
+      - ./config:/etc/caddy/
+      - caddy_data:/data
+      - caddy_config:/config
+
+  services-api:
+    image: ghcr.io/sderickson/saf-services-api:latest
+    volumes:
+      - ../../dbs/main/data:/app/dbs/main/data
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PROTOCOL=${PROTOCOL}
+
+  services-auth:
+    image: ghcr.io/sderickson/saf-services-auth:latest
+    volumes:
+      - ../../dbs/auth/data:/app/dbs/auth/data
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PROTOCOL=${PROTOCOL}
+
+volumes:
+  caddy_data:
+  caddy_config: 
