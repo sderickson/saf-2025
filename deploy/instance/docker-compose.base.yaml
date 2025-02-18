@@ -5,7 +5,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./config:/etc/caddy/
+      - ./remote-assets/config:/etc/caddy/
       - caddy_data:/data
       - caddy_config:/config
     environment:
@@ -31,7 +31,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
-
+      - DOMAIN=${DOMAIN}
   services-auth:
     image: ghcr.io/sderickson/saf-services-auth:latest
     volumes:
@@ -42,7 +42,8 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
-    
+      - DOMAIN=${DOMAIN}
+      
   specs-apis:
     build:
       context: ../..

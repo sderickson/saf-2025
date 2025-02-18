@@ -34,18 +34,21 @@ declare global {
 app.use(recommendedPreMiddleware);
 
 // Session configuration
+const cookie = {
+  secure: process.env.PROTOCOL === "https",
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  sameSite: "strict" as const,
+  domain: `.${process.env.DOMAIN}`, // Allow cookies to be shared across subdomains
+};
+console.log(cookie);
+
 app.use(
   session({
     store: db.sessionStore,
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: process.env.PROTOCOL === "https",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: "strict",
-      domain: ".docker.localhost", // Allow cookies to be shared across subdomains
-    },
+    cookie,
   })
 );
 

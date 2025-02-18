@@ -22,6 +22,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
+      - DOMAIN=${DOMAIN}
     restart: unless-stopped
     deploy:
       resources:
@@ -36,6 +37,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
+      - DOMAIN=${DOMAIN}
     restart: unless-stopped
     deploy:
       resources:
