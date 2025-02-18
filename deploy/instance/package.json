@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up --watch",
     "test": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
-    "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.base.yaml -f docker-compose.prod.yaml up",
+    "prod-local": "cd ./remote-assets && docker compose --env-file ../.env.prod-local -f docker-compose.prod.yaml up",
     
     "build-and-push": "cd ../.. && ./deploy/instance/local-scripts/build-and-push.sh",
     "sync": "cd ../.. && ./deploy/instance/local-scripts/sync.sh",
@@ -11,6 +11,7 @@
     "remote-purge": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/purge.sh",
     "remote-setup": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/setup.sh",
     "remote-pull": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/pull.sh",
-    "remote-deploy": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/deploy.sh"
+    "remote-deploy": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/deploy.sh",
+    "remote-undeploy": "ssh root@saf-demo.online 'bash -s' < ./remote-scripts/undeploy.sh"
   }
 }
