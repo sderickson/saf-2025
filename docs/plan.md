@@ -2,51 +2,16 @@
 
 Rough order of development
 
-### Scratch
-
-Steps to deploy:
-
-- Create an instance with a static IP and a private SSH key managed by 1password
-- Buy a domain, point its nameservers to the host
-- Update the host records to serve from the instance
-- Add a .env file to /root and put the read-only GitHub token in there as CP_PAT
-- Run the following commands from here:
-  - remote-purge to remove any existing docker installations
-  - remote-setup to set up docker
-  - build-and-push to update the images if needed
-  - remote-pull to retrieve the latest docker images
-  - sync to send over remote-assets
-  - remote-deploy to run the site
-
-So for deployments, here's my plan:
-
-- To minimize number of services I'm using, I'll publish to GitHub's container store
-- To start, I'll just work on deploying to a single virtual instance via ssh
-- I'd like to minimize the effort to set up an instance/domain. Pretty much buy a domain, point it to the nameservers.
-
-So the process for getting a fork of this repo to be running will be:
-
-1. Purchase instance, get/store SSH key for it (thinking 1Password)
-2. Purchase domain, point it at instance provider's nameservers
-3. Update domain in repo wherever the source of truth is
-4. Add SSH key to repo secrets
-
-At that point, the workflow should just work, to ssh into the instance, install anything needed, then run the service.
-
 ### Backlog
 
 - This branch
 
-  - Create bootstrap script - installs docker, adds read-only token
-  - Add initial-deploy script
-    - Make sure site works
   - Add blue-green deploy script
     - Make sure site never goes down
   - Add workflow which ssh's into the virtual instance
   - Update to build/publish images
   - Update to run bootstrap script after build/publish
   - Switch workflow to be on main branch
-  - Add docs for how to set up a deployment
   - Merge branch
 
 - next branch

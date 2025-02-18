@@ -1,6 +1,0 @@
-include:
-  - clients/docker-compose.yaml
-  - services/auth/docker-compose.yaml
-  - services/api/docker-compose.yaml
-  - deploy/instance/reverse-proxy/docker-compose.yaml
-  - specs/apis/docker-compose.yaml
