@@ -12,6 +12,10 @@
 	}
 }
 
+(reverse_proxy_common) {
+	header_up X-Request-ID {http.request.uuid}
+}
+
 {$PROTOCOL}://{$DOMAIN}, {$PROTOCOL}://api.{$DOMAIN}, {$PROTOCOL}://api.specs.{$DOMAIN} {
 	# Add unique request ID header to all requests
 	header {
@@ -39,7 +43,7 @@
 
 	handle @auth {
 		reverse_proxy services-auth:3000 {
-			header_up X-Request-ID {http.request.uuid}
+			import reverse_proxy_common
 		}
 	}
 
@@ -49,13 +53,13 @@
 			header_up X-Request-ID {http.request.uuid}
 		}
 		reverse_proxy services-api:3000 {
-			header_up X-Request-ID {http.request.uuid}
+			import reverse_proxy_common
 		}
 	}
 
 	handle @specs {
 		reverse_proxy specs-apis:3000 {
-			header_up X-Request-ID {http.request.uuid}
+			import reverse_proxy_common
 		}
 	}
 

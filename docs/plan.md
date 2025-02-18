@@ -18,18 +18,9 @@ Rough order of development
 
   - Create new script in deploy/instance which generates all the docker files from package files
 
-- Deployments
-  - Buy domain
-  - Create DO droplet
-  - Figure out how to run docker-compose in production mode
-  - Test also locally with hosts updated to (hopefully) make sure things will work
-  - Write a script which will
-    - install anything fundamental (e.g. docker) if not present
-    - start the server if it's not already running
-    - do a zero-downtime deploy with docker-compose blue/green setup if it _is_ already running
-  -
-- Add forgot email flow
-- Add verify email flow
+- separate branch
+  - Add forgot email flow
+  - Add verify email flow
 
 ### Core
 
@@ -78,6 +69,7 @@ What follows can largely be done in any order.
 - Infra+
   - Kubernetes
   - Secret management
+  - Optimize memory - fit on smallest droplet?
 - Workflow+
   - ✓ Code formatting, quality, ESLint
   - API Versioning
