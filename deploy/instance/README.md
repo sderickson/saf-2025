@@ -62,8 +62,11 @@ To set up a remote deployment:
 To set up deployments from your development machine.
 
 1. **Test your setup with SSH**. Make sure you can `ssh` into your instance, probably with `ssh root@<domain>`.
-2. **Log into your container registry**. Same as for the instance, but this time you'll need write access as well.
-3. **Prepare the instance**. Run `npm run remote-purge` and then `npm run remote-setup` for a clean docker installation.
+2. **Update .env files**:
+   1. `./.env.remote` with your SSH user/hostname.
+   2. `./remote-assets/.env.prod` with your domain name.
+3. **Log into your container registry on your machine**. Same as for the instance, but this time you'll need write access as well.
+4. **Prepare the instance**. Run `npm run remote-purge` and then `npm run remote-setup` for a clean docker installation.
 
 Then you should be ready to run the commands below to deploy your application!
 

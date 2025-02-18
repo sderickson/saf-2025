@@ -1,1 +1,1 @@
-ssh root@saf-demo.online 'bash -s'
+ssh $SSH_HOSTNAME 'bash -s'
