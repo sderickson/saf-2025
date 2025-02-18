@@ -1,9 +1,8 @@
 REMOTE_HOST="root@saf-demo.online"
 REMOTE_PATH="/root/"
-REMOTE_FOLDER="saf-2025/deploy/instance"
-LOCAL_FOLDER="."
+REMOTE_FOLDER="/root/saf-2025/"
+LOCAL_FOLDER="./deploy/instance/remote-assets"
 ZIP_NAME="deploy-instance.zip"
-REMOTE_COMMAND="./setup.sh"
 
 # Create zip file
 echo "Creating zip file..."
@@ -27,18 +26,14 @@ if ! command -v unzip &> /dev/null; then
     apt-get install -y unzip
 fi
 mkdir -p "$REMOTE_FOLDER"
-rm -rf "$REMOTE_FOLDER/*"
+echo "Removing existing files..."
+echo "Removing $REMOTE_FOLDER*"
+rm -rf $REMOTE_FOLDER* -v
 unzip -o "$ZIP_NAME" -d "$REMOTE_FOLDER"
-cd "$REMOTE_FOLDER"
-pwd
-echo "Running command..."
-echo "$REMOTE_COMMAND"
-$REMOTE_COMMAND
+rm "$ZIP_NAME"
 echo "Done!"
 EOF
 
 # Clean up local zip file
-echo "Cleaning up..."
+echo "Cleaning up."
 rm "$ZIP_NAME"
-
-echo "Done!"

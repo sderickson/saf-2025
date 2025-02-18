@@ -15,26 +15,25 @@ services:
       - ./config:/etc/caddy/
       - caddy_data:/data
       - caddy_config:/config
+    restart: unless-stopped
     # TODO: Figure out how to build separately
     # build:
     #   context: ../..
     #   dockerfile: deploy/instance/Dockerfile.prod
 
-  services-api:
-    image: ghcr.io/sderickson/saf-services-api:latest
-    volumes:
-      - ../../dbs/main/data:/app/dbs/main/data
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - PROTOCOL=${PROTOCOL}
+  # services-api:
+  #   image: ghcr.io/sderickson/saf-services-api:latest
+  #   environment:
+  #     - NODE_ENV=${NODE_ENV}
+  #     - PROTOCOL=${PROTOCOL}
+  #   restart: unless-stopped
 
   services-auth:
     image: ghcr.io/sderickson/saf-services-auth:latest
-    volumes:
-      - ../../dbs/auth/data:/app/dbs/auth/data
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
+    restart: unless-stopped
 
 volumes:
   caddy_data:

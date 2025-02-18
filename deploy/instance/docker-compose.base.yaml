@@ -1,4 +1,4 @@
-# common elements between dev, test and prod
+# common elements between dev and test
 services:
   caddy:
     image: caddy:2.9.1

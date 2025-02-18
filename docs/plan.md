@@ -4,6 +4,20 @@ Rough order of development
 
 ### Scratch
 
+Steps to deploy:
+
+- Create an instance with a static IP and a private SSH key managed by 1password
+- Buy a domain, point its nameservers to the host
+- Update the host records to serve from the instance
+- Add a .env file to /root and put the read-only GitHub token in there as CP_PAT
+- Run the following commands from here:
+  - remote-purge to remove any existing docker installations
+  - remote-setup to set up docker
+  - build-and-push to update the images if needed
+  - remote-pull to retrieve the latest docker images
+  - sync to send over remote-assets
+  - remote-deploy to run the site
+
 So for deployments, here's my plan:
 
 - To minimize number of services I'm using, I'll publish to GitHub's container store

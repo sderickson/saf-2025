@@ -1,0 +1,1 @@
+ssh root@saf-demo.online 'bash -s'
