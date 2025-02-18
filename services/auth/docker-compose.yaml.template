@@ -1,4 +1,0 @@
-services:
-  services-auth:
-    volumes:
-      - ../../dbs/auth/data:/app/dbs/auth/data
