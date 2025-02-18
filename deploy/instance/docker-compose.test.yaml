@@ -4,4 +4,4 @@ services:
       - DISABLE_CADDY_PROD_SERVER=#
 
   clients:
-    command: npm run dev 
+    command: npm run dev

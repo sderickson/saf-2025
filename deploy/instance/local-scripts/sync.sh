@@ -1,3 +1,5 @@
+#!/bin/bash
+
 REMOTE_HOST="root@saf-demo.online"
 REMOTE_PATH="/root/"
 REMOTE_FOLDER="/root/saf-2025/"
