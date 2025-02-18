@@ -17,6 +17,7 @@ import { authRouter } from "./routes/auth.ts";
 import { setupPassport } from "./config/passport.ts";
 
 const app = express();
+app.set("trust proxy", true);
 
 // Define properties added to Express Request objects by middleware
 declare global {
@@ -40,7 +41,6 @@ const cookie = {
   sameSite: "strict" as const,
   domain: `.${process.env.DOMAIN}`, // Allow cookies to be shared across subdomains
 };
-console.log(cookie);
 
 app.use(
   session({
