@@ -4,9 +4,21 @@ Rough order of development
 
 ### Backlog
 
-- Add GitHub actions for tests
-- Add forgot email flow
-- Add verify email flow
+- Workflow branch
+
+  - Add workflow which ssh's into the virtual instance
+  - Update to build/publish images
+  - Update to run bootstrap script after build/publish
+  - Switch workflow to be on main branch
+  - Merge branch
+
+- Generate Docker branch
+
+  - Create new script in deploy/instance which generates all the docker files from package files
+
+- separate branch
+  - Add forgot email flow
+  - Add verify email flow
 
 ### Core
 
@@ -41,6 +53,7 @@ What follows can largely be done in any order.
   - Backups
   - Uploads
   - Rate limiting
+  - Stronger security, such as express/helmet, or caddy headers
 - Frontend+
   - ✓ Tanstack Query
   - ✓ Vue Router
@@ -55,6 +68,8 @@ What follows can largely be done in any order.
 - Infra+
   - Kubernetes
   - Secret management
+  - Optimize memory - fit on smallest droplet?
+  - Blue/Green deployment
 - Workflow+
   - ✓ Code formatting, quality, ESLint
   - API Versioning

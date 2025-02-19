@@ -10,7 +10,7 @@ teardown("shut down docker compose", async () => {
   });
   console.log("=== Docker Teardown Start ===");
   console.log("Shutting down docker containers...");
-  const result = exec("docker compose down", (error) => {
+  const result = exec("docker stop $(docker ps -a -q)", (error) => {
     if (error) {
       console.error("Docker teardown failed:", error.message);
       reject(error);

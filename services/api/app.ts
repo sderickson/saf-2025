@@ -13,6 +13,7 @@ import {
 import todosRouter from "./routes/todos.ts";
 
 const app = express();
+app.set("trust proxy", true);
 
 /**
  * Pre-route Middleware Stack

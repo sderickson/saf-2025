@@ -108,8 +108,15 @@ authRouter.post(
 authRouter.get(
   "/verify",
   createHandler(async (req: Request, res: Response, next: NextFunction) => {
+    // TODO: Figure out how to handle OPTIONS in caddy, or at the very least,
+    // don't forward_auth OPTIONS requests.
+    if (req.headers["x-forwarded-method"] === "OPTIONS") {
+      res.status(200).end();
+      return;
+    }
+
     if (!req.isAuthenticated()) {
-      res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized!" });
       return;
     }
 

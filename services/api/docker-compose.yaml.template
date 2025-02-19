@@ -1,4 +1,0 @@
-services:
-  services-api:
-    volumes:
-      - ../../dbs/main/data:/app/dbs/main/data

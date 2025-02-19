@@ -4,14 +4,28 @@ import vuetify from "vite-plugin-vuetify";
 import vueDevTools from "vite-plugin-vue-devtools";
 import type { ProxyOptions } from "vite";
 import path from "path";
+import ignore from "rollup-plugin-ignore";
 const DEBUG_PROXY = true;
 
 function makeConfig() {
   return defineConfig({
+    base: "/",
+    appType: "mpa",
     plugins: [vue(), vuetify(), vueDevTools()],
+    build: {
+      rollupOptions: {
+        input: {
+          app: path.resolve(__dirname, "app/index.html"),
+          auth: path.resolve(__dirname, "auth/index.html"),
+          landing: path.resolve(__dirname, "index.html"),
+        },
+        plugins: [ignore(["**/*.test.ts"])],
+      },
+    },
     resolve: {
       alias: {
         clients: path.resolve(__dirname, "./"),
+        "@saf/specs-apis": path.resolve(__dirname, "../specs/apis/dist"),
       },
     },
     server: {

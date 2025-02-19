@@ -1,6 +1,7 @@
 #!/usr/bin/env ts-node
 
-// Note - this script is entirely generated. But it works? It needs tests.
+// Note - this script is obsoleted by refactoring docker-compose files into /deploy/instance.
+// This script needs to be moved there and reworked.
 
 import * as fs from "fs";
 import * as path from "path";
