@@ -53,6 +53,7 @@ What follows can largely be done in any order.
   - Backups
   - Uploads
   - Rate limiting
+  - Stronger security, such as express/helmet, or caddy headers
 - Frontend+
   - ✓ Tanstack Query
   - ✓ Vue Router
