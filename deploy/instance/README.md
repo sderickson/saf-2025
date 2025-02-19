@@ -82,5 +82,8 @@ npm run remote-pull         # Pulls the docker images made with build-and-push
 npm run remote-deploy       # docker-compose up
 npm run remote-undeploy     # docker-compose down
 
-npm run full-deploy         # Does all of the above (undeploy first)
+npm run full-deploy         # Does all of the above, except undeploy. Only
+                            # services that have changed will be recreated.
+                            # There may be short downtime as services spin
+                            # back up.
 ```

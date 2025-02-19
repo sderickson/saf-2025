@@ -116,7 +116,7 @@ authRouter.get(
     }
 
     if (!req.isAuthenticated()) {
-      res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized!" });
       return;
     }
 

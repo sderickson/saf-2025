@@ -4,17 +4,15 @@ Rough order of development
 
 ### Backlog
 
-- This branch
+- Workflow branch
 
-  - Add blue-green deploy script
-    - Make sure site never goes down
   - Add workflow which ssh's into the virtual instance
   - Update to build/publish images
   - Update to run bootstrap script after build/publish
   - Switch workflow to be on main branch
   - Merge branch
 
-- next branch
+- Generate Docker branch
 
   - Create new script in deploy/instance which generates all the docker files from package files
 
@@ -70,6 +68,7 @@ What follows can largely be done in any order.
   - Kubernetes
   - Secret management
   - Optimize memory - fit on smallest droplet?
+  - Blue/Green deployment
 - Workflow+
   - ✓ Code formatting, quality, ESLint
   - API Versioning
