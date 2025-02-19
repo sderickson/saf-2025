@@ -9,7 +9,10 @@ const SqliteStore = BetterSqlite3SessionStore(session);
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const sessionDb = new sqlite(path.join(__dirname, "data/sessions.sqlite"));
+
+const sessionDbName = `sessions-${process.env.NODE_ENV}.sqlite`;
+
+const sessionDb = new sqlite(path.join(__dirname, `data/${sessionDbName}`));
 const sessionStore = new SqliteStore({
   client: sessionDb,
   expired: {

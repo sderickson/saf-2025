@@ -7,8 +7,10 @@ const getDirname = () => {
   return path.dirname(__filename);
 };
 
+const usersDbName = `users-${process.env.NODE_ENV}.sqlite`;
+
 export const getDbPath = () => {
-  return path.join(getDirname(), "data/users.sqlite");
+  return path.join(getDirname(), `data/${usersDbName}`);
 };
 
 export const getMigrationsPath = () => {
@@ -20,6 +22,6 @@ export default defineConfig({
   schema: "./src/schema.ts",
   dialect: "sqlite",
   dbCredentials: {
-    url: "./data/users.sqlite",
+    url: `./data/${usersDbName}`,
   },
 });

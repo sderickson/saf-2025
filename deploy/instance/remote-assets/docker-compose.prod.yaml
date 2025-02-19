@@ -31,6 +31,8 @@ services:
         reservations:
           memory: 128M
     memswap_limit: 2G
+    volumes:
+      - /opt/app/dbs/main/data:/app/dbs/main/data
 
   services-auth:
     image: ghcr.io/sderickson/saf-services-auth:latest
@@ -46,6 +48,8 @@ services:
         reservations:
           memory: 128M
     memswap_limit: 2G
+    volumes:
+      - /opt/app/dbs/auth/data:/app/dbs/auth/data
 
 volumes:
   caddy_data:
