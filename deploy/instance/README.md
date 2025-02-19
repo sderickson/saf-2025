@@ -75,7 +75,8 @@ Then you should be ready to run the commands below to deploy your application!
 From this directory, run:
 
 ```
-npm run build-and-push      # Builds the production images and pushes them
+npm run build               # Builds the production images
+npm run push                # Pushes them
 npm run sync                # Copies the `./remote-assets` directory to the instance
 npm run remote-pull         # Pulls the docker images made with build-and-push
 npm run remote-deploy       # docker-compose up
