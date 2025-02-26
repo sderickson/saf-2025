@@ -39,13 +39,13 @@ This template provides a foundation for creating SQLite databases with TypeScrip
 
    ```json
    {
-     "name": "@saf/dbs-your-db-name"
+     "name": "@your-project-name/dbs-your-db-name"
    }
    ```
 
 3. Update the "TemplateDatabaseError" in errors.ts to match your package name
 4. Modify the schema in `src/schema.ts` to define your tables
-5. Run "npm generate" to generate migrations files
+5. Run "npm run generate" to generate migrations files
 6. Update queries in `src/queries/` to match your schema
 7. Update exports in `index.ts`
 8. Add unit tests co-located with the files being tested
