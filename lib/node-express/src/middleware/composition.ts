@@ -8,7 +8,7 @@ import { notFoundHandler, errorHandler } from "./errors.ts";
 import { healthRouter } from "./health.ts";
 import { corsRouter } from "./cors.ts";
 import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.ts";
-import { user } from "./user.ts";
+import { auth } from "./auth.ts";
 
 /**
  * Recommended pre-route middleware stack.
@@ -38,9 +38,11 @@ interface PreMiddlewareOptions {
   parseAuthHeaders?: boolean;
 }
 
-export const createPreMiddleware = (options: PreMiddlewareOptions = {}): Handler[] => {
+export const createPreMiddleware = (
+  options: PreMiddlewareOptions = {}
+): Handler[] => {
   const { apiSpec, parseAuthHeaders } = options;
-  
+
   let openApiValidatorMiddleware: Handler[] = [];
   if (apiSpec) {
     openApiValidatorMiddleware = createOpenApiValidator(apiSpec);
@@ -48,7 +50,7 @@ export const createPreMiddleware = (options: PreMiddlewareOptions = {}): Handler
 
   let authMiddleware: Handler[] = [];
   if (parseAuthHeaders) {
-    authMiddleware = [user];
+    authMiddleware = [auth];
   }
 
   return [
