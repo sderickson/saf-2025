@@ -15,6 +15,7 @@ import dotenv from "dotenv";
 export {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
+  createPreMiddleware,
 } from "./middleware/composition.ts";
 export { createHandler } from "./handler.ts";
 export { user } from "./middleware/user.ts";

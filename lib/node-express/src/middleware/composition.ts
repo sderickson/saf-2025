@@ -3,10 +3,12 @@ import { json, urlencoded } from "express";
 import { requestId } from "./requestId.ts";
 import { httpLogger } from "./httpLogger.ts";
 import { loggerInjector } from "./logger.ts";
-import { openApiValidator } from "./openapi.ts";
+import { openApiValidator, createOpenApiValidator } from "./openapi.ts";
 import { notFoundHandler, errorHandler } from "./errors.ts";
 import { healthRouter } from "./health.ts";
 import { corsRouter } from "./cors.ts";
+import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.ts";
+import { user } from "./user.ts";
 
 /**
  * Recommended pre-route middleware stack.
@@ -30,6 +32,38 @@ export const recommendedPreMiddleware: Handler[] = [
   corsRouter,
   ...openApiValidator,
 ];
+
+interface PreMiddlewareOptions {
+  apiSpec?: OpenAPIV3.DocumentV3;
+  parseAuthHeaders?: boolean;
+}
+
+export const createPreMiddleware = (options: PreMiddlewareOptions = {}): Handler[] => {
+  const { apiSpec, parseAuthHeaders } = options;
+  
+  let openApiValidatorMiddleware: Handler[] = [];
+  if (apiSpec) {
+    openApiValidatorMiddleware = createOpenApiValidator(apiSpec);
+  }
+
+  let authMiddleware: Handler[] = [];
+  if (parseAuthHeaders) {
+    authMiddleware = [user];
+  }
+
+  return [
+    healthRouter, // before httpLogger to avoid polluting logs
+    requestId,
+    httpLogger,
+    // Built-in Express middleware
+    json(),
+    urlencoded({ extended: false }),
+    loggerInjector,
+    corsRouter,
+    ...openApiValidatorMiddleware,
+    ...authMiddleware,
+  ];
+};
 
 /**
  * Recommended error handling middleware stack.
