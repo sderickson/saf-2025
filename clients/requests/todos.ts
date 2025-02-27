@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { client } from "./client";
+import { client } from "./client.ts";
 import type { components } from "@saf/specs-apis/dist/openapi";
 
 type Todo = components["schemas"]["Todo"];
@@ -10,7 +10,10 @@ export function useTodos() {
   return useQuery<Todo[]>({
     queryKey: ["todos"],
     queryFn: async () => {
-      const { data } = await client.GET("/todos");
+      const { data, error } = await client.GET("/todos");
+      if (error) {
+        throw error;
+      }
       return data ?? [];
     },
   });
