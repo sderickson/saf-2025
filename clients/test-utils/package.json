@@ -1,0 +1,23 @@
+{
+  "name": "@saf/clients-test-utils",
+  "version": "1.0.0",
+  "description": "Test utilities for SAF client applications",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.0",
+    "@tanstack/vue-query": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "vue": "^3.3.0",
+    "@tanstack/vue-query": "^5.0.0"
+  }
+} 
