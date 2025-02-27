@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { client } from "./client.ts";
-import type { components } from "@saf/specs-apis/dist/openapi";
+import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
 
-type Todo = components["schemas"]["Todo"];
-type CreateTodoRequest = components["schemas"]["CreateTodoRequest"];
-type UpdateTodoRequest = components["schemas"]["UpdateTodoRequest"];
+type Todo = ResponseSchema<"getTodos">;
+type CreateTodoRequest = RequestSchema<"createTodo">;
+type UpdateTodoRequest = RequestSchema<"updateTodo">;
 
 export function useTodos() {
   return useQuery<Todo[]>({

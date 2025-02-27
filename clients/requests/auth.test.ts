@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useLogin, useLogout, useRegister } from "./auth";
-import { client } from "./client";
-import { withVueQuery } from "./test-utils";
+import { useLogin, useLogout, useRegister } from "./auth.js";
+import { client } from "./client.js";
+import { withVueQuery } from "@saf/clients-test-utils";
 
 // Mock the client
 vi.mock("./client", () => ({
