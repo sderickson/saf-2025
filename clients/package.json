@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "ts:check": "vue-tsc -b"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",

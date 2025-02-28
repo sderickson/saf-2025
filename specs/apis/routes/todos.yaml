@@ -24,6 +24,7 @@ components:
 
 get:
   summary: List all todos
+  operationId: getTodos
   tags:
     - todos
   responses:
@@ -38,6 +39,7 @@ get:
 
 post:
   summary: Create a new todo
+  operationId: createTodo
   tags:
     - todos
   requestBody:
@@ -72,6 +74,7 @@ post:
 
   put:
     summary: Update a todo
+    operationId: updateTodo
     tags:
       - todos
     requestBody:
@@ -102,6 +105,7 @@ post:
 
   delete:
     summary: Delete a todo
+    operationId: deleteTodo
     tags:
       - todos
     responses:

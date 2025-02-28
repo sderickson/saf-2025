@@ -151,6 +151,7 @@
     "/todos": {
       "get": {
         "summary": "List all todos",
+        "operationId": "getTodos",
         "tags": [
           "todos"
         ],
@@ -172,6 +173,7 @@
       },
       "post": {
         "summary": "Create a new todo",
+        "operationId": "createTodo",
         "tags": [
           "todos"
         ],
@@ -212,6 +214,7 @@
     "/todos/{id}": {
       "put": {
         "summary": "Update a todo",
+        "operationId": "updateTodo",
         "tags": [
           "todos"
         ],
@@ -260,6 +263,7 @@
       },
       "delete": {
         "summary": "Delete a todo",
+        "operationId": "deleteTodo",
         "tags": [
           "todos"
         ],
