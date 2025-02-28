@@ -42,12 +42,14 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       teardown: "shut down docker compose",
+      dependencies: ["server health"],
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
       teardown: "shut down docker compose",
+      dependencies: ["server health"],
     },
     {
       name: "shut down docker compose",
