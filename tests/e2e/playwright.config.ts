@@ -1,5 +1,4 @@
 import { defineConfig, devices } from "@playwright/test";
-import path from "path";
 
 /**
  * Read environment variables from file.
@@ -35,6 +34,10 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    {
+      name: "server health",
+      testMatch: /global\.setup\.ts/,
+    },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
@@ -74,8 +77,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev-clean-slate",
+    command: "npm run dev-clean-slate 2>&1 > last-docker-compose.log",
     url: "http://localhost",
-    reuseExistingServer: false,
+    reuseExistingServer: true,
   },
 });

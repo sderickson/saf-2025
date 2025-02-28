@@ -17,7 +17,7 @@ test("logging in with a user that doesn't exist", async ({ page }) => {
     .getByRole("textbox", { name: "Enter your password" })
     .fill("asdfasdf");
   await page.getByRole("button", { name: "Log In" }).click();
-  await expect(page.getByText("User not found.")).toBeVisible();
+  await expect(page.getByText("Invalid credentials")).toBeVisible();
 });
 
 test("registering a user", async ({ page }) => {

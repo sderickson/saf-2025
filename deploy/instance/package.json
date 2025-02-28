@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up --watch",
     "test": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
-    "prod-local": "cd ./remote-assets && docker compose --env-file ../.env.prod-local -f docker-compose.prod.yaml up",
+    "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up",
     
     "exec-remote": "source .env.remote && ssh $SSH_HOSTNAME 'bash -s'",
     "build": "cd ../.. && ./deploy/instance/local-scripts/build.sh",
