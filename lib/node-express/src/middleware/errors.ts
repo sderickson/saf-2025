@@ -20,16 +20,20 @@ export const errorHandler = (
   next: NextFunction
 ): void => {
   // Log error
-  if (!req.log) {
-    console.error(err.stack);
-  } else {
-    req.log.error(err.stack);
+  const status = err.status || 500;
+
+  if (status >= 500) {
+    if (!req.log) {
+      console.error(err.stack);
+    } else {
+      req.log.error(err.stack);
+    }
   }
 
   // Send error response
-  res.status(err.status || 500);
+  res.status(status);
   res.json({
     message: err.message,
-    status: err.status || 500,
+    status,
   });
 };

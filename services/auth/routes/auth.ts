@@ -110,6 +110,12 @@ authRouter.get(
   createHandler(async (req: Request, res: Response, next: NextFunction) => {
     // TODO: Figure out how to handle OPTIONS in caddy, or at the very least,
     // don't forward_auth OPTIONS requests.
+
+    if (req.headers["x-forwarded-uri"] === "/health") {
+      res.status(200).end();
+      return;
+    }
+
     if (req.headers["x-forwarded-method"] === "OPTIONS") {
       res.status(200).end();
       return;

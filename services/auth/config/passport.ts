@@ -31,13 +31,28 @@ export const setupPassport = () => {
       async (email, password, done) => {
         try {
           // Get the user and their email auth
-          const user = await users.getByEmail(email);
-          if (!user) {
-            return done(null, false, { message: "Invalid credentials" });
+          let user;
+          try {
+            user = await users.getByEmail(email);
+          } catch (err) {
+            if (err instanceof users.UserNotFoundError) {
+              return done(null, false, { message: "Invalid credentials" });
+            }
+            return done(err);
           }
 
-          const auth = await emailAuth.getByEmail(email);
-          if (!auth) {
+          let auth;
+          try {
+            auth = await emailAuth.getByEmail(email);
+          } catch (err) {
+            if (err instanceof emailAuth.EmailAuthNotFoundError) {
+              return done(null, false, { message: "Invalid credentials" });
+            }
+            return done(err);
+          }
+
+          if (!auth || !user) {
+            // should never happen? Shushing typescript.
             return done(null, false, { message: "Invalid credentials" });
           }
 
