@@ -68,8 +68,7 @@ post:
       in: path
       required: true
       schema:
-        type: string
-        format: uuid
+        type: integer
       description: The todo item ID
 
   put:

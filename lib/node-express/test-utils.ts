@@ -30,7 +30,9 @@ export function expectStatus(
       console.error(
         "Make sure the status code is defined in the OpenAPI spec for this route."
       );
-      console.error("See docs/testing-guidelines.md for more information.\n\n");
+      console.error(
+        "See node-express/docs/testing-guidelines.md for more information.\n\n"
+      );
       throw new Error(
         `Expected status ${expectedStatus} but got 500 due to OpenAPI validation error.`
       );

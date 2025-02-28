@@ -18,7 +18,7 @@ declare global {
  * Expects x-user-id and x-user-email headers to be set by authentication layer.
  * Throws 401 if headers are missing.
  */
-export const auth: Handler = (req, res, next): void => {
+export const auth: Handler = (req, _res, next): void => {
   const userId = req.headers["x-user-id"];
   const userEmail = req.headers["x-user-email"];
 
@@ -31,5 +31,5 @@ export const auth: Handler = (req, res, next): void => {
     userEmail: userEmail as string,
   };
 
-  next();
+  return next();
 };
