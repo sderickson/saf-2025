@@ -1,16 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { client } from "./client";
-import type { components } from "@saf/specs-apis/dist/openapi";
+import { client } from "./client.ts";
+import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
 
-type Todo = components["schemas"]["Todo"];
-type CreateTodoRequest = components["schemas"]["CreateTodoRequest"];
-type UpdateTodoRequest = components["schemas"]["UpdateTodoRequest"];
+type Todos = ResponseSchema<"getTodos", 200>;
+type CreateTodoRequest = RequestSchema<"createTodo">;
+type UpdateTodoRequest = RequestSchema<"updateTodo">;
 
 export function useTodos() {
-  return useQuery<Todo[]>({
+  return useQuery<Todos>({
     queryKey: ["todos"],
     queryFn: async () => {
-      const { data } = await client.GET("/todos");
+      const { data, error } = await client.GET("/todos");
+      if (error) {
+        throw error;
+      }
       return data ?? [];
     },
   });
@@ -19,8 +22,8 @@ export function useTodos() {
 export function useCreateTodo() {
   const queryClient = useQueryClient();
 
-  return useMutation<Todo, Error, CreateTodoRequest>({
-    mutationFn: async (todo) => {
+  return useMutation({
+    mutationFn: async (todo: CreateTodoRequest) => {
       const { data } = await client.POST("/todos", { body: todo });
       if (!data) throw new Error("Failed to create todo");
       return data;
@@ -34,8 +37,14 @@ export function useCreateTodo() {
 export function useUpdateTodo() {
   const queryClient = useQueryClient();
 
-  return useMutation<Todo, Error, { id: number; todo: UpdateTodoRequest }>({
-    mutationFn: async ({ id, todo }) => {
+  return useMutation({
+    mutationFn: async ({
+      id,
+      todo,
+    }: {
+      id: number;
+      todo: UpdateTodoRequest;
+    }) => {
       const { data } = await client.PUT(`/todos/${id}` as "/todos/{id}", {
         body: todo,
       });

@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo } from "./todos";
-import { client } from "./client";
-import { withVueQuery } from "./test-utils";
+import {
+  useTodos,
+  useCreateTodo,
+  useUpdateTodo,
+  useDeleteTodo,
+} from "./todos.ts";
+import { client } from "./client.ts";
+import { withVueQuery } from "@saf/clients/test-utils";
 import { QueryClient } from "@tanstack/vue-query";
 
 // Mock the client
