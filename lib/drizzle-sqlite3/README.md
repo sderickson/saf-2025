@@ -118,6 +118,119 @@ export class InvalidDataError extends HandledDatabaseError {
 // Export these errors for consumers to catch
 ```
 
+## Database Schema Best Practices
+
+### Data Types
+
+- **IDs**: Use `integer` type for primary keys and foreign keys
+
+  ```typescript
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  ```
+
+- **JSON Data**: Use `text` with `{ mode: "json" }` for JSON data
+
+  ```typescript
+  preferences: text("preferences", { mode: "json" }).$type<string[]>(),
+  metadata: text("metadata", { mode: "json" }).$type<Record<string, unknown>>(),
+  ```
+
+- **Timestamps**: Use `integer` with `{ mode: "timestamp" }` for dates
+
+  ```typescript
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+  ```
+
+- **Currency**: Use `integer` for monetary values (store in cents)
+  ```typescript
+  price: integer("price").notNull(), // Stored in cents
+  ```
+
+### Relationships
+
+- **User IDs**: For external user IDs (from auth service), use `integer` type
+
+  ```typescript
+  userId: integer("user_id").notNull().unique(),
+  ```
+
+- **One-to-One Relationships**: Add unique constraints
+  ```typescript
+  profileId: integer("profile_id").notNull().unique(),
+  ```
+
+## Query Pattern Best Practices
+
+### Upsert Pattern
+
+For one-to-one relationships (like user profiles or settings), implement an "upsert" pattern:
+
+```typescript
+// Upsert a user profile (create if it doesn't exist, update if it does)
+export const upsertUserProfile = queryWrapper(
+  async (
+    userId: number,
+    profileData: Partial<NewUserProfile>
+  ): Promise<UserProfile> => {
+    // Check if a profile already exists for this user
+    const existingProfile = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.userId, userId));
+
+    if (existingProfile.length > 0) {
+      // Update existing profile
+      const result = await db
+        .update(userProfiles)
+        .set({
+          ...profileData,
+          updatedAt: new Date(),
+        })
+        .where(eq(userProfiles.userId, userId))
+        .returning();
+
+      return result[0];
+    } else {
+      // Create a new profile
+      const result = await db
+        .insert(userProfiles)
+        .values({
+          userId,
+          ...profileData,
+          updatedAt: new Date(),
+        })
+        .returning();
+
+      return result[0];
+    }
+  }
+);
+```
+
+### Error Handling
+
+Always create specific error classes for common error cases:
+
+```typescript
+export class ProfileNotFoundError extends MainDatabaseError {
+  constructor(userId: number) {
+    super(`Profile for user with id ${userId} not found`);
+  }
+}
+```
+
+### Validation
+
+Perform validation before database operations:
+
+```typescript
+if (!isValidEmail(email)) {
+  throw new InvalidDataError("email");
+}
+```
+
 ## Development
 
 1. Run tests:
