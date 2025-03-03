@@ -4,18 +4,6 @@ Rough order of development
 
 ### Backlog
 
-- Workflow branch
-
-  - Add workflow which ssh's into the virtual instance
-  - Update to build/publish images
-  - Update to run bootstrap script after build/publish
-  - Switch workflow to be on main branch
-  - Merge branch
-
-- Generate Docker branch
-
-  - Create new script in deploy/instance which generates all the docker files from package files
-
 - separate branch
   - Add forgot email flow
   - Add verify email flow
@@ -30,14 +18,14 @@ Once all of this is done, should start using this in actual applications.
   - ✓ SQLite
   - ✓ Docker Compose
   - ✓ API Specs
-  - Auth (use-case for framework features)
+  - ✓ Auth (use-case for framework features)
 - Production
-  - Experiment with GitHub Actions, hosting services and products, settle on one
-  - Domain, CDN
+  - ✓ Experiment with GitHub Actions, hosting services and products, settle on one
+  - ✓ Domain
 - Testing
   - ✓ Vitest FE Unit
   - ✓ Vitest BE Unit
-  - Integrate with GitHub Actions
+  - ✓ Integrate with GitHub Actions
 - Observability
   - LGTM
   - PagerDuty
@@ -57,26 +45,29 @@ What follows can largely be done in any order.
 - Frontend+
   - ✓ Tanstack Query
   - ✓ Vue Router
-  - Sentry, Error boundaries
   - ✓ Design system, components
+  - Sentry, Error boundaries
   - Analytics et al
   - i18n
 - Testing+
-  - Storybook
   - ✓ Playwright
+  - Storybook
   - Nock
 - Infra+
   - Kubernetes
   - Secret management
-  - Optimize memory - fit on smallest droplet?
+  - Optimize memory - fit on smallest droplet? Bun?
   - Blue/Green deployment
+  - CDN
 - Workflow+
   - ✓ Code formatting, quality, ESLint
+  - Generate docker files from package files
   - API Versioning
   - Documentation
+  - Checklists
   - Dependency management
   - Monorepo package management - nx, turborepo and alike
 - AI+
+  - ✓ Add code review like CodeRabbit
   - Integrate with no-code tools, e.g. lovable, synthflow, repl.it, bolt.new, v0.dev
   - Try running an LLM locally, e.g. llama3 or deepseek
-  - ✓ Add code review like CodeRabbit
