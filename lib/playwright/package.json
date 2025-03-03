@@ -1,0 +1,9 @@
+{
+  "name": "@saf/lib-playwright",
+  "description": "Shared Playwright utilities for SAF products",
+  "type": "module",
+  "main": "index.ts",
+  "peerDependencies": {
+    "@playwright/test": "*"
+  }
+}
