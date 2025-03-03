@@ -42,6 +42,7 @@ What follows can largely be done in any order.
   - Uploads
   - Rate limiting
   - Stronger security, such as express/helmet, or caddy headers
+  - Scopes
 - Frontend+
   - ✓ Tanstack Query
   - ✓ Vue Router
