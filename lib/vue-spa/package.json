@@ -2,12 +2,6 @@
   "name": "@saf/vue-spa",
   "description": "All-in-one set of helper methods and documents for creating Vue SPAs for SAF applications",
   "type": "module",
-  "main": "index.ts",
-  "types": "index.ts",
-  "files": [
-    "index.ts",
-    "test-utils.ts"
-  ],
   "dependencies": {
     "@tanstack/vue-query": "^5.64.2",
     "vue": "^3.5.13"

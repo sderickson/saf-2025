@@ -2,8 +2,6 @@ import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
 import vuetify from "vite-plugin-vuetify";
 
-console.log("vitest.config.ts was run");
-
 export default defineConfig({
   plugins: [vue(), vuetify()],
   test: {
