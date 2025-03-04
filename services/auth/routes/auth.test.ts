@@ -278,6 +278,7 @@ describe("Auth Routes", () => {
         ...user,
         lastLoginAt: new Date(),
       });
+      (argon2.verify as Mock).mockResolvedValue(true);
 
       // Use agent to maintain cookies between requests
       const agent = request.agent(app);
