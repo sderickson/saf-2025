@@ -403,7 +403,17 @@ export interface operations {
                     "X-User-Email"?: string;
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": {
+                        /** @description The authenticated user's ID */
+                        id: number;
+                        /**
+                         * Format: email
+                         * @description The authenticated user's email
+                         */
+                        email: string;
+                    };
+                };
             };
             /** @description User is not authenticated */
             401: {
