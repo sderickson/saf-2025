@@ -10,8 +10,8 @@ import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
  */
 export function withVueQuery<T>(
   composable: () => T,
-  queryClient?: QueryClient
-): [T, App<Element>, QueryClient] {
+  queryClient?: any // TODO: Make this QueryClient instead
+): [T, App<Element>, any] {
   let result!: T;
   const client =
     queryClient ??
