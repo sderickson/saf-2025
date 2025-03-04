@@ -252,10 +252,51 @@ describe("Auth Routes", () => {
       expect(response.body).toEqual({ message: "Unauthorized!" });
     });
 
-    // Skip this test for now since we can't easily mock authentication in supertest
-    it.skip("should return user ID and email when authenticated", async () => {
-      // This test is skipped because we can't easily mock authentication in supertest
-      // The functionality is tested in the implementation, but we can't test it here
+    it("should return user ID and email when authenticated", async () => {
+      // Setup test user
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+      };
+
+      const user = {
+        id: 1,
+        email: userData.email,
+        createdAt: new Date(),
+        lastLoginAt: null,
+      };
+
+      // Mock database responses
+      (users.getByEmail as Mock).mockResolvedValue(user);
+      (emailAuth.getByEmail as Mock).mockResolvedValue({
+        userId: user.id,
+        email: user.email,
+        passwordHash: Buffer.from("hashed-password"),
+      });
+      (users.getById as Mock).mockResolvedValue(user);
+      (users.updateLastLogin as Mock).mockResolvedValue({
+        ...user,
+        lastLoginAt: new Date(),
+      });
+
+      // Use agent to maintain cookies between requests
+      const agent = request.agent(app);
+
+      // Login first to establish session
+      const loginResponse = await agent.post("/auth/login").send(userData);
+
+      expect(loginResponse.status).toBe(200);
+
+      // Then verify authentication
+      const verifyResponse = await agent.get("/auth/verify");
+
+      expect(verifyResponse.status).toBe(200);
+      expect(verifyResponse.body).toEqual({
+        id: user.id,
+        email: user.email,
+      });
+      expect(verifyResponse.header["x-user-id"]).toBe(user.id.toString());
+      expect(verifyResponse.header["x-user-email"]).toBe(user.email);
     });
 
     it("should handle health check requests", async () => {
