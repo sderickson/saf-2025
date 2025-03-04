@@ -1,7 +1,0 @@
-{
-  "name": "@saf/clients-test-utils",
-  "description": "Test utilities for SAF client applications",
-  "type": "module",
-  "main": "index.ts",
-  "types": "index.ts"
-} 
