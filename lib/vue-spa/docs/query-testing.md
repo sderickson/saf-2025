@@ -118,7 +118,7 @@ describe("useMyMutation", () => {
     const [result, app] = withVueQuery(() => useMyMutation());
 
     await expect(result.mutateAsync(mutationData)).rejects.toThrow(
-      "Expected error message",
+      "Expected error message"
     );
 
     app.unmount();
@@ -242,7 +242,7 @@ it("should invalidate cache after mutation", async () => {
   // Perform mutation
   const [mutationResult, mutationApp] = withVueQuery(
     () => useMyMutation(),
-    queryClient,
+    queryClient
   );
   await mutationResult.mutateAsync(mutationData);
 

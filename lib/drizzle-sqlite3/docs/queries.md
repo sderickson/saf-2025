@@ -1,11 +1,6 @@
-# Internal Guide
+# Writing Queries
 
-This document is for direct users of this library.
-
-## Layering
-
-Users of this library should use it to enforce a strong boundary with its consumers. This comes into play
-especially for error handling:
+Queries are the "public" interface for the database. Services should not craft their own SQL queries, they should be housed in the "queries" folder of the database library and exported for general use. This enforces the following layering:
 
 1. **Database Layer**: Uses `queryWrapper` to catch and classify database errors
 2. **Service Layer**: Catches specific handled errors and reports generic errors for unhandled ones
@@ -66,49 +61,6 @@ export class InvalidDataError extends HandledDatabaseError {
 
 // Export these errors for consumers to catch
 ```
-
-## Database Schema Best Practices
-
-### Data Types
-
-- **IDs**: Use `integer` type for primary keys and foreign keys
-
-  ```typescript
-  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").notNull().references(() => users.id),
-  ```
-
-- **JSON Data**: Use `text` with `{ mode: "json" }` for JSON data
-
-  ```typescript
-  preferences: text("preferences", { mode: "json" }).$type<string[]>(),
-  metadata: text("metadata", { mode: "json" }).$type<Record<string, unknown>>(),
-  ```
-
-- **Timestamps**: Use `integer` with `{ mode: "timestamp" }` for dates
-
-  ```typescript
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  ```
-
-- **Currency**: Use `integer` for monetary values (store in cents)
-  ```typescript
-  price: integer("price").notNull(), // Stored in cents
-  ```
-
-### Relationships
-
-- **User IDs**: For external user IDs (from auth service), use `integer` type
-
-  ```typescript
-  userId: integer("user_id").notNull().unique(),
-  ```
-
-- **One-to-One Relationships**: Add unique constraints
-  ```typescript
-  profileId: integer("profile_id").notNull().unique(),
-  ```
 
 ## Query Pattern Best Practices
 
@@ -179,6 +131,10 @@ if (!isValidEmail(email)) {
   throw new InvalidDataError("email");
 }
 ```
+
+### Testing
+
+Tests should be in the fuzzy space between unit and integration tests; they should include the database itself to ensure the queries work as expected with the database client and database. SQLite makes this easy by being able to be run in-memory.
 
 ## Development
 

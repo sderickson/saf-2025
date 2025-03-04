@@ -1,40 +1,6 @@
-# External User Guide
+# Mocking Database Modules
 
-This guide is for consumers of databases which depend on this library.
-
-## Error Handling
-
-Databases which use this library will export and throw specific error objects.
-
-### Consuming Database Queries in Services
-
-```typescript
-// In your service layer
-import { getTodoById, TodoNotFoundError } from "@your-product/dbs-main";
-
-app.get("/todos/:id", async (req, res, next) => {
-  try {
-    const todo = await getTodoById(db)(req.params.id);
-    res.json(todo);
-  } catch (error) {
-    if (error instanceof TodoNotFoundError) {
-      // Handle specific error with appropriate status code
-      return res.status(404).json({
-        error: { message: error.message, code: error.code },
-      });
-    }
-    // Pass other errors to Express error handler
-    next(error);
-  }
-});
-```
-
-## Testing
-
-When testing applications that use database libraries based on this template, follow these best practices:
-
-### Mocking Database Modules
-
+Tests written for node-express services should be unit tests, so they should mock databases and 3rd party services they depend on.
 When writing tests for services or APIs that use the database, you'll often need to mock the database module. Here's the recommended approach using Vitest:
 
 ```typescript
@@ -81,7 +47,7 @@ vi.mock("@your-project/dbs-your-db-name", async (importOriginal) => {
 // Rest of your test file
 ```
 
-### Common Pitfalls
+## Common Pitfalls
 
 1. **Mock Placement**: Always place `vi.mock()` calls after imports but before test definitions. Vitest hoists these calls, but they must be in the correct order.
 
