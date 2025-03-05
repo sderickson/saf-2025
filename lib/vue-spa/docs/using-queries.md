@@ -274,10 +274,11 @@ const { settings, isLoading, isSaving, updateUserSettings } =
   useAuthedSettings();
 
 // Initialize form value from settings data if available
+// Always provide a default value as the third parameter
 const selectedOption = useFormRefForRemoteRef<
   typeof settings.value,
   ExperienceLevel
->(settings, (data) => data?.experienceLevel);
+>(settings, (data) => data?.experienceLevel, "NEW_TO_ME");
 
 // Handle form submission
 const handleSubmit = async () => {
@@ -312,6 +313,59 @@ const handleSubmit = async () => {
 </template>
 ```
 
+### Working with Array Types
+
+When working with array types in forms, you can use the `ElementType` utility type to extract the element type from an array:
+
+```vue
+<script setup lang="ts">
+import { useAuthedSettings } from "@tasktap/clients/requests/userSettings";
+import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
+import type { components } from "@tasktap/specs-apis/dist/openapi";
+import type { ElementType } from "@saf/ts-openapi";
+
+// Define the work preferences type using ElementType to extract the array element type
+type WorkPreference = ElementType<
+  components["schemas"]["settings"]["workPreferences"]
+>;
+
+// Use our custom composable to get authenticated settings
+const { settings, isLoading, isSaving, updateUserSettings } =
+  useAuthedSettings();
+
+// Initialize selected options from settings data if available
+// Provide an empty array as the default value
+const selectedOptions = useFormRefForRemoteRef<
+  components["schemas"]["settings"],
+  WorkPreference[]
+>(settings, (data) => data?.workPreferences || [], []);
+
+// Helper function to toggle an option in the array
+const toggleOption = (value: WorkPreference) => {
+  const index = selectedOptions.value.indexOf(value);
+  if (index === -1) {
+    selectedOptions.value.push(value);
+  } else {
+    selectedOptions.value.splice(index, 1);
+  }
+};
+
+// Handle form submission
+const handleSubmit = async () => {
+  if (selectedOptions.value.length > 0) {
+    try {
+      await updateUserSettings({
+        workPreferences: selectedOptions.value,
+      });
+      // Navigate or show success message
+    } catch (error) {
+      console.error("Failed to save:", error);
+    }
+  }
+};
+</script>
+```
+
 ### How `useFormRefForRemoteRef` Works
 
 The `useFormRefForRemoteRef` composable:
@@ -319,15 +373,15 @@ The `useFormRefForRemoteRef` composable:
 1. Takes a remote data reference and a selector function to extract a specific property
 2. Creates a local form reference that syncs with the remote data
 3. Watches for changes in the remote data and updates the form value accordingly
-4. Supports an optional default value
+4. Requires a default value to ensure the form is always initialized properly
 
 ```typescript
 // Type signature
 function useFormRefForRemoteRef<T, K>(
   remoteRef: Ref<T | undefined>,
   selector: (data: T) => K | undefined,
-  defaultValue: K | "" = ""
-): Ref<K | "">;
+  defaultValue: K
+): Ref<K>;
 ```
 
 ### Benefits of Using `useFormRefForRemoteRef`
@@ -337,6 +391,7 @@ function useFormRefForRemoteRef<T, K>(
 3. **Simplicity**: No need to manually set up watchers for remote data changes
 4. **Consistency**: All forms using this composable will behave consistently
 5. **Separation of concerns**: Data synchronization logic is separated from component logic
+6. **Default values**: Always provides a sensible default when remote data is not available
 
 ### When to Use `useFormRefForRemoteRef`
 
@@ -345,7 +400,7 @@ Use this composable when:
 1. You need to initialize form fields from remote data
 2. You want to maintain local form state that doesn't immediately update the server
 3. You need to handle the case where remote data is loading or not yet available
-4. You want to provide a default value when remote data is not available
+4. You need to provide a default value when remote data is not available
 
 ## Error Handling
 
