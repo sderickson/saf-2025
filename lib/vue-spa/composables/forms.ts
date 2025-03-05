@@ -10,10 +10,10 @@ import { Ref, ref, watch } from "vue";
 export function useFormRefForRemoteRef<T, K>(
   remoteRef: Ref<T | undefined>,
   selector: (data: T) => K | undefined,
-  defaultValue: K | "" = ""
+  defaultValue: K
 ) {
   // Create a local ref for the form value
-  const formRef = ref<K | "">(defaultValue);
+  const formRef = ref<K>(defaultValue);
 
   // Watch for changes in the remote data and update the form value if it's not set
   watch(
