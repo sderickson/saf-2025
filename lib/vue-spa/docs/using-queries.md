@@ -9,6 +9,11 @@ This guide focuses on how to effectively use query and mutation functions in you
 - [Dependent Queries](#dependent-queries)
 - [Using Mutations](#using-mutations)
 - [Form Handling with Remote Data](#form-handling-with-remote-data)
+  - [Working with Array Types](#working-with-array-types)
+  - [How `useFormRefForRemoteRef` Works](#how-useformrefforremoteref-works)
+  - [Handling Nested Objects](#handling-nested-objects)
+  - [Benefits of Using `useFormRefForRemoteRef`](#benefits-of-using-useformrefforremoteref)
+  - [When to Use `useFormRefForRemoteRef`](#when-to-use-useformrefforremoteref)
 - [Error Handling](#error-handling)
 - [Loading States](#loading-states)
 - [UI Patterns](#ui-patterns)
@@ -344,9 +349,11 @@ const selectedOptions = useFormRefForRemoteRef<
 const toggleOption = (value: WorkPreference) => {
   const index = selectedOptions.value.indexOf(value);
   if (index === -1) {
-    selectedOptions.value.push(value);
+    selectedOptions.value = [...selectedOptions.value, value];
   } else {
-    selectedOptions.value.splice(index, 1);
+    selectedOptions.value = selectedOptions.value.filter(
+      (option) => option !== value
+    );
   }
 };
 
@@ -364,6 +371,141 @@ const handleSubmit = async () => {
   }
 };
 </script>
+```
+
+### Handling Nested Objects
+
+When working with complex nested objects using `useFormRefForRemoteRef`, you need to be careful about how you modify the data. The refs returned by this composable are readonly reactive objects, which means direct nested mutations are disallowed.
+
+Here are some best practices for handling nested objects:
+
+#### 1. Create Deep Copies for Editing
+
+When you need to edit a nested object, create a deep copy using `JSON.parse(JSON.stringify())`:
+
+```typescript
+// Define your complex type
+interface Employment {
+  title: string;
+  company: string;
+  startDate: {
+    month: number;
+    year: number;
+  };
+  endDate: {
+    month: number;
+    year: number;
+  };
+  // other properties...
+}
+
+// Initialize from profile data
+const employmentHistory = useFormRefForRemoteRef<
+  typeof profile.value,
+  Employment[]
+>(profile, (data) => data?.employmentHistory || [], []);
+
+// For editing, create a deep copy
+const currentEmployment = ref<Employment>({
+  /* default values */
+});
+
+// When opening an edit modal
+const openEditModal = (index: number) => {
+  // Create a deep copy to avoid reactivity issues with nested objects
+  currentEmployment.value = JSON.parse(
+    JSON.stringify(employmentHistory.value[index])
+  );
+  // other setup...
+};
+```
+
+#### 2. Replace the Entire Object When Saving
+
+When saving changes to a nested object, replace the entire object rather than trying to modify properties directly:
+
+```typescript
+const handleSave = async () => {
+  if (isEditing) {
+    // Replace the entire object at the specified index
+    employmentHistory.value = employmentHistory.value.map(
+      (employment, index) => {
+        if (index === editingIndex.value) {
+          // Create a fresh copy to ensure reactivity works correctly
+          return JSON.parse(JSON.stringify(currentEmployment.value));
+        }
+        return employment;
+      }
+    );
+  } else {
+    // Add a new item to the array
+    employmentHistory.value = [
+      ...employmentHistory.value,
+      JSON.parse(JSON.stringify(currentEmployment.value)),
+    ];
+  }
+
+  // Save to the API
+  try {
+    await updateUserProfile({
+      employmentHistory: employmentHistory.value,
+    });
+  } catch (error) {
+    console.error("Failed to save:", error);
+  }
+};
+```
+
+#### 3. Avoid Direct Nested Mutations
+
+Avoid code patterns like these, which attempt to directly modify nested properties:
+
+```typescript
+// ❌ This won't work reliably with nested objects
+employmentHistory.value[index].startDate.month = 3;
+
+// ❌ This might also cause reactivity issues
+const employment = employmentHistory.value[index];
+employment.startDate.month = 3;
+employmentHistory.value[index] = employment;
+```
+
+Instead, always create a new copy and replace the entire object:
+
+```typescript
+// ✅ Create a copy, modify it, then replace the entire object
+const updatedEmployment = JSON.parse(
+  JSON.stringify(employmentHistory.value[index])
+);
+updatedEmployment.startDate.month = 3;
+employmentHistory.value = employmentHistory.value.map((item, i) =>
+  i === index ? updatedEmployment : item
+);
+```
+
+#### 4. Consider Using Immutable Update Patterns
+
+For complex nested updates, consider using immutable update patterns or libraries like immer:
+
+```typescript
+// Example with manual immutable updates
+const toggleCurrentRole = (index: number) => {
+  employmentHistory.value = employmentHistory.value.map((employment, i) => {
+    if (i === index) {
+      return {
+        ...employment,
+        isCurrentRole: !employment.isCurrentRole,
+        // If setting to current role, we might want to clear the end date
+        ...(employment.isCurrentRole
+          ? {}
+          : {
+              endDate: { month: 0, year: new Date().getFullYear() },
+            }),
+      };
+    }
+    return employment;
+  });
+};
 ```
 
 ### How `useFormRefForRemoteRef` Works
