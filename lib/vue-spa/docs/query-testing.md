@@ -14,56 +14,13 @@ This guide focuses on how to effectively test your TanStack Query functions, inc
 
 ## Testing Setup
 
-To test TanStack Query functions, you need to set up a proper testing environment:
+To test TanStack Query functions, you need to set up a proper testing environment. Make sure this package is included as a dependency in your own, then you can import the `withVueQuery` function included in `@saf/vue-spa`.
 
 ```typescript
-// test-utils/requests.ts
-import { createApp } from "vue";
-import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
-import { flushPromises } from "@vue/test-utils";
+import { withVueQuery } from "@saf/vue-spa/test-utils/requests.ts";
 
-/**
- * Helper function to test TanStack Query hooks
- * @param useQueryHook The query hook to test
- * @param queryClient Optional custom QueryClient
- * @returns [result, app] The query result and the Vue app instance
- */
-export function withVueQuery<T>(
-  useQueryHook: () => T,
-  queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false, // Disable retries in tests
-      },
-    },
-  })
-) {
-  // Create a minimal Vue app
-  const app = createApp({
-    setup() {
-      const result = useQueryHook();
-      // Expose the result for testing
-      return { result };
-    },
-    template: "<div></div>",
-  });
-
-  // Install the VueQueryPlugin
-  app.use(VueQueryPlugin, { queryClient });
-
-  // Mount the app
-  const vm = app.mount(document.createElement("div"));
-
-  // Return the result and app for cleanup
-  return [vm.result as T, app];
-}
-
-/**
- * Helper to wait for queries to settle
- */
-export async function waitForQueries() {
-  await flushPromises();
-}
+// then within your test:
+const [result, app] = withVueQuery(() => yourQuery());
 ```
 
 ## Testing Basic Queries
