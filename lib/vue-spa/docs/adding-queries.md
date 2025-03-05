@@ -1,63 +1,498 @@
-# Adding Queries
+# Adding Queries and Mutations
 
-All queries should live in the /clients/requests folder. This folder is responsible for interfacing with all remote resources, and it uses `tanstack/vue-query` in conjunction with `openapi-fetch` to do this.
+This guide focuses on how to implement query and mutation functions for TanStack Query in your application.
 
-Queries should be of the format:
+## Table of Contents
 
-```ts
-// client.ts is a simple file that create an openapi-fetch client with openapi specs
-import { client } from "./client.ts";
+- [Query Function Structure](#query-function-structure)
+- [Mutation Function Structure](#mutation-function-structure)
+- [Type Safety](#type-safety)
+- [Error Handling](#error-handling)
+- [Query Keys](#query-keys)
+- [Cache Invalidation](#cache-invalidation)
+- [Common Patterns](#common-patterns)
 
-export const useGetFoos = (
-  // parameters should be refs so that reactivity works
-  fooId: Ref<number>,
-  // expose options that aren't handled by this convenience function
+## Query Function Structure
+
+Query functions should follow a consistent pattern to ensure maintainability and type safety:
+
+```typescript
+// requests/users.ts
+import { useQuery, UseQueryOptions } from "@tanstack/vue-query";
+import { client } from "./client";
+import type { ResponseSchema } from "@tasktap/specs-apis";
+import { Ref } from "vue";
+
+/**
+ * Hook to fetch a list of users
+ */
+export const useGetUsers = (
   options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
 ) => {
   return useQuery({
-    queryKey: ["foos", fooId],
+    queryKey: ["users"],
     queryFn: async () => {
-      // openapi-fetch does not throw errors
-      const { data, error } = await client.GET("/foos/{fooId}", {
-        params: {
-          path: { fooId: fooId.value },
-        },
-      });
+      const { data, error } = await client.GET("/users");
 
-      // tanstack query expects thrown errors, though, so do so
       if (error) {
         throw error;
       }
 
-      return data as ResponseSchema<"getUserSettings">;
+      return data as ResponseSchema<"getUsers">;
     },
     ...options,
   });
 };
 ```
 
-Mutations are similar:
+### Using Parameters with Refs
 
-```ts
-export type CreateFooRequest = RequestSchema<"createFoo">;
+When your query needs parameters, use Vue's `Ref` type:
 
-export function useCreateFoo() {
-  const queryClient = useQueryClient();
+```typescript
+// requests/userProfile.ts
+import { useQuery, UseQueryOptions } from "@tanstack/vue-query";
+import { client } from "./client";
+import type { ResponseSchema } from "@tasktap/specs-apis";
+import { Ref } from "vue";
 
-  return useMutation({
-    mutationFn: async (callSeries: CreateFooRequest) => {
-      const { data, error } = await client.POST("/foo", {
-        body: callSeries,
+/**
+ * Hook to fetch a user's profile
+ * @param userId Ref to the user ID
+ * @param options Additional query options
+ */
+export const useGetUserProfile = (
+  userId: Ref<number>,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+) => {
+  return useQuery({
+    // Include the ref directly in the queryKey
+    queryKey: ["userProfile", userId],
+    queryFn: async () => {
+      // Access the .value inside the queryFn
+      const { data, error } = await client.GET("/users/{userId}/profile", {
+        params: {
+          path: { userId: userId.value },
+        },
       });
+
       if (error) {
         throw error;
       }
-      if (!data) throw new Error("Failed to create call series");
-      return data;
+
+      return data as ResponseSchema<"getUserProfile">;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["foos"] });
+    ...options,
+  });
+};
+```
+
+### Query with Query Parameters
+
+For queries that need query parameters:
+
+```typescript
+// requests/searchUsers.ts
+import { useQuery, UseQueryOptions } from "@tanstack/vue-query";
+import { client } from "./client";
+import type { ResponseSchema } from "@tasktap/specs-apis";
+import { Ref, computed } from "vue";
+
+/**
+ * Hook to search for users
+ * @param searchParams Ref to search parameters
+ * @param options Additional query options
+ */
+export const useSearchUsers = (
+  searchParams: Ref<{
+    query?: string;
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+  }>,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+) => {
+  // Create a computed queryKey that updates when searchParams changes
+  const queryKey = computed(() => ["users", "search", searchParams.value]);
+
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const { data, error } = await client.GET("/users/search", {
+        params: {
+          query: searchParams.value,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"searchUsers">;
+    },
+    ...options,
+  });
+};
+```
+
+### Key Points for Queries
+
+1. Use `Ref<T>` for parameters that may change
+2. Include parameters in the `queryKey` to ensure proper cache management
+3. Access `.value` inside the `queryFn`, not in the `queryKey`
+4. Always handle errors from the API client
+5. Use proper type assertions with `ResponseSchema<T>`
+6. Allow passing additional options to customize query behavior
+
+## Mutation Function Structure
+
+Mutations follow a similar pattern but use `useMutation` instead:
+
+```typescript
+// requests/userProfile.ts
+import { useMutation, useQueryClient } from "@tanstack/vue-query";
+import { client } from "./client";
+import type { RequestSchema, ResponseSchema } from "@tasktap/specs-apis";
+import { Ref } from "vue";
+
+/**
+ * Hook to update a user's profile
+ */
+export const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      profileData,
+    }: {
+      userId: Ref<number>;
+      profileData: RequestSchema<"updateUserProfile">;
+    }) => {
+      const { data, error } = await client.PATCH("/users/{userId}/profile", {
+        params: {
+          path: { userId: userId.value },
+        },
+        body: profileData,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"updateUserProfile">;
+    },
+    // Automatically invalidate related queries after successful mutation
+    onSuccess: (_, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile", userId] });
     },
   });
-}
+};
 ```
+
+### Key Points for Mutations
+
+1. Use `useMutation` instead of `useQuery`
+2. Define a clear interface for mutation parameters
+3. Use `Ref<T>` for parameters that may change
+4. Implement `onSuccess` to invalidate related queries
+5. Handle errors from the API client
+6. Use proper type assertions with `RequestSchema<T>` and `ResponseSchema<T>`
+
+## Type Safety
+
+Ensure type safety by using the API schema types:
+
+```typescript
+import type { RequestSchema, ResponseSchema } from "@tasktap/specs-apis";
+
+// For request bodies
+const body = data as RequestSchema<"updateUserProfile">;
+
+// For response data
+return data as ResponseSchema<"getUserProfile">;
+```
+
+## Error Handling
+
+Always handle errors from the API client:
+
+```typescript
+const { data, error } = await client.GET("/users");
+
+if (error) {
+  // Option 1: Throw the error to be caught by TanStack Query
+  throw error;
+
+  // Option 2: Transform the error
+  throw new Error(`Failed to fetch users: ${error.message}`);
+}
+
+return data;
+```
+
+## Query Keys
+
+Query keys are crucial for proper caching. Follow these guidelines:
+
+1. **Structure**: Use an array with increasing specificity
+
+   ```typescript
+   queryKey: ["users"]; // All users
+   queryKey: ["users", userId]; // Specific user
+   queryKey: ["users", "search", searchParams.value]; // Search results
+   ```
+
+2. **Reactivity**: Include reactive values directly in the queryKey
+
+   ```typescript
+   queryKey: ["userProfile", userId]; // userId is a Ref<number>
+   ```
+
+3. **Consistency**: Use the same key structure across related queries and mutations
+
+## Cache Invalidation
+
+Properly invalidate the cache after mutations:
+
+```typescript
+// Basic invalidation
+onSuccess: () => {
+  queryClient.invalidateQueries({ queryKey: ["users"] });
+};
+
+// Targeted invalidation
+onSuccess: (_, { userId }) => {
+  queryClient.invalidateQueries({ queryKey: ["userProfile", userId] });
+
+  // You can also invalidate related queries
+  queryClient.invalidateQueries({ queryKey: ["userPosts", userId] });
+};
+
+// Invalidate with predicate
+onSuccess: () => {
+  queryClient.invalidateQueries({
+    predicate: (query) =>
+      query.queryKey[0] === "users" && query.queryKey.length > 1,
+  });
+};
+```
+
+### Optimistic Updates
+
+For a better user experience, you can update the cache optimistically:
+
+```typescript
+export const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ userId, profileData }) => {
+      // ... same as before
+    },
+    // Update the cache optimistically before the server responds
+    onMutate: async ({ userId, profileData }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["userProfile", userId] });
+
+      // Snapshot the previous value
+      const previousProfile = queryClient.getQueryData(["userProfile", userId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["userProfile", userId], (old) => ({
+        ...old,
+        ...profileData,
+      }));
+
+      // Return a context object with the snapshot
+      return { previousProfile };
+    },
+    // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (err, { userId }, context) => {
+      queryClient.setQueryData(
+        ["userProfile", userId],
+        context.previousProfile
+      );
+    },
+    // Always refetch after error or success
+    onSettled: (_, __, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile", userId] });
+    },
+  });
+};
+```
+
+## Common Patterns
+
+### 1. Queries with Filters
+
+```typescript
+export const useGetFilteredTasks = (
+  filters: Ref<{
+    status?: string;
+    priority?: string;
+    assignee?: number;
+  }>,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+) => {
+  // Create a computed queryKey that updates when filters change
+  const queryKey = computed(() => ["tasks", "filtered", filters.value]);
+
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const { data, error } = await client.GET("/tasks", {
+        params: {
+          query: filters.value,
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"getTasks">;
+    },
+    ...options,
+  });
+};
+```
+
+### 2. Dependent Queries
+
+```typescript
+// This query depends on the result of another query
+export const useGetUserPosts = (
+  userId: Ref<number>,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+) => {
+  return useQuery({
+    queryKey: ["userPosts", userId],
+    queryFn: async () => {
+      const { data, error } = await client.GET("/users/{userId}/posts", {
+        params: {
+          path: { userId: userId.value },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"getUserPosts">;
+    },
+    // This query will only run when enabled is true
+    // The component using this query should set enabled based on
+    // whether the dependent data is available
+    ...options,
+  });
+};
+```
+
+### 3. Infinite Queries
+
+```typescript
+export const useGetInfinitePosts = (
+  options?: Omit<
+    UseInfiniteQueryOptions,
+    "queryKey" | "queryFn" | "getNextPageParam"
+  >
+) => {
+  return useInfiniteQuery({
+    queryKey: ["posts", "infinite"],
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data, error } = await client.GET("/posts", {
+        params: {
+          query: { page: pageParam, limit: 10 },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"getPosts">;
+    },
+    getNextPageParam: (lastPage) => {
+      // Return undefined when there are no more pages
+      return lastPage.nextPage || undefined;
+    },
+    ...options,
+  });
+};
+```
+
+### 4. Optimistic Updates
+
+```typescript
+export const useToggleTodoStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      todoId,
+      completed,
+    }: {
+      todoId: number;
+      completed: boolean;
+    }) => {
+      const { data, error } = await client.PATCH("/todos/{todoId}", {
+        params: {
+          path: { todoId },
+        },
+        body: { completed },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data;
+    },
+    // Optimistically update the todo item
+    onMutate: async ({ todoId, completed }) => {
+      await queryClient.cancelQueries({ queryKey: ["todos"] });
+
+      // Get the current todos
+      const previousTodos = queryClient.getQueryData(["todos"]);
+
+      // Update the cache with the new status
+      queryClient.setQueryData(["todos"], (old: any) => {
+        return {
+          ...old,
+          items: old.items.map((todo: any) =>
+            todo.id === todoId ? { ...todo, completed } : todo
+          ),
+        };
+      });
+
+      return { previousTodos };
+    },
+    // Roll back on error
+    onError: (_, __, context) => {
+      queryClient.setQueryData(["todos"], context.previousTodos);
+    },
+    // Refetch to ensure consistency
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+};
+```
+
+## Conclusion
+
+Following these patterns will help you create consistent, type-safe, and maintainable query and mutation functions. Remember to:
+
+1. Use `Ref<T>` for parameters that may change
+2. Include parameters in the `queryKey` for proper caching
+3. Handle errors from the API client
+4. Use proper type assertions
+5. Implement cache invalidation for mutations
+6. Consider optimistic updates for a better user experience
+
+For more information, refer to:
+
+- [Using Queries Guide](./using-queries.md) - How to use these functions in components
+- [Query Testing Guide](./query-testing.md) - How to test your query functions
+- [TanStack Query Documentation](https://tanstack.com/query/latest/docs/vue/overview)

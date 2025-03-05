@@ -1,354 +1,583 @@
-# Testing Vue Query Hooks
+# Testing TanStack Query Functions
 
-This document explains how to write unit tests for Vue Query hooks in your application.
+This guide focuses on how to effectively test your TanStack Query functions, including both queries and mutations.
 
-## Setup
+## Table of Contents
 
-### Test Utils
+- [Testing Setup](#testing-setup)
+- [Testing Basic Queries](#testing-basic-queries)
+- [Testing Queries with Parameters](#testing-queries-with-parameters)
+- [Testing Mutations](#testing-mutations)
+- [Testing Error Handling](#testing-error-handling)
+- [Testing Cache Interactions](#testing-cache-interactions)
+- [Testing in Components](#testing-in-components)
 
-We use a helper function `withVueQuery` (from `@saf/clients-test-utils`) to properly set up the Vue Query context for testing:
+## Testing Setup
+
+To test TanStack Query functions, you need to set up a proper testing environment:
 
 ```typescript
-function withVueQuery(composable: () => unknown, queryClient?: QueryClient) {
-  let result;
-  // Create a new QueryClient if one wasn't provided
-  const client =
-    queryClient ||
-    new QueryClient({
-      defaultOptions: {
-        mutations: {
-          retry: false,
-        },
-      },
-    });
+// test-utils/requests.ts
+import { createApp } from "vue";
+import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+import { flushPromises } from "@vue/test-utils";
 
+/**
+ * Helper function to test TanStack Query hooks
+ * @param useQueryHook The query hook to test
+ * @param queryClient Optional custom QueryClient
+ * @returns [result, app] The query result and the Vue app instance
+ */
+export function withVueQuery<T>(
+  useQueryHook: () => T,
+  queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false, // Disable retries in tests
+      },
+    },
+  })
+) {
+  // Create a minimal Vue app
   const app = createApp({
     setup() {
-      result = composable();
-      return () => {};
+      const result = useQueryHook();
+      // Expose the result for testing
+      return { result };
     },
+    template: "<div></div>",
   });
 
-  app.use(VueQueryPlugin, { queryClient: client });
-  app.mount(document.createElement("div"));
+  // Install the VueQueryPlugin
+  app.use(VueQueryPlugin, { queryClient });
 
-  return [result, app] as const;
+  // Mount the app
+  const vm = app.mount(document.createElement("div"));
+
+  // Return the result and app for cleanup
+  return [vm.result as T, app];
+}
+
+/**
+ * Helper to wait for queries to settle
+ */
+export async function waitForQueries() {
+  await flushPromises();
 }
 ```
 
-### Mocking HTTP Client
+## Testing Basic Queries
 
-Mock the client at the start of your test file:
+Here's how to test a basic query function:
 
 ```typescript
+// requests/users.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useGetUsers } from "./users";
+import { client } from "./client";
+import { withVueQuery, waitForQueries } from "../test-utils/requests";
+
+// Mock the client
 vi.mock("./client", () => ({
   client: {
     GET: vi.fn(),
-    POST: vi.fn(),
-    PUT: vi.fn(),
-    DELETE: vi.fn(),
   },
 }));
-```
 
-## Writing Tests
-
-### 1. Testing Query Hooks
-
-For hooks that fetch data (using `useQuery`):
-
-```typescript
-describe("useMyQuery", () => {
-  it("should fetch data", async () => {
-    // 1. Mock the response
-    const mockData = {
-      /* your mock data */
-    };
-    mockGET.mockResolvedValueOnce({ data: mockData });
-
-    // 2. Set up the query
-    const [result, app] = withVueQuery(() => useMyQuery());
-
-    // 3. Wait for the query to complete
-    await result.suspense();
-
-    // 4. Clean up
-    app.unmount();
-
-    // 5. Assert
-    expect(mockGET).toHaveBeenCalledWith("/your-endpoint");
-    expect(result.data.value).toEqual(mockData);
-  });
-
-  it("should handle null response", async () => {
-    mockGET.mockResolvedValueOnce({ data: null });
-    // ... similar pattern
-  });
-});
-```
-
-### 2. Testing Mutation Hooks
-
-For hooks that modify data (using `useMutation`):
-
-```typescript
-describe("useMyMutation", () => {
-  it("should perform mutation", async () => {
-    // 1. Mock the response
-    const mockResponse = {
-      /* your mock response */
-    };
-    mockPOST.mockResolvedValueOnce({ data: mockResponse });
-
-    // 2. Set up the mutation
-    const [result, app] = withVueQuery(() => useMyMutation());
-
-    // 3. Execute the mutation
-    const response = await result.mutateAsync(mutationData);
-
-    // 4. Clean up
-    app.unmount();
-
-    // 5. Assert
-    expect(mockPOST).toHaveBeenCalledWith("/your-endpoint", {
-      body: mutationData,
-    });
-    expect(response).toEqual(mockResponse);
-  });
-
-  it("should handle errors", async () => {
-    mockPOST.mockResolvedValueOnce({ data: null });
-    const [result, app] = withVueQuery(() => useMyMutation());
-
-    await expect(result.mutateAsync(mutationData)).rejects.toThrow(
-      "Expected error message"
-    );
-
-    app.unmount();
-  });
-});
-```
-
-## Best Practices
-
-1. **Clean Up**: Always call `app.unmount()` after your tests to prevent memory leaks.
-
-2. **Mock Clearing**: Clear mocks in `beforeEach` to ensure clean state:
-
-   ```typescript
-   beforeEach(() => {
-     mockGET.mockClear();
-     mockPOST.mockClear();
-     // etc...
-   });
-   ```
-
-3. **Type Safety**: Use proper typing for your mock data and responses to catch type errors early.
-
-4. **Error Testing**: Always include error cases to ensure proper error handling.
-
-5. **Async/Await**: Use `async/await` with:
-   - `result.suspense()` for queries
-   - `result.mutateAsync()` for mutations
-
-## Examples
-
-See complete examples in:
-
-- `auth.test.ts` - Testing authentication mutations
-- `todos.test.ts` - Testing both queries and mutations for a CRUD interface
-- `userSettings.test.ts` - Testing cache invalidation behavior
-- `userProfile.test.ts` - Testing cache invalidation behavior
-
-## Common Patterns
-
-1. **Query Testing**:
-
-   - Test successful data fetching
-   - Test empty/null responses
-   - Test error handling
-   - Test query caching behavior
-
-2. **Mutation Testing**:
-
-   - Test successful operations
-   - Test error cases
-   - Verify correct endpoint and payload
-   - Test response handling
-   - Test query cache invalidation
-
-3. **Setup/Teardown**:
-   - Mock HTTP methods
-   - Clear mocks between tests
-   - Clean up Vue instances
-
-## Testing Query Cache Behavior
-
-Vue Query maintains a cache of query results and automatically invalidates it when mutations occur. Here's how to test this behavior:
-
-### 1. Setting Up a Shared QueryClient
-
-When testing caching behavior, it's crucial to use a shared QueryClient instance for all related queries and mutations within a test. Create a fresh QueryClient for each test to ensure isolation:
-
-```typescript
-describe("my tests", () => {
-  let queryClient: QueryClient;
+describe("users requests", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    // Create a new QueryClient for each test
-    queryClient = new QueryClient({
+    vi.clearAllMocks();
+  });
+
+  it("should fetch users", async () => {
+    // Mock the response
+    const mockUsers = [
+      { id: 1, name: "User 1" },
+      { id: 2, name: "User 2" },
+    ];
+    mockGET.mockResolvedValueOnce({ data: mockUsers, error: null });
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() => useGetUsers());
+
+    // Wait for the query to complete
+    await waitForQueries();
+
+    // Assert
+    expect(mockGET).toHaveBeenCalledWith("/users");
+    expect(result.data.value).toEqual(mockUsers);
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Testing Queries with Parameters
+
+For queries that take parameters, especially refs:
+
+```typescript
+// requests/userProfile.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useGetUserProfile } from "./userProfile";
+import { client } from "./client";
+import { withVueQuery, waitForQueries } from "../test-utils/requests";
+import { ref } from "vue";
+
+// Mock the client
+vi.mock("./client", () => ({
+  client: {
+    GET: vi.fn(),
+  },
+}));
+
+describe("userProfile requests", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should fetch user profile with ref parameter", async () => {
+    // Mock the response
+    const mockProfile = { name: "Test User", email: "test@example.com" };
+    mockGET.mockResolvedValueOnce({ data: mockProfile, error: null });
+
+    // Use a ref for userId
+    const userId = ref(123);
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() => useGetUserProfile(userId));
+
+    // Wait for the query to complete
+    await waitForQueries();
+
+    // Assert
+    expect(mockGET).toHaveBeenCalledWith("/users/{userId}/profile", {
+      params: {
+        path: { userId: userId.value },
+      },
+    });
+    expect(result.data.value).toEqual(mockProfile);
+
+    // Test that changing the ref triggers a refetch
+    mockGET.mockResolvedValueOnce({
+      data: { ...mockProfile, name: "Updated User" },
+      error: null,
+    });
+
+    // Change the ref value
+    userId.value = 456;
+
+    // Wait for the query to refetch
+    await waitForQueries();
+
+    // Assert the new call
+    expect(mockGET).toHaveBeenCalledWith("/users/{userId}/profile", {
+      params: {
+        path: { userId: 456 },
+      },
+    });
+
+    // Clean up
+    app.unmount();
+  });
+
+  it("should respect the enabled option", async () => {
+    // Mock the response
+    mockGET.mockResolvedValueOnce({ data: { name: "Test User" }, error: null });
+
+    // Use a ref for userId and enabled
+    const userId = ref(123);
+    const enabled = ref(false);
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() =>
+      useGetUserProfile(userId, { enabled })
+    );
+
+    // Wait for any potential queries
+    await waitForQueries();
+
+    // Assert that the query was not called when disabled
+    expect(mockGET).not.toHaveBeenCalled();
+    expect(result.isLoading.value).toBe(false);
+
+    // Enable the query
+    enabled.value = true;
+
+    // Wait for the query to execute
+    await waitForQueries();
+
+    // Assert that the query was called after enabling
+    expect(mockGET).toHaveBeenCalledTimes(1);
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Testing Mutations
+
+Testing mutations requires checking both the mutation function and its side effects:
+
+```typescript
+// requests/userProfile.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useUpdateUserProfile } from "./userProfile";
+import { client } from "./client";
+import { withVueQuery, waitForQueries } from "../test-utils/requests";
+import { ref } from "vue";
+import { QueryClient } from "@tanstack/vue-query";
+
+// Mock the client
+vi.mock("./client", () => ({
+  client: {
+    PATCH: vi.fn(),
+  },
+}));
+
+describe("userProfile mutations", () => {
+  const mockPATCH = client.PATCH as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should update user profile", async () => {
+    // Mock the response
+    const mockResponse = { success: true };
+    mockPATCH.mockResolvedValueOnce({ data: mockResponse, error: null });
+
+    // Create a QueryClient for testing
+    const queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
-          // Set a long staleTime to ensure data remains fresh and cached
-          staleTime: 1000 * 60 * 5, // 5 minutes
         },
+      },
+    });
+
+    // Spy on the invalidateQueries method
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+
+    // Set up the mutation with our helper
+    const [mutation, app] = withVueQuery(
+      () => useUpdateUserProfile(),
+      queryClient
+    );
+
+    // Use a ref for userId
+    const userId = ref(123);
+    const profileData = { name: "Updated Name", bio: "New bio" };
+
+    // Execute the mutation
+    await mutation.mutateAsync({
+      userId,
+      profileData,
+    });
+
+    // Assert
+    expect(mockPATCH).toHaveBeenCalledWith("/users/{userId}/profile", {
+      params: {
+        path: { userId: userId.value },
+      },
+      body: profileData,
+    });
+
+    // Check that the cache was invalidated
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: ["userProfile", userId],
+    });
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Testing Error Handling
+
+Test how your queries and mutations handle errors:
+
+```typescript
+// requests/users.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useGetUsers } from "./users";
+import { client } from "./client";
+import { withVueQuery, waitForQueries } from "../test-utils/requests";
+
+// Mock the client
+vi.mock("./client", () => ({
+  client: {
+    GET: vi.fn(),
+  },
+}));
+
+describe("users requests error handling", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should handle API errors", async () => {
+    // Mock an error response
+    const mockError = { message: "API Error", status: 500 };
+    mockGET.mockResolvedValueOnce({ data: null, error: mockError });
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() => useGetUsers());
+
+    // Wait for the query to complete
+    await waitForQueries();
+
+    // Assert
+    expect(mockGET).toHaveBeenCalledWith("/users");
+    expect(result.error.value).toEqual(mockError);
+    expect(result.isError.value).toBe(true);
+    expect(result.data.value).toBeUndefined();
+
+    // Clean up
+    app.unmount();
+  });
+
+  it("should handle network errors", async () => {
+    // Mock a network error
+    const networkError = new Error("Network Error");
+    mockGET.mockRejectedValueOnce(networkError);
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() => useGetUsers());
+
+    // Wait for the query to complete
+    await waitForQueries();
+
+    // Assert
+    expect(mockGET).toHaveBeenCalledWith("/users");
+    expect(result.error.value).toBe(networkError);
+    expect(result.isError.value).toBe(true);
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Testing Cache Interactions
+
+Test how your queries interact with the cache:
+
+```typescript
+// requests/users.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { useGetUsers } from "./users";
+import { client } from "./client";
+import { withVueQuery, waitForQueries } from "../test-utils/requests";
+import { QueryClient } from "@tanstack/vue-query";
+
+// Mock the client
+vi.mock("./client", () => ({
+  client: {
+    GET: vi.fn(),
+  },
+}));
+
+describe("users requests caching", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should use cached data and not refetch", async () => {
+    // Create a QueryClient for testing
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    // Prefill the cache
+    const mockUsers = [{ id: 1, name: "User 1" }];
+    queryClient.setQueryData(["users"], mockUsers);
+
+    // Set up the query with our helper and the prefilled QueryClient
+    const [result, app] = withVueQuery(() => useGetUsers(), queryClient);
+
+    // Wait for any potential queries
+    await waitForQueries();
+
+    // Assert that the data comes from cache and no fetch was made
+    expect(mockGET).not.toHaveBeenCalled();
+    expect(result.data.value).toEqual(mockUsers);
+
+    // Clean up
+    app.unmount();
+  });
+
+  it("should refetch when stale time is exceeded", async () => {
+    // Mock the response
+    const mockUsers = [{ id: 1, name: "User 1" }];
+    mockGET.mockResolvedValueOnce({ data: mockUsers, error: null });
+
+    // Create a QueryClient with a very short stale time
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+          staleTime: 10, // 10ms stale time
+        },
+      },
+    });
+
+    // Set up the query with our helper
+    const [result, app] = withVueQuery(() => useGetUsers(), queryClient);
+
+    // Wait for the initial query
+    await waitForQueries();
+    expect(mockGET).toHaveBeenCalledTimes(1);
+
+    // Mock the second response
+    const updatedUsers = [{ id: 1, name: "Updated User" }];
+    mockGET.mockResolvedValueOnce({ data: updatedUsers, error: null });
+
+    // Wait for the stale time to pass
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    // Trigger a refetch
+    await result.refetch();
+
+    // Wait for the refetch
+    await waitForQueries();
+
+    // Assert that a second fetch was made
+    expect(mockGET).toHaveBeenCalledTimes(2);
+    expect(result.data.value).toEqual(updatedUsers);
+
+    // Clean up
+    app.unmount();
+  });
+});
+```
+
+## Testing in Components
+
+When testing components that use TanStack Query, you need to provide a QueryClient:
+
+```typescript
+// components/__tests__/UserProfile.test.ts
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mount } from "@vue/test-utils";
+import { createTestingPinia } from "@pinia/testing";
+import UserProfile from "../UserProfile.vue";
+import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+import { client } from "../../requests/client";
+
+// Mock the client
+vi.mock("../../requests/client", () => ({
+  client: {
+    GET: vi.fn(),
+  },
+}));
+
+describe("UserProfile.vue", () => {
+  const mockGET = client.GET as ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should display user profile data", async () => {
+    // Mock the response
+    const mockProfile = { name: "Test User", email: "test@example.com" };
+    mockGET.mockResolvedValueOnce({ data: mockProfile, error: null });
+
+    // Create a QueryClient for testing
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    // Mount the component with the QueryClient
+    const wrapper = mount(UserProfile, {
+      props: {
+        userId: 123,
+      },
+      global: {
+        plugins: [[VueQueryPlugin, { queryClient }], createTestingPinia()],
+      },
+    });
+
+    // Initially should show loading state
+    expect(wrapper.text()).toContain("Loading");
+
+    // Wait for the query to complete
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+
+    // Should display the profile data
+    expect(wrapper.text()).toContain("Test User");
+    expect(wrapper.text()).toContain("test@example.com");
+
+    // Verify the API was called correctly
+    expect(mockGET).toHaveBeenCalledWith("/users/{userId}/profile", {
+      params: {
+        path: { userId: 123 },
       },
     });
   });
 
-  // Tests go here...
+  it("should handle errors", async () => {
+    // Mock an error response
+    const mockError = { message: "Profile not found", status: 404 };
+    mockGET.mockResolvedValueOnce({ data: null, error: mockError });
+
+    // Create a QueryClient for testing
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    // Mount the component with the QueryClient
+    const wrapper = mount(UserProfile, {
+      props: {
+        userId: 999,
+      },
+      global: {
+        plugins: [[VueQueryPlugin, { queryClient }], createTestingPinia()],
+      },
+    });
+
+    // Wait for the query to complete
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+
+    // Should display the error message
+    expect(wrapper.text()).toContain("Profile not found");
+    expect(wrapper.find(".error-message").exists()).toBe(true);
+  });
 });
 ```
 
-### 2. Testing Query Caching
+## Conclusion
 
-To verify that the cache is working correctly, make multiple queries with the same parameters and check that the API is only called once:
+Testing TanStack Query functions requires a proper setup to handle the asynchronous nature of queries and mutations. By following these patterns, you can ensure your query functions work correctly and handle various scenarios appropriately.
 
-```typescript
-it("should use cache for repeated queries", async () => {
-  // Mock the response
-  mockGET.mockResolvedValueOnce({ data: mockData, error: null });
+For more information, refer to:
 
-  // First query
-  const [firstQueryResult, firstApp] = withVueQuery(
-    () => useMyQuery(params),
-    queryClient
-  );
-  await firstQueryResult.suspense();
-
-  // Verify first query made an API call
-  expect(mockGET).toHaveBeenCalledTimes(1);
-  expect(firstQueryResult.data.value).toEqual(mockData);
-
-  // Second query with same parameters
-  const [secondQueryResult, secondApp] = withVueQuery(
-    () => useMyQuery(params),
-    queryClient
-  );
-  await secondQueryResult.suspense();
-
-  // Verify second query used cache (no additional API call)
-  expect(mockGET).toHaveBeenCalledTimes(1); // Still only called once
-  expect(secondQueryResult.data.value).toEqual(mockData);
-
-  // Clean up
-  firstApp.unmount();
-  secondApp.unmount();
-});
-```
-
-### 3. Testing Cache Invalidation
-
-To test that mutations properly invalidate the cache, follow this pattern:
-
-```typescript
-it("should properly use cache and invalidate after update", async () => {
-  // Initial data and updated data
-  const initialData = {
-    /* initial state */
-  };
-  const updatedData = {
-    /* updated state */
-  };
-
-  // Mock the GET responses - first for initial fetch, second for refetch after mutation
-  mockGET.mockResolvedValueOnce({ data: initialData, error: null });
-  mockGET.mockResolvedValueOnce({ data: updatedData, error: null });
-
-  // Mock the mutation response
-  mockPATCH.mockResolvedValueOnce({ data: updatedData, error: null });
-
-  // 1. Initial query
-  const [getResult, queryApp] = withVueQuery(
-    () => useMyQuery(params),
-    queryClient
-  );
-  await getResult.suspense();
-
-  // Verify initial data and that GET was called once
-  expect(getResult.data.value).toEqual(initialData);
-  expect(mockGET).toHaveBeenCalledTimes(1);
-
-  // 2. Second query (should use cache)
-  const [secondQueryResult, secondApp] = withVueQuery(
-    () => useMyQuery(params),
-    queryClient
-  );
-  await secondQueryResult.suspense();
-
-  // Verify that no additional GET request was made (cache was used)
-  expect(mockGET).toHaveBeenCalledTimes(1);
-  expect(secondQueryResult.data.value).toEqual(initialData);
-
-  // 3. Perform mutation
-  const [updateResult, mutationApp] = withVueQuery(
-    () => useMyMutation(),
-    queryClient
-  );
-  await updateResult.mutateAsync(mutationData);
-
-  // 4. Third query after mutation (should trigger refetch)
-  const [thirdQueryResult, thirdApp] = withVueQuery(
-    () => useMyQuery(params),
-    queryClient
-  );
-  await thirdQueryResult.suspense();
-
-  // Verify that a new GET request was made (cache was invalidated)
-  expect(mockGET).toHaveBeenCalledTimes(2);
-  expect(thirdQueryResult.data.value).toEqual(updatedData);
-
-  // Clean up all app instances
-  queryApp.unmount();
-  secondApp.unmount();
-  mutationApp.unmount();
-  thirdApp.unmount();
-});
-```
-
-### 4. Important Configuration Notes
-
-1. **StaleTime**: Set a sufficiently long `staleTime` in the QueryClient configuration to prevent automatic refetching during tests:
-
-   ```typescript
-   staleTime: 1000 * 60 * 5, // 5 minutes
-   ```
-
-2. **Retry**: Disable retry behavior to make tests more predictable:
-
-   ```typescript
-   retry: false,
-   ```
-
-3. **Mock Responses**: Use `mockResolvedValueOnce` to provide different responses for initial fetch and post-mutation refetch.
-
-4. **Cleanup**: Remember to unmount all app instances created during the test.
-
-5. **Assertions**: Verify both the number of API calls and the data returned by each query.
-
-### 5. Troubleshooting Cache Tests
-
-If your cache tests are failing:
-
-1. **Check StaleTime**: Ensure `staleTime` is set high enough to prevent automatic refetching.
-
-2. **Verify QueryClient Sharing**: Make sure the same QueryClient instance is passed to all `withVueQuery` calls within a test.
-
-3. **Check Query Keys**: Ensure your query keys are consistent between calls.
-
-4. **Inspect Invalidation Logic**: Verify that your mutation function correctly calls `queryClient.invalidateQueries()` with the appropriate query key.
-
-5. **Timing Issues**: If tests are flaky, you might need to add small delays or use `vi.waitFor()` to wait for async operations to complete.
-
-See `userSettings.test.ts` and `userProfile.test.ts` for complete examples of testing cache behavior with proper invalidation.
+- [Adding Queries Guide](./adding-queries.md) - How to implement query functions
+- [Using Queries Guide](./using-queries.md) - How to use queries in components
+- [TanStack Query Testing Documentation](https://tanstack.com/query/latest/docs/vue/guides/testing)
