@@ -265,6 +265,8 @@ const saveProfile = async () => {
 
 When building forms that need to sync with remote data, use the `useFormRefForRemoteRef` composable:
 
+> **Note:** For comprehensive guidance on form design patterns, including best practices for component structure and separation of concerns, see the [Form Design Patterns](./forms.md) guide.
+
 ```vue
 <script setup lang="ts">
 import { useAuthedSettings } from "@tasktap/clients/requests/userSettings";
