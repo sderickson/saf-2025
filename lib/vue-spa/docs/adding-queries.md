@@ -11,6 +11,7 @@ This guide focuses on how to implement query and mutation functions for TanStack
 - [Query Keys](#query-keys)
 - [Cache Invalidation](#cache-invalidation)
 - [Common Patterns](#common-patterns)
+- [Composable Queries](#composable-queries)
 
 ## Query Function Structure
 
@@ -480,6 +481,176 @@ export const useToggleTodoStatus = () => {
 };
 ```
 
+## Composable Queries
+
+One of the most powerful patterns for organizing your API interactions is to create composable functions that bundle related queries and mutations together. This approach provides several benefits:
+
+1. **Simplified component code**: Components can import a single function instead of multiple query/mutation hooks
+2. **Encapsulated authentication**: Authentication logic can be handled within the composable
+3. **Consistent error handling**: Error handling can be standardized across related operations
+4. **Co-located related functionality**: Queries and mutations that operate on the same resource are defined together
+
+### Example: User Settings Composable
+
+Here's an example of a composable that bundles user settings operations:
+
+```typescript
+// requests/userSettings.ts
+import { useQuery, useMutation, useQueryClient } from "@tanstack/vue-query";
+import { client } from "./client.js";
+import type { RequestSchema, ResponseSchema } from "@tasktap/specs-apis";
+import { Ref, computed, ref } from "vue";
+import { useVerifyAuth } from "./auth.js";
+
+// Individual query function
+export const useGetUserSettings = (
+  userId: Ref<number>,
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+) => {
+  return useQuery({
+    queryKey: ["userSettings", userId],
+    queryFn: async () => {
+      const { data, error } = await client.GET("/users/{userId}/settings", {
+        params: {
+          path: { userId: userId.value },
+        },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"getUserSettings">;
+    },
+    ...options,
+  });
+};
+
+// Individual mutation function
+export const useUpdateUserSettings = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      settingsData,
+    }: {
+      userId: Ref<number>;
+      settingsData: RequestSchema<"updateUserSettings">;
+    }) => {
+      const { data, error } = await client.PATCH("/users/{userId}/settings", {
+        params: {
+          path: { userId: userId.value },
+        },
+        body: settingsData,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      return data as ResponseSchema<"updateUserSettings">;
+    },
+    onSuccess: (_, { userId }) => {
+      queryClient.invalidateQueries({ queryKey: ["userSettings", userId] });
+    },
+  });
+};
+
+// Composable that bundles authentication, query, and mutation
+export function useAuthedSettings() {
+  // Get the authenticated user
+  const {
+    data: authData,
+    isLoading: isAuthLoading,
+    error: authError,
+  } = useVerifyAuth();
+
+  // Create a computed userId from auth data
+  const userId = computed(() => authData.value?.id || -1);
+
+  // Only enable settings query when we have a valid userId
+  const fetchEnabled = computed(() => userId.value !== -1);
+
+  // Get user settings
+  const {
+    data: settings,
+    isLoading: isSettingsLoading,
+    error: settingsError,
+    refetch,
+  } = useGetUserSettings(userId, {
+    enabled: fetchEnabled,
+  });
+
+  // Setup mutation
+  const updateMutation = useUpdateUserSettings();
+  const isSaving = computed(() => updateMutation.isPending.value);
+
+  // Combined loading state
+  const isLoading = computed(
+    () => isAuthLoading.value || isSettingsLoading.value
+  );
+
+  // Combined error state
+  const error = computed(() => authError.value || settingsError.value);
+
+  // Wrapper function for the mutation
+  const updateUserSettings = async (
+    settingsData: RequestSchema<"updateUserSettings">
+  ) => {
+    return updateMutation.mutateAsync({
+      userId,
+      settingsData,
+    });
+  };
+
+  // Return everything needed by components
+  return {
+    settings,
+    isLoading,
+    isSaving,
+    error,
+    updateUserSettings,
+    refetch,
+  };
+}
+```
+
+### Using the Composable in Components
+
+Components can now use this composable with minimal code:
+
+```vue
+<script setup lang="ts">
+import { useAuthedSettings } from "@/requests/userSettings";
+
+// Get everything we need with a single function call
+const { settings, isLoading, isSaving, error, updateUserSettings } =
+  useAuthedSettings();
+
+// Use the settings data and update function as needed
+</script>
+```
+
+### Key Benefits of Composable Queries
+
+1. **Simplified API**: Components only need to import and use a single function
+2. **Encapsulated complexity**: Authentication, loading states, and error handling are managed internally
+3. **Type safety**: All return values are properly typed
+4. **Reusability**: The same composable can be used across multiple components
+5. **Maintainability**: Related functionality is defined in one place
+6. **Testability**: The composable can be tested as a unit
+
+### When to Use Composable Queries
+
+Consider creating composable queries when:
+
+1. You have related queries and mutations that operate on the same resource
+2. You need to handle authentication for protected resources
+3. You want to simplify component code by providing a unified API
+4. You need to combine multiple loading or error states
+5. You have complex dependencies between queries
+
 ## Conclusion
 
 Following these patterns will help you create consistent, type-safe, and maintainable query and mutation functions. Remember to:
@@ -490,6 +661,8 @@ Following these patterns will help you create consistent, type-safe, and maintai
 4. Use proper type assertions
 5. Implement cache invalidation for mutations
 6. Consider optimistic updates for a better user experience
+7. Bundle related queries and mutations into composable functions
+8. Use absolute import paths for better maintainability
 
 For more information, refer to:
 

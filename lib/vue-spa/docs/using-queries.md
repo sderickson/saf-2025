@@ -8,6 +8,7 @@ This guide focuses on how to effectively use query and mutation functions in you
 - [Working with Refs](#working-with-refs)
 - [Dependent Queries](#dependent-queries)
 - [Using Mutations](#using-mutations)
+- [Form Handling with Remote Data](#form-handling-with-remote-data)
 - [Error Handling](#error-handling)
 - [Loading States](#loading-states)
 - [UI Patterns](#ui-patterns)
@@ -18,7 +19,8 @@ Once you've created your query functions (see [Adding Queries](./adding-queries.
 
 ```vue
 <script setup lang="ts">
-import { useGetUsers } from "../../requests/users";
+// Use absolute paths from the library root for better maintainability
+import { useGetUsers } from "@tasktap/clients/requests/users";
 
 // Destructure the result to get data, loading state, and errors
 const { data: users, isLoading, error } = useGetUsers();
@@ -34,6 +36,26 @@ const { data: users, isLoading, error } = useGetUsers();
   </div>
 </template>
 ```
+
+### Import Best Practices
+
+When importing query functions and composables, use absolute paths from the library root:
+
+```typescript
+// ✅ Good: Use absolute paths
+import { useGetUsers } from "@tasktap/clients/requests/users";
+import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
+
+// ❌ Bad: Avoid relative paths
+import { useGetUsers } from "../../requests/users";
+```
+
+Using absolute paths provides several benefits:
+
+1. **Maintainability**: Paths don't break when files are moved
+2. **Clarity**: The source of the import is immediately clear
+3. **Consistency**: All imports follow the same pattern
+4. **IDE support**: Better autocomplete and navigation
 
 ## Working with Refs
 
@@ -233,6 +255,97 @@ const saveProfile = async () => {
 2. Handle errors from the mutation
 3. Reset UI state after successful mutation
 4. No need to manually refetch data - cache invalidation handles this
+
+## Form Handling with Remote Data
+
+When building forms that need to sync with remote data, use the `useFormRefForRemoteRef` composable:
+
+```vue
+<script setup lang="ts">
+import { useAuthedSettings } from "@tasktap/clients/requests/userSettings";
+import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
+import type { components } from "@tasktap/specs-apis/dist/openapi";
+
+// Define the type to match the API schema
+type ExperienceLevel = components["schemas"]["settings"]["experienceLevel"];
+
+// Use our custom composable to get authenticated settings
+const { settings, isLoading, isSaving, updateUserSettings } =
+  useAuthedSettings();
+
+// Initialize form value from settings data if available
+const selectedOption = useFormRefForRemoteRef<
+  typeof settings.value,
+  ExperienceLevel
+>(settings, (data) => data?.experienceLevel);
+
+// Handle form submission
+const handleSubmit = async () => {
+  if (selectedOption.value) {
+    try {
+      // Save the form value to the user's settings
+      await updateUserSettings({
+        experienceLevel: selectedOption.value as ExperienceLevel,
+      });
+
+      // Navigate or show success message
+    } catch (error) {
+      console.error("Failed to save:", error);
+    }
+  }
+};
+</script>
+
+<template>
+  <div v-if="isLoading">Loading...</div>
+  <form v-else @submit.prevent="handleSubmit">
+    <select v-model="selectedOption">
+      <option value="BEGINNER">Beginner</option>
+      <option value="INTERMEDIATE">Intermediate</option>
+      <option value="ADVANCED">Advanced</option>
+    </select>
+
+    <button type="submit" :disabled="!selectedOption || isSaving">
+      {{ isSaving ? "Saving..." : "Save" }}
+    </button>
+  </form>
+</template>
+```
+
+### How `useFormRefForRemoteRef` Works
+
+The `useFormRefForRemoteRef` composable:
+
+1. Takes a remote data reference and a selector function to extract a specific property
+2. Creates a local form reference that syncs with the remote data
+3. Watches for changes in the remote data and updates the form value accordingly
+4. Supports an optional default value
+
+```typescript
+// Type signature
+function useFormRefForRemoteRef<T, K>(
+  remoteRef: Ref<T | undefined>,
+  selector: (data: T) => K | undefined,
+  defaultValue: K | "" = ""
+): Ref<K | "">;
+```
+
+### Benefits of Using `useFormRefForRemoteRef`
+
+1. **Automatic synchronization**: Form values are automatically initialized from remote data
+2. **Type safety**: The form value has the correct type
+3. **Simplicity**: No need to manually set up watchers for remote data changes
+4. **Consistency**: All forms using this composable will behave consistently
+5. **Separation of concerns**: Data synchronization logic is separated from component logic
+
+### When to Use `useFormRefForRemoteRef`
+
+Use this composable when:
+
+1. You need to initialize form fields from remote data
+2. You want to maintain local form state that doesn't immediately update the server
+3. You need to handle the case where remote data is loading or not yet available
+4. You want to provide a default value when remote data is not available
 
 ## Error Handling
 
@@ -510,6 +623,14 @@ const handleToggle = async (todo) => {
 ## Conclusion
 
 TanStack Query provides a powerful way to manage server state in your Vue components. By following these patterns, you can create a smooth user experience with proper loading states, error handling, and data updates.
+
+Key takeaways:
+
+1. Use absolute import paths from the library root for better maintainability
+2. Leverage composable queries to bundle related functionality
+3. Use `useFormRefForRemoteRef` for form fields that need to sync with remote data
+4. Handle loading and error states appropriately
+5. Implement proper UI patterns for different data states
 
 For more information, refer to:
 
