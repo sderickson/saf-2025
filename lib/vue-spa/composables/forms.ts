@@ -1,4 +1,5 @@
-import { Ref, ref, watch } from "vue";
+import { ref, watch } from "vue";
+import type { Ref } from "vue";
 
 /**
  * Creates a form ref that syncs with a remote data ref
