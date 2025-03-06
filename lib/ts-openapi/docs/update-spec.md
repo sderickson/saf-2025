@@ -1,6 +1,6 @@
-# API Specifications
+# Updating API Specifications
 
-This directory contains example OpenAPI specifications that demonstrate how to structure API endpoints in your project.
+Your /specs/apis directory contains OpenAPI specifications. These generate types used in TypeScript on both client and server, json objects which are used by node/express to validate responses and requests, and an html file for exploring your APIs. This document goes over how to update these APIs and update these outputs.
 
 ## Directory Structure
 
@@ -105,7 +105,7 @@ When adding new endpoints to your project's API specifications, follow these gui
 - **Always include `operationId`**: This is required for proper type generation in the TypeScript clients.
 - **Do not include `security` sections**: The security handling is currently managed separately and not used in the OpenAPI specs.
 - **Use consistent naming**: Use kebab-case for paths (`/user-profiles`) and camelCase for operationIds (`getUserProfile`).
-- **Group related endpoints**: Use tags to group related endpoints for better organization.
+- **Group related endpoints**: Add tags to group related endpoints for better organization.
 
 ### Data Type Best Practices
 
