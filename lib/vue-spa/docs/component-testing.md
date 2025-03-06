@@ -61,6 +61,85 @@ describe("YourComponent", () => {
 });
 ```
 
+### Using Test Utilities
+
+We provide several test utilities to simplify component testing, especially with Vuetify components:
+
+```typescript
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import {
+  mountWithVuetify,
+  setupResizeObserverMock,
+  teardownResizeObserverMock,
+} from "@saf/vue-spa/test-utils/components";
+import YourComponent from "../YourComponent.vue";
+
+describe("YourComponent", () => {
+  // Setup and teardown for ResizeObserver mock
+  beforeAll(() => {
+    setupResizeObserverMock();
+  });
+
+  afterAll(() => {
+    teardownResizeObserverMock();
+  });
+
+  const mountComponent = (props = {}) => {
+    return mountWithVuetify(YourComponent, {
+      props,
+      // Additional options as needed
+    });
+  };
+
+  // Tests go here
+});
+```
+
+#### ResizeObserver Mock
+
+Vuetify components often use the ResizeObserver API, which is not available in the JSDOM environment. We provide utilities to mock this API:
+
+1. `setupResizeObserverMock()`: Sets up a mock ResizeObserver implementation
+2. `teardownResizeObserverMock()`: Cleans up the mock ResizeObserver
+3. `withResizeObserverMock(callback)`: A helper that sets up and tears down the mock around a callback function
+
+Example using the `withResizeObserverMock` helper:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { withResizeObserverMock } from "@saf/vue-spa/test-utils/components";
+
+withResizeObserverMock(() => {
+  describe("YourComponent", () => {
+    // Your tests here
+  });
+});
+```
+
+#### Mounting Components with Vuetify
+
+The `mountWithVuetify` function simplifies mounting components that use Vuetify:
+
+```typescript
+import { mountWithVuetify } from "@saf/vue-spa/test-utils/components";
+
+const wrapper = mountWithVuetify(YourComponent, {
+  props: {
+    // Component props
+  },
+  global: {
+    // Additional global options
+    stubs: ["router-link"],
+  },
+});
+```
+
+This function:
+
+1. Creates a Vuetify instance with all components and directives
+2. Mounts the component with the Vuetify plugin
+3. Merges any additional options you provide
+
 ## Best Practices
 
 ### 1. Start with a Render Test
@@ -125,7 +204,7 @@ Create reusable helpers for common form interactions:
 ```typescript
 const fillForm = async (
   wrapper: VueWrapper,
-  { email, password }: { email: string; password: string },
+  { email, password }: { email: string; password: string }
 ) => {
   await getEmailInput(wrapper).setValue(email);
   await getPasswordInput(wrapper).setValue(password);
@@ -301,9 +380,15 @@ can't be done well, then just skip the tests.
    - Example: `isPending: { value: false }` instead of `isPending: false`
 
 5. Finding Elements in Dialogs:
+
    - Dialogs may be rendered in portals outside the component's DOM tree
    - Use `wrapper.findAll()` instead of `dialog.findAll()`
    - Identify elements by text content rather than by class names
+
+6. ResizeObserver Issues:
+   - Vuetify components that use ResizeObserver will fail in JSDOM
+   - Use the provided ResizeObserver mock utilities
+   - Always set up the mock before mounting components that use Vuetify
 
 ## Example Test
 

@@ -43,6 +43,7 @@ export function setupResizeObserverMock() {
 export function teardownResizeObserverMock() {
   // Only delete if it's our mock implementation
   if (global.ResizeObserver === ResizeObserverMock) {
+    // @ts-expect-error - ResizeObserver is not defined in the test environment
     delete global.ResizeObserver;
   }
 }
