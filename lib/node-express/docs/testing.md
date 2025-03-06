@@ -41,6 +41,39 @@ describe("Example Routes", () => {
 });
 ```
 
+## Mocking Dependencies
+
+When your route depends on external modules like the filesystem or a database, you need to mock them properly:
+
+```ts
+// Import the module you want to mock BEFORE mocking it
+import * as fs from "fs";
+
+// Mock the module
+vi.mock("fs", async (importOriginal) => {
+  const originalModule = await importOriginal<typeof import("fs")>();
+  return {
+    ...originalModule,
+    readFileSync: vi.fn(),
+  };
+});
+
+// In your test
+it("should return data from file", async () => {
+  // Set up the mock implementation
+  (fs.readFileSync as any).mockReturnValue(JSON.stringify({ data: "test" }));
+
+  // Make the request
+  const response = await request(app).get("/route").set(mockHeaders);
+
+  // Verify the response
+  expect(response.status).toBe(200);
+  expect(fs.readFileSync).toHaveBeenCalled();
+});
+```
+
+See [mocking.md](./mocking.md) for more details, especially if your mocking isn't working!
+
 ## Common Issues
 
 ### OpenAPI Specification Validation
@@ -56,7 +89,7 @@ Our API middleware validates responses against the OpenAPI specification. If a r
 
 1. Check the OpenAPI specification in `specs/apis/routes/*.yaml` for the route you're testing
 2. Ensure all status codes your route can return are properly defined in the spec
-3. Run `npm run generate` from the `specs/apis` folder to generatethe generated specs
+3. Run `npm run generate` from the `specs/apis` folder to generate the generated specs
 
 ## Testing Checklist
 
@@ -66,6 +99,7 @@ When adding tests for new API routes, ensure:
 2. **Status code alignment**: Verify that all status codes returned by your implementation are defined in the OpenAPI spec
 3. **Error handling**: Test that errors are properly caught and converted to appropriate HTTP responses
 4. **Authorization**: Test both authorized and unauthorized access scenarios
+5. **Simplify assertions**: Focus on testing the essential behavior (status codes, response structure) rather than exact response content
 
 ## Running Tests
 

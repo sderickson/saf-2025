@@ -16,50 +16,101 @@ We use the following tools for testing:
 ### Basic Test Structure
 
 ```typescript
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { mount, type VueWrapper } from "@vue/test-utils";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
+import { describe, it, expect, vi } from "vitest";
+import {
+  withResizeObserverMock,
+  mountWithVuetify,
+} from "@saf/vue-spa/test-utils/components";
 import YourComponent from "../YourComponent.vue";
 
-const vuetify = createVuetify({
-  components,
-  directives,
-});
+withResizeObserverMock(() => {
+  describe("YourComponent", () => {
+    // Helper functions for element selection
+    const getEmailInput = (wrapper) => {
+      const emailInput = wrapper.find("[placeholder='Email address']");
+      expect(emailInput.exists()).toBe(true);
+      return emailInput;
+    };
 
-describe("YourComponent", () => {
-  const mountComponent = () => {
-    return mount(YourComponent, {
-      global: {
-        plugins: [vuetify],
-        stubs: ["router-link"], // Stub router components if needed
-      },
+    const getSubmitButton = (wrapper) => {
+      const button = wrapper.find("button");
+      expect(button.exists()).toBe(true);
+      expect(button.text()).toBe("Submit");
+      return button;
+    };
+
+    const mountComponent = (props = {}) => {
+      return mountWithVuetify(YourComponent, {
+        props,
+        // Additional options as needed
+      });
+    };
+
+    beforeEach(() => {
+      // Clear mocks and reset state
+      vi.clearAllMocks();
     });
-  };
 
-  // Helper functions for element selection
-  const getEmailInput = (wrapper: VueWrapper) => {
-    const emailInput = wrapper.find("[placeholder='Email address']");
-    expect(emailInput.exists()).toBe(true);
-    return emailInput;
-  };
-
-  const getSubmitButton = (wrapper: VueWrapper) => {
-    const button = wrapper.find("button");
-    expect(button.exists()).toBe(true);
-    expect(button.text()).toBe("Submit");
-    return button;
-  };
-
-  beforeEach(() => {
-    // Clear mocks and reset state
-    vi.clearAllMocks();
+    // Tests go here
+    it("should render the form", () => {
+      const wrapper = mountComponent();
+      expect(getEmailInput(wrapper).exists()).toBe(true);
+      expect(getSubmitButton(wrapper).exists()).toBe(true);
+    });
   });
-
-  // Tests go here
 });
 ```
+
+### Using Test Utilities
+
+We provide several test utilities to simplify component testing, especially with Vuetify components:
+
+#### ResizeObserver Mock
+
+Vuetify components often use the ResizeObserver API, which is not available in the JSDOM environment. We provide a helper function to mock this API:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { withResizeObserverMock } from "@saf/vue-spa/test-utils/components";
+
+withResizeObserverMock(() => {
+  describe("YourComponent", () => {
+    // Your tests here
+  });
+});
+```
+
+The `withResizeObserverMock` helper:
+
+1. Sets up a mock ResizeObserver implementation before your tests run
+2. Executes your test suite
+3. Cleans up the mock after your tests complete
+
+Always wrap your Vuetify component tests with this helper to avoid ResizeObserver errors.
+
+#### Mounting Components with Vuetify
+
+The `mountWithVuetify` function simplifies mounting components that use Vuetify:
+
+```typescript
+import { mountWithVuetify } from "@saf/vue-spa/test-utils/components";
+
+const wrapper = mountWithVuetify(YourComponent, {
+  props: {
+    // Component props
+  },
+  global: {
+    // Additional global options
+    stubs: ["router-link"],
+  },
+});
+```
+
+This function:
+
+1. Creates a Vuetify instance with all components and directives
+2. Mounts the component with the Vuetify plugin
+3. Merges any additional options you provide
 
 ## Best Practices
 
@@ -87,11 +138,11 @@ This test serves two purposes:
 
    ```typescript
    // Good - uses placeholder text that's already in the component
-   const getEmailInput = (wrapper: VueWrapper) =>
+   const getEmailInput = (wrapper) =>
      wrapper.find("[placeholder='Email address']");
 
    // Good - uses button text that's already in the component
-   const getSubmitButton = (wrapper: VueWrapper) => {
+   const getSubmitButton = (wrapper) => {
      const button = wrapper.find("button");
      expect(button.text()).toBe("Submit");
      return button;
@@ -111,7 +162,7 @@ This test serves two purposes:
 
 3. Make selection helpers robust:
    ```typescript
-   const getInput = (wrapper: VueWrapper, placeholder: string) => {
+   const getInput = (wrapper, placeholder) => {
      const input = wrapper.find(`[placeholder='${placeholder}']`);
      expect(input.exists()).toBe(true);
      return input;
@@ -123,10 +174,7 @@ This test serves two purposes:
 Create reusable helpers for common form interactions:
 
 ```typescript
-const fillForm = async (
-  wrapper: VueWrapper,
-  { email, password }: { email: string; password: string },
-) => {
+const fillForm = async (wrapper, { email, password }) => {
   await getEmailInput(wrapper).setValue(email);
   await getPasswordInput(wrapper).setValue(password);
   await wrapper.vm.$nextTick();
@@ -223,10 +271,9 @@ it("should disable submit button when form is invalid", async () => {
 1. Finding Vuetify Components:
 
    ```typescript
-   // Use findComponent with the Vuetify component
-   const dialog = wrapper.findComponent(components.VDialog);
+   // Use findComponent with the name option
+   const dialog = wrapper.findComponent({ name: "v-dialog" });
    expect(dialog.exists()).toBe(true);
-   expect(dialog.isVisible()).toBe(true);
 
    // For buttons with icons, find by icon class
    const deleteButton = wrapper
@@ -250,9 +297,8 @@ can't be done well, then just skip the tests.
    expect(wrapper.vm.showDeleteDialog).toBe(true);
 
    // Better - verify the dialog is visible in the DOM
-   const dialog = wrapper.findComponent(components.VDialog);
+   const dialog = wrapper.findComponent({ name: "v-dialog" });
    expect(dialog.exists()).toBe(true);
-   expect(dialog.isVisible()).toBe(true);
    ```
 
 2. Avoid calling component methods directly:
@@ -285,7 +331,7 @@ can't be done well, then just skip the tests.
 
 2. Component Mounting:
 
-   - Always include Vuetify setup
+   - Always use `mountWithVuetify` for Vuetify components
    - Stub router components when needed
    - Consider global plugins and providers
 
@@ -301,28 +347,74 @@ can't be done well, then just skip the tests.
    - Example: `isPending: { value: false }` instead of `isPending: false`
 
 5. Finding Elements in Dialogs:
+
    - Dialogs may be rendered in portals outside the component's DOM tree
    - Use `wrapper.findAll()` instead of `dialog.findAll()`
    - Identify elements by text content rather than by class names
 
+6. ResizeObserver Issues:
+   - Always wrap Vuetify component tests with `withResizeObserverMock`
+   - Place the wrapper at the top level of your test file
+   - This ensures ResizeObserver is properly mocked for all tests
+
 ## Example Test
 
 ```typescript
-it("should handle form submission", async () => {
-  const wrapper = mountComponent();
+import { describe, it, expect, vi } from "vitest";
+import {
+  withResizeObserverMock,
+  mountWithVuetify,
+} from "@saf/vue-spa/test-utils/components";
+import LoginForm from "../LoginForm.vue";
 
-  await fillForm(wrapper, {
-    email: "test@example.com",
-    password: "validpassword123",
-  });
+// Mock the auth request
+const mockSubmit = vi.fn();
+vi.mock("../../requests/auth", () => ({
+  useLogin: () => ({
+    mutate: mockSubmit,
+    isPending: { value: false },
+    isError: { value: false },
+  }),
+}));
 
-  const submitButton = getSubmitButton(wrapper);
-  await submitButton.trigger("click");
-  await wrapper.vm.$nextTick();
+withResizeObserverMock(() => {
+  describe("LoginForm", () => {
+    const mountLoginForm = (props = {}) => {
+      return mountWithVuetify(LoginForm, { props });
+    };
 
-  expect(mockSubmit).toHaveBeenCalledWith({
-    email: "test@example.com",
-    password: "validpassword123",
+    const getEmailInput = (wrapper) =>
+      wrapper.find("[placeholder='Email address']");
+
+    const getPasswordInput = (wrapper) =>
+      wrapper.find("[placeholder='Password']");
+
+    const getLoginButton = (wrapper) => wrapper.find("button");
+
+    const fillLoginForm = async (wrapper, email, password) => {
+      await getEmailInput(wrapper).setValue(email);
+      await getPasswordInput(wrapper).setValue(password);
+      await wrapper.vm.$nextTick();
+    };
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it("should handle form submission", async () => {
+      const wrapper = mountLoginForm();
+
+      await fillLoginForm(wrapper, "test@example.com", "validpassword123");
+
+      const submitButton = getLoginButton(wrapper);
+      await submitButton.trigger("click");
+      await wrapper.vm.$nextTick();
+
+      expect(mockSubmit).toHaveBeenCalledWith({
+        email: "test@example.com",
+        password: "validpassword123",
+      });
+    });
   });
 });
 ```

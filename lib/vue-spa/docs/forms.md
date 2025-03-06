@@ -14,6 +14,7 @@ This guide outlines best practices for implementing forms in Vue applications. I
   - [Conditional Rendering](#conditional-rendering)
   - [Handling Form Submissions](#handling-form-submissions)
   - [Navigation Control](#navigation-control)
+- [Using v-list for Form Selection](#using-v-list-for-form-selection)
 - [Complete Example](#complete-example)
   - [Form Component](#form-component)
   - [Parent Component](#parent-component)
@@ -253,6 +254,126 @@ onBeforeRouteLeave((to, from, next) => {
 });
 </script>
 ```
+
+## Using v-list for Form Selection
+
+When implementing selection interfaces with Vuetify's `v-list` component, follow these best practices:
+
+### Leveraging v-model:selected for Selection Management
+
+Vuetify's `v-list` component provides built-in selection management through the `v-model:selected` directive. This is the preferred approach for handling selections:
+
+```vue
+<template>
+  <!-- Single selection -->
+  <v-list
+    v-model:selected="selectedItem"
+    class="border rounded"
+    select-strategy="single-independent"
+  >
+    <v-list-item v-for="item in items" :key="item.id" :value="item.id">
+      <v-list-item-title>{{ item.name }}</v-list-item-title>
+    </v-list-item>
+  </v-list>
+
+  <!-- Multiple selection -->
+  <v-list
+    v-model:selected="selectedItems"
+    class="border rounded"
+    select-strategy="independent"
+  >
+    <v-list-item
+      v-for="item in items"
+      :key="item.id"
+      :value="item.id"
+      :disabled="isItemDisabled(item)"
+    >
+      <template #prepend="{ isSelected }">
+        <v-checkbox-btn
+          :model-value="isSelected"
+          :aria-label="item.name"
+        ></v-checkbox-btn>
+      </template>
+      <v-list-item-title>{{ item.name }}</v-list-item-title>
+    </v-list-item>
+  </v-list>
+</template>
+```
+
+### Key Benefits of This Approach
+
+1. **Simplified state management**: The `v-model:selected` directive handles all selection state internally.
+2. **Automatic toggling**: Clicking on list items automatically toggles their selection state.
+3. **Accessibility**: Using `v-list-item-action` with `v-checkbox-btn` provides proper accessibility.
+4. **Cleaner code**: No need for custom click handlers or manual state management.
+
+### Handling Single vs. Multiple Selection
+
+- For single selection, use `select-strategy="single-independent"` and bind to a string or number ref.
+- For multiple selection, use `select-strategy="independent"` and bind to an array ref.
+
+If your data model uses a single string for a single selection but the v-list requires an array, you can use a computed property with getter/setter:
+
+```vue
+<script setup>
+const selectedCategory = ref("");
+
+const selectedCategories = computed({
+  get: () => {
+    return selectedCategory.value ? [selectedCategory.value] : [];
+  },
+  set: (value) => {
+    selectedCategory.value = value[0];
+  },
+});
+</script>
+
+<template>
+  <v-list
+    v-model:selected="selectedCategories"
+    select-strategy="single-independent"
+  >
+    <!-- List items -->
+  </v-list>
+</template>
+```
+
+### Displaying Selection State
+
+Use the `isSelected` parameter provided by the `#prepend` slot to display the selection state:
+
+```vue
+<template #prepend="{ isSelected }">
+  <v-list-item-action start>
+    <v-checkbox-btn
+      :model-value="isSelected"
+      :aria-label="item.name"
+    ></v-checkbox-btn>
+  </v-list-item-action>
+</template>
+```
+
+### Handling Disabled Items
+
+Use the `:disabled` prop on `v-list-item` to prevent selection of certain items:
+
+```vue
+<v-list-item
+  :disabled="
+    selectedItems.length >= maxSelections && !selectedItems.includes(item.id)
+  "
+>
+  <!-- Item content -->
+</v-list-item>
+```
+
+### Best Practices
+
+1. **Always use `v-model:selected`** instead of manual click handlers.
+2. **Provide `aria-label` attributes** on checkboxes for accessibility.
+3. **Use `v-list-item-action` with `start` prop** for proper checkbox positioning.
+4. **Set appropriate `select-strategy`** based on your selection requirements.
+5. **Handle disabled states** at the list item level, not just the checkbox.
 
 ## Complete Example
 
