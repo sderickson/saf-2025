@@ -3,7 +3,6 @@ export { requestId } from "./middleware/requestId.ts";
 export { httpLogger } from "./middleware/httpLogger.ts";
 export { createLogger, loggerInjector, logger } from "./middleware/logger.ts";
 export { healthRouter } from "./middleware/health.ts";
-export { createHandler } from "./handler.ts";
 export { auth } from "./middleware/auth.ts";
 
 // validation
@@ -29,3 +28,6 @@ export {
   recommendedErrorHandlers,
   createPreMiddleware,
 } from "./middleware/composition.ts";
+
+// route handler utilities
+export { createHandler } from "./handler.ts";

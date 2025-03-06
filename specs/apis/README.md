@@ -1,6 +1,6 @@
 # API Specifications
 
-This directory contains the OpenAPI specifications for our API endpoints.
+This directory contains example OpenAPI specifications that demonstrate how to structure API endpoints in your project.
 
 ## Directory Structure
 
@@ -17,7 +17,9 @@ specs/apis/
     └── ...
 ```
 
-## Adding New Endpoints
+## Adding New Endpoints to Your API Specs
+
+When adding new endpoints to your project's API specifications, follow these guidelines:
 
 1. Create schema file in `schemas/` if needed
 
@@ -37,6 +39,7 @@ specs/apis/
    ```yaml
    get:
      summary: List all items
+     operationId: listItems # IMPORTANT: Always include operationId for type generation
      tags:
        - Feature Name
      responses:
@@ -57,8 +60,10 @@ specs/apis/
 
    /{id}:
      get:
+       operationId: getItem # IMPORTANT: Always include operationId
        # Single item endpoint
      put:
+       operationId: updateItem # IMPORTANT: Always include operationId
        # Update endpoint
    ```
 
@@ -93,9 +98,64 @@ specs/apis/
    npm run generate
    ```
 
+## API Best Practices
+
+### General Guidelines
+
+- **Always include `operationId`**: This is required for proper type generation in the TypeScript clients.
+- **Do not include `security` sections**: The security handling is currently managed separately and not used in the OpenAPI specs.
+- **Use consistent naming**: Use kebab-case for paths (`/user-profiles`) and camelCase for operationIds (`getUserProfile`).
+- **Group related endpoints**: Use tags to group related endpoints for better organization.
+
+### Data Type Best Practices
+
+- **Currency**: Always use integers (cents) instead of floats to avoid floating-point precision issues.
+
+  ```yaml
+  price:
+    type: integer
+    description: Price in cents (e.g., 1000 = $10.00)
+  ```
+
+- **Dates and Times**: Use ISO 8601 format strings for dates and times.
+
+  ```yaml
+  createdAt:
+    type: string
+    format: date-time
+    description: Creation timestamp in ISO 8601 format
+  ```
+
+- **IDs**: Use integer types for database IDs (for SQLite compatibility).
+
+  ```yaml
+  id:
+    type: integer
+    description: Unique identifier
+  ```
+
+- **Enums**: Define enum values explicitly for better type safety.
+  ```yaml
+  status:
+    type: string
+    enum: [pending, active, completed]
+    description: Current status of the item
+  ```
+
+### Response Structure
+
+- Always include appropriate error responses (401, 403, 404, 500)
+- Use consistent response structures across all endpoints
+- Include pagination metadata for list endpoints
+
+### Request Validation
+
+- Define request validation rules in the schema
+- Include examples where helpful
+- Document required vs. optional fields clearly
+
 ## Common Patterns
 
-- Use integer types for IDs (for SQLite compatibility)
-- Include error responses with error schema
-- Group related endpoints under feature-specific tags
 - Follow existing examples in routes/ for consistent structure
+- Include error responses with error schema
+- Use descriptive summaries and descriptions

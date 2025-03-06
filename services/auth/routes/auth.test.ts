@@ -243,4 +243,79 @@ describe("Auth Routes", () => {
       expect(response.body).toEqual({});
     });
   });
+
+  describe("GET /auth/verify", () => {
+    it("should return 401 when not authenticated", async () => {
+      const response = await request(app).get("/auth/verify");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({ message: "Unauthorized!" });
+    });
+
+    it("should return user ID and email when authenticated", async () => {
+      // Setup test user
+      const userData = {
+        email: "test@example.com",
+        password: "password123",
+      };
+
+      const user = {
+        id: 1,
+        email: userData.email,
+        createdAt: new Date(),
+        lastLoginAt: null,
+      };
+
+      // Mock database responses
+      (users.getByEmail as Mock).mockResolvedValue(user);
+      (emailAuth.getByEmail as Mock).mockResolvedValue({
+        userId: user.id,
+        email: user.email,
+        passwordHash: Buffer.from("hashed-password"),
+      });
+      (users.getById as Mock).mockResolvedValue(user);
+      (users.updateLastLogin as Mock).mockResolvedValue({
+        ...user,
+        lastLoginAt: new Date(),
+      });
+      (argon2.verify as Mock).mockResolvedValue(true);
+
+      // Use agent to maintain cookies between requests
+      const agent = request.agent(app);
+
+      // Login first to establish session
+      const loginResponse = await agent.post("/auth/login").send(userData);
+
+      expect(loginResponse.status).toBe(200);
+
+      // Then verify authentication
+      const verifyResponse = await agent.get("/auth/verify");
+
+      expect(verifyResponse.status).toBe(200);
+      expect(verifyResponse.body).toEqual({
+        id: user.id,
+        email: user.email,
+      });
+      expect(verifyResponse.header["x-user-id"]).toBe(user.id.toString());
+      expect(verifyResponse.header["x-user-email"]).toBe(user.email);
+    });
+
+    it("should handle health check requests", async () => {
+      const response = await request(app)
+        .get("/auth/verify")
+        .set("x-forwarded-uri", "/health");
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({});
+    });
+
+    it("should handle OPTIONS requests", async () => {
+      const response = await request(app)
+        .get("/auth/verify")
+        .set("x-forwarded-method", "OPTIONS");
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({});
+    });
+  });
 });

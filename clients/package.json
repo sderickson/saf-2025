@@ -28,7 +28,8 @@
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.0",
     "vite-plugin-vue-devtools": "^7.7.0",
-    "vuetify": "^3.7.6"
+    "vuetify": "^3.7.6",
+    "@saf/vue-spa": "*"
   },
   "devDependencies": {
     "@tanstack/vue-query-devtools": "^5.64.2",

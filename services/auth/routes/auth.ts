@@ -131,6 +131,10 @@ authRouter.get(
     res.setHeader("X-User-ID", user.id.toString());
     res.setHeader("X-User-Email", user.email);
 
-    res.status(200).end();
+    // Return user ID and email in the response body
+    res.status(200).json({
+      id: user.id,
+      email: user.email,
+    });
   })
 );
