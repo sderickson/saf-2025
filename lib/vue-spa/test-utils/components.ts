@@ -9,7 +9,7 @@ import { beforeAll, afterAll } from "vitest";
  * Creates a Vuetify instance for testing
  * @returns A Vuetify instance
  */
-export function createTestVuetify() {
+function createTestVuetify() {
   return createVuetify({
     components,
     directives,
@@ -19,7 +19,7 @@ export function createTestVuetify() {
 /**
  * Mock implementation of ResizeObserver for testing
  */
-export class ResizeObserverMock {
+class ResizeObserverMock {
   observe() {}
   unobserve() {}
   disconnect() {}
@@ -29,7 +29,7 @@ export class ResizeObserverMock {
  * Sets up ResizeObserver mock for tests
  * Should be called in beforeAll
  */
-export function setupResizeObserverMock() {
+function setupResizeObserverMock() {
   // We need to check if ResizeObserver exists to avoid overriding it if it's already defined
   if (typeof global.ResizeObserver === "undefined") {
     global.ResizeObserver = ResizeObserverMock;
@@ -40,7 +40,7 @@ export function setupResizeObserverMock() {
  * Tears down ResizeObserver mock after tests
  * Should be called in afterAll
  */
-export function teardownResizeObserverMock() {
+function teardownResizeObserverMock() {
   // Only delete if it's our mock implementation
   if (global.ResizeObserver === ResizeObserverMock) {
     // @ts-expect-error - ResizeObserver is not defined in the test environment
