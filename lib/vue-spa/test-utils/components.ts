@@ -2,7 +2,7 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { mount } from "@vue/test-utils";
-import { Component } from "vue";
+import type { Component } from "vue";
 import { beforeAll, afterAll } from "vitest";
 
 /**
