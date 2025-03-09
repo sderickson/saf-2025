@@ -1,6 +1,7 @@
 # Outline
 
-Rough order of development
+Working doc for keeping track of what main features are built, and what is still be done.
+Also throw in some interesting things to try as I find them.
 
 ### Backlog
 
@@ -43,6 +44,7 @@ What follows can largely be done in any order.
   - Rate limiting
   - Stronger security, such as express/helmet, or caddy headers
   - Scopes
+  - Workers (e.g. Cloudflare Workers)
 - Frontend+
   - ✓ Tanstack Query
   - ✓ Vue Router
@@ -62,13 +64,16 @@ What follows can largely be done in any order.
   - CDN
 - Workflow+
   - ✓ Code formatting, quality, ESLint
-  - Generate docker files from package files
+  - Generate docker files from package files, general package-driven development
   - API Versioning
   - Documentation
   - Checklists
   - Dependency management
   - Monorepo package management - nx, turborepo and alike
+  - Try out some methodology [here](https://generaitelabs.com/one-agentic-coding-workflow-to-rule-them-all/)
 - AI+
   - ✓ Add code review like CodeRabbit
   - Integrate with no-code tools, e.g. lovable, synthflow, repl.it, bolt.new, v0.dev
   - Try running an LLM locally, e.g. llama3 or deepseek
+  - Try Roo code
+  - Try Cline
