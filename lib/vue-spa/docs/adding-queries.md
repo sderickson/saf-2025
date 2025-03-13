@@ -33,7 +33,7 @@ export const useGetUsers = (
   return useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const { data, error } = await client.GET("/users");
+      const { data, error } = await client.GET("/users", {});
 
       if (error) {
         throw error;
@@ -45,6 +45,24 @@ export const useGetUsers = (
   });
 };
 ```
+
+### Path Parameters in URLs
+
+When working with path parameters in URLs, do NOT use template literals to construct the URL. Instead, use the path parameter syntax with the `params.path` object:
+
+```typescript
+// INCORRECT - Don't use template literals for URLs
+const { data, error } = await client.GET(`/users/${userId}`, {});
+
+// CORRECT - Use path parameter syntax
+const { data, error } = await client.GET("/users/{userId}", {
+  params: {
+    path: { userId: String(userId) },
+  },
+});
+```
+
+This approach ensures type safety and proper URL encoding of parameters.
 
 ### Using Parameters with Refs
 
@@ -71,6 +89,7 @@ export const useGetUserProfile = (
     queryKey: ["userProfile", userId],
     queryFn: async () => {
       // Access the .value inside the queryFn
+      // IMPORTANT: Use path parameter syntax, not template literals
       const { data, error } = await client.GET("/users/{userId}/profile", {
         params: {
           path: { userId: userId.value },
@@ -219,7 +238,7 @@ return data as ResponseSchema<"getUserProfile">;
 Always handle errors from the API client:
 
 ```typescript
-const { data, error } = await client.GET("/users");
+const { data, error } = await client.GET("/users", {});
 
 if (error) {
   // Option 1: Throw the error to be caught by TanStack Query
@@ -663,6 +682,8 @@ Following these patterns will help you create consistent, type-safe, and maintai
 6. Consider optimistic updates for a better user experience
 7. Bundle related queries and mutations into composable functions
 8. Use absolute import paths for better maintainability
+9. **Always use path parameter syntax with `params.path` for URL parameters, not template literals**
+10. **Always include an empty object `{}` as the second parameter when there are no params**
 
 For more information, refer to:
 
