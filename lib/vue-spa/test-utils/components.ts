@@ -1,10 +1,10 @@
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import { mount } from "@vue/test-utils";
-import type { Component } from "vue";
+import { mount, type ComponentMountingOptions } from "@vue/test-utils";
+import type { Component, Plugin } from "vue";
 import { beforeAll, afterAll } from "vitest";
-
+import { createRouter, createMemoryHistory } from "vue-router";
 /**
  * Creates a Vuetify instance for testing
  * @returns A Vuetify instance
@@ -70,14 +70,38 @@ export function withResizeObserverMock(callback: () => void) {
  * @param options - Mount options
  * @returns The mounted component wrapper
  */
-export function mountWithVuetify(component: Component, options: any = {}) {
+
+export const router = createRouter({
+  history: createMemoryHistory(),
+  routes: [],
+});
+
+interface MountWithPluginsOptions {
+  router?: Plugin;
+}
+
+export function mountWithVuetify(
+  component: Component,
+  options: ComponentMountingOptions<Component> = {},
+  pluginOptions: MountWithPluginsOptions = {}
+) {
   const vuetify = createTestVuetify();
+  // To suppress warnings, provide your own router
+  const router =
+    pluginOptions.router ||
+    createRouter({
+      history: createMemoryHistory(),
+      routes: [],
+    });
 
   return mount(component, {
     ...options,
     global: {
-      plugins: [vuetify],
+      plugins: [vuetify, router],
       ...(options.global || {}),
     },
   });
 }
+
+// This is the new name. Should refactor off "mountWithVuetify"
+export const mountWithPlugins = mountWithVuetify;
