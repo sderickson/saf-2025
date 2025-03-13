@@ -1,3 +1,5 @@
+*NOTE: This doc is out of date - need to update this. Some is true, some needs to be vetted*
+
 # Instructions
 
 Documentation for each workflow at the monorepo level.
