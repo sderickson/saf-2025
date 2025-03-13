@@ -19,7 +19,7 @@ We use the following tools for testing:
 import { describe, it, expect, vi } from "vitest";
 import {
   withResizeObserverMock,
-  mountWithVuetify,
+  mountWithPlugins,
 } from "@saf/vue-spa/test-utils/components";
 import YourComponent from "../YourComponent.vue";
 
@@ -40,7 +40,7 @@ withResizeObserverMock(() => {
     };
 
     const mountComponent = (props = {}) => {
-      return mountWithVuetify(YourComponent, {
+      return mountWithPlugins(YourComponent, {
         props,
         // Additional options as needed
       });
@@ -88,29 +88,37 @@ The `withResizeObserverMock` helper:
 
 Always wrap your Vuetify component tests with this helper to avoid ResizeObserver errors.
 
-#### Mounting Components with Vuetify
+#### Mounting Components with Plugins
 
-The `mountWithVuetify` function simplifies mounting components that use Vuetify:
+The `mountWithPlugins` function (previously known as `mountWithVuetify`) simplifies mounting components that use Vuetify and other plugins like Vue Router:
 
 ```typescript
-import { mountWithVuetify } from "@saf/vue-spa/test-utils/components";
+import { mountWithPlugins } from "@saf/vue-spa/test-utils/components";
+import { router } from "@your-app/router"; // Import your app's router
 
-const wrapper = mountWithVuetify(YourComponent, {
-  props: {
-    // Component props
+const wrapper = mountWithPlugins(
+  YourComponent,
+  {
+    props: {
+      // Component props
+    },
+    global: {
+      // Additional global options
+      stubs: ["router-link"],
+    },
   },
-  global: {
-    // Additional global options
-    stubs: ["router-link"],
-  },
-});
+  {
+    router, // Pass your app's router instance
+  }
+);
 ```
 
 This function:
 
 1. Creates a Vuetify instance with all components and directives
-2. Mounts the component with the Vuetify plugin
-3. Merges any additional options you provide
+2. Sets up the router you provide (or creates a default one if none is provided)
+3. Mounts the component with the Vuetify plugin and router
+4. Merges any additional options you provide
 
 ## Best Practices
 
@@ -245,26 +253,65 @@ it("should disable submit button when form is invalid", async () => {
 
 ### 7. Mocking External Dependencies
 
-1. Mock at the top of the file:
+#### Proper Mocking with importOriginal
 
-   ```typescript
-   const mockSubmit = vi.fn();
-   vi.mock("../path/to/module", () => ({
-     useSubmit: () => ({
-       mutate: mockSubmit,
-       isPending: { value: false }, // Note: reactive properties should be objects with a value property
-       isError: { value: false },
-     }),
-   }));
-   ```
+Always use the `importOriginal` pattern when mocking modules to preserve the original module's structure:
 
-2. Reset mocks in `beforeEach`:
-   ```typescript
-   beforeEach(() => {
-     vi.clearAllMocks();
-     mockSubmit.mockReset();
-   });
-   ```
+```typescript
+// RECOMMENDED: Use importOriginal to preserve module structure
+const mockSubmit = vi.fn();
+vi.mock("../path/to/module", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../path/to/module")>();
+  return {
+    ...original, // Preserve all original exports
+    useSubmit: () => ({
+      mutate: mockSubmit,
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+  };
+});
+
+// AVOID: This approach completely replaces the module and loses original exports
+vi.mock("../path/to/module", () => ({
+  useSubmit: () => ({
+    mutate: vi.fn(),
+    isPending: { value: false },
+    isError: { value: false },
+  }),
+}));
+```
+
+The `importOriginal` pattern:
+
+1. Preserves all original exports from the module
+2. Only overrides the specific functions you need to mock
+3. Prevents unexpected errors when the component uses other exports from the same module
+4. Provides better TypeScript support
+
+Example of mocking Vue Router:
+
+```typescript
+const mockPush = vi.fn();
+vi.mock("vue-router", async (importOriginal) => {
+  const original = await importOriginal<typeof import("vue-router")>();
+  return {
+    ...original,
+    useRouter: vi.fn(() => ({
+      push: mockPush,
+    })),
+  };
+});
+```
+
+Reset mocks in `beforeEach`:
+
+```typescript
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockPush.mockReset();
+});
+```
 
 ### 8. Testing Vuetify Components
 
@@ -331,8 +378,8 @@ can't be done well, then just skip the tests.
 
 2. Component Mounting:
 
-   - Always use `mountWithVuetify` for Vuetify components
-   - Stub router components when needed
+   - Always use `mountWithPlugins` for Vuetify components
+   - Provide your app's router when testing components that use routing
    - Consider global plugins and providers
 
 3. Async Operations:
@@ -360,27 +407,36 @@ can't be done well, then just skip the tests.
 ## Example Test
 
 ```typescript
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   withResizeObserverMock,
-  mountWithVuetify,
+  mountWithPlugins,
 } from "@saf/vue-spa/test-utils/components";
 import LoginForm from "../LoginForm.vue";
+import { router } from "@your-app/router"; // Import your app's router
 
-// Mock the auth request
+// Mock the auth request with importOriginal pattern
 const mockSubmit = vi.fn();
-vi.mock("../../requests/auth", () => ({
-  useLogin: () => ({
-    mutate: mockSubmit,
-    isPending: { value: false },
-    isError: { value: false },
-  }),
-}));
+vi.mock("../../requests/auth", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../../requests/auth")>();
+  return {
+    ...original, // Preserve all original exports
+    useLogin: () => ({
+      mutate: mockSubmit,
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+  };
+});
 
 withResizeObserverMock(() => {
   describe("LoginForm", () => {
     const mountLoginForm = (props = {}) => {
-      return mountWithVuetify(LoginForm, { props });
+      return mountWithPlugins(
+        LoginForm,
+        { props },
+        { router } // Pass your app's router
+      );
     };
 
     const getEmailInput = (wrapper) =>
