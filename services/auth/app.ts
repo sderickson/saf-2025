@@ -5,16 +5,16 @@
  * Implements common middleware patterns and specific auth-related functionality.
  */
 
-import express from "express";
-import passport from "passport";
 import * as db from "@saf/dbs-auth";
-import session from "express-session";
 import {
-  recommendedPreMiddleware,
+  createPreMiddleware,
   recommendedErrorHandlers,
 } from "@saf/node-express";
-import { authRouter } from "./routes/auth.ts";
+import express from "express";
+import session from "express-session";
+import passport from "passport";
 import { setupPassport } from "./config/passport.ts";
+import { authRouter } from "./routes/auth.ts";
 
 const app = express();
 app.set("trust proxy", true);
@@ -32,7 +32,14 @@ declare global {
  * Pre-route Middleware Stack
  * Includes request ID, logging, body parsing, and OpenAPI validation
  */
-app.use(recommendedPreMiddleware);
+console.log("Env:", {
+  DISABLE_CORS: process.env.DISABLE_CORS,
+  DOMAIN: process.env.DOMAIN,
+  PROTOCOL: process.env.PROTOCOL,
+});
+
+const DISABLE_CORS = process.env.DISABLE_CORS === "true";
+app.use(createPreMiddleware({ disableCors: DISABLE_CORS }));
 
 // Session configuration
 const cookie = {
