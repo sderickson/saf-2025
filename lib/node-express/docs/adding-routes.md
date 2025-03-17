@@ -2,7 +2,7 @@
 
 ## Implementation Basics
 
-- Use "createHander" for each handler. It basically just ensures errors are caught and passed to middleware, and that handlers use Promises.
+- Use "createHandler" for each handler. It ensures errors are caught and passed to middleware, and that handlers use Promises.
 - Files in the /routes folder should export a router which the app.ts uses
 - For type checking, use "RequestSchema" and "ResponseSchema" from the openapi specs library. Have them enforce the types you receive and that you send.
 - Handled errors should send status code and response objects directly. Unhandled errors should be passed to `next`.
@@ -12,31 +12,33 @@ Example:
 
 ```typescript
 // In your routes/<>.ts file
-export const exampleRouter = express.Router();
+import { Router } from "express";
+import { createHandler } from "@saf/node-express";
+import type { RequestSchema, ResponseSchema } from "@your-project/specs-apis";
 
-router.get("/route", async (req, res, next) => {
-  const exampleRequest: RequestSchema<"exampleRoute"> = req.body;
-  try {
-    let exampleResponse: ResponseSchema<"exampleRoute", 200>;
-    /* I/O like db requests happens here */
-    exampleResponse = {
+export const exampleRouter = Router();
+
+router.get(
+  "/route",
+  createHandler(async (req) => {
+    const exampleRequest: RequestSchema<"exampleRoute"> = req.body;
+
+    // I/O like db requests happens here
+    const exampleResponse: ResponseSchema<"exampleRoute", 200> = {
       /* ... */
     };
-    res.json(exampleResponse);
-  } catch (error) {
-    // Handle specific error with appropriate status code
-    if (error instanceof NotFoundError) {
-      let errorResponse: ResponseSchema<"exampleRoute", 404>;
-      errorResponse = {
-        /* ... */
-      };
-      return res.status(404).json(error);
-    }
-    // Pass other errors to Express error handler
-    next(error);
-  }
-});
+
+    return exampleResponse;
+  })
+);
 
 // In your app.ts file
 app.use("/examples", exampleRouter);
 ```
+
+The `createHandler` function:
+
+- Automatically handles Promise rejection
+- Passes errors to Express error handler
+- Makes the code cleaner by removing try/catch blocks
+- Ensures consistent error handling across all routes
