@@ -1,5 +1,10 @@
 import { createApp, App } from "vue";
-import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+import {
+  VueQueryPlugin,
+  QueryClient,
+  UseQueryReturnType,
+  UseMutationReturnType,
+} from "@tanstack/vue-query";
 
 /**
  * Helper function to test Vue Query composables in isolation
@@ -38,3 +43,42 @@ export function withVueQuery<T>(
 
   return [result, app, client];
 }
+
+/**
+ * Type guard to check if a result is a UseQueryReturnType
+ */
+export function isQueryResult<TData = unknown, TError = Error>(
+  result: unknown
+): result is UseQueryReturnType<TData, TError> {
+  return (
+    result !== null &&
+    typeof result === "object" &&
+    "data" in result &&
+    "refetch" in result
+  );
+}
+
+/**
+ * Type guard to check if a result is a UseMutationReturnType
+ */
+export function isMutationResult<
+  TData = unknown,
+  TError = Error,
+  TVariables = unknown,
+  TContext = unknown,
+>(
+  result: unknown
+): result is UseMutationReturnType<TData, TError, TVariables, TContext> {
+  return (
+    result !== null &&
+    typeof result === "object" &&
+    "mutate" in result &&
+    "mutateAsync" in result
+  );
+}
+
+// Re-export types from @tanstack/vue-query for convenience
+export type {
+  UseQueryReturnType,
+  UseMutationReturnType,
+} from "@tanstack/vue-query";
