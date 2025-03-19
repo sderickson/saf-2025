@@ -115,6 +115,29 @@ If your package depends on another package in the monorepo:
 
 2. Run `npm install` from the root directory
 
+## Import Rules
+
+1. Always use `.ts` extension in imports (not `.js`)
+2. Use relative imports (e.g., `./file.ts`) for files within the same package
+3. Use package names (e.g., `@vendata/package-name`) for imports from other packages
+4. Never use relative paths with `../` to import from other packages
+
+Example:
+
+```typescript
+// Good - importing from same package
+import { Something } from "./something.ts";
+
+// Good - importing from another package
+import { OtherThing } from "@vendata/other-package/src/thing.ts";
+
+// Bad - using .js extension
+import { Something } from "./something.js";
+
+// Bad - using relative path to another package
+import { OtherThing } from "../../other-package/src/thing.ts";
+```
+
 ## Generated Code
 
 If your package includes generated code (e.g., from protobuf):
