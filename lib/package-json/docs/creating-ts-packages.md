@@ -39,15 +39,32 @@ Key points:
 
 ## TypeScript Configuration
 
-The `tsconfig.json` should extend the root configuration:
+There are two types of TypeScript packages:
+
+### 1. Regular TypeScript Packages
+
+For packages that contain TypeScript source code that can be imported:
 
 ```json
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "declaration": true,
-    "noEmit": false
+    "noEmit": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts"]
+}
+```
+
+### 2. Generated TypeScript Packages
+
+For packages that only contain generated TypeScript (e.g., from protobuf):
+
+```json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
   },
   "include": ["dist/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"]
@@ -57,9 +74,8 @@ The `tsconfig.json` should extend the root configuration:
 Key points:
 
 - Extend the root tsconfig
+- Set `noEmit: true` since no compilation into JS is rarely necessary
 - Only override necessary options
-- Set `noEmit: false` to allow compilation
-- Include only the dist directory (for generated code)
 
 ## Dependencies
 
