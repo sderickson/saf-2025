@@ -79,17 +79,41 @@ Key points:
 
 ## Dependencies
 
-Don't specify dependency versions in package.json. Instead, install them fresh:
+### Adding New Dependencies
 
-```bash
-# For runtime dependencies
-npm install @package-name
+1. Add the package to your package.json without versions:
 
-# For dev dependencies
-npm install -D @package-name
+```json
+{
+  "dependencies": {
+    "package-name": "*"
+  },
+  "devDependencies": {
+    "dev-package-name": "*"
+  }
+}
 ```
 
-This ensures you always get the latest compatible versions.
+2. Run `npm install` from the root directory to:
+   - Install the latest versions
+   - Ensure consistent versions across the monorepo
+   - Set up proper workspace linking
+
+### Workspace Dependencies
+
+If your package depends on another package in the monorepo:
+
+1. Add it as a dependency in your package.json:
+
+```json
+{
+  "dependencies": {
+    "@vendata/other-package": "*"
+  }
+}
+```
+
+2. Run `npm install` from the root directory
 
 ## Generated Code
 
