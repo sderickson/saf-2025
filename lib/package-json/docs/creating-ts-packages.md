@@ -22,6 +22,7 @@ The `package.json` should be minimal and focused:
 {
   "name": "@vendata/package-name",
   "description": "Brief description of the package",
+  "private": true,
   "main": "dist/index.ts",
   "scripts": {
     "clean": "rm -rf dist",
