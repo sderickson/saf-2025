@@ -4,7 +4,7 @@ import type { OpenAPIV3 } from "express-openapi-validator/dist/framework/types.t
 import { auth } from "./auth.ts";
 import { corsRouter } from "./cors.ts";
 import { errorHandler, notFoundHandler } from "./errors.ts";
-import { healthRouter } from "./health.ts";
+import { createHealthHandler, healthRouter } from "./health.ts";
 import { httpLogger } from "./httpLogger.ts";
 import { loggerInjector } from "./logger.ts";
 import { createOpenApiValidator, openApiValidator } from "./openapi.ts";
@@ -37,12 +37,18 @@ interface PreMiddlewareOptions {
   apiSpec?: OpenAPIV3.DocumentV3;
   parseAuthHeaders?: boolean;
   disableCors?: boolean;
+  healthCheck?: () => Promise<boolean>;
 }
 
 export const createPreMiddleware = (
   options: PreMiddlewareOptions = {}
 ): Handler[] => {
-  const { apiSpec, parseAuthHeaders, disableCors } = options;
+  const { apiSpec, parseAuthHeaders, disableCors, healthCheck } = options;
+
+  let healthMiddleware: Handler = healthRouter;
+  if (healthCheck) {
+    healthMiddleware = createHealthHandler(healthCheck);
+  }
 
   let openApiValidatorMiddleware: Handler[] = [];
   if (apiSpec) {
@@ -60,7 +66,7 @@ export const createPreMiddleware = (
   }
 
   return [
-    healthRouter, // before httpLogger to avoid polluting logs
+    healthMiddleware, // before httpLogger to avoid polluting logs
     requestId,
     httpLogger,
     // Built-in Express middleware
