@@ -9,7 +9,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "drizzle-orm": "*",
+    "drizzle-orm": ">=0.41.0",
     "better-sqlite3": "*",
     "drizzle-kit": "*"
   },
