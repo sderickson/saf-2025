@@ -4,7 +4,7 @@
   "main": "./eslint.config.js",
   "type": "module",
   "dependencies": {
-    "globals": "*",
+    "globals": ">=16",
     "eslint": "*",
     "eslint-config-prettier": "*",
     "eslint-plugin-vue": "*",
