@@ -1,9 +1,9 @@
-import { createApp, App } from "vue";
+import { createApp, type App } from "vue";
 import {
   VueQueryPlugin,
   QueryClient,
-  UseQueryReturnType,
-  UseMutationReturnType,
+  type UseQueryReturnType,
+  type UseMutationReturnType,
 } from "@tanstack/vue-query";
 
 /**
@@ -22,12 +22,8 @@ export function withVueQuery<T>(
     queryClient ??
     new QueryClient({
       defaultOptions: {
-        mutations: {
-          retry: false,
-        },
-        queries: {
-          retry: false,
-        },
+        mutations: { retry: false },
+        queries: { retry: false },
       },
     });
 
