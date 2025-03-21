@@ -6,13 +6,13 @@ When writing tests for services or APIs that use external dependencies, you'll n
 ## Mocking Database Modules
 
 ```typescript
-import * as yourModule from "@your-project/dbs-your-db-name";
+import * as yourModule from "@your-org/dbs-your-db-name";
 
 // Mock the database module
-vi.mock("@your-project/dbs-your-db-name", async (importOriginal) => {
+vi.mock("@your-org/dbs-your-db-name", async (importOriginal) => {
   // Import the original module to get the real error classes
   const originalModule =
-    await importOriginal<typeof import("@your-project/dbs-your-db-name")>();
+    await importOriginal<typeof import("@your-org/dbs-your-db-name")>();
 
   // Create mock data
   const mockData = {

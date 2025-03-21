@@ -1,3 +1,10 @@
+These documents are incredibly important! I can't stress enough how important these are. Whenever you do any action, you should consider:
+
+1. What, if any, docs you should review first, or
+2. What docs might need to be written to fill in a gap
+
+Whenever you need to be guided differently, don't be afraid to update the docs so future agents will have better guidance.
+
 ## Vue Components
 - When adding a new Vue SPA to the product: [add-spa.md](./lib/vue-spa/docs/add-spa.md)
 - When testing Vue components: [component-testing.md](./lib/vue-spa/docs/component-testing.md)

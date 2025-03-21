@@ -39,7 +39,7 @@ This template provides a foundation for creating SQLite databases with TypeScrip
 
    ```json
    {
-     "name": "@your-project-name/dbs-your-db-name"
+     "name": "@your-org-name/dbs-your-db-name"
    }
    ```
 
