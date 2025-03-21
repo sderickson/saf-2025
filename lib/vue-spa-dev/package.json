@@ -1,0 +1,10 @@
+{
+  "name": "@saf/vue-spa-dev-lib",
+  "description": "Library for testing Vue SPAs within the SAF framework",
+  "type": "module",
+  "dependencies": {
+    "@saf/vue-spa": "*",
+    "vitest": "^3.0.5",
+    "vite-plugin-vuetify": "^2.0.4"
+  }
+} 
