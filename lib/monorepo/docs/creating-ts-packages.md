@@ -37,6 +37,7 @@ Key points:
 - `main` points to the TypeScript file (we strip types at runtime)
 - No separate types field needed
 - Use vitest for testing
+- `private` assuming you aren't planning on publishing the package
 
 ## TypeScript Configuration
 
