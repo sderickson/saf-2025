@@ -7,7 +7,17 @@
     "@tanstack/vue-query": "*",
     "vue": "*",
     "@vitejs/plugin-vue": "*",
-    "@mdi/font": "*"
+    "@mdi/font": "*",
+    "@vue/tsconfig": "*",
+    "openapi-fetch": "*",
+    "typescript": "*",
+    "rollup-plugin-ignore": "*",
+    "vite": "*",
+    "vite-plugin-vue-devtools": "*",
+    "vite-plugin-vuetify": "*",
+    "vue-router": "*",
+    "vue-tsc": "*",
+    "vuetify": "*"
   },
   "devDependencies": {
     "vitest": "^3.0.5",
