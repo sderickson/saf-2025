@@ -4,11 +4,10 @@
   "type": "module",
   "dependencies": {
     "@saf/vue-spa": "*",
-    "vitest": "*",
-    "vite-plugin-vuetify": "*",
-    "jsdom": "*",
-    "@vitest/coverage-v8": "*",
+    "@saf/vitest-lib": "*",
     "@vue/test-utils": "*",
-    "sass-embedded": "*"
+    "jsdom": "*",
+    "sass-embedded": "*",
+    "vite-plugin-vuetify": "*"
   }
 } 
