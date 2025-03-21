@@ -4,7 +4,11 @@
   "type": "module",
   "dependencies": {
     "@saf/vue-spa": "*",
-    "vitest": "^3.0.5",
-    "vite-plugin-vuetify": "^2.0.4"
+    "vitest": "*",
+    "vite-plugin-vuetify": "*",
+    "jsdom": "*",
+    "@vitest/coverage-v8": "*",
+    "@vue/test-utils": "*",
+    "sass-embedded": "*"
   }
 } 
