@@ -1,0 +1,12 @@
+{
+  "name": "@saf/vue-spa-dev",
+  "description": "All-in-one set of helper methods and documents for creating Vue SPAs for SAF applications",
+  "type": "module",
+  "dependencies": {
+    "@tanstack/vue-query": "*",
+    "@vitejs/plugin-vue": "*",
+    "vitest": "*",
+    "vite-plugin-vuetify": "*",
+    "vue": "*"
+  }
+}

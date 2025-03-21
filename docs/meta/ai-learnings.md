@@ -113,6 +113,17 @@ One way to use this **template**, is if I want to generally change the structure
 
 Better yet, I notice that the agent tends to respond to and handle linter errors pretty consistently and quickly. At some point I'd like to take some of the guidance I put into documentation and instead create linters so that the agent gets immediate feedback when it goes a weird way.
 
+### ... For Business Processes
+So here's an idea: you can use LLMs to monitor and manage site complexity.
+
+There's a tendency when working on growth that the longer and more complex the funnel, the higher the drop-off. There are just more opportunities for the user to leave before finishing the thing. But there's also a tendency at businesses to add more *stuff* to a product, which tends to make doing the core feature harder, because there's more to wade through, more text to read, more buttons to click, more stuff to grok. Like, right now I tend to prefer using DigitalOcean because it's more focused and simpler for what I want, to rent a server, whereas products like AWS through just about everything at you.
+
+Site complexity can be measured in a few different ways. Reliability and performance metrics are a couple groups of metrics. Conversion rates is another. But LLM evals give us a new one: token count.
+
+With an eval, you tend to measure the ability and consistency of an agent to do a thing. It's an automated test for an agent. But it not only measures the agent's ability, but also its cost. And cost goes up the more the agent has to read, understand, and interact with. So it's a fairly comprehensive measure of "complexity". It's sort of like an automated UX test, where instead of observing the tester's mounting frustration, you measure the mounting agent token cost.
+
+One thing you could do, is set up an eval telling an agent to do a core JTBD of your product, then monitor how many tokens it tends to cost to do that, or even how consistently it finishes the job. This could be a leading indicator of business metrics, and a way to measure and guard against product bloat weighing down the core product.
+
 ## Second Order Effects Coding with AI Has On...
 
 So, the above is direct impact on the act of coding. What about things that are indirectly affected?
