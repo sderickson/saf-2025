@@ -1,0 +1,15 @@
+{
+  "name": "@saf/drizzle-sqlite3-dev-lib",
+  "description": "Shared testing and type dependencies and utilities for SAF drizzle-sqlite3 libraries",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@types/better-sqlite3": "*",
+    "@types/node": "*"
+  }
+} 
