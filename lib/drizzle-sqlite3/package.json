@@ -1,6 +1,5 @@
 {
   "name": "@saf/drizzle-sqlite3",
-  "version": "0.1.0",
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
@@ -9,16 +8,12 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "drizzle-orm": "^0.29.3",
-    "better-sqlite3": "^11.8.0"
-  },
-  "peerDependencies": {
-    "drizzle-orm": "^0.29.3",
-    "better-sqlite3": "^11.8.0"
+    "drizzle-orm": "*",
+    "better-sqlite3": "*",
+    "drizzle-kit": "*"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.9",
-    "vitest": "^3.0.5",
-    "@vitest/coverage-v8": "^3.0.5"
+    "@saf/drizzle-sqlite3-dev-lib": "*",
+    "@saf/vitest-lib": "*"
   }
 } 

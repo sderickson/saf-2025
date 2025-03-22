@@ -1,6 +1,5 @@
 {
     "name": "@saf/specs-apis",
-    "version": "1.0.0",
     "description": "Shared OpenAPI specification for SAF services",
     "type": "module",
     "main": "./index.ts",
@@ -13,11 +12,7 @@
         "generate-and-serve": "npm run generate && npm run serve"
     },
     "devDependencies": {
-        "@redocly/cli": "^1.27.2",
-        "openapi-typescript": "^7.5.2",
-        "serve": "^14.2.4",
-        "typescript": "^5.7.3",
-        "yaml": "^2.7.0"
+        "@saf/openapi-specs-lib": "*"
     },
     "files": [
         "dist"

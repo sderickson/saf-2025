@@ -1,0 +1,14 @@
+{
+  "name": "@saf/monorepo-lib",
+  "description": "Library and docs for projects which use the SAF monorepo structure and conventions",
+  "main": "./eslint.config.js",
+  "type": "module",
+  "dependencies": {
+    "globals": ">=16",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-vue": "*",
+    "typescript-eslint": "*",
+    "prettier": "*"
+  }
+}

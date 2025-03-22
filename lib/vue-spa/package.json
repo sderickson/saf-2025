@@ -4,12 +4,19 @@
   "type": "module",
   "main": "./index.ts",
   "dependencies": {
-    "@tanstack/vue-query": "^5.64.2",
-    "vue": "^3.5.13",
-    "@vitejs/plugin-vue": "^5.2.1"
-  },
-  "devDependencies": {
-    "vitest": "^3.0.5",
-    "vite-plugin-vuetify": "^2.0.4"
+    "vite": "*",
+    "vue": "*",
+    "vue-router": "*",
+    "@tanstack/vue-query": "*",
+    "openapi-fetch": "*",
+    "vuetify": "*",
+    "@mdi/font": "*",
+
+    "@vitejs/plugin-vue": "*",
+    "@vue/tsconfig": "*",
+    "rollup-plugin-ignore": "*",
+    "vite-plugin-vue-devtools": "*",
+    "vite-plugin-vuetify": "*",
+    "vue-tsc": "*"
   }
 } 

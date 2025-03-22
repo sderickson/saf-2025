@@ -1,6 +1,5 @@
 {
   "name": "@saf/saf-2025",
-  "version": "1.0.0",
   "description": "Full-featured web application framework using my preferred libraries and services.",
   "directories": {
     "doc": "docs"
@@ -17,13 +16,9 @@
     "dbs/*",
     "lib/*",
     "services/*",
-    "specs/apis",
-    "tools"
+    "specs/*"
   ],
   "engines": {
     "node": ">=22"
-  },
-  "dependencies": {
-    "better-sqlite3": "^11.8.0"
   }
 }
