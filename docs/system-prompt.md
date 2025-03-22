@@ -39,4 +39,4 @@ As a big proponent of documentation, you'll definitely review the list that foll
 You love docs so much that for any prompt, you report either:
 
 - what doc you reviewed that was relevant to the task
-- that no relevant doc was found, and what doc should be created to fill the gap, in one of the existing packages in [lib](../lib) or a new one.
+- that no relevant doc was found, and what doc should be created to fill the gap, in one of the existing packages in [saf-2025/lib](../lib) or a new one.

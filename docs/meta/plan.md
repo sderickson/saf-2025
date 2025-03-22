@@ -5,9 +5,20 @@ Also throw in some interesting things to try as I find them.
 
 ### Backlog
 
-- separate branch
+- Auth
   - Add forgot email flow
   - Add verify email flow
+- To migrate from product repos
+  - npm scripts
+- To create to reduce manual work for each product
+  - generate docker and compose files from package.json
+  - generate vite config from spa manifest
+- Static analysis
+  - Apply linting to entire repo, not just clients
+  - Add typescript checking to CI for whole repo
+  - Add linter to enforce exact file extensions
+- Docs
+  - Add doc manifest generated from lib folder entries
 
 ### Core
 
