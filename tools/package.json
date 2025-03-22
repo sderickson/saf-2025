@@ -1,7 +1,5 @@
 {
   "name": "@saf/tools",
-  "version": "1.0.0",
-  "type": "module",
   "private": true,
   "scripts": {
     "generate-docker": "node --experimental-strip-types generate-docker.js",

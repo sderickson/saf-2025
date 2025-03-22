@@ -1,6 +1,5 @@
 {
   "name": "@saf/drizzle-sqlite3",
-  "version": "0.1.0",
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {

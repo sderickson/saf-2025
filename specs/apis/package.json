@@ -1,6 +1,5 @@
 {
     "name": "@saf/specs-apis",
-    "version": "1.0.0",
     "description": "Shared OpenAPI specification for SAF services",
     "type": "module",
     "main": "./index.ts",
