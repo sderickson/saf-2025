@@ -52,6 +52,14 @@ Implementation should be independent from "integration". That process should loo
   - [ ] **Review Point**
   - [ ] If necessary, add or update docs, especially if there were no appropriate docs to review
 
+There are also "refactor" tasks, which might look like this:
+
+- [ ] Refactor task
+  - [ ] Move logic from x to y
+  - [ ] Update tests
+  - [ ] Run `npm run test` in the affected packages and make sure they still work
+  - [ ] **Review Point**
+
 Note that the following are all separate implementation and integration tasks:
 
 - Implement api specs
