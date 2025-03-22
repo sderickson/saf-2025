@@ -38,7 +38,6 @@ Maybe I should try prompting the agent to be a stickler for lists...
 
 One thing I'm interested in trying there is giving the agent more tools to use. A todolist might be a good tool for it to use. Then I can enforce that it not only create a plan but also stick to it, or mark it won't complete.
 
-
 ## Using AI in Software Development...
 
 ### ...For Code
@@ -81,7 +80,7 @@ This approach still requires you to build your own deep understanding of tools l
 
 In this way, perhaps you can assess the output of the AI without ever having deeply learned the tool they're using.
 
-**Update:** So in trying this out again with gRPC, and TypeScript, two technologies I am not as familiar with as I'd like to be, I *do* think you go a lot slower if you don't understand the thing you're trying to get the agent to build. Maybe agents will become better with time, better enough that they'll actually build something right with just acceptance criteria but... they ain't there now, and I'm not sure when/if they'll get that far. I think that'll be my next "aha" moment if I get an agent that just does it *right*, or a lot more right than it does now.
+**Update:** So in trying this out again with gRPC, and TypeScript, two technologies I am not as familiar with as I'd like to be, I _do_ think you go a lot slower if you don't understand the thing you're trying to get the agent to build. Maybe agents will become better with time, better enough that they'll actually build something right with just acceptance criteria but... they ain't there now, and I'm not sure when/if they'll get that far. I think that'll be my next "aha" moment if I get an agent that just does it _right_, or a lot more right than it does now.
 
 The way I'd like it to go is that I can review the code that is written, be able to ask questions of it, and have the answers mostly be clear explanations to why the way they did it is the, or a, right way to do it. Instead, much of it is "oh you know, we don't need that" or "oh this is actually written wrong" which is the answer to a good number of my questions about generated code.
 
@@ -112,6 +111,18 @@ One way to use this **template**, is if I want to generally change the structure
 **Update**: I haven't been using templates for a while. I think it's better to just have good documentation with examples, and good example services to point to. That should be enough.
 
 Better yet, I notice that the agent tends to respond to and handle linter errors pretty consistently and quickly. At some point I'd like to take some of the guidance I put into documentation and instead create linters so that the agent gets immediate feedback when it goes a weird way.
+
+### ... For Business Processes
+
+So here's an idea: you can use LLMs to monitor and manage site complexity.
+
+There's a tendency when working on growth that the longer and more complex the funnel, the higher the drop-off. There are just more opportunities for the user to leave before finishing the thing. But there's also a tendency at businesses to add more _stuff_ to a product, which tends to make doing the core feature harder, because there's more to wade through, more text to read, more buttons to click, more stuff to grok. Like, right now I tend to prefer using DigitalOcean because it's more focused and simpler for what I want, to rent a server, whereas products like AWS through just about everything at you.
+
+Site complexity can be measured in a few different ways. Reliability and performance metrics are a couple groups of metrics. Conversion rates is another. But LLM evals give us a new one: token count.
+
+With an eval, you tend to measure the ability and consistency of an agent to do a thing. It's an automated test for an agent. But it not only measures the agent's ability, but also its cost. And cost goes up the more the agent has to read, understand, and interact with. So it's a fairly comprehensive measure of "complexity". It's sort of like an automated UX test, where instead of observing the tester's mounting frustration, you measure the mounting agent token cost.
+
+One thing you could do, is set up an eval telling an agent to do a core JTBD of your product, then monitor how many tokens it tends to cost to do that, or even how consistently it finishes the job. This could be a leading indicator of business metrics, and a way to measure and guard against product bloat weighing down the core product.
 
 ## Second Order Effects Coding with AI Has On...
 
@@ -146,6 +157,6 @@ Well, the existing questions are still relevant. It's important for an engineer 
 
 However, there are likely skills that will warrant greater focus, such as:
 
-* Code review. It certainly wouldn't be difficult to generate code for such an interview.
-* Management, TL skills. Like reviewing specs and plans. And providing guidance, acceptance criteria, priorities. I think this is what people might consider "prompt engineering" but basically it's this: delegation and being clear about what you want and why.
-* Dev experience skills. Like creating linters, setting up docs, etc.
+- Code review. It certainly wouldn't be difficult to generate code for such an interview.
+- Management, TL skills. Like reviewing specs and plans. And providing guidance, acceptance criteria, priorities. I think this is what people might consider "prompt engineering" but basically it's this: delegation and being clear about what you want and why.
+- Dev experience skills. Like creating linters, setting up docs, etc.
