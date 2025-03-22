@@ -116,7 +116,7 @@ watch(
       email: email.value,
     });
   },
-  { deep: true }
+  { deep: true },
 );
 
 // ❌ Avoid: Form component making API calls
@@ -420,7 +420,7 @@ watch(
       address: address.value,
     });
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 
@@ -474,7 +474,7 @@ const isFormValid = computed(() => {
   if (!formData.value) return false;
 
   return Boolean(
-    formData.value.firstName && formData.value.lastName && formData.value.email
+    formData.value.firstName && formData.value.lastName && formData.value.email,
   );
 });
 

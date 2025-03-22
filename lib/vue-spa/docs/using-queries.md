@@ -120,7 +120,7 @@ const {
 
 // Third query - depends on both userId and profile
 const fetchPostsEnabled = computed(
-  () => userId.value !== -1 && !!profile.value
+  () => userId.value !== -1 && !!profile.value,
 );
 
 // This query will only run when both userId is valid and profile is loaded
@@ -134,7 +134,7 @@ const {
 
 // Combined loading state
 const isLoading = computed(
-  () => isAuthLoading.value || isProfileLoading.value || isPostsLoading.value
+  () => isAuthLoading.value || isProfileLoading.value || isPostsLoading.value,
 );
 </script>
 
@@ -181,7 +181,7 @@ const { data: profile, isLoading: isProfileLoading } = useGetUserProfile(
   userId,
   {
     enabled: computed(() => userId.value !== -1),
-  }
+  },
 );
 
 // Setup mutation
@@ -354,7 +354,7 @@ const toggleOption = (value: WorkPreference) => {
     selectedOptions.value = [...selectedOptions.value, value];
   } else {
     selectedOptions.value = selectedOptions.value.filter(
-      (option) => option !== value
+      (option) => option !== value,
     );
   }
 };
@@ -416,7 +416,7 @@ const currentEmployment = ref<Employment>({
 const openEditModal = (index: number) => {
   // Create a deep copy to avoid reactivity issues with nested objects
   currentEmployment.value = JSON.parse(
-    JSON.stringify(employmentHistory.value[index])
+    JSON.stringify(employmentHistory.value[index]),
   );
   // other setup...
 };
@@ -437,7 +437,7 @@ const handleSave = async () => {
           return JSON.parse(JSON.stringify(currentEmployment.value));
         }
         return employment;
-      }
+      },
     );
   } else {
     // Add a new item to the array
@@ -477,11 +477,11 @@ Instead, always create a new copy and replace the entire object:
 ```typescript
 // ✅ Create a copy, modify it, then replace the entire object
 const updatedEmployment = JSON.parse(
-  JSON.stringify(employmentHistory.value[index])
+  JSON.stringify(employmentHistory.value[index]),
 );
 updatedEmployment.startDate.month = 3;
 employmentHistory.value = employmentHistory.value.map((item, i) =>
-  i === index ? updatedEmployment : item
+  i === index ? updatedEmployment : item,
 );
 ```
 
@@ -524,7 +524,7 @@ The `useFormRefForRemoteRef` composable:
 function useFormRefForRemoteRef<T, K>(
   remoteRef: Ref<T | undefined>,
   selector: (data: T) => K | undefined,
-  defaultValue: K
+  defaultValue: K,
 ): Ref<K>;
 ```
 
@@ -693,7 +693,7 @@ const {
   computed(() => ({
     page: page.value,
     pageSize: pageSize.value,
-  }))
+  })),
 );
 
 // Extract users and pagination info

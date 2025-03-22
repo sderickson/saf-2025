@@ -62,7 +62,7 @@ describe("email-auth queries", () => {
 
     it("should throw EmailAuthNotFoundError when email not found", async () => {
       await expect(getByEmail("nonexistent@example.com")).rejects.toThrow(
-        EmailAuthNotFoundError
+        EmailAuthNotFoundError,
       );
     });
   });
@@ -97,7 +97,7 @@ describe("email-auth queries", () => {
 
     it("should throw EmailAuthNotFoundError when user not found", async () => {
       await expect(
-        updateVerification(999, "token", new Date(), null)
+        updateVerification(999, "token", new Date(), null),
       ).rejects.toThrow(EmailAuthNotFoundError);
     });
   });
@@ -125,7 +125,7 @@ describe("email-auth queries", () => {
       const updated = await updateForgotPasswordToken(
         user.id,
         token,
-        expiresAt
+        expiresAt,
       );
       expect(updated).toMatchObject({
         forgotPasswordToken: token,
@@ -135,7 +135,7 @@ describe("email-auth queries", () => {
 
     it("should throw EmailAuthNotFoundError when user not found", async () => {
       await expect(
-        updateForgotPasswordToken(999, "token", new Date())
+        updateForgotPasswordToken(999, "token", new Date()),
       ).rejects.toThrow(EmailAuthNotFoundError);
     });
   });
@@ -164,7 +164,7 @@ describe("email-auth queries", () => {
 
     it("should throw EmailAuthNotFoundError when user not found", async () => {
       await expect(
-        updatePasswordHash(999, Buffer.from([4, 5, 6]))
+        updatePasswordHash(999, Buffer.from([4, 5, 6])),
       ).rejects.toThrow(EmailAuthNotFoundError);
     });
   });

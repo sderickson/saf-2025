@@ -65,7 +65,7 @@ describe("todos queries", () => {
     it("should throw TodoNotFoundError when todo not found", async () => {
       const nonExistentId = 999;
       await expect(updateTodo(nonExistentId, "Title", false)).rejects.toThrow(
-        new TodoNotFoundError(nonExistentId)
+        new TodoNotFoundError(nonExistentId),
       );
     });
   });
@@ -87,7 +87,7 @@ describe("todos queries", () => {
     it("should throw TodoNotFoundError when todo not found", async () => {
       const nonExistentId = 999;
       await expect(deleteTodo(nonExistentId)).rejects.toThrow(
-        new TodoNotFoundError(nonExistentId)
+        new TodoNotFoundError(nonExistentId),
       );
     });
   });

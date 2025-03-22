@@ -1,4 +1,4 @@
-*NOTE: This doc is out of date - need to update this. Some is true, some needs to be vetted*
+_NOTE: This doc is out of date - need to update this. Some is true, some needs to be vetted_
 
 # Instructions
 

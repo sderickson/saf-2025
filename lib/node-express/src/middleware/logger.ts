@@ -18,7 +18,7 @@ export const createLogger = (): Logger => {
       winston.format.timestamp(),
       winston.format.printf(({ reqId, level, message, timestamp }) => {
         return `${timestamp} <${reqId}> [${level}]: ${message}`;
-      })
+      }),
     ),
   });
 };

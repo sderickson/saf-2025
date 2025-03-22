@@ -38,7 +38,7 @@ export class HandledDatabaseError extends Error {
 }
 
 export function queryWrapper<T, A extends any[]>(
-  queryFunc: (...args: A) => Promise<T>
+  queryFunc: (...args: A) => Promise<T>,
 ): (...args: A) => Promise<T> {
   return async (...args: A) => {
     try {

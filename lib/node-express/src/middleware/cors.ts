@@ -9,8 +9,8 @@ const protocol = process.env.PROTOCOL;
 
 const whitelist = new Set(
   domains.flatMap((domain) =>
-    subdomains.map((subdomain) => `${protocol}://${subdomain}${domain}`)
-  )
+    subdomains.map((subdomain) => `${protocol}://${subdomain}${domain}`),
+  ),
 );
 
 export const corsRouter = Router();

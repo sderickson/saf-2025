@@ -12,6 +12,6 @@ export const httpLogger: Handler = (() => {
 
   // Return configured morgan middleware
   return morgan(
-    ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]"
+    ":date[iso] <:id> :method :url :status :response-time ms - :res[content-length]",
   );
 })();

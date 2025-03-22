@@ -3,4 +3,4 @@
   "description": "Helper methods for working with OpenAPI specs in TypeScript",
   "type": "module",
   "main": "./index.ts"
-} 
+}

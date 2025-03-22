@@ -12,7 +12,7 @@ healthRouter.get("/health", (_req, res) => {
 });
 
 export const createHealthHandler = (
-  healthCheck: () => Promise<boolean>
+  healthCheck: () => Promise<boolean>,
 ): Handler => {
   const router = Router();
   router.get("/health", async (_req, res) => {

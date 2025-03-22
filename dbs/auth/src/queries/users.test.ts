@@ -66,7 +66,7 @@ describe("users queries", () => {
       const result = await getAll();
       expect(result).toHaveLength(2);
       expect(result.map((u) => u.email)).toEqual(
-        expect.arrayContaining(testUsers.map((u) => u.email))
+        expect.arrayContaining(testUsers.map((u) => u.email)),
       );
     });
 
@@ -92,7 +92,7 @@ describe("users queries", () => {
 
     it("should throw UserNotFoundError when email not found", async () => {
       await expect(getByEmail("nonexistent@example.com")).rejects.toThrow(
-        UserNotFoundError
+        UserNotFoundError,
       );
     });
   });
@@ -132,7 +132,7 @@ describe("users queries", () => {
       expect(result).toBeDefined();
       expect(result?.lastLoginAt).toBeInstanceOf(Date);
       expect(result?.lastLoginAt?.getTime()).toBeGreaterThan(
-        created.createdAt.getTime()
+        created.createdAt.getTime(),
       );
       vi.useRealTimers();
     });

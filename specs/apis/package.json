@@ -1,20 +1,20 @@
 {
-    "name": "@saf/specs-apis",
-    "description": "Shared OpenAPI specification for SAF services",
-    "type": "module",
-    "main": "./index.ts",
-    "scripts": {
-        "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
-        "generate:json": "redocly bundle openapi.yaml --ext json --output dist/openapi.json",
-        "generate:html": "redocly build-docs ./openapi.yaml --output=dist/index.html",
-        "generate": "npm run generate:types && npm run generate:json && npm run generate:html",
-        "serve": "serve dist -p 3000",
-        "generate-and-serve": "npm run generate && npm run serve"
-    },
-    "devDependencies": {
-        "@saf/openapi-specs-lib": "*"
-    },
-    "files": [
-        "dist"
-    ]
+  "name": "@saf/specs-apis",
+  "description": "Shared OpenAPI specification for SAF services",
+  "type": "module",
+  "main": "./index.ts",
+  "scripts": {
+    "generate:types": "openapi-typescript ./openapi.yaml -o dist/openapi.d.ts",
+    "generate:json": "redocly bundle openapi.yaml --ext json --output dist/openapi.json",
+    "generate:html": "redocly build-docs ./openapi.yaml --output=dist/index.html",
+    "generate": "npm run generate:types && npm run generate:json && npm run generate:html",
+    "serve": "serve dist -p 3000",
+    "generate-and-serve": "npm run generate && npm run serve"
+  },
+  "devDependencies": {
+    "@saf/openapi-specs-lib": "*"
+  },
+  "files": [
+    "dist"
+  ]
 }

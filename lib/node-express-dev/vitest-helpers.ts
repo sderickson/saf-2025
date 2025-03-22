@@ -12,7 +12,7 @@ import type { Response } from "supertest";
 export function expectStatus(
   response: Response,
   expectedStatus: number,
-  message?: string
+  message?: string,
 ): void {
   // Check if we got a 500 error but expected something else
   if (response.status === 500 && expectedStatus !== 500) {
@@ -25,16 +25,16 @@ export function expectStatus(
     if (isOpenApiValidationError) {
       console.error("\n\n⚠️ OPENAPI VALIDATION ERROR ⚠️");
       console.error(
-        `Expected status ${expectedStatus} but got 500 due to OpenAPI validation error.`
+        `Expected status ${expectedStatus} but got 500 due to OpenAPI validation error.`,
       );
       console.error(
-        "Make sure the status code is defined in the OpenAPI spec for this route."
+        "Make sure the status code is defined in the OpenAPI spec for this route.",
       );
       console.error(
-        "See node-express/docs/testing-guidelines.md for more information.\n\n"
+        "See node-express/docs/testing-guidelines.md for more information.\n\n",
       );
       throw new Error(
-        `Expected status ${expectedStatus} but got 500 due to OpenAPI validation error.`
+        `Expected status ${expectedStatus} but got 500 due to OpenAPI validation error.`,
       );
     }
   }
@@ -42,7 +42,7 @@ export function expectStatus(
   // Perform the actual assertion
   expect(
     response.status,
-    message || `Expected status ${expectedStatus} but got ${response.status}`
+    message || `Expected status ${expectedStatus} but got ${response.status}`,
   ).toBe(expectedStatus);
 }
 

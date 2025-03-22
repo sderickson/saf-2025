@@ -5,5 +5,5 @@
     "@redocly/cli": "*",
     "openapi-typescript": "*",
     "serve": "*"
-  } 
+  }
 }

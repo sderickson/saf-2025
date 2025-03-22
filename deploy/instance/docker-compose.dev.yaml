@@ -7,7 +7,7 @@ services:
     volumes:
       - ../../clients:/app/clients
     command: npm run dev
-  
+
   services-api:
     develop:
       watch:

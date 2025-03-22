@@ -10,4 +10,4 @@ services:
         - action: sync+restart
           path: ./openapi.yaml
           target: /app/specs/apis/openapi.yaml
-    command: npm run generate-and-serve 
+    command: npm run generate-and-serve

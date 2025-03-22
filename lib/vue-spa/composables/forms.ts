@@ -11,7 +11,7 @@ import type { Ref } from "vue";
 export function useFormRefForRemoteRef<T, K>(
   remoteRef: Ref<T | undefined>,
   selector: (data: T) => K | undefined,
-  defaultValue: K
+  defaultValue: K,
 ) {
   // Create a local ref for the form value
   const formRef = ref<K>(defaultValue);
@@ -27,7 +27,7 @@ export function useFormRefForRemoteRef<T, K>(
         }
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   return formRef;

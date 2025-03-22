@@ -26,7 +26,7 @@ describe("Error handling", () => {
     it("should create error with generic message", () => {
       const error = new UnhandledDatabaseError();
       expect(error.message).toBe(
-        "A database library did not catch and handle an error. Check logs."
+        "A database library did not catch and handle an error. Check logs.",
       );
       expect(error.name).toBe("UnhandledDatabaseError");
     });
@@ -53,13 +53,13 @@ describe("Error handling", () => {
       });
       await expect(wrappedQuery()).rejects.toThrow(UnhandledDatabaseError);
       await expect(wrappedQuery()).rejects.toThrow(
-        "A database library did not catch and handle an error. Check logs."
+        "A database library did not catch and handle an error. Check logs.",
       );
     });
 
     it("should handle query with parameters", async () => {
       const wrappedQuery = queryWrapper(
-        async (a: number, b: string) => `${a}-${b}`
+        async (a: number, b: string) => `${a}-${b}`,
       );
       await expect(wrappedQuery(1, "test")).resolves.toBe("1-test");
     });

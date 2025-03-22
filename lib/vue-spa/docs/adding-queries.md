@@ -28,7 +28,7 @@ import { Ref } from "vue";
  * Hook to fetch a list of users
  */
 export const useGetUsers = (
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     queryKey: ["users"],
@@ -82,7 +82,7 @@ import { Ref } from "vue";
  */
 export const useGetUserProfile = (
   userId: Ref<number>,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     // Include the ref directly in the queryKey
@@ -130,7 +130,7 @@ export const useSearchUsers = (
     limit?: number;
     sortBy?: string;
   }>,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   // Create a computed queryKey that updates when searchParams changes
   const queryKey = computed(() => ["users", "search", searchParams.value]);
@@ -331,7 +331,7 @@ export const useUpdateUserProfile = () => {
     onError: (err, { userId }, context) => {
       queryClient.setQueryData(
         ["userProfile", userId],
-        context.previousProfile
+        context.previousProfile,
       );
     },
     // Always refetch after error or success
@@ -353,7 +353,7 @@ export const useGetFilteredTasks = (
     priority?: string;
     assignee?: number;
   }>,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   // Create a computed queryKey that updates when filters change
   const queryKey = computed(() => ["tasks", "filtered", filters.value]);
@@ -384,7 +384,7 @@ export const useGetFilteredTasks = (
 // This query depends on the result of another query
 export const useGetUserPosts = (
   userId: Ref<number>,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     queryKey: ["userPosts", userId],
@@ -416,7 +416,7 @@ export const useGetInfinitePosts = (
   options?: Omit<
     UseInfiniteQueryOptions,
     "queryKey" | "queryFn" | "getNextPageParam"
-  >
+  >,
 ) => {
   return useInfiniteQuery({
     queryKey: ["posts", "infinite"],
@@ -481,7 +481,7 @@ export const useToggleTodoStatus = () => {
         return {
           ...old,
           items: old.items.map((todo: any) =>
-            todo.id === todoId ? { ...todo, completed } : todo
+            todo.id === todoId ? { ...todo, completed } : todo,
           ),
         };
       });
@@ -524,7 +524,7 @@ import { useVerifyAuth } from "./auth.js";
 // Individual query function
 export const useGetUserSettings = (
   userId: Ref<number>,
-  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions, "queryKey" | "queryFn">,
 ) => {
   return useQuery({
     queryKey: ["userSettings", userId],
@@ -607,7 +607,7 @@ export function useAuthedSettings() {
 
   // Combined loading state
   const isLoading = computed(
-    () => isAuthLoading.value || isSettingsLoading.value
+    () => isAuthLoading.value || isSettingsLoading.value,
   );
 
   // Combined error state
@@ -615,7 +615,7 @@ export function useAuthedSettings() {
 
   // Wrapper function for the mutation
   const updateUserSettings = async (
-    settingsData: RequestSchema<"updateUserSettings">
+    settingsData: RequestSchema<"updateUserSettings">,
   ) => {
     return updateMutation.mutateAsync({
       userId,

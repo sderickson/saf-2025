@@ -15,7 +15,7 @@ import {
  */
 export function withVueQuery<T>(
   composable: () => T,
-  queryClient?: any // TODO: Make this QueryClient instead
+  queryClient?: any, // TODO: Make this QueryClient instead
 ): [T, App<Element>, any] {
   let result!: T;
   const client =
@@ -44,7 +44,7 @@ export function withVueQuery<T>(
  * Type guard to check if a result is a UseQueryReturnType
  */
 export function isQueryResult<TData = unknown, TError = Error>(
-  result: unknown
+  result: unknown,
 ): result is UseQueryReturnType<TData, TError> {
   return (
     result !== null &&
@@ -63,7 +63,7 @@ export function isMutationResult<
   TVariables = unknown,
   TContext = unknown,
 >(
-  result: unknown
+  result: unknown,
 ): result is UseMutationReturnType<TData, TError, TVariables, TContext> {
   return (
     result !== null &&

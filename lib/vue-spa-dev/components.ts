@@ -83,7 +83,7 @@ interface MountWithPluginsOptions {
 export function mountWithVuetify(
   component: Component,
   options: ComponentMountingOptions<Component> = {},
-  pluginOptions: MountWithPluginsOptions = {}
+  pluginOptions: MountWithPluginsOptions = {},
 ) {
   const vuetify = createTestVuetify();
   // To suppress warnings, provide your own router

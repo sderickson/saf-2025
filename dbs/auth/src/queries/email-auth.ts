@@ -18,7 +18,7 @@ export const create = queryWrapper(
   async (auth: NewEmailAuth): Promise<SelectEmailAuth> => {
     const result = await db.insert(emailAuth).values(auth).returning();
     return result[0];
-  }
+  },
 );
 
 export const getByEmail = queryWrapper(
@@ -30,7 +30,7 @@ export const getByEmail = queryWrapper(
       throw new EmailAuthNotFoundError();
     }
     return result;
-  }
+  },
 );
 
 export const updateVerification = queryWrapper(
@@ -38,7 +38,7 @@ export const updateVerification = queryWrapper(
     userId: number,
     verificationToken: string | null,
     verificationTokenExpiresAt: Date | null,
-    verifiedAt: Date | null
+    verifiedAt: Date | null,
   ): Promise<SelectEmailAuth> => {
     const result = await db
       .update(emailAuth)
@@ -54,14 +54,14 @@ export const updateVerification = queryWrapper(
       throw new EmailAuthNotFoundError();
     }
     return result[0];
-  }
+  },
 );
 
 export const updateForgotPasswordToken = queryWrapper(
   async (
     userId: number,
     forgotPasswordToken: string | null,
-    forgotPasswordTokenExpiresAt: Date | null
+    forgotPasswordTokenExpiresAt: Date | null,
   ): Promise<SelectEmailAuth> => {
     const result = await db
       .update(emailAuth)
@@ -76,13 +76,13 @@ export const updateForgotPasswordToken = queryWrapper(
       throw new EmailAuthNotFoundError();
     }
     return result[0];
-  }
+  },
 );
 
 export const updatePasswordHash = queryWrapper(
   async (
     userId: number,
-    passwordHash: Uint8Array
+    passwordHash: Uint8Array,
   ): Promise<SelectEmailAuth> => {
     const result = await db
       .update(emailAuth)
@@ -94,7 +94,7 @@ export const updatePasswordHash = queryWrapper(
       throw new EmailAuthNotFoundError();
     }
     return result[0];
-  }
+  },
 );
 
 export const deleteAll = queryWrapper(async (): Promise<void> => {
