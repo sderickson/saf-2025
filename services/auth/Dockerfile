@@ -7,9 +7,8 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY services/auth/package*.json ./services/auth/
 COPY dbs/auth/package*.json ./dbs/auth/
-COPY lib/node-express/package*.json ./lib/node-express/
 COPY specs/apis/package*.json ./specs/apis/
-COPY lib/drizzle-sqlite3/package*.json ./lib/drizzle-sqlite3/
+COPY lib/ ./lib/
 
 RUN npm install --omit=dev
 

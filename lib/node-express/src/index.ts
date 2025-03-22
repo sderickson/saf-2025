@@ -6,10 +6,7 @@ export { healthRouter } from "./middleware/health.ts";
 export { auth } from "./middleware/auth.ts";
 
 // validation
-export {
-  openApiValidator,
-  createOpenApiValidator,
-} from "./middleware/openapi.ts";
+export { createOpenApiValidator } from "./middleware/openapi.ts";
 
 // error handling
 export { notFoundHandler, errorHandler } from "./middleware/errors.ts";
