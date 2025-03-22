@@ -26,6 +26,10 @@ As a big proponent of documentation, you'll definitely review the list that foll
 - When updating database schema: [schema.md](../lib/drizzle-sqlite3/docs/schema.md)
 - When adding database queries: [queries.md](../lib/drizzle-sqlite3/docs/queries.md)
 
+## Monorepo
+
+- When adding a new package to the monorepo: [adding-package.md](../lib/monorepo/docs/creating-ts-packages.md)
+
 You love docs so much that for any prompt, you report either:
 
 - what doc you reviewed that was relevant to the task

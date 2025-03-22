@@ -1,6 +1,6 @@
 # Creating TypeScript Packages
 
-This guide outlines the best practices for creating TypeScript packages in the Vendata monorepo.
+This guide outlines the best practices for creating TypeScript packages in your monorepo.
 
 ## Package Structure
 
@@ -9,7 +9,6 @@ A typical TypeScript package should have the following structure:
 ```
 package-name/
 ├── package.json
-├── tsconfig.json
 └── src/           # Source files
     └── index.ts   # Main entry point
 ```
@@ -20,13 +19,22 @@ The `package.json` should be minimal and focused:
 
 ```json
 {
-  "name": "@vendata/package-name",
+  "name": "@your-org/package-name",
   "description": "Brief description of the package",
   "private": true,
-  "main": "dist/index.ts",
+  "type": "module",
+  "main": "src/index.ts",
   "scripts": {
-    "clean": "rm -rf dist",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saf/name-of-saf-lib": "*",
+    "your-third-party-lib": "*"
+  },
+  "devDependencies": {
+    "@saf/name-of-saf-dev-lib": "*"
   }
 }
 ```
@@ -35,49 +43,15 @@ Key points:
 
 - No version field needed (we're not publishing)
 - `main` points to the TypeScript file (we strip types at runtime)
+- `type` is `module` - we're using ESM
 - No separate types field needed
 - Use vitest for testing
 - `private` assuming you aren't planning on publishing the package
+- Product packages will tend to depend on SAF libraries, depending on what the package does.
 
 ## TypeScript Configuration
 
-There are two types of TypeScript packages:
-
-### 1. Regular TypeScript Packages
-
-For packages that contain TypeScript source code that can be imported:
-
-```json
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"]
-}
-```
-
-### 2. Generated TypeScript Packages
-
-For packages that only contain generated TypeScript (e.g., from protobuf):
-
-```json
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true
-  },
-  "include": ["dist/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"]
-}
-```
-
-Key points:
-
-- Extend the root tsconfig
-- Set `noEmit: true` since no compilation into JS is rarely necessary
-- Only override necessary options
+Avoid creating one. By default, use the root tsconfig.
 
 ## Dependencies
 
@@ -97,7 +71,7 @@ Key points:
 ```
 
 2. Run `npm install` from the root directory to:
-   - Install the latest versions
+   - Install the latest versions and lock the versions
    - Ensure consistent versions across the monorepo
    - Set up proper workspace linking
 
@@ -110,10 +84,12 @@ If your package depends on another package in the monorepo:
 ```json
 {
   "dependencies": {
-    "@vendata/other-package": "*"
+    "@your-org/other-package": "*"
   }
 }
 ```
+
+If you depend on it for your tests, add it to the devDependencies instead.
 
 2. Run `npm install` from the root directory
 
@@ -121,7 +97,7 @@ If your package depends on another package in the monorepo:
 
 1. Always use `.ts` extension in imports (not `.js`)
 2. Use relative imports (e.g., `./file.ts`) for files within the same package
-3. Use package names (e.g., `@vendata/package-name`) for imports from other packages
+3. Use package names (e.g., `@your-org/package-name`) for imports from other packages
 4. Never use relative paths with `../` to import from other packages
 
 Example:
@@ -131,7 +107,7 @@ Example:
 import { Something } from "./something.ts";
 
 // Good - importing from another package
-import { OtherThing } from "@vendata/other-package/src/thing.ts";
+import { OtherThing } from "@your-org/other-package/src/thing.ts";
 
 // Bad - using .js extension
 import { Something } from "./something.js";
@@ -146,7 +122,7 @@ If your package includes generated code (e.g., from protobuf):
 
 1. Generate into the `dist` directory
 2. Include the generated files in your package
-3. Make sure the generation script is documented, and runs as "npm run generate"
+3. Make sure the generation script is documented, and runs as `npm run generate`
 4. Consider adding a preinstall hook to ensure generation happens
 
 ## Testing
