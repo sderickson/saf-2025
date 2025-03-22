@@ -7,7 +7,7 @@ import { errorHandler, notFoundHandler } from "./errors.ts";
 import { createHealthHandler, healthRouter } from "./health.ts";
 import { httpLogger } from "./httpLogger.ts";
 import { loggerInjector } from "./logger.ts";
-import { createOpenApiValidator, openApiValidator } from "./openapi.ts";
+import { createOpenApiValidator } from "./openapi.ts";
 import { requestId } from "./requestId.ts";
 
 /**
@@ -30,7 +30,6 @@ export const recommendedPreMiddleware: Handler[] = [
   urlencoded({ extended: false }),
   loggerInjector,
   corsRouter,
-  ...openApiValidator,
 ];
 
 interface PreMiddlewareOptions {

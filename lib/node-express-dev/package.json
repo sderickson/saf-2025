@@ -4,10 +4,10 @@
   "type": "module",
   "dependencies": {
     "@types/supertest": "*",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/http-errors": "^2.0.4",
-    "@types/morgan": "^1.9.9",
+    "@types/cors": "*",
+    "@types/express": "*",
+    "@types/http-errors": "*",
+    "@types/morgan": "*",
     "supertest": "*"
   }
 }
