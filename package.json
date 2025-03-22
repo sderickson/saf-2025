@@ -16,8 +16,7 @@
     "dbs/*",
     "lib/*",
     "services/*",
-    "specs/apis",
-    "tools"
+    "specs/*"
   ],
   "engines": {
     "node": ">=22"

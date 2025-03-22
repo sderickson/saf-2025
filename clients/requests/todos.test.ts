@@ -6,7 +6,7 @@ import {
   useDeleteTodo,
 } from "./todos.ts";
 import { client } from "./client.ts";
-import { withVueQuery } from "@saf/vue-spa/test-utils/requests.ts";
+import { withVueQuery } from "@saf/vue-spa-dev-lib/requests.ts";
 import { QueryClient } from "@tanstack/vue-query";
 
 // Mock the client
