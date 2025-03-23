@@ -32,16 +32,48 @@ To get started:
 
 ### Implementation Phase
 
-- [ ] Create auth-spa library structure
+#### Phase 1: Auth Spec Package
+
+- [ ] Create auth-spec package structure
+
+  - [ ] Create new directory in /saf-2025/lib/auth-spec
+  - [ ] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
+  - [ ] **Review Point**
+
+- [ ] Define auth schemas
+
+  - [ ] Create schemas for login request/response
+  - [ ] Create schemas for register request/response
+  - [ ] Create schemas for logout request/response
+  - [ ] Add tests for schemas
+  - [ ] **Review Point**
+
+- [ ] Define auth paths
+
+  - [ ] Create path definitions for /auth/login
+  - [ ] Create path definitions for /auth/register
+  - [ ] Create path definitions for /auth/logout
+  - [ ] Add tests for paths
+  - [ ] **Review Point**
+
+- [ ] Generate TypeScript types
+  - [ ] Set up type generation
+  - [ ] Generate types from schemas
+  - [ ] Add tests for generated types
+  - [ ] **Review Point**
+
+#### Phase 2: Auth SPA Package
+
+- [ ] Create auth-spa package structure
 
   - [ ] Create new directory in /saf-2025/lib/auth-spa
   - [ ] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
   - [ ] **Review Point**
 
-- [ ] Migrate auth API client code first
+- [ ] Migrate auth API client code
 
   - [ ] Copy auth.ts from clients/requests to auth-spa
-  - [ ] Update imports and dependencies following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md#import-rules)
+  - [ ] Update imports to use auth-spec types
   - [ ] Ensure proper typing and exports
   - [ ] Add tests for the auth functions following [query-testing.md](../lib/vue-spa-dev/docs/query-testing.md)
   - [ ] **Review Point**
