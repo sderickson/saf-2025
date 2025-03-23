@@ -33,11 +33,11 @@ The auth spec package will be created as `@saf-2025/auth-spec` with the followin
 
 ```
 lib/auth-spec/
-├── src/
-│   ├── schemas/     # OpenAPI schemas for auth
-│   ├── paths/       # OpenAPI paths for auth endpoints
-│   └── index.ts     # Main exports
-├── tests/          # Test files
+├── routes/
+│   └── auth.yaml     # OpenAPI route definitions
+├── schemas/
+│   └── error.yaml    # Shared error schema
+├── openapi.yaml      # Main OpenAPI file
 └── package.json
 ```
 
@@ -49,8 +49,9 @@ Following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md
   "description": "API specifications for SAF-2025 authentication",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/openapi.json",
   "scripts": {
+    "generate": "ts-openapi generate",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -63,6 +64,13 @@ Following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md
   }
 }
 ```
+
+The package will define the following endpoints:
+
+1. POST /auth/register - Register a new user
+2. POST /auth/login - Authenticate a user
+3. POST /auth/logout - Logout a user
+4. GET /auth/verify - Verify authentication status (used by Caddy for forward auth)
 
 #### Auth SPA Package
 

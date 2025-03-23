@@ -18,41 +18,54 @@ To get started:
 
 ### Planning Phase
 
-- [ ] Write specification
-  - [ ] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/<feature-folder>/spec.md
-  - [ ] Fill in each section
-  - [ ] Ask questions to clarify any ambiguities
-- [ ] **Review Point**
+- [x] Write specification
+  - [x] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/<feature-folder>/spec.md
+  - [x] Fill in each section
+  - [x] Ask questions to clarify any ambiguities
+- [x] **Review Point**
 
-- [ ] Update checklist
-  - [ ] Update the checkbox contents for what is necessary for this feature based on the spec.
-  - [ ] Break down complex tasks into smaller, manageable subtasks.
-  - [ ] Note: {} indicates something to fill in or choose. ... means repeat as necessary.
-- [ ] **Review Point**
+- [x] Update checklist
+  - [x] Update the checkbox contents for what is necessary for this feature based on the spec.
+  - [x] Break down complex tasks into smaller, manageable subtasks.
+  - [x] Note: {} indicates something to fill in or choose. ... means repeat as necessary.
+- [x] **Review Point**
 
 ### Implementation Phase
 
 #### Phase 1: Auth Spec Package
 
-- [ ] Create auth-spec package structure
+- [x] Create auth-spec package structure
 
-  - [ ] Create new directory in /saf-2025/lib/auth-spec
-  - [ ] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
-  - [ ] **Review Point**
+  - [x] Create new directory in /saf-2025/lib/auth-spec
+  - [x] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
+  - [x] **Review Point**
 
 - [ ] Define auth schemas
 
   - [ ] Create schemas for login request/response
+    - [ ] Review existing auth.ts to understand current types
+    - [ ] Create OpenAPI schema for login request
+    - [ ] Create OpenAPI schema for login response
   - [ ] Create schemas for register request/response
+    - [ ] Create OpenAPI schema for register request
+    - [ ] Create OpenAPI schema for register response
   - [ ] Create schemas for logout request/response
+    - [ ] Create OpenAPI schema for logout request
+    - [ ] Create OpenAPI schema for logout response
   - [ ] Add tests for schemas
   - [ ] **Review Point**
 
 - [ ] Define auth paths
 
   - [ ] Create path definitions for /auth/login
+    - [ ] Define POST method
+    - [ ] Link to request/response schemas
   - [ ] Create path definitions for /auth/register
+    - [ ] Define POST method
+    - [ ] Link to request/response schemas
   - [ ] Create path definitions for /auth/logout
+    - [ ] Define POST method
+    - [ ] Link to request/response schemas
   - [ ] Add tests for paths
   - [ ] **Review Point**
 
@@ -64,11 +77,11 @@ To get started:
 
 #### Phase 2: Auth SPA Package
 
-- [ ] Create auth-spa package structure
+- [x] Create auth-spa package structure
 
-  - [ ] Create new directory in /saf-2025/lib/auth-spa
-  - [ ] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
-  - [ ] **Review Point**
+  - [x] Create new directory in /saf-2025/lib/auth-spa
+  - [x] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
+  - [x] **Review Point**
 
 - [ ] Migrate auth API client code
 

@@ -1,0 +1,20 @@
+{
+  "name": "@saf-2025/auth-spec",
+  "description": "API specifications for SAF-2025 authentication",
+  "private": true,
+  "type": "module",
+  "main": "dist/openapi.json",
+  "scripts": {
+    "generate": "ts-openapi generate",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saf-2025/ts-openapi": "*",
+    "zod": "*"
+  },
+  "devDependencies": {
+    "@saf-2025/ts-openapi-dev": "*"
+  }
+} 
