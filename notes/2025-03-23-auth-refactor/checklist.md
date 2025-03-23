@@ -35,89 +35,59 @@ To get started:
 #### Phase 1: Auth Spec Package
 
 - [x] Create auth-spec package structure
-
-  - [x] Create new directory in /saf-2025/lib/auth-spec
-  - [x] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
-  - [x] **Review Point**
-
-- [ ] Define auth schemas
-
-  - [ ] Create schemas for login request/response
-    - [ ] Review existing auth.ts to understand current types
-    - [ ] Create OpenAPI schema for login request
-    - [ ] Create OpenAPI schema for login response
-  - [ ] Create schemas for register request/response
-    - [ ] Create OpenAPI schema for register request
-    - [ ] Create OpenAPI schema for register response
-  - [ ] Create schemas for logout request/response
-    - [ ] Create OpenAPI schema for logout request
-    - [ ] Create OpenAPI schema for logout response
-  - [ ] Add tests for schemas
-  - [ ] **Review Point**
-
-- [ ] Define auth paths
-
-  - [ ] Create path definitions for /auth/login
-    - [ ] Define POST method
-    - [ ] Link to request/response schemas
-  - [ ] Create path definitions for /auth/register
-    - [ ] Define POST method
-    - [ ] Link to request/response schemas
-  - [ ] Create path definitions for /auth/logout
-    - [ ] Define POST method
-    - [ ] Link to request/response schemas
-  - [ ] Add tests for paths
-  - [ ] **Review Point**
-
+  - [x] Create routes/auth.yaml
+  - [x] Create schemas/error.yaml
+  - [x] Create openapi.yaml
+  - [x] Create package.json
+- [x] Define OpenAPI schemas and paths
+  - [x] Define RegisterRequest schema
+  - [x] Define LoginRequest schema
+  - [x] Define UserResponse schema
+  - [x] Define error schema
+  - [x] Define register path
+  - [x] Define login path
+  - [x] Define logout path
+  - [x] Define verify path
 - [ ] Generate TypeScript types
-  - [ ] Set up type generation
-  - [ ] Generate types from schemas
-  - [ ] Add tests for generated types
-  - [ ] **Review Point**
+  - [ ] Add generate scripts to package.json
+  - [ ] Run generate to create types
+  - [ ] Verify generated types
 
-#### Phase 2: Auth SPA Package
+#### Phase 2: Request Logic Migration
 
-- [x] Create auth-spa package structure
+- [ ] Create auth-spa package structure
+  - [ ] Create src/requests directory
+  - [ ] Create src/types.ts
+  - [ ] Create src/routes.ts
+  - [ ] Create src/index.ts
+  - [ ] Create package.json
+- [ ] Copy auth request functions
+  - [ ] Copy useLogin function
+  - [ ] Copy useLogout function
+  - [ ] Copy useRegister function
+- [ ] Update imports to use auth-spec types
+- [ ] Add tests for the functions following [query-testing.md](../lib/vue-spa-dev/docs/query-testing.md)
 
-  - [x] Create new directory in /saf-2025/lib/auth-spa
-  - [x] Set up package.json following [creating-ts-packages.md](../lib/monorepo/docs/creating-ts-packages.md)
-  - [x] **Review Point**
+#### Phase 3: Component Migration
 
-- [ ] Migrate auth API client code
+- [ ] Copy Vue components
+  - [ ] Copy LoginPage.vue
+  - [ ] Copy RegisterPage.vue
+  - [ ] Copy ForgotPasswordPage.vue
+  - [ ] Copy LogoutPage.vue
+- [ ] Update imports to use new auth request functions
+- [ ] Add component tests following [component-testing.md](../lib/vue-spa-dev/docs/component-testing.md)
 
-  - [ ] Copy auth.ts from clients/requests to auth-spa
-  - [ ] Update imports to use auth-spec types
-  - [ ] Ensure proper typing and exports
-  - [ ] Add tests for the auth functions following [query-testing.md](../lib/vue-spa-dev/docs/query-testing.md)
-  - [ ] **Review Point**
-
-- [ ] Create initial auth-spa exports
-
-  - [ ] Create index.ts to export auth functions
-  - [ ] Create types.ts for shared types
-  - [ ] Export routes array from router.ts
-  - [ ] **Review Point**
-
-- [ ] Migrate auth components
-
-  - [ ] Copy LoginPage.vue from clients/auth/views
-  - [ ] Copy RegisterPage.vue from clients/auth/views
-  - [ ] Copy ForgotPasswordPage.vue from clients/auth/views
-  - [ ] Copy LogoutPage.vue from clients/auth/views
-  - [ ] Update component imports to use new auth-spa package
-  - [ ] Add tests for components following [component-testing.md](../lib/vue-spa-dev/docs/component-testing.md)
-  - [ ] **Review Point**
+#### Phase 4: Integration
 
 - [ ] Update existing auth client
-
-  - [ ] Update imports to use new auth-spa package
-  - [ ] Test that everything still works
-  - [ ] **Review Point**
-
-- [ ] Clean up old code
-  - [ ] Remove old auth.ts from clients/requests
-  - [ ] Remove old components from clients/auth/views
-  - [ ] **Review Point**
+  - [ ] Update imports to use new library
+  - [ ] Update router configuration
+- [ ] Test the integration
+- [ ] Remove old code
+  - [ ] Remove old auth request functions
+  - [ ] Remove old components
+  - [ ] Remove old types
 
 ### Testing Phase
 
