@@ -143,6 +143,10 @@ I've used Nginx before, but I could use something a bit more opinionated, conven
 
 I sort of went with npm workspaces without much consideration. But I think it would probably be good to try out some alternatives at some point. `pnpm` has high positivity in the [State of JS](https://2024.stateofjs.com/en-US/libraries/monorepo_tools/), and I know Taylor is using Bun. Both are drop-in replacements, so I might move this project a little more and then see if there's a noticeable difference in DX (in the case of both) and/or runtime (in the case of bun).
 
+## Ownership
+
+I'd like the unit of ownership to be a package. However, it's not that simple. I can't just add a package.json file to a folder and it magically works. That package needs to be listed in the workspaces of the monorepo, and if it's in the monorepo, it needs to be included (at least the shell of it) in unrelated builds, such as in images that use bun (which errors if a workspace package is not included). It also would require specifying dependencies over again... which is probably fine actually, it's good to be explicit what things your package that you own depends on. Something to ponder.
+
 ## Other Considerations
 
 I could spend all my time planning and not building. Here are a few areas of decision-making to work on as I go, rather than figuring out everything ahead of time.

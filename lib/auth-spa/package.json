@@ -11,12 +11,9 @@
   },
   "dependencies": {
     "@saf/vue-spa": "*",
-    "@saf/auth-spec": "*",
-    "openapi-fetch": "^0.7.0"
+    "@saf/auth-spec": "*"
   },
   "devDependencies": {
-    "@saf/vue-spa-dev-lib": "*",
-    "@vitejs/plugin-vue": "^5.0.0",
-    "jsdom": "^24.0.0"
+    "@saf/vue-spa-dev-lib": "*"
   }
 } 
