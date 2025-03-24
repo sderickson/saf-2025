@@ -1,5 +1,5 @@
 {
-  "name": "@saf/services-api",
+  "name": "@saf-2025/services-api",
   "type": "module",
   "scripts": {
     "start": "node --experimental-strip-types ./bin/www",

@@ -1,5 +1,5 @@
 {
-  "name": "@saf/monorepo-lib",
+  "name": "@saflib/monorepo",
   "description": "Library and docs for projects which use the SAF monorepo structure and conventions",
   "main": "./eslint.config.js",
   "type": "module",

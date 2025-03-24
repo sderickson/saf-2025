@@ -1,5 +1,5 @@
 {
-  "name": "@saf/saf-2025",
+  "name": "@saf-2025/saf-2025",
   "description": "Full-featured web application framework using my preferred libraries and services.",
   "directories": {
     "doc": "docs"

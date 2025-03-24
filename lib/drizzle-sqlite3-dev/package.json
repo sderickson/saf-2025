@@ -1,5 +1,5 @@
 {
-  "name": "@saf/drizzle-sqlite3-dev-lib",
+  "name": "@saflib/drizzle-sqlite3-dev",
   "description": "Shared testing and type dependencies and utilities for SAF drizzle-sqlite3 libraries",
   "dependencies": {
     "@types/better-sqlite3": "*",

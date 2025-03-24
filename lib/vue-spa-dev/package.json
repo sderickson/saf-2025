@@ -1,10 +1,10 @@
 {
-  "name": "@saf/vue-spa-dev-lib",
+  "name": "@saflib/vue-spa-dev",
   "description": "Library for testing Vue SPAs within the SAF framework",
   "type": "module",
   "dependencies": {
-    "@saf/vue-spa": "*",
-    "@saf/vitest-lib": "*",
+    "@saflib/vue-spa": "*",
+    "@saflib/vitest": "*",
     "@vue/test-utils": "*",
     "jsdom": "*",
     "sass-embedded": "*",

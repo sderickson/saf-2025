@@ -1,5 +1,5 @@
 {
-  "name": "@saf/auth-spa",
+  "name": "@saflib/auth-spa",
   "description": "Shared authentication components and utilities for SAF-2025",
   "private": true,
   "type": "module",
@@ -10,10 +10,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@saf/vue-spa": "*",
-    "@saf/auth-spec": "*"
+    "@saflib/vue-spa": "*",
+    "@saflib/auth-spec": "*"
   },
   "devDependencies": {
-    "@saf/vue-spa-dev-lib": "*"
+    "@saflib/vue-spa-dev": "*"
   }
 } 

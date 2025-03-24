@@ -1,5 +1,5 @@
 {
-  "name": "@saf/drizzle-sqlite3",
+  "name": "@saflib/drizzle-sqlite3",
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
@@ -13,7 +13,7 @@
     "drizzle-kit": "*"
   },
   "devDependencies": {
-    "@saf/drizzle-sqlite3-dev-lib": "*",
-    "@saf/vitest-lib": "*"
+    "@saflib/drizzle-sqlite3-dev": "*",
+    "@saflib/vitest": "*"
   }
 }

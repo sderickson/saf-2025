@@ -1,5 +1,5 @@
 {
-  "name": "@saf/dbs-main",
+  "name": "@saf-2025/dbs-main",
   "main": "./index.ts",
   "type": "module",
   "exports": {

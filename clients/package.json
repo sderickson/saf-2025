@@ -1,5 +1,5 @@
 {
-  "name": "@saf/clients",
+  "name": "@saf-2025/clients",
   "type": "module",
   "scripts": {
     "dev": "vite",

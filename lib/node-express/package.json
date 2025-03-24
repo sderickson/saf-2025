@@ -1,5 +1,5 @@
 {
-  "name": "@saf/node-express",
+  "name": "@saflib/node-express",
   "description": "Shared Express.js utilities for SAF services",
   "type": "module",
   "main": "./src/index.ts",
@@ -18,7 +18,7 @@
     "winston": "*"
   },
   "devDependencies": {
-    "@saf/node-express-dev-lib": "*",
-    "@saf/vitest-lib": "*"
+    "@saflib/node-express-dev": "*",
+    "@saflib/vitest": "*"
   }
 }

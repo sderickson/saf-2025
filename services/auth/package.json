@@ -1,5 +1,5 @@
 {
-  "name": "@saf/services-auth",
+  "name": "@saf-2025/services-auth",
   "type": "module",
   "scripts": {
     "start": "node --experimental-strip-types ./bin/www",

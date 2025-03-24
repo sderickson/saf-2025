@@ -1,5 +1,5 @@
 {
-  "name": "@saf/tests-e2e",
+  "name": "@saf-2025/tests-e2e",
   "scripts": {
     "test": "npx playwright test",
     "report": "npx playwright show-report",

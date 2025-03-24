@@ -1,5 +1,5 @@
 {
-  "name": "@saf/dbs-auth",
+  "name": "@saf-2025/dbs-auth",
   "type": "module",
   "main": "./index.ts",
   "exports": {
