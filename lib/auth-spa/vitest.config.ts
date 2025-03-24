@@ -5,5 +5,11 @@ export default defineConfig({
   plugins: [vue()],
   test: {
     environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
+    globals: true,
+    css: true,
+    deps: {
+      inline: [/vuetify/],
+    },
   },
 });
