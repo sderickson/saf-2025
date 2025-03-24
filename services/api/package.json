@@ -1,5 +1,5 @@
 {
-  "name": "@saf/services-api",
+  "name": "@saf-2025/services-api",
   "type": "module",
   "scripts": {
     "start": "node --experimental-strip-types ./bin/www",
@@ -9,9 +9,9 @@
     "healthcheck": "node --experimental-strip-types ./bin/healthcheck"
   },
   "dependencies": {
-    "@saf/dbs-main": "*",
-    "@saf/node-express": "*",
-    "@saf/specs-apis": "*",
+    "@saf-2025/dbs-main": "*",
+    "@saflib/node-express": "*",
+    "@saf-2025/specs-apis": "*",
     "express": "^4.21.2",
     "tsx": "^4.19.2"
   },

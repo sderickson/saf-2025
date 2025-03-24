@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { withVueQuery } from "@saf/vue-spa-dev-lib/requests.ts";
+import { withVueQuery } from "@saflib/vue-spa-dev/requests.ts";
 import { useLogin, useLogout, useRegister } from "./auth.ts";
 import { client } from "../client.ts";
 

@@ -9,7 +9,7 @@ import express from "express";
 import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
-} from "@saf/node-express";
+} from "@saflib/node-express";
 import todosRouter from "./routes/todos.ts";
 
 const app = express();

@@ -20,7 +20,7 @@ import { describe, it, expect, vi } from "vitest";
 import {
   withResizeObserverMock,
   mountWithPlugins,
-} from "@saf/vue-spa/test-utils/components";
+} from "@saflib/vue-spa/test-utils/components";
 import YourComponent from "../YourComponent.vue";
 
 withResizeObserverMock(() => {
@@ -71,7 +71,7 @@ Vuetify components often use the ResizeObserver API, which is not available in t
 
 ```typescript
 import { describe, it, expect } from "vitest";
-import { withResizeObserverMock } from "@saf/vue-spa/test-utils/components";
+import { withResizeObserverMock } from "@saflib/vue-spa/test-utils/components";
 
 withResizeObserverMock(() => {
   describe("YourComponent", () => {
@@ -93,7 +93,7 @@ Always wrap your Vuetify component tests with this helper to avoid ResizeObserve
 The `mountWithPlugins` function (previously known as `mountWithVuetify`) simplifies mounting components that use Vuetify and other plugins like Vue Router:
 
 ```typescript
-import { mountWithPlugins } from "@saf/vue-spa/test-utils/components";
+import { mountWithPlugins } from "@saflib/vue-spa/test-utils/components";
 import { router } from "@your-app/router"; // Import your app's router
 
 const wrapper = mountWithPlugins(
@@ -109,7 +109,7 @@ const wrapper = mountWithPlugins(
   },
   {
     router, // Pass your app's router instance
-  },
+  }
 );
 ```
 
@@ -411,7 +411,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   withResizeObserverMock,
   mountWithPlugins,
-} from "@saf/vue-spa/test-utils/components";
+} from "@saflib/vue-spa/test-utils/components";
 import LoginForm from "../LoginForm.vue";
 import { router } from "@your-app/router"; // Import your app's router
 
@@ -435,7 +435,7 @@ withResizeObserverMock(() => {
       return mountWithPlugins(
         LoginForm,
         { props },
-        { router }, // Pass your app's router
+        { router } // Pass your app's router
       );
     };
 

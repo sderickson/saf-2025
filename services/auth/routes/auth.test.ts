@@ -10,14 +10,14 @@ import * as argon2 from "argon2";
 import {
   recommendedErrorHandlers,
   recommendedPreMiddleware,
-} from "@saf/node-express";
+} from "@saflib/node-express";
 
 // Import the mocked modules
-import { users } from "@saf/dbs-auth";
-import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
+import { users } from "@saf-2025/dbs-auth";
+import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
 
 // Mock the modules
-vi.mock("@saf/dbs-auth", () => ({
+vi.mock("@saf-2025/dbs-auth", () => ({
   users: {
     create: vi.fn(),
     getByEmail: vi.fn(),
@@ -32,7 +32,7 @@ vi.mock("@saf/dbs-auth", () => ({
   },
 }));
 
-vi.mock("@saf/dbs-auth/queries/email-auth", () => ({
+vi.mock("@saf-2025/dbs-auth/queries/email-auth", () => ({
   create: vi.fn(),
   getByEmail: vi.fn(),
 }));
@@ -52,7 +52,7 @@ app.use(
     secret: "test-secret",
     resave: false,
     saveUninitialized: false,
-  }),
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());

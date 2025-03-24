@@ -13,7 +13,7 @@ Example:
 ```typescript
 // In your routes/<>.ts file
 import { Router } from "express";
-import { createHandler } from "@saf/node-express";
+import { createHandler } from "@saflib/node-express";
 import type { RequestSchema, ResponseSchema } from "@your-project/specs-apis";
 
 export const exampleRouter = Router();
@@ -29,7 +29,7 @@ router.get(
     };
 
     return exampleResponse;
-  }),
+  })
 );
 
 // In your app.ts file

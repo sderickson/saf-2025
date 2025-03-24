@@ -1,5 +1,5 @@
 {
-  "name": "@saf/specs-apis",
+  "name": "@saf-2025/specs-apis",
   "description": "Shared OpenAPI specification for SAF services",
   "type": "module",
   "main": "./index.ts",
@@ -12,7 +12,7 @@
     "generate-and-serve": "npm run generate && npm run serve"
   },
   "devDependencies": {
-    "@saf/openapi-specs-lib": "*"
+    "@saflib/openapi-specs": "*"
   },
   "files": [
     "dist"

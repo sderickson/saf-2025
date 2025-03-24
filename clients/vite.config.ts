@@ -25,7 +25,7 @@ function makeConfig() {
     resolve: {
       alias: {
         clients: path.resolve(__dirname, "./"),
-        "@saf/specs-apis": path.resolve(__dirname, "../specs/apis/dist"),
+        "@saflib/specs-apis": path.resolve(__dirname, "../specs/apis/dist"),
       },
     },
     server: {

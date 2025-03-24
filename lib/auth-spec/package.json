@@ -1,5 +1,5 @@
 {
-  "name": "@saf/auth-spec",
+  "name": "@saflib/auth-spec",
   "description": "API specifications for SAF-2025 authentication",
   "private": true,
   "type": "module",
@@ -13,7 +13,7 @@
     "generate-and-serve": "npm run generate && npm run serve"
   },
   "devDependencies": {
-    "@saf/openapi-specs-lib": "*"
+    "@saflib/openapi-specs": "*"
   },
   "files": [
     "dist"

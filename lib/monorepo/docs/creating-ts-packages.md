@@ -30,11 +30,11 @@ The `package.json` should be minimal and focused:
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@saf/name-of-saf-lib": "*",
+    "@saflib/name-of-saf-lib": "*",
     "your-third-party-lib": "*"
   },
   "devDependencies": {
-    "@saf/name-of-saf-dev-lib": "*"
+    "@saflib/name-of-saf-dev-lib": "*"
   }
 }
 ```
