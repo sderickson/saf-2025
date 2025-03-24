@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/vue-query";
-import { client } from "@saf-2025/vue-spa";
+import { client } from "../client.ts";
 import type { LoginRequest, RegisterRequest } from "../types.ts";
 
 export const useLogin = () => {

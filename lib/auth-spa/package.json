@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@saf-2025/vue-spa": "*",
-    "@saf-2025/ts-openapi": "*"
+    "@saf-2025/auth-spec": "*"
   },
   "devDependencies": {
     "@saf-2025/vue-spa-dev": "*"
