@@ -1,7 +1,7 @@
 import express from "express";
-import { todos, TodoNotFoundError } from "@saf/dbs-main";
-import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
-import { createHandler } from "@saf/node-express";
+import { todos, TodoNotFoundError } from "@saf-2025/dbs-main";
+import type { RequestSchema, ResponseSchema } from "@saf-2025/specs-apis";
+import { createHandler } from "@saflib/node-express";
 const router = express.Router();
 
 // Get all todos
@@ -10,7 +10,7 @@ router.get(
   createHandler(async (req, res, next) => {
     const todoList = await todos.getAllTodos();
     res.json(todoList);
-  }),
+  })
 );
 
 // Create a new todo
@@ -21,7 +21,7 @@ router.post(
     const todo: ResponseSchema<"createTodo", 201> =
       await todos.createTodo(title);
     res.status(201).json(todo);
-  }),
+  })
 );
 
 // Update a todo
@@ -34,7 +34,7 @@ router.put(
       const todo: ResponseSchema<"updateTodo", 200> = await todos.updateTodo(
         id,
         title,
-        completed,
+        completed
       );
       res.json(todo);
     } catch (error) {
@@ -44,7 +44,7 @@ router.put(
         next(error);
       }
     }
-  }),
+  })
 );
 
 // Delete a todo
@@ -63,7 +63,7 @@ router.delete(
         next(error);
       }
     }
-  }),
+  })
 );
 
 export default router;

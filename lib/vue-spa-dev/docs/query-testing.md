@@ -17,7 +17,7 @@ This guide focuses on how to effectively test your TanStack Query functions, inc
 To test TanStack Query functions, you need to set up a proper testing environment. Make sure this package is included as a dependency in your own, then you can import the `withVueQuery` function included in `@saf/vue-spa`.
 
 ```typescript
-import { withVueQuery } from "@saf/vue-spa/test-utils/requests.ts";
+import { withVueQuery } from "@saflib/vue-spa/test-utils/requests.ts";
 
 // then within your test:
 const [result, app] = withVueQuery(() => yourQuery());
@@ -153,7 +153,7 @@ describe("userProfile requests", () => {
 
     // Set up the query with our helper
     const [result, app] = withVueQuery(() =>
-      useGetUserProfile(userId, { enabled }),
+      useGetUserProfile(userId, { enabled })
     );
 
     // Wait for any potential queries
@@ -225,7 +225,7 @@ describe("userProfile mutations", () => {
     // Set up the mutation with our helper
     const [mutation, app] = withVueQuery(
       () => useUpdateUserProfile(),
-      queryClient,
+      queryClient
     );
 
     // Use a ref for userId

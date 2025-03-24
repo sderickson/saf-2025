@@ -1,3 +1,3 @@
-import { defaultConfig } from "@saf/vue-spa-dev-lib/vitest-config.js";
+import { defaultConfig } from "@saflib/vue-spa-dev/vitest-config.js";
 
 export default defaultConfig;

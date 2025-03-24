@@ -1,7 +1,7 @@
 import { db } from "../instance.ts";
 import { todos } from "../schema.ts";
 import { MainDatabaseError } from "../errors.ts";
-import { queryWrapper } from "@saf/drizzle-sqlite3";
+import { queryWrapper } from "@saflib/drizzle-sqlite3";
 import { eq } from "drizzle-orm";
 
 export class TodoNotFoundError extends MainDatabaseError {
@@ -37,7 +37,7 @@ export const updateTodo = queryWrapper(
     }
 
     return result[0];
-  },
+  }
 );
 
 export const deleteTodo = queryWrapper(async (id: number): Promise<Todo> => {

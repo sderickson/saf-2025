@@ -49,7 +49,7 @@ When importing query functions and composables, use absolute paths from the libr
 ```typescript
 // ✅ Good: Use absolute paths
 import { useGetUsers } from "@tasktap/clients/requests/users";
-import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
+import { useFormRefForRemoteRef } from "@saflib/vue-spa/composables/forms";
 
 // ❌ Bad: Avoid relative paths
 import { useGetUsers } from "../../requests/users";
@@ -120,7 +120,7 @@ const {
 
 // Third query - depends on both userId and profile
 const fetchPostsEnabled = computed(
-  () => userId.value !== -1 && !!profile.value,
+  () => userId.value !== -1 && !!profile.value
 );
 
 // This query will only run when both userId is valid and profile is loaded
@@ -134,7 +134,7 @@ const {
 
 // Combined loading state
 const isLoading = computed(
-  () => isAuthLoading.value || isProfileLoading.value || isPostsLoading.value,
+  () => isAuthLoading.value || isProfileLoading.value || isPostsLoading.value
 );
 </script>
 
@@ -181,7 +181,7 @@ const { data: profile, isLoading: isProfileLoading } = useGetUserProfile(
   userId,
   {
     enabled: computed(() => userId.value !== -1),
-  },
+  }
 );
 
 // Setup mutation
@@ -270,7 +270,7 @@ When building forms that need to sync with remote data, use the `useFormRefForRe
 ```vue
 <script setup lang="ts">
 import { useAuthedSettings } from "@tasktap/clients/requests/userSettings";
-import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
+import { useFormRefForRemoteRef } from "@saflib/vue-spa/composables/forms";
 import type { components } from "@tasktap/specs-apis/dist/openapi";
 
 // Define the type to match the API schema
@@ -320,61 +320,6 @@ const handleSubmit = async () => {
 </template>
 ```
 
-### Working with Array Types
-
-When working with array types in forms, you can use the `ElementType` utility type to extract the element type from an array:
-
-```vue
-<script setup lang="ts">
-import { useAuthedSettings } from "@tasktap/clients/requests/userSettings";
-import { useFormRefForRemoteRef } from "@saf/vue-spa/composables/forms";
-import type { components } from "@tasktap/specs-apis/dist/openapi";
-import type { ElementType } from "@saf/ts-openapi";
-
-// Define the work preferences type using ElementType to extract the array element type
-type WorkPreference = ElementType<
-  components["schemas"]["settings"]["workPreferences"]
->;
-
-// Use our custom composable to get authenticated settings
-const { settings, isLoading, isSaving, updateUserSettings } =
-  useAuthedSettings();
-
-// Initialize selected options from settings data if available
-// Provide an empty array as the default value
-const selectedOptions = useFormRefForRemoteRef<
-  components["schemas"]["settings"],
-  WorkPreference[]
->(settings, (data) => data?.workPreferences || [], []);
-
-// Helper function to toggle an option in the array
-const toggleOption = (value: WorkPreference) => {
-  const index = selectedOptions.value.indexOf(value);
-  if (index === -1) {
-    selectedOptions.value = [...selectedOptions.value, value];
-  } else {
-    selectedOptions.value = selectedOptions.value.filter(
-      (option) => option !== value,
-    );
-  }
-};
-
-// Handle form submission
-const handleSubmit = async () => {
-  if (selectedOptions.value.length > 0) {
-    try {
-      await updateUserSettings({
-        workPreferences: selectedOptions.value,
-      });
-      // Navigate or show success message
-    } catch (error) {
-      console.error("Failed to save:", error);
-    }
-  }
-};
-</script>
-```
-
 ### Handling Nested Objects
 
 When working with complex nested objects using `useFormRefForRemoteRef`, you need to be careful about how you modify the data. The refs returned by this composable are readonly reactive objects, which means direct nested mutations are disallowed.
@@ -416,7 +361,7 @@ const currentEmployment = ref<Employment>({
 const openEditModal = (index: number) => {
   // Create a deep copy to avoid reactivity issues with nested objects
   currentEmployment.value = JSON.parse(
-    JSON.stringify(employmentHistory.value[index]),
+    JSON.stringify(employmentHistory.value[index])
   );
   // other setup...
 };
@@ -437,7 +382,7 @@ const handleSave = async () => {
           return JSON.parse(JSON.stringify(currentEmployment.value));
         }
         return employment;
-      },
+      }
     );
   } else {
     // Add a new item to the array
@@ -477,11 +422,11 @@ Instead, always create a new copy and replace the entire object:
 ```typescript
 // ✅ Create a copy, modify it, then replace the entire object
 const updatedEmployment = JSON.parse(
-  JSON.stringify(employmentHistory.value[index]),
+  JSON.stringify(employmentHistory.value[index])
 );
 updatedEmployment.startDate.month = 3;
 employmentHistory.value = employmentHistory.value.map((item, i) =>
-  i === index ? updatedEmployment : item,
+  i === index ? updatedEmployment : item
 );
 ```
 
@@ -524,7 +469,7 @@ The `useFormRefForRemoteRef` composable:
 function useFormRefForRemoteRef<T, K>(
   remoteRef: Ref<T | undefined>,
   selector: (data: T) => K | undefined,
-  defaultValue: K,
+  defaultValue: K
 ): Ref<K>;
 ```
 
@@ -693,7 +638,7 @@ const {
   computed(() => ({
     page: page.value,
     pageSize: pageSize.value,
-  })),
+  }))
 );
 
 // Extract users and pagination info

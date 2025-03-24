@@ -45,7 +45,7 @@ export type UserResponse = components["schemas"]["UserResponse"];
 1. Import types from the spec package:
 
 ```typescript
-import type { components } from "@saf/auth-spec";
+import type { components } from "@saflib/auth-spec";
 
 // Use schema types
 type LoginRequest = components["schemas"]["LoginRequest"];
@@ -55,7 +55,7 @@ type LoginRequest = components["schemas"]["LoginRequest"];
 
 ```typescript
 import createClient from "openapi-fetch";
-import type { paths } from "@saf/auth-spec";
+import type { paths } from "@saflib/auth-spec";
 
 export const client = createClient<paths>({
   baseUrl: `${document.location.protocol}//api.${document.location.host}`,

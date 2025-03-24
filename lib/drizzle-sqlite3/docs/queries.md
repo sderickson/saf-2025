@@ -12,7 +12,7 @@ to handle them directly and this would lead to tight coupling.
 
 ```typescript
 // In your database layer (e.g., queries/todos.ts)
-import { queryWrapper, HandledDatabaseError } from "@saf/drizzle-sqlite3";
+import { queryWrapper, HandledDatabaseError } from "@saflib/drizzle-sqlite3";
 import { eq } from "drizzle-orm";
 import { todos } from "../schema";
 
@@ -44,7 +44,7 @@ export const getTodoById = (db) => async (id: string) => {
 Extend the `HandledDatabaseError` class to create specific error types:
 
 ```typescript
-import { HandledDatabaseError } from "@saf/drizzle-sqlite3";
+import { HandledDatabaseError } from "@saflib/drizzle-sqlite3";
 
 // Create specific error types for your domain
 export class DuplicateUserError extends HandledDatabaseError {
@@ -73,7 +73,7 @@ For one-to-one relationships (like user profiles or settings), implement an "ups
 export const upsertUserProfile = queryWrapper(
   async (
     userId: number,
-    profileData: Partial<NewUserProfile>,
+    profileData: Partial<NewUserProfile>
   ): Promise<UserProfile> => {
     // Check if a profile already exists for this user
     const existingProfile = await db
@@ -106,7 +106,7 @@ export const upsertUserProfile = queryWrapper(
 
       return result[0];
     }
-  },
+  }
 );
 ```
 

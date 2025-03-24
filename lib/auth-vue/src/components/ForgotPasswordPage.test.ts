@@ -4,8 +4,8 @@ import ForgotPasswordPage from "./ForgotPasswordPage.vue";
 import {
   mountWithPlugins,
   withResizeObserverMock,
-} from "@saf/vue-spa-dev-lib/components.ts";
-import { router } from "@saf/clients/auth/router";
+} from "@saflib/vue-spa-dev/components.ts";
+import { router } from "@saf-2025/clients/auth/router";
 import { RouterLink } from "vue-router";
 
 withResizeObserverMock(() => {

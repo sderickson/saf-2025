@@ -4,7 +4,7 @@ import {
   RegisterPage,
   ForgotPasswordPage,
   LogoutPage,
-} from "@saf/auth-spa";
+} from "@saflib/auth-vue";
 
 const routes = [
   { path: "/", component: LoginPage },

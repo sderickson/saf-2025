@@ -1,7 +1,7 @@
 import { db } from "../instance.ts";
 import { users } from "../schema.ts";
 import { AuthDatabaseError } from "../errors.ts";
-import { queryWrapper } from "@saf/drizzle-sqlite3";
+import { queryWrapper } from "@saflib/drizzle-sqlite3";
 import { eq } from "drizzle-orm";
 
 type NewUser = typeof users.$inferInsert;
@@ -39,7 +39,7 @@ export const create = queryWrapper(
       }
       throw e;
     }
-  },
+  }
 );
 
 export const getAll = queryWrapper(async (): Promise<SelectUser[]> => {
@@ -55,7 +55,7 @@ export const getByEmail = queryWrapper(
       throw new UserNotFoundError();
     }
     return result;
-  },
+  }
 );
 
 export const getById = queryWrapper(
@@ -67,7 +67,7 @@ export const getById = queryWrapper(
       throw new UserNotFoundError();
     }
     return result;
-  },
+  }
 );
 
 export const updateLastLogin = queryWrapper(
@@ -83,7 +83,7 @@ export const updateLastLogin = queryWrapper(
       throw new UserNotFoundError();
     }
     return result[0];
-  },
+  }
 );
 
 export const deleteAll = queryWrapper(async (): Promise<void> => {

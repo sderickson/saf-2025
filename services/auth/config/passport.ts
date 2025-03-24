@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { users } from "@saf/dbs-auth";
-import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
+import { users } from "@saf-2025/dbs-auth";
+import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
 import type { User } from "../types.ts";
 
@@ -58,7 +58,7 @@ export const setupPassport = () => {
 
           // Convert the password hash to a string for argon2 verification
           const passwordHash = Buffer.from(
-            auth.passwordHash as Uint8Array,
+            auth.passwordHash as Uint8Array
           ).toString("utf-8");
 
           // Check password using argon2
@@ -74,7 +74,7 @@ export const setupPassport = () => {
         } catch (err) {
           return done(err);
         }
-      },
-    ),
+      }
+    )
   );
 };

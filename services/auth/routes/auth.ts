@@ -2,12 +2,12 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import type { IVerifyOptions } from "passport-local";
-import type { RequestSchema, ResponseSchema } from "@saf/specs-apis";
-import { users } from "@saf/dbs-auth";
-import * as emailAuth from "@saf/dbs-auth/queries/email-auth";
+import type { RequestSchema, ResponseSchema } from "@saf-2025/specs-apis";
+import { users } from "@saf-2025/dbs-auth";
+import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
-import type { AuthDatabaseError } from "@saf/dbs-auth";
-import { createHandler } from "@saf/node-express";
+import type { AuthDatabaseError } from "@saf-2025/dbs-auth";
+import { createHandler } from "@saflib/node-express";
 
 export const authRouter = express.Router();
 
@@ -55,7 +55,7 @@ authRouter.post(
       }
       next(err);
     }
-  }),
+  })
 );
 
 authRouter.post(
@@ -66,7 +66,7 @@ authRouter.post(
       (
         err: Error | null,
         user: Express.User | false,
-        info: IVerifyOptions | undefined,
+        info: IVerifyOptions | undefined
       ) => {
         if (err) {
           return next(err);
@@ -88,9 +88,9 @@ authRouter.post(
 
           res.json(response);
         });
-      },
+      }
     )(req, res, next);
-  }),
+  })
 );
 
 authRouter.post(
@@ -102,7 +102,7 @@ authRouter.post(
       }
       res.status(200).end();
     });
-  }),
+  })
 );
 
 authRouter.get(
@@ -136,5 +136,5 @@ authRouter.get(
       id: user.id,
       email: user.email,
     });
-  }),
+  })
 );

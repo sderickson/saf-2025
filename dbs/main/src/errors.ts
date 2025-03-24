@@ -1,4 +1,4 @@
-import { HandledDatabaseError } from "@saf/drizzle-sqlite3";
+import { HandledDatabaseError } from "@saflib/drizzle-sqlite3";
 
 export class MainDatabaseError extends HandledDatabaseError {
   constructor(message: string) {

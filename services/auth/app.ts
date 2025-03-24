@@ -5,11 +5,11 @@
  * Implements common middleware patterns and specific auth-related functionality.
  */
 
-import * as db from "@saf/dbs-auth";
+import * as db from "@saf-2025/dbs-auth";
 import {
   createPreMiddleware,
   recommendedErrorHandlers,
-} from "@saf/node-express";
+} from "@saflib/node-express";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
@@ -56,7 +56,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie,
-  }),
+  })
 );
 
 // Initialize Passport and restore authentication state from session

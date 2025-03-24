@@ -1,5 +1,5 @@
 {
-  "name": "@saflib/auth-spa",
+  "name": "@saflib/auth-vue",
   "description": "Shared authentication components and utilities for SAF-2025",
   "private": true,
   "type": "module",

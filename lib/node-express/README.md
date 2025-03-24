@@ -25,7 +25,7 @@ import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
   createPreMiddleware,
-} from "@saf/node-express";
+} from "@saflib/node-express";
 ```
 
 ## Features
@@ -36,7 +36,7 @@ Extracts and makes available the request ID provided by Caddy. This ensures cons
 
 ```typescript
 import express from "express";
-import { requestId } from "@saf/node-express";
+import { requestId } from "@saflib/node-express";
 
 const app = express();
 app.use(requestId);
@@ -54,7 +54,7 @@ Provides structured logging for Express applications with request context. The l
 
 ```typescript
 import express from "express";
-import { httpLogger, createLogger, loggerInjector } from "@saf/node-express";
+import { httpLogger, createLogger, loggerInjector } from "@saflib/node-express";
 
 const app = express();
 
@@ -81,7 +81,7 @@ Ready-to-use health check endpoints for service monitoring.
 
 ```typescript
 import express from "express";
-import { healthRouter } from "@saf/node-express";
+import { healthRouter } from "@saflib/node-express";
 
 const app = express();
 app.use("/health", healthRouter);
@@ -93,7 +93,7 @@ Middleware for handling authentication context. Adds an auth object to the reque
 
 ```typescript
 import express from "express";
-import { auth } from "@saf/node-express";
+import { auth } from "@saflib/node-express";
 
 const app = express();
 app.use(auth);
@@ -113,7 +113,7 @@ Middleware for validating requests against OpenAPI specifications.
 
 ```typescript
 import express from "express";
-import { createOpenApiValidator } from "@saf/node-express";
+import { createOpenApiValidator } from "@saflib/node-express";
 
 const app = express();
 const validator = createOpenApiValidator("./openapi.yaml");
@@ -126,7 +126,7 @@ Provides standardized error handling for Express applications. Automatically for
 
 ```typescript
 import express from "express";
-import { errorHandler, notFoundHandler } from "@saf/node-express";
+import { errorHandler, notFoundHandler } from "@saflib/node-express";
 
 const app = express();
 
@@ -158,7 +158,7 @@ import {
   recommendedPreMiddleware,
   recommendedErrorHandlers,
   createPreMiddleware,
-} from "@saf/node-express";
+} from "@saflib/node-express";
 
 const app = express();
 
@@ -183,7 +183,7 @@ app.use(recommendedErrorHandlers);
 Utilities for starting and managing Express servers.
 
 ```typescript
-import { startServer } from "@saf/node-express";
+import { startServer } from "@saflib/node-express";
 import express from "express";
 
 const app = express();

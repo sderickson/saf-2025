@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/vue-query";
-import type { LoginRequest, UserResponse } from "@saf/auth-spec";
+import type { LoginRequest, UserResponse } from "@saflib/auth-spec";
 
 const API_BASE_URL = "/api";
 
