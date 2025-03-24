@@ -8,9 +8,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "drizzle-orm": ">=0.0.0",
-    "better-sqlite3": ">=11.0.0",
-    "drizzle-kit": ">=0.0.0"
+    "drizzle-orm": "^0.41.0",
+    "better-sqlite3": "^11.0.0",
+    "drizzle-kit": "^0.30.0"
   },
   "devDependencies": {
     "@saflib/drizzle-sqlite3-dev": "*",
