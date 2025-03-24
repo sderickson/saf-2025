@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/vue-query";
-import { client } from "./client.ts";
-import type { RequestSchema } from "@saf/specs-apis";
+import { client } from "../client.ts";
+import type { LoginRequest, RegisterRequest } from "../types.ts";
 
 export const useLogin = () => {
   return useMutation({
-    mutationFn: async (body: RequestSchema<"loginUser">) => {
+    mutationFn: async (body: LoginRequest) => {
       const { data, error } = await client.POST("/auth/login", { body });
       if (error) {
         throw error;
@@ -27,7 +27,7 @@ export const useLogout = () => {
 
 export const useRegister = () => {
   return useMutation({
-    mutationFn: async (body: RequestSchema<"registerUser">) => {
+    mutationFn: async (body: RegisterRequest) => {
       const { data, error } = await client.POST("/auth/register", {
         body,
       });

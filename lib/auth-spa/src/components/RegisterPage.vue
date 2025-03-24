@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { emailRules, passwordRules } from "../rules";
-import { useRegister } from "../../requests/auth";
+import { emailRules, passwordRules } from "../rules.ts";
+import { useRegister } from "../requests/auth.ts";
 
 const passwordVisible = ref(false);
 const email = ref("");
@@ -23,7 +23,7 @@ watch(
     if (success) {
       window.location.href = "/app/";
     }
-  },
+  }
 );
 
 const handleRegister = () => {
@@ -113,5 +113,3 @@ const confirmPasswordRules = [
     </v-card>
   </div>
 </template>
-
-<style scoped></style>

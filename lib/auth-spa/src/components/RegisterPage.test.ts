@@ -3,10 +3,10 @@ import { mount, type VueWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import RegisterPage from "../RegisterPage.vue";
+import RegisterPage from "./RegisterPage.vue";
 
 const mockRegister = vi.fn();
-vi.mock("../../../requests/auth", () => ({
+vi.mock("../requests/auth", () => ({
   useRegister: () => ({
     mutate: mockRegister,
     isPending: false,
@@ -46,7 +46,7 @@ describe("RegisterPage", () => {
 
   const getConfirmPasswordInput = (wrapper: VueWrapper) => {
     const confirmPasswordInput = wrapper.find(
-      "[placeholder='Confirm your password']",
+      "[placeholder='Confirm your password']"
     );
     expect(confirmPasswordInput.exists()).toBe(true);
     return confirmPasswordInput;
@@ -65,7 +65,7 @@ describe("RegisterPage", () => {
       email,
       password,
       confirmPassword,
-    }: { email: string; password: string; confirmPassword: string },
+    }: { email: string; password: string; confirmPassword: string }
   ) => {
     await getEmailInput(wrapper).setValue(email);
     await getPasswordInput(wrapper).setValue(password);

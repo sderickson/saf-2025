@@ -3,12 +3,12 @@ import { mount, type VueWrapper, type DOMWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import LoginPage from "../LoginPage.vue";
+import LoginPage from "./LoginPage.vue";
 
 const mockMutate = vi.fn();
 
 // Mock the auth request
-vi.mock("../../../requests/auth", () => ({
+vi.mock("../requests/auth", () => ({
   useLogin: () => ({
     mutate: mockMutate,
     isError: false,
@@ -56,7 +56,7 @@ describe("LoginPage", () => {
   const fillLoginForm = async (
     wrapper: VueWrapper,
     email: string,
-    password: string,
+    password: string
   ) => {
     const emailInput = getEmailInput(wrapper);
     const passwordInput = getPasswordInput(wrapper);
@@ -101,7 +101,7 @@ describe("LoginPage", () => {
     // Verify the login function was called with correct credentials
     expect(mockMutate).toHaveBeenCalledWith(
       { email: "test@example.com", password: "validpassword123" },
-      expect.any(Object),
+      expect.any(Object)
     );
   });
 });

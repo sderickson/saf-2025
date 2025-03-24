@@ -7,6 +7,7 @@ COPY ./package*.json .
 COPY ./tsconfig.json .
 COPY ./specs/apis/package*.json ./specs/apis/
 COPY ./clients/package*.json ./clients/
+COPY ./lib/ ./lib/
 
 RUN npm install --omit=dev
 

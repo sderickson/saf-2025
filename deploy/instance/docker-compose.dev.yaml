@@ -6,6 +6,7 @@ services:
   clients:
     volumes:
       - ../../clients:/app/clients
+      - ../../lib/:/app/lib/
     command: npm run dev
 
   services-api:

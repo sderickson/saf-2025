@@ -1,0 +1,19 @@
+{
+  "name": "@saf/auth-spa",
+  "description": "Shared authentication components and utilities for SAF-2025",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saf/vue-spa": "*",
+    "@saf/auth-spec": "*"
+  },
+  "devDependencies": {
+    "@saf/vue-spa-dev-lib": "*"
+  }
+} 

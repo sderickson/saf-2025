@@ -1,14 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useLogin, useLogout, useRegister } from "./auth.js";
-import { client } from "./client.js";
 import { withVueQuery } from "@saf/vue-spa-dev-lib/requests.ts";
+import { useLogin, useLogout, useRegister } from "./auth.ts";
+import { client } from "../client.ts";
 
 // Mock the client
-vi.mock("./client", () => ({
-  client: {
-    POST: vi.fn(),
-  },
-}));
+vi.mock("../client.ts", () => ({ client: { POST: vi.fn() } }));
 
 describe("auth requests", () => {
   const mockPOST = client.POST as ReturnType<typeof vi.fn>;
@@ -24,7 +20,10 @@ describe("auth requests", () => {
     };
 
     it("should make a POST request to /auth/login with credentials", async () => {
-      const mockResponse = { data: { token: "mock-token" }, error: null };
+      const mockResponse = {
+        data: { id: 1, email: "test@example.com" },
+        error: null,
+      };
       mockPOST.mockResolvedValueOnce(mockResponse);
 
       const [result, app] = withVueQuery(() => useLogin());
@@ -42,7 +41,7 @@ describe("auth requests", () => {
 
       const [result, app] = withVueQuery(() => useLogin());
       await expect(result.mutateAsync(validCredentials)).rejects.toEqual(
-        mockError,
+        mockError
       );
       app.unmount();
     });
@@ -73,11 +72,13 @@ describe("auth requests", () => {
     const validRegistration = {
       email: "test@example.com",
       password: "password123",
-      name: "Test User",
     };
 
     it("should make a POST request to /auth/register with user data", async () => {
-      const mockResponse = { data: { token: "mock-token" }, error: null };
+      const mockResponse = {
+        data: { id: 1, email: "test@example.com" },
+        error: null,
+      };
       mockPOST.mockResolvedValueOnce(mockResponse);
 
       const [result, app] = withVueQuery(() => useRegister());
@@ -95,7 +96,7 @@ describe("auth requests", () => {
 
       const [result, app] = withVueQuery(() => useRegister());
       await expect(result.mutateAsync(validRegistration)).rejects.toEqual(
-        mockError,
+        mockError
       );
       app.unmount();
     });

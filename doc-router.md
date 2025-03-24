@@ -16,6 +16,7 @@
 - When adding new API routes: [adding-routes.md](./lib/node-express/docs/adding-routes.md)
 - When testing API routes: [testing.md](./lib/node-express/docs/testing.md)
 - When mocking node/express routes for testing: [mocking.md](./lib/node-express/docs/mocking.md)
+- When working with OpenAPI types: [openapi-types.md](./lib/ts-openapi/docs/openapi-types.md)
 
 ## Database
 
