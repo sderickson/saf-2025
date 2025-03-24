@@ -1,4 +1,4 @@
-# @saf/node-express
+# @saflib/node-express
 
 Shared Express.js utilities and middleware for SAF services. This library provides common functionality used across SAF Express.js applications, helping maintain consistency and reducing code duplication.
 

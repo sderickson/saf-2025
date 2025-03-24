@@ -5,7 +5,7 @@ import {
   mountWithPlugins,
   withResizeObserverMock,
 } from "@saflib/vue-spa-dev/components.ts";
-import { router } from "@saf-2025/clients/auth/router";
+import { router } from "../router";
 import { RouterLink } from "vue-router";
 
 withResizeObserverMock(() => {

@@ -1,4 +1,4 @@
-# @saf/drizzle-sqlite3
+# @saflib/drizzle-sqlite3
 
 A utility library for working with SQLite3 databases using Drizzle ORM in the SAF monorepo and projects which depend on it. This package provides error handling utilities and query wrappers to create a consistent error handling pattern across database consumers.
 

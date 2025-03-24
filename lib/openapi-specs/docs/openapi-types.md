@@ -4,13 +4,13 @@ This guide explains how to work with and set up OpenAPI-generated types in the S
 
 ## Overview
 
-The monorepo uses OpenAPI specifications housed in packages like `@saf/auth-spec` to generate TypeScript types that are shared between the service and client implementations. This ensures type safety across the entire application.
+The monorepo uses OpenAPI specifications housed in packages like `@saflib/auth-spec` to generate TypeScript types that are shared between the service and client implementations. This ensures type safety across the entire application.
 
 ## Example Package Structure
 
-- `@saf/auth-spec`: Contains the OpenAPI specification and generated types
-- `@saf/auth-spa`: Consumes the generated types for client-side code
-- `@saf/auth-node`: Consumes the generated types for server-side code (TODO)
+- `@saflib/auth-spec`: Contains the OpenAPI specification and generated types
+- `@saflib/auth-vue`: Consumes the generated types for client-side code
+- `@saflib/auth-node`: Consumes the generated types for server-side code (TODO)
 
 ## Generation
 

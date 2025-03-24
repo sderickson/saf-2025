@@ -14,7 +14,7 @@ This guide focuses on how to effectively test your TanStack Query functions, inc
 
 ## Testing Setup
 
-To test TanStack Query functions, you need to set up a proper testing environment. Make sure this package is included as a dependency in your own, then you can import the `withVueQuery` function included in `@saf/vue-spa`.
+To test TanStack Query functions, you need to set up a proper testing environment. Make sure this package is included as a dependency in your own, then you can import the `withVueQuery` function included in `@saflib/vue-spa`.
 
 ```typescript
 import { withVueQuery } from "@saflib/vue-spa/test-utils/requests.ts";
