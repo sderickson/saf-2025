@@ -16,8 +16,8 @@ app.use("/todos", todosRouter);
 app.use(recommendedErrorHandlers);
 
 // Mock the database functions
-vi.mock("@saf/dbs-main", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@saf/dbs-main")>();
+vi.mock("@saf-2025/dbs-main", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@saf-2025/dbs-main")>();
   return {
     ...actual,
     todos: {
