@@ -1,15 +1,3 @@
-import { defineConfig } from "vitest/config";
-import vue from "@vitejs/plugin-vue";
+import { defaultConfig } from "@saf/vue-spa-dev-lib/vitest-config.js";
 
-export default defineConfig({
-  plugins: [vue()],
-  test: {
-    environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
-    globals: true,
-    css: true,
-    deps: {
-      inline: [/vuetify/],
-    },
-  },
-});
+export default defaultConfig;
