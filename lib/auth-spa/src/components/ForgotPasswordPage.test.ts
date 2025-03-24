@@ -5,7 +5,7 @@ import {
   mountWithPlugins,
   withResizeObserverMock,
 } from "@saf/vue-spa-dev-lib/components.ts";
-import { router } from "@vendata/clients/auth/router";
+import { router } from "@saf/clients/auth/router";
 import { RouterLink } from "vue-router";
 
 withResizeObserverMock(() => {

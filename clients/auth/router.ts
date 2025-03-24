@@ -1,8 +1,10 @@
 import { createWebHistory, createRouter } from "vue-router";
-import LoginPage from "./views/LoginPage.vue";
-import RegisterPage from "./views/RegisterPage.vue";
-import ForgotPasswordPage from "./views/ForgotPasswordPage.vue";
-import LogoutPage from "./views/LogoutPage.vue";
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  LogoutPage,
+} from "@saf/auth-spa";
 
 const routes = [
   { path: "/", component: LoginPage },

@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@saf/vue-spa": "*",
-    "@saf/specs-apis": "*"
+    "@saf/specs-apis": "*",
+    "@saf/auth-spa": "*"
   },
   "devDependencies": {
     "@saf/vue-spa-dev-lib": "*"
