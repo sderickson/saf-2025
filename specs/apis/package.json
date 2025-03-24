@@ -12,7 +12,7 @@
     "generate-and-serve": "npm run generate && npm run serve"
   },
   "devDependencies": {
-    "@saf/openapi-specs-lib": "*"
+    "@saflib/openapi-specs": "*"
   },
   "files": [
     "dist"

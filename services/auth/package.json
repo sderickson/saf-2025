@@ -9,9 +9,9 @@
     "healthcheck": "node --experimental-strip-types ./bin/healthcheck"
   },
   "dependencies": {
-    "@saf/dbs-auth": "*",
-    "@saf/node-express": "*",
-    "@saf/specs-apis": "*",
+    "@saf-2025/dbs-auth": "*",
+    "@saflib/node-express": "*",
+    "@saf-2025/specs-apis": "*",
     "argon2": "^0.41.1",
     "express": "^4.21.2",
     "express-session": "^1.18.0",
