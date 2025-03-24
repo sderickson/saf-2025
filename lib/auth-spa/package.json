@@ -1,5 +1,5 @@
 {
-  "name": "@saf-2025/auth-spa",
+  "name": "@saf/auth-spa",
   "description": "Shared authentication components and utilities for SAF-2025",
   "private": true,
   "type": "module",
@@ -10,10 +10,13 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@saf-2025/vue-spa": "*",
-    "@saf-2025/auth-spec": "*"
+    "@saf/vue-spa": "*",
+    "@saf/auth-spec": "*",
+    "openapi-fetch": "^0.7.0"
   },
   "devDependencies": {
-    "@saf-2025/vue-spa-dev": "*"
+    "@saf/vue-spa-dev-lib": "*",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "jsdom": "^24.0.0"
   }
 } 

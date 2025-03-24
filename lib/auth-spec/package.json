@@ -1,5 +1,5 @@
 {
-  "name": "@saf-2025/auth-spec",
+  "name": "@saf/auth-spec",
   "description": "API specifications for SAF-2025 authentication",
   "private": true,
   "type": "module",
