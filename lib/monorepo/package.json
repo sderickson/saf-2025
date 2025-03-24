@@ -5,10 +5,10 @@
   "type": "module",
   "dependencies": {
     "globals": ">=16",
-    "eslint": "*",
-    "eslint-config-prettier": "*",
-    "eslint-plugin-vue": "*",
-    "typescript-eslint": "*",
-    "prettier": "*"
+    "eslint": ">=9.0.0",
+    "eslint-config-prettier": ">=10.0.0",
+    "eslint-plugin-vue": ">=9.0.0",
+    "typescript-eslint": ">=8.0.0",
+    "prettier": ">=3.0.0"
   }
 }

@@ -14,11 +14,11 @@
     "ts:check": "vue-tsc -b"
   },
   "dependencies": {
-    "@saf/vue-spa": "*",
-    "@saf/specs-apis": "*",
-    "@saf/auth-spa": "*"
+    "@saflib/vue-spa": "*",
+    "@saf-2025/specs-apis": "*",
+    "@saflib/auth-vue": "*"
   },
   "devDependencies": {
-    "@saf/vue-spa-dev-lib": "*"
+    "@saflib/vue-spa-dev": "*"
   }
 }
