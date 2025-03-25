@@ -93,6 +93,27 @@ Standardize ESLint rules across the entire monorepo to enforce consistent code s
 - Add documentation for ESLint configuration and rules
 - Create automated fix scripts for common violations
 
+### 7. Integration Testing Infrastructure (`integration-testing`)
+
+Create comprehensive integration testing infrastructure for external service integrations.
+
+**Key Changes:**
+
+- Create new package `@saflib/integration-testing` in `lib/`
+- Implement Nock-based HTTP mocking infrastructure:
+  - Standard mock setup patterns
+  - Recording/replay capabilities
+  - Type-safe mock definitions
+- Add webhook testing support:
+  - Local webhook receiver infrastructure
+  - Mock webhook sender for testing outbound webhooks
+  - Timing and retry testing utilities
+- Create documentation:
+  - Mock setup and usage patterns
+  - Webhook testing patterns
+  - Best practices for integration tests
+  - Example implementations
+
 ## Dependencies
 
 Projects should be completed in this order:
@@ -103,6 +124,7 @@ Projects should be completed in this order:
 4. `api-scopes`
 5. `eslint-standards`
 6. `auth-admin`
+7. `integration-testing` (can be developed independently)
 
 ## Timeline Considerations
 
