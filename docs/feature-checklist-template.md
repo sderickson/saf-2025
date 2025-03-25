@@ -14,6 +14,8 @@ To get started:
 
 - Check off items as they are done.
 - Update the plan if needed with what actually got done
+- Each implementation section MUST start with reviewing relevant documentation
+- If no relevant documentation exists for a section, create it after implementation
 - After generating or updating every file, ask for a review
 
 ### Planning Phase
@@ -25,57 +27,80 @@ To get started:
 - [ ] **Review Point**
 
 - [ ] Update checklist
-  - [ ] Update the checkbox contents for what is necessary for this feature based on the spec.
-  - [ ] Break down complex tasks into smaller, manageable subtasks.
-  - [ ] Note: {} indicates something to fill in or choose. ... means repeat as necessary.
+  - [ ] Update the checkbox contents for what is necessary for this feature based on the spec
+  - [ ] Break down complex tasks into smaller, manageable subtasks
+  - [ ] Review [system-prompt.md](./system-prompt.md) and identify relevant platform docs for each implementation section
+  - [ ] Note where new platform documentation will need to be created
 - [ ] **Review Point**
 
 ### Implementation Phase
 
-This section largely depends on the feature. Each implementation piece should follow a similar process:
+Each implementation section should follow this pattern:
 
-- [ ] Implement task
-  - [ ] Review <appropriate-doc.md> - this will tend to be in /saf-2025/lib/\*/docs
-  - [ ] Write the implementation
-  - [ ] Run `npm run generate` if needed
-  - [ ] Add unit tests and run them - make sure they work with `npm run test`
-  - [ ] **Review Point**
-  - [ ] If necessary, add or update docs, especially if there were no appropriate docs to review
+```markdown
+## {Component} Layer
 
-Implementation should be independent from "integration". That process should look something like this:
+- [ ] Review Documentation
 
-- [ ] Integrate task
-  - [ ] Review <appropriate-doc.md> - this will tend to be in /saf-2025/lib/\*/docs
-  - [ ] Add any package dependencies and run `npm install` from the root folder
-  - [ ] Write the integration
-  - [ ] Add/update tests and run them - make sure they work. You will likely need to add mocks.
-  - [ ] **Review Point**
-  - [ ] If necessary, add or update docs, especially if there were no appropriate docs to review
-
-There are also "refactor" tasks, which might look like this:
-
-- [ ] Refactor task
-  - [ ] Move logic from x to y
-  - [ ] Update tests
-  - [ ] Run `npm run test` in the affected packages and make sure they still work
+  - [ ] Review relevant docs from system-prompt.md
+  - [ ] Note any missing platform documentation needs
   - [ ] **Review Point**
 
-Note that the following are all separate implementation and integration tasks:
+- [ ] Implementation Task
 
-- Implement api specs
-- Implement stub api endpoints
-- Implement database queries
-- Integrate api endpoints with database
-- Implement vue query functions
-- Implement static frontend
-- Integrate frontend with vue query functions
+  - [ ] Write tests
+  - [ ] Implement feature
+  - [ ] Run tests
+  - [ ] **Review Point**
+
+- [ ] Update Documentation
+  - [ ] Update/create platform documentation if needed:
+    - [ ] Add new capabilities to relevant lib/\*_/docs/_.md
+    - [ ] Update package README.md with new functionality
+  - [ ] Update product documentation if needed:
+    - [ ] Update README.md adjacent to the appropriate package.json
+    - [ ] Add API documentation
+    - [ ] Add configuration documentation
+  - [ ] **Review Point**
+```
+
+For example:
+
+```markdown
+## Database Layer
+
+- [ ] Review Documentation
+
+  - [ ] Review [schema.md](../lib/drizzle-sqlite3/docs/schema.md)
+  - [ ] Review [queries.md](../lib/drizzle-sqlite3/docs/queries.md)
+  - [ ] Review [testing.md](../lib/drizzle-sqlite3-dev/docs/testing.md) (TODO!)
+  - [ ] Note any missing documentation needs
+  - [ ] **Review Point**
+
+- [ ] Implement Schema Changes
+
+  - [ ] Write schema tests
+  - [ ] Add table definitions
+  - [ ] Run tests
+  - [ ] **Review Point**
+
+- [ ] Update Documentation
+  - [ ] Update platform docs:
+    - [ ] Make edits to the docs reviewed above, based on how implementation went
+    - [ ] Add new docs for any new or under-documented platform capabilities
+  - [ ] Update product docs:
+    - [ ] Update README.md with schema changes
+    - [ ] Document migration process if needed
+  - [ ] **Review Point**
+```
 
 ### Testing Phase
 
 - [ ] Test end-to-end
 
+  - [ ] Review [e2e-testing.md](../lib/playwright/docs/e2e-testing.md) (TODO!)
   - [ ] Create production docker images by running `npm run build` from `/deploy/instance`
-  - [ ] Run `npm run test` in /tests/e2e and make sure existing tests still pass.
+  - [ ] Run `npm run test` in /tests/e2e and make sure existing tests still pass
   - [ ] Create test in /tests/e2e/specs for new user flow happy path
   - [ ] Run to make sure it works
   - [ ] **Review Point**
@@ -85,4 +110,13 @@ Note that the following are all separate implementation and integration tasks:
   - [ ] Run `npm run test:coverage` and fill in any major gaps
   - [ ] Run `npm run lint`
   - [ ] Run `npm run format`
+  - [ ] **Review Point**
+
+### Final Documentation Review
+
+- [ ] Review all documentation changes
+  - [ ] Check that all platform changes are documented
+  - [ ] Check that all product changes are documented
+  - [ ] Verify documentation matches implementation
+  - [ ] Check for any missing documentation that should be created
   - [ ] **Review Point**
