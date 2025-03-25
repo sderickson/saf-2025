@@ -3,7 +3,7 @@ import request from "supertest";
 import express from "express";
 import { todos, TodoNotFoundError } from "@saf-2025/dbs-main";
 import type { Todo } from "@saf-2025/dbs-main";
-import todosRouter from "./todos.js";
+import todosRouter from "./todos.ts";
 import {
   recommendedErrorHandlers,
   recommendedPreMiddleware,
@@ -68,7 +68,7 @@ describe("Todos Routes", () => {
 
     it("should handle database errors", async () => {
       vi.mocked(todos.getAllTodos).mockRejectedValue(
-        new Error("Database error"),
+        new Error("Database error")
       );
 
       const response = await request(app).get("/todos");
@@ -97,7 +97,7 @@ describe("Todos Routes", () => {
 
     it("should handle database errors", async () => {
       vi.mocked(todos.createTodo).mockRejectedValue(
-        new Error("Database error"),
+        new Error("Database error")
       );
 
       const response = await request(app)
@@ -128,14 +128,14 @@ describe("Todos Routes", () => {
       expect(todos.updateTodo).toHaveBeenCalledWith(
         todoId,
         updateData.title,
-        updateData.completed,
+        updateData.completed
       );
     });
 
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.updateTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId),
+        new TodoNotFoundError(todoId)
       );
 
       const response = await request(app)
@@ -167,7 +167,7 @@ describe("Todos Routes", () => {
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.deleteTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId),
+        new TodoNotFoundError(todoId)
       );
 
       const response = await request(app).delete(`/todos/${todoId}`);
