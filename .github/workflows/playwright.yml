@@ -30,3 +30,9 @@ jobs:
           name: playwright-report
           path: ./tests/e2e/playwright-report/
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: last-docker-compose-log
+          path: ./tests/e2e/last-docker-compose.log
+          retention-days: 30
