@@ -100,7 +100,7 @@ describe("createCallLog", () => {
         type: "TEST",
         retellCallStatus: "registered",
         retellToNumber: "+12125551234",
-      })
+      }),
     ).rejects.toThrow(CallSeriesNotFoundError);
   });
 });
@@ -170,7 +170,7 @@ describe("validation", () => {
       createCallLog({
         // ...
         retellToNumber: "invalid",
-      })
+      }),
     ).rejects.toThrow(InvalidPhoneNumberError);
   });
 
@@ -179,7 +179,7 @@ describe("validation", () => {
       createCallLog({
         // ...
         retellCallStatus: "invalid_status",
-      })
+      }),
     ).rejects.toThrow(InvalidCallStatusError);
   });
 });

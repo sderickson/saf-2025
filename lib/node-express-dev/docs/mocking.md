@@ -83,7 +83,7 @@ it("should handle API response", async () => {
     expect.any(String),
     expect.objectContaining({
       // expected parameters
-    })
+    }),
   );
 });
 ```
@@ -171,7 +171,7 @@ describe("Call Series API", () => {
     expect(call.createPhoneCall).toHaveBeenCalledWith(
       expect.any(String),
       "+12125551234",
-      expect.stringContaining("Previous call discussion")
+      expect.stringContaining("Previous call discussion"),
     );
   });
 });
