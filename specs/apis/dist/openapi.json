@@ -16,9 +16,7 @@
       "post": {
         "summary": "Register New User",
         "operationId": "registerUser",
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "requestBody": {
           "required": true,
           "content": {
@@ -57,9 +55,7 @@
       "post": {
         "summary": "Authenticate User",
         "operationId": "loginUser",
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "requestBody": {
           "required": true,
           "content": {
@@ -98,9 +94,7 @@
       "post": {
         "summary": "Logout User",
         "operationId": "logoutUser",
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "responses": {
           "200": {
             "description": "Successful logout"
@@ -113,9 +107,7 @@
         "summary": "Verify Authentication Status",
         "description": "Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.",
         "operationId": "verifyAuth",
-        "tags": [
-          "auth"
-        ],
+        "tags": ["auth"],
         "responses": {
           "200": {
             "description": "User is authenticated",
@@ -149,10 +141,7 @@
                       "description": "The authenticated user's email"
                     }
                   },
-                  "required": [
-                    "id",
-                    "email"
-                  ]
+                  "required": ["id", "email"]
                 }
               }
             }
@@ -174,9 +163,7 @@
       "get": {
         "summary": "List all todos",
         "operationId": "getTodos",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "responses": {
           "200": {
             "description": "A list of todo items",
@@ -196,9 +183,7 @@
       "post": {
         "summary": "Create a new todo",
         "operationId": "createTodo",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "requestBody": {
           "required": true,
           "content": {
@@ -237,9 +222,7 @@
       "put": {
         "summary": "Update a todo",
         "operationId": "updateTodo",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "requestBody": {
           "required": true,
           "content": {
@@ -286,9 +269,7 @@
       "delete": {
         "summary": "Delete a todo",
         "operationId": "deleteTodo",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "responses": {
           "204": {
             "description": "Todo item successfully deleted"
@@ -309,9 +290,7 @@
     "/examples": {
       "get": {
         "summary": "Get all examples",
-        "tags": [
-          "examples"
-        ],
+        "tags": ["examples"],
         "responses": {
           "200": {
             "description": "List of examples",
@@ -330,9 +309,7 @@
       },
       "post": {
         "summary": "Create a new example",
-        "tags": [
-          "examples"
-        ],
+        "tags": ["examples"],
         "requestBody": {
           "required": true,
           "content": {
@@ -370,9 +347,7 @@
     "/examples/{id}": {
       "get": {
         "summary": "Get example by ID",
-        "tags": [
-          "examples"
-        ],
+        "tags": ["examples"],
         "responses": {
           "200": {
             "description": "Example item",
@@ -408,10 +383,7 @@
       },
       "RegisterRequest": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
@@ -425,10 +397,7 @@
       },
       "UserResponse": {
         "type": "object",
-        "required": [
-          "id",
-          "email"
-        ],
+        "required": ["id", "email"],
         "properties": {
           "id": {
             "type": "number"
@@ -441,9 +410,7 @@
       },
       "error": {
         "type": "object",
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "properties": {
           "message": {
             "type": "string",
@@ -457,10 +424,7 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
@@ -473,12 +437,7 @@
       },
       "todo": {
         "type": "object",
-        "required": [
-          "id",
-          "title",
-          "completed",
-          "createdAt"
-        ],
+        "required": ["id", "title", "completed", "createdAt"],
         "properties": {
           "id": {
             "type": "integer",
@@ -501,9 +460,7 @@
       },
       "CreateTodoRequest": {
         "type": "object",
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "properties": {
           "title": {
             "type": "string",
@@ -513,10 +470,7 @@
       },
       "UpdateTodoRequest": {
         "type": "object",
-        "required": [
-          "title",
-          "completed"
-        ],
+        "required": ["title", "completed"],
         "properties": {
           "title": {
             "type": "string",
@@ -530,11 +484,7 @@
       },
       "Example": {
         "type": "object",
-        "required": [
-          "id",
-          "name",
-          "createdAt"
-        ],
+        "required": ["id", "name", "createdAt"],
         "properties": {
           "id": {
             "type": "integer"
@@ -550,9 +500,7 @@
       },
       "CreateExampleRequest": {
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "properties": {
           "name": {
             "type": "string"
@@ -561,11 +509,7 @@
       },
       "user": {
         "type": "object",
-        "required": [
-          "id",
-          "email",
-          "name"
-        ],
+        "required": ["id", "email", "name"],
         "properties": {
           "id": {
             "type": "number"

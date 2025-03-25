@@ -131,6 +131,8 @@ I'm tempted to pay for an identity service like Okta/0Auth, but I think it's bes
 
 I looked at a couple Authentik and Keycloak that were suggested. However, they look pretty heavy for what I need, more like Enterprise auth systems like Okta. So I'll stick with Passport.js.
 
+Update 3/25/25: I want to use scopes for my endpoints, and openid connect supports those, and generally seems like a good system to just set up and enable defined features as needed. [node-oidc-provider](https://github.com/panva/node-oidc-provider/blob/HEAD/docs/README.md) seems like a good fit. I'll build out the auth service in that direction (following openid connect semantics and conventions) and then swap in that proper implementation later.
+
 ## API Specs
 
 Either gRPC-web, or OpenAPI. There are tons of tools related to OpenAPI so TBD exactly which libraries I'll use to 1) generate SDKs, 2) generate server stubs/validation, and 3) generate/host docs. Per Claude, I'll start with openapi-typescript, tsoa or Express OpenAPI Validator, and Redoc respectively. Fern was suggested but that doesn't look free.

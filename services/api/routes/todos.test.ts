@@ -3,7 +3,7 @@ import request from "supertest";
 import express from "express";
 import { todos, TodoNotFoundError } from "@saf-2025/dbs-main";
 import type { Todo } from "@saf-2025/dbs-main";
-import todosRouter from "./todos.js";
+import todosRouter from "./todos.ts";
 import {
   recommendedErrorHandlers,
   recommendedPreMiddleware,

@@ -4,8 +4,8 @@ import request from "supertest";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
-import { authRouter } from "./auth.js";
-import { setupPassport } from "../config/passport.js";
+import { authRouter } from "./auth.ts";
+import { setupPassport } from "../config/passport.ts";
 import * as argon2 from "argon2";
 import {
   recommendedErrorHandlers,

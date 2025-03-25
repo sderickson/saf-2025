@@ -37,7 +37,7 @@ export const updateTodo = queryWrapper(
     }
 
     return result[0];
-  }
+  },
 );
 
 export const deleteTodo = queryWrapper(async (id: number): Promise<Todo> => {
