@@ -135,11 +135,26 @@ When adding new endpoints to your project's API specifications, follow these gui
   ```
 
 - **Enums**: Define enum values explicitly for better type safety.
+
   ```yaml
   status:
     type: string
     enum: [pending, active, completed]
     description: Current status of the item
+  ```
+
+- **Object Schemas**: Always set `additionalProperties: false` to ensure strict response validation.
+  ```yaml
+  type: object
+  additionalProperties: false # Prevents extra properties not in the schema
+  properties:
+    id:
+      type: integer
+    name:
+      type: string
+  required:
+    - id
+    - name
   ```
 
 ### Response Structure

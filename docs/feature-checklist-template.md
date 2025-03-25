@@ -50,6 +50,9 @@ Each implementation section should follow this pattern:
 
   - [ ] Write tests
   - [ ] Implement feature
+  - [ ] Verify package exports
+    - [ ] Check index.ts exports all new types, functions, and errors
+    - [ ] Verify exports are properly typed
   - [ ] Run tests
   - [ ] **Review Point**
 
