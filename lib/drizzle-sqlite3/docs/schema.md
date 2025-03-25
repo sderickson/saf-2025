@@ -40,3 +40,13 @@
   ```typescript
   profileId: integer("profile_id").notNull().unique(),
   ```
+
+## After Making Schema Changes
+
+After making any changes to schema files:
+
+1. Run `npm run generate` from the database package root
+2. This will create a new migration file in the `migrations` directory
+3. No schema-specific tests are needed - testing is done at the query level
+
+Note: Schema changes should be committed along with their generated migration files.
