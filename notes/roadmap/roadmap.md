@@ -75,6 +75,24 @@ Add scope enforcement to OpenAPI specification.
 - Add "authenticated" pseudo-scope
 - Update documentation for scope specification
 
+### 6. ESLint Standardization (`eslint-standards`)
+
+Standardize ESLint rules across the entire monorepo to enforce consistent code style and import patterns.
+
+**Key Changes:**
+
+- Extend Vue ESLint rules to all TypeScript files in the repository
+- Add and configure `import/extensions` rule to:
+  - Enforce explicit file extensions in imports
+  - Ensure extensions match source files (no `.js` for `.ts` files)
+  - No extension inference or transpilation assumptions
+- Update `saf-2025/lib/monorepo/eslint.config.js` to:
+  - Apply consistent rules across all directories
+  - Remove client-specific configurations where possible
+  - Add proper parser options for Vue files
+- Add documentation for ESLint configuration and rules
+- Create automated fix scripts for common violations
+
 ## Dependencies
 
 Projects should be completed in this order:
@@ -83,7 +101,8 @@ Projects should be completed in this order:
 2. `auth-service-library`
 3. `auth-scopes`
 4. `api-scopes`
-5. `auth-admin`
+5. `eslint-standards`
+6. `auth-admin`
 
 ## Timeline Considerations
 
