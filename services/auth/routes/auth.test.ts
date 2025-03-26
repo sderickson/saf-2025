@@ -12,14 +12,36 @@ import {
   recommendedPreMiddleware,
 } from "@saflib/node-express";
 import { AuthDB } from "@saflib/auth-db";
+import { sessionStore } from "../session-store.ts";
 
 // Create a test app
-
 const app = express();
 app.use(recommendedPreMiddleware);
-app.use(session({ secret: "test" }));
+
+// Initialize database
+const db = new AuthDB({ inMemory: true });
+
+// Session configuration
+app.use(
+  session({
+    store: sessionStore,
+    secret: "test",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// Initialize Passport
+setupPassport(db);
 app.use(passport.initialize());
 app.use(passport.session());
+
+// db injection
+app.use((req, _, next) => {
+  req.db = db;
+  next();
+});
+
 app.use("/auth", authRouter);
 app.use(recommendedErrorHandlers);
 
@@ -29,15 +51,9 @@ vi.mock("argon2", () => ({
   verify: vi.fn().mockResolvedValue(true),
 }));
 
-const db: AuthDB = new AuthDB({ inMemory: true });
-setupPassport(db);
-
 describe("Auth Routes", () => {
-  // let db: AuthDB;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    // db = new AuthDB({ inMemory: true });
   });
 
   describe("POST /auth/register", () => {
@@ -287,7 +303,6 @@ describe("Auth Routes", () => {
 
       // Login first to establish session
       const loginResponse = await agent.post("/auth/login").send(userData);
-      console.log(loginResponse.body);
 
       expect(loginResponse.status).toBe(200);
 
