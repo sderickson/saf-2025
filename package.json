@@ -1,13 +1,13 @@
 {
   "name": "@saf-2025/saf-2025",
-  "description": "Full-featured web application framework using my preferred libraries and services.",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "Site and demonstration of SAF features.",
+  "type": "module",
   "scripts": {
     "test": "npm run test --workspaces --if-present --parallel",
     "test:coverage": "npm run test:coverage --workspaces --if-present --parallel",
-    "dev": "docker compose up"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write ."
   },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
@@ -20,5 +20,8 @@
   ],
   "engines": {
     "node": ">=22"
+  },
+  "devDependencies": {
+    "@saflib/monorepo": "*"
   }
 }
