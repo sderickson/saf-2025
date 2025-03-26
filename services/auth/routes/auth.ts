@@ -2,11 +2,8 @@ import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import type { IVerifyOptions } from "passport-local";
-import type { RequestSchema, ResponseSchema } from "@saf-2025/specs-apis";
-import { users } from "@saf-2025/dbs-auth";
-import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
+import type { RegisterRequest, UserResponse } from "@saflib/auth-spec";
 import * as argon2 from "argon2";
-import type { AuthDatabaseError } from "@saf-2025/dbs-auth";
 import { createHandler } from "@saflib/node-express";
 
 export const authRouter = express.Router();
@@ -15,20 +12,20 @@ authRouter.post(
   "/register",
   createHandler(async (req, res, next) => {
     try {
-      const registerRequest: RequestSchema<"registerUser"> = req.body;
+      const registerRequest: RegisterRequest = req.body;
       const { email, password } = registerRequest;
 
       // Hash the password with argon2
       const passwordHash = await argon2.hash(password);
 
       // Create the user
-      const user = await users.create({
+      const user = await req.db.users.create({
         email,
         createdAt: new Date(),
       });
 
       // Create email authentication
-      await emailAuth.create({
+      await req.db.emailAuth.create({
         userId: user.id,
         email: user.email,
         passwordHash: Buffer.from(passwordHash),
@@ -40,7 +37,7 @@ authRouter.post(
           return next(err);
         }
 
-        const response: ResponseSchema<"registerUser", 200> = {
+        const response: UserResponse = {
           id: user.id,
           email: user.email,
         };
@@ -48,14 +45,13 @@ authRouter.post(
         res.status(200).json(response);
       });
     } catch (err) {
-      const error = err as AuthDatabaseError;
-      if (error.name === "EmailConflictError") {
+      if (err instanceof req.db.users.EmailConflictError) {
         res.status(409).json({ message: "Email already exists" });
         return;
       }
       next(err);
     }
-  }),
+  })
 );
 
 authRouter.post(
@@ -66,7 +62,7 @@ authRouter.post(
       (
         err: Error | null,
         user: Express.User | false,
-        info: IVerifyOptions | undefined,
+        info: IVerifyOptions | undefined
       ) => {
         if (err) {
           return next(err);
@@ -81,16 +77,16 @@ authRouter.post(
             return next(err);
           }
 
-          const response: ResponseSchema<"loginUser", 200> = {
+          const response: UserResponse = {
             id: user.id,
             email: user.email,
           };
 
           res.json(response);
         });
-      },
+      }
     )(req, res, next);
-  }),
+  })
 );
 
 authRouter.post(
@@ -102,7 +98,7 @@ authRouter.post(
       }
       res.status(200).end();
     });
-  }),
+  })
 );
 
 authRouter.get(
@@ -136,5 +132,5 @@ authRouter.get(
       id: user.id,
       email: user.email,
     });
-  }),
+  })
 );

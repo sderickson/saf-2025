@@ -1,18 +1,17 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { users } from "@saf-2025/dbs-auth";
-import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
 import * as argon2 from "argon2";
 import type { User } from "../types.ts";
+import { AuthDB } from "@saflib/auth-db";
 
-export const setupPassport = () => {
+export const setupPassport = (db: AuthDB) => {
   passport.serializeUser((user: User, done) => {
     done(null, user.id);
   });
 
   passport.deserializeUser(async (id: number, done) => {
     try {
-      const user = await users.getById(id);
+      const user = await db.users.getById(id);
       if (!user) {
         return done(null, false);
       }
@@ -33,9 +32,9 @@ export const setupPassport = () => {
           // Get the user and their email auth
           let user;
           try {
-            user = await users.getByEmail(email);
+            user = await db.users.getByEmail(email);
           } catch (err) {
-            if (err instanceof users.UserNotFoundError) {
+            if (err instanceof db.users.UserNotFoundError) {
               return done(null, false, { message: "Invalid credentials" });
             }
             return done(err);
@@ -43,9 +42,9 @@ export const setupPassport = () => {
 
           let auth;
           try {
-            auth = await emailAuth.getByEmail(email);
+            auth = await db.emailAuth.getByEmail(email);
           } catch (err) {
-            if (err instanceof emailAuth.EmailAuthNotFoundError) {
+            if (err instanceof db.emailAuth.EmailAuthNotFoundError) {
               return done(null, false, { message: "Invalid credentials" });
             }
             return done(err);
@@ -58,7 +57,7 @@ export const setupPassport = () => {
 
           // Convert the password hash to a string for argon2 verification
           const passwordHash = Buffer.from(
-            auth.passwordHash as Uint8Array,
+            auth.passwordHash as Uint8Array
           ).toString("utf-8");
 
           // Check password using argon2
@@ -68,13 +67,13 @@ export const setupPassport = () => {
           }
 
           // Update last login time
-          const updatedUser = await users.updateLastLogin(user.id);
+          const updatedUser = await db.users.updateLastLogin(user.id);
 
           return done(null, updatedUser);
         } catch (err) {
           return done(err);
         }
-      },
-    ),
+      }
+    )
   );
 };

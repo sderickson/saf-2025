@@ -39,11 +39,11 @@
   - [x] Document basic usage
   - [x] **Review Point**
 
-- [ ] Test Multi-File Access
+- [x] Test Multi-File Access
 
-  - [ ] Write a test which instantiates two AuthDb instances pointing to the same database file
-  - [ ] See if they can read/write to the same database file and observe each others' changes
-  - [ ] **Review Point**
+  - [x] Write a test which instantiates two AuthDb instances pointing to the same database file
+  - [x] See if they can read/write to the same database file and observe each others' changes
+  - [x] **Review Point**
 
 - [ ] Update `services/auth` to use new AuthDb
 

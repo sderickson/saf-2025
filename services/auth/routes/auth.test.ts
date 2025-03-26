@@ -11,58 +11,33 @@ import {
   recommendedErrorHandlers,
   recommendedPreMiddleware,
 } from "@saflib/node-express";
+import { AuthDB } from "@saflib/auth-db";
 
-// Import the mocked modules
-import { users } from "@saf-2025/dbs-auth";
-import * as emailAuth from "@saf-2025/dbs-auth/queries/email-auth";
+// Create a test app
 
-// Mock the modules
-vi.mock("@saf-2025/dbs-auth", () => ({
-  users: {
-    create: vi.fn(),
-    getByEmail: vi.fn(),
-    getById: vi.fn(),
-    updateLastLogin: vi.fn(),
-    EmailConflictError: class EmailConflictError extends Error {
-      constructor() {
-        super("Email already exists");
-        this.name = "EmailConflictError";
-      }
-    },
-  },
-}));
+const app = express();
+app.use(recommendedPreMiddleware);
+app.use(session({ secret: "test" }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/auth", authRouter);
+app.use(recommendedErrorHandlers);
 
-vi.mock("@saf-2025/dbs-auth/queries/email-auth", () => ({
-  create: vi.fn(),
-  getByEmail: vi.fn(),
-}));
-
+// Mock argon2
 vi.mock("argon2", () => ({
   hash: vi.fn().mockResolvedValue("hashed-password"),
   verify: vi.fn().mockResolvedValue(true),
 }));
 
-setupPassport();
-
-// Create Express app for testing
-const app = express();
-app.use(recommendedPreMiddleware);
-app.use(
-  session({
-    secret: "test-secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use("/auth", authRouter);
-app.use(recommendedErrorHandlers);
+const db: AuthDB = new AuthDB({ inMemory: true });
+setupPassport(db);
 
 describe("Auth Routes", () => {
+  // let db: AuthDB;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    // db = new AuthDB({ inMemory: true });
   });
 
   describe("POST /auth/register", () => {
@@ -79,11 +54,16 @@ describe("Auth Routes", () => {
         lastLoginAt: null,
       };
 
-      (users.create as Mock).mockResolvedValue(createdUser);
-      (emailAuth.create as Mock).mockResolvedValue({
+      vi.spyOn(db.users, "create").mockResolvedValue(createdUser);
+      vi.spyOn(db.emailAuth, "create").mockResolvedValue({
         userId: createdUser.id,
         email: createdUser.email,
         passwordHash: Buffer.from("hashed-password"),
+        verifiedAt: null,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiresAt: null,
       });
 
       const response = await request(app).post("/auth/register").send(userData);
@@ -94,12 +74,12 @@ describe("Auth Routes", () => {
         id: createdUser.id,
       });
 
-      expect(users.create).toHaveBeenCalledWith({
+      expect(db.users.create).toHaveBeenCalledWith({
         email: userData.email,
         createdAt: expect.any(Date),
       });
 
-      expect(emailAuth.create).toHaveBeenCalledWith({
+      expect(db.emailAuth.create).toHaveBeenCalledWith({
         userId: createdUser.id,
         email: userData.email,
         passwordHash: expect.any(Buffer),
@@ -114,7 +94,9 @@ describe("Auth Routes", () => {
         password: "password123",
       };
 
-      (users.create as Mock).mockRejectedValue(new users.EmailConflictError());
+      vi.spyOn(db.users, "create").mockRejectedValue(
+        new db.users.EmailConflictError()
+      );
 
       const response = await request(app).post("/auth/register").send(userData);
 
@@ -141,16 +123,20 @@ describe("Auth Routes", () => {
         userId: user.id,
         email: user.email,
         passwordHash: Buffer.from("hashed-password"),
+        verifiedAt: null,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiresAt: null,
       };
 
-      (users.getByEmail as Mock).mockResolvedValue(user);
-      (emailAuth.getByEmail as Mock).mockResolvedValue(authData);
-      (users.updateLastLogin as Mock).mockResolvedValue({
+      vi.spyOn(db.users, "getByEmail").mockResolvedValue(user);
+      vi.spyOn(db.emailAuth, "getByEmail").mockResolvedValue(authData);
+      vi.spyOn(db.users, "updateLastLogin").mockResolvedValue({
         ...user,
         lastLoginAt: new Date(),
       });
-      (users.getById as Mock).mockResolvedValue(user);
-      (argon2.verify as Mock).mockResolvedValue(true);
+      vi.spyOn(db.users, "getById").mockResolvedValue(user);
 
       const response = await request(app).post("/auth/login").send(userData);
 
@@ -161,10 +147,10 @@ describe("Auth Routes", () => {
       });
       expect(response.header["set-cookie"]).toBeDefined();
 
-      expect(users.getByEmail).toHaveBeenCalledWith(userData.email);
-      expect(emailAuth.getByEmail).toHaveBeenCalledWith(userData.email);
+      expect(db.users.getByEmail).toHaveBeenCalledWith(userData.email);
+      expect(db.emailAuth.getByEmail).toHaveBeenCalledWith(userData.email);
       expect(argon2.verify).toHaveBeenCalled();
-      expect(users.updateLastLogin).toHaveBeenCalledWith(user.id);
+      expect(db.users.updateLastLogin).toHaveBeenCalledWith(user.id);
     });
 
     it("should return 401 for invalid credentials", async () => {
@@ -173,7 +159,9 @@ describe("Auth Routes", () => {
         password: "wrong",
       };
 
-      (users.getByEmail as Mock).mockResolvedValue(null);
+      vi.spyOn(db.users, "getByEmail").mockRejectedValue(
+        new db.users.UserNotFoundError()
+      );
 
       const response = await request(app).post("/auth/login").send(userData);
 
@@ -198,11 +186,16 @@ describe("Auth Routes", () => {
         userId: user.id,
         email: user.email,
         passwordHash: Buffer.from("hashed-password"),
+        verifiedAt: null,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiresAt: null,
       };
 
-      (users.getByEmail as Mock).mockResolvedValue(user);
-      (emailAuth.getByEmail as Mock).mockResolvedValue(authData);
-      (argon2.verify as Mock).mockResolvedValue(false);
+      vi.spyOn(db.users, "getByEmail").mockResolvedValue(user);
+      vi.spyOn(db.emailAuth, "getByEmail").mockResolvedValue(authData);
+      vi.spyOn(argon2, "verify").mockResolvedValue(false);
 
       const response = await request(app).post("/auth/login").send(userData);
 
@@ -226,11 +219,16 @@ describe("Auth Routes", () => {
         lastLoginAt: null,
       };
 
-      (users.getByEmail as Mock).mockResolvedValue(user);
-      (emailAuth.getByEmail as Mock).mockResolvedValue({
+      vi.spyOn(db.users, "getByEmail").mockResolvedValue(user);
+      vi.spyOn(db.emailAuth, "getByEmail").mockResolvedValue({
         userId: user.id,
         email: user.email,
         passwordHash: Buffer.from("hashed-password"),
+        verifiedAt: null,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiresAt: null,
       });
 
       // Login first
@@ -267,24 +265,29 @@ describe("Auth Routes", () => {
       };
 
       // Mock database responses
-      (users.getByEmail as Mock).mockResolvedValue(user);
-      (emailAuth.getByEmail as Mock).mockResolvedValue({
+      vi.spyOn(db.users, "getByEmail").mockResolvedValue(user);
+      vi.spyOn(db.emailAuth, "getByEmail").mockResolvedValue({
         userId: user.id,
         email: user.email,
         passwordHash: Buffer.from("hashed-password"),
+        verifiedAt: null,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+        forgotPasswordToken: null,
+        forgotPasswordTokenExpiresAt: null,
       });
-      (users.getById as Mock).mockResolvedValue(user);
-      (users.updateLastLogin as Mock).mockResolvedValue({
+      vi.spyOn(db.users, "getById").mockResolvedValue(user);
+      vi.spyOn(db.users, "updateLastLogin").mockResolvedValue({
         ...user,
         lastLoginAt: new Date(),
       });
-      (argon2.verify as Mock).mockResolvedValue(true);
 
       // Use agent to maintain cookies between requests
       const agent = request.agent(app);
 
       // Login first to establish session
       const loginResponse = await agent.post("/auth/login").send(userData);
+      console.log(loginResponse.body);
 
       expect(loginResponse.status).toBe(200);
 
