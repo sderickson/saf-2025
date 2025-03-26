@@ -12,7 +12,6 @@ import {
   recommendedPreMiddleware,
 } from "@saflib/node-express";
 import { AuthDB } from "@saflib/auth-db";
-import { sessionStore } from "../session-store.ts";
 
 // Create a test app
 const app = express();
@@ -24,7 +23,6 @@ const db = new AuthDB({ inMemory: true });
 // Session configuration
 app.use(
   session({
-    store: sessionStore,
     secret: "test",
     resave: false,
     saveUninitialized: false,
@@ -297,6 +295,7 @@ describe("Auth Routes", () => {
         ...user,
         lastLoginAt: new Date(),
       });
+      vi.spyOn(argon2, "verify").mockResolvedValue(true);
 
       // Use agent to maintain cookies between requests
       const agent = request.agent(app);
