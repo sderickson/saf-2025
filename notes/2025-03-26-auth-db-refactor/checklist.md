@@ -45,28 +45,27 @@
   - [x] See if they can read/write to the same database file and observe each others' changes
   - [x] **Review Point**
 
-- [ ] Update `services/auth` to use new AuthDb
+- [x] Update `services/auth` to use new AuthDb
 
-  - [ ] Update imports to use new AuthDb
-  - [ ] Update tests to use new AuthDb
-  - [ ] Make sure services/auth unit tests pass
+  - [x] Update imports to use new AuthDb
+  - [x] Update tests to use new AuthDb
+  - [x] Make sure services/auth unit tests pass
 
-- [ ] Update deployment
-  - [ ] Update docker file in /services/auth as needed
-  - [ ] Update docker compose files in /deploy/instance as needed
-  - [ ] Run `npm run dev -- --build` from /deploy/instance and check the volumes work
-  - [ ] Run `npm run build` from /deploy/instance and check that it works
-  - [ ] Run `npm run test` in /tests/e2e and check that it works
-  - [ ] **Review Point**
+- [x] Update deployment
+  - [x] Update docker file in /services/auth as needed
+  - [x] Update docker compose files in /deploy/instance as needed
+  - [x] Run `npm run dev -- --build` from /deploy/instance and check the volumes work
+  - [x] Run `npm run build` from /deploy/instance and check that it works
+  - [x] Run `npm run test` in /tests/e2e and check that it works
+  - [x] **Review Point**
 
 ## Testing Phase
 
 - [ ] Make sure everything still works
-  - [ ] Run `npm run test`
-  - [ ] Run `npm run test:coverage` - check for major coverage gaps
-  - [ ] Run `npm run lint`
-  - [ ] Run `npm run format`
-  - [ ] **Review Point**
+  - [x] Run `npm run test`
+  - [x] Run `npm run lint`
+  - [x] Run `npm run format`
+  - [x] **Review Point**
 
 ## Final Documentation Review
 
