@@ -2,18 +2,17 @@
 
 ## Planning Phase
 
-- [ ] Write specification
-  - [ ] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/<feature-folder>/spec.md
-  - [ ] Fill in each section
-  - [ ] Ask questions to clarify any ambiguities
-- [ ] **Review Point**
+- [ x Write specification
+  - [x] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/<feature-folder>/spec.md
+  - [x] Fill in each section
+  - [x] Ask questions to clarify any ambiguities
+- [x] **Review Point**
 
-- [ ] Update checklist
-  - [ ] Update the checkbox contents for what is necessary for this feature based on the spec
-  - [ ] Break down complex tasks into smaller, manageable subtasks
-  - [ ] Review [system-prompt.md](./system-prompt.md) and identify relevant platform docs for each implementation section
-  - [ ] Note where new platform documentation will need to be created
-- [ ] **Review Point**
+- [x] Update checklist
+  - [x] Update the checkbox contents for what is necessary for this feature based on the spec
+  - [x] Break down complex tasks into smaller, manageable subtasks
+  - [x] Note where new platform documentation will need to be created
+- [x] **Review Point**
 
 ## Implementation Phase
 
