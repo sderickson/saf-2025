@@ -2,7 +2,7 @@
 
 ## Planning Phase
 
-- [ x Write specification
+- [x] Write specification
   - [x] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/<feature-folder>/spec.md
   - [x] Fill in each section
   - [x] Ask questions to clarify any ambiguities
@@ -18,34 +18,25 @@
 
 ### Database Layer
 
-- [ ] Review Documentation
+- [x] Create New Package Structure
 
-  - [ ] Review [schema.md](../lib/drizzle-sqlite3/docs/schema.md)
-  - [ ] Review [queries.md](../lib/drizzle-sqlite3/docs/queries.md)
-  - [ ] Review [testing.md](../lib/drizzle-sqlite3-dev/docs/testing.md)
-  - [ ] Note any missing documentation needs
-  - [ ] **Review Point**
+  - [x] Create `lib/auth-db` directory
+  - [x] Initialize package.json with correct dependencies
+  - [x] Set up TypeScript configuration
+  - [x] Create basic package structure (src/, tests/, docs/)
+  - [x] **Review Point**
 
-- [ ] Create New Package Structure
+- [x] Migrate Database Implementation
 
-  - [ ] Create `lib/auth-db` directory
-  - [ ] Initialize package.json with correct dependencies
-  - [ ] Set up TypeScript configuration
-  - [ ] Create basic package structure (src/, tests/, docs/)
-  - [ ] **Review Point**
+  - [x] Move SQLite database implementation from `dbs/auth`
+  - [x] Update imports and dependencies
+  - [x] Ensure all tests pass
+  - [x] **Review Point**
 
-- [ ] Migrate Database Implementation
-
-  - [ ] Move SQLite database implementation from `dbs/auth`
-  - [ ] Update imports and dependencies
-  - [ ] Ensure all tests pass
-  - [ ] **Review Point**
-
-- [ ] Update Documentation
-  - [ ] Create package README.md
-  - [ ] Document basic usage
-  - [ ] Add API documentation
-  - [ ] **Review Point**
+- [x] Update Documentation
+  - [x] Create package README.md
+  - [x] Document basic usage
+  - [x] **Review Point**
 
 ### Integration Layer
 
