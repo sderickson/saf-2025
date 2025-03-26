@@ -34,23 +34,36 @@
   - [x] **Review Point**
 
 - [x] Update Documentation
+
   - [x] Create package README.md
   - [x] Document basic usage
   - [x] **Review Point**
 
-### Integration Layer
+- [ ] Test Multi-File Access
 
-- [ ] Test Multi-Service Access
-  - [ ] Temporarily update auth service to use new library
-  - [ ] Temporarily update api service to use new library
-  - [ ] Verify both services can read/write to the same database file
+  - [ ] Write a test which instantiates two AuthDb instances pointing to the same database file
+  - [ ] See if they can read/write to the same database file and observe each others' changes
+  - [ ] **Review Point**
+
+- [ ] Update `services/auth` to use new AuthDb
+
+  - [ ] Update imports to use new AuthDb
+  - [ ] Update tests to use new AuthDb
+  - [ ] Make sure services/auth unit tests pass
+
+- [ ] Update deployment
+  - [ ] Update docker file in /services/auth as needed
+  - [ ] Update docker compose files in /deploy/instance as needed
+  - [ ] Run `npm run dev -- --build` from /deploy/instance and check the volumes work
+  - [ ] Run `npm run build` from /deploy/instance and check that it works
+  - [ ] Run `npm run test` in /tests/e2e and check that it works
   - [ ] **Review Point**
 
 ## Testing Phase
 
 - [ ] Make sure everything still works
   - [ ] Run `npm run test`
-  - [ ] Run `npm run test:coverage`
+  - [ ] Run `npm run test:coverage` - check for major coverage gaps
   - [ ] Run `npm run lint`
   - [ ] Run `npm run format`
   - [ ] **Review Point**
