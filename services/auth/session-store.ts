@@ -1,6 +1,3 @@
-import * as users from "./src/queries/users.ts";
-import { AuthDatabaseError } from "./src/errors.ts";
-
 import session from "express-session";
 import sqlite from "better-sqlite3";
 import BetterSqlite3SessionStore from "better-sqlite3-session-store";
@@ -13,12 +10,10 @@ const __dirname = path.dirname(__filename);
 const sessionDbName = `sessions-${process.env.NODE_ENV}.sqlite`;
 
 const sessionDb = new sqlite(path.join(__dirname, `data/${sessionDbName}`));
-const sessionStore = new SqliteStore({
+export const sessionStore = new SqliteStore({
   client: sessionDb,
   expired: {
     clear: true,
     intervalMs: 900000, //ms = 15min
   },
 });
-
-export { users, AuthDatabaseError, sessionStore };

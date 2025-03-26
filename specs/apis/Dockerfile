@@ -3,7 +3,7 @@ FROM node:22-slim
 WORKDIR /app
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
-COPY ./lib/ ./lib/
+COPY ./saflib/ ./saflib/
 COPY ./specs/apis ./specs/apis
 RUN npm install
 

@@ -1,13 +1,13 @@
 services:
-  services-api:
+  api:
     extends:
       file: remote-assets/docker-compose.prod.yaml
-      service: services-api
+      service: api
     volumes: !override []
-  services-auth:
+  auth:
     extends:
       file: remote-assets/docker-compose.prod.yaml
-      service: services-auth
+      service: auth
     volumes: !override []
   caddy:
     extends:

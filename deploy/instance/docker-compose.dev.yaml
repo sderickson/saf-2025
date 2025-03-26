@@ -9,7 +9,7 @@ services:
       - ../../lib/:/app/lib/
     command: npm run dev
 
-  services-api:
+  api:
     develop:
       watch:
         - action: sync+restart
@@ -18,35 +18,35 @@ services:
           ignore:
             - data
         - action: sync+restart
-          path: ../../lib/node-express
-          target: /app/lib/node-express
+          path: ../../saflib/node-express
+          target: /app/saflib/node-express
         - action: sync+restart
           path: ../../specs/apis/dist
           target: /app/specs/apis/dist
         - action: sync+restart
-          path: ../../lib/drizzle-sqlite3
-          target: /app/lib/drizzle-sqlite3
+          path: ../../saflib/drizzle-sqlite3
+          target: /app/saflib/drizzle-sqlite3
         - action: sync+restart
-          path: .
+          path: ../../services/api
           target: /app/services/api
 
-  services-auth:
+  auth:
     develop:
       watch:
         - action: sync+restart
-          path: ../../dbs/auth
-          target: /app/dbs/auth
+          path: ../../saflib/auth-db
+          target: /app/saflib/auth-db
           ignore:
             - data
         - action: sync+restart
-          path: ../../lib/node-express
-          target: /app/lib/node-express
+          path: ../../saflib/node-express
+          target: /app/saflib/node-express
         - action: sync+restart
           path: ../../specs/apis/dist
           target: /app/specs/apis/dist
         - action: sync+restart
-          path: ../../lib/drizzle-sqlite3
-          target: /app/lib/drizzle-sqlite3
+          path: ../../saflib/drizzle-sqlite3
+          target: /app/saflib/drizzle-sqlite3
         - action: sync+restart
           path: ../../services/auth
           target: /app/services/auth
@@ -55,5 +55,5 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ./openapi.yaml
+          path: ../../specs/apis/openapi.yaml
           target: /app/specs/apis/openapi.yaml

@@ -4,11 +4,17 @@
 	file_server {
 		pass_thru
 	}
+	@no_extension {
+		not path_regexp \.
+	}
 	handle /auth/* {
 		try_files /auth/index.html
 	}
 	handle /app/* {
 		try_files /app/index.html
+	}
+	handle @no_extension {
+		try_files /index.html
 	}
 }
 
@@ -42,17 +48,17 @@
 	}
 
 	handle @auth {
-		reverse_proxy services-auth:3000 {
+		reverse_proxy auth:3000 {
 			import reverse_proxy_common
 		}
 	}
 
 	handle @api {
-		forward_auth services-auth:3000 {
+		forward_auth auth:3000 {
 			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
 		}
-		reverse_proxy services-api:3000 {
+		reverse_proxy api:3000 {
 			import reverse_proxy_common
 		}
 	}

@@ -16,13 +16,13 @@ services:
 
   clients:
     # Named for local dev, but doesn't get published; not needed for prod
-    image: saf-clients:latest
+    image: saf-2025-clients:latest
     build:
       context: ../..
       dockerfile: ./clients/Dockerfile
 
-  services-api:
-    image: ghcr.io/sderickson/saf-services-api:latest
+  api:
+    image: ghcr.io/sderickson/saf-2025-api:latest
     volumes:
       - ../../dbs/main/data:/app/dbs/main/data
     build:
@@ -32,10 +32,12 @@ services:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
       - DOMAIN=${DOMAIN}
-  services-auth:
-    image: ghcr.io/sderickson/saf-services-auth:latest
+
+  auth:
+    image: ghcr.io/sderickson/saf-2025-auth:latest
     volumes:
-      - ../../dbs/auth/data:/app/dbs/auth/data
+      - ../../saflib/auth-db/data:/app/saflib/auth-db/data
+      - ../../services/auth/data:/app/services/auth/data
     build:
       context: ../..
       dockerfile: services/auth/Dockerfile

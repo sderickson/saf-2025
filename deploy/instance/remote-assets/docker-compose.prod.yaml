@@ -2,7 +2,7 @@ services:
   caddy:
     cap_add:
       - NET_ADMIN
-    image: ghcr.io/sderickson/saf-caddy:latest
+    image: ghcr.io/sderickson/saf-2025-caddy:latest
     ports:
       - "80:80"
       - "443:443"
@@ -17,8 +17,8 @@ services:
       - caddy_config:/config
     restart: unless-stopped
 
-  services-api:
-    image: ghcr.io/sderickson/saf-services-api:latest
+  api:
+    image: ghcr.io/sderickson/saf-2025-api:latest
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
@@ -34,8 +34,8 @@ services:
     volumes:
       - /opt/app/dbs/main/data:/app/dbs/main/data
 
-  services-auth:
-    image: ghcr.io/sderickson/saf-services-auth:latest
+  auth:
+    image: ghcr.io/sderickson/saf-2025-auth:latest
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
@@ -49,7 +49,8 @@ services:
           memory: 128M
     memswap_limit: 2G
     volumes:
-      - /opt/app/dbs/auth/data:/app/dbs/auth/data
+      - /opt/saf-2025/saflib/auth-db/data:/app/saflib/auth-db/data
+      - /opt/saf-2025/services/auth/data:/app/services/auth/data
 
 volumes:
   caddy_data:

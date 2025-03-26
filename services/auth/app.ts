@@ -5,7 +5,7 @@
  * Implements common middleware patterns and specific auth-related functionality.
  */
 
-import * as db from "@saf-2025/dbs-auth";
+import { AuthDB } from "@saflib/auth-db";
 import {
   createPreMiddleware,
   recommendedErrorHandlers,
@@ -15,31 +15,24 @@ import session from "express-session";
 import passport from "passport";
 import { setupPassport } from "./config/passport.ts";
 import { authRouter } from "./routes/auth.ts";
-
-const app = express();
-app.set("trust proxy", true);
-
+import { sessionStore } from "./session-store.ts";
 // Define properties added to Express Request objects by middleware
 declare global {
   namespace Express {
     interface Request {
-      db: typeof db;
+      db: AuthDB;
     }
   }
 }
 
-/**
- * Pre-route Middleware Stack
- * Includes request ID, logging, body parsing, and OpenAPI validation
- */
-console.log("Env:", {
-  DISABLE_CORS: process.env.DISABLE_CORS,
-  DOMAIN: process.env.DOMAIN,
-  PROTOCOL: process.env.PROTOCOL,
-});
+const app = express();
+app.set("trust proxy", true);
 
-const DISABLE_CORS = process.env.DISABLE_CORS === "true";
-app.use(createPreMiddleware({ disableCors: DISABLE_CORS }));
+// Initialize database
+const db = new AuthDB();
+
+// Apply recommended middleware
+app.use(createPreMiddleware());
 
 // Session configuration
 const cookie = {
@@ -51,7 +44,7 @@ const cookie = {
 
 app.use(
   session({
-    store: db.sessionStore,
+    store: sessionStore,
     secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
@@ -60,7 +53,7 @@ app.use(
 );
 
 // Initialize Passport and restore authentication state from session
-setupPassport();
+setupPassport(db);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -76,10 +69,7 @@ app.use((req, _, next) => {
  */
 app.use("/auth", authRouter);
 
-/**
- * Error Handling Middleware Stack
- * Includes 404 handler and centralized error handling
- */
+// Apply recommended error handlers
 app.use(recommendedErrorHandlers);
 
 export default app;
