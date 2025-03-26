@@ -16,7 +16,9 @@
       "post": {
         "summary": "Register New User",
         "operationId": "registerUser",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -55,7 +57,9 @@
       "post": {
         "summary": "Authenticate User",
         "operationId": "loginUser",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -94,7 +98,9 @@
       "post": {
         "summary": "Logout User",
         "operationId": "logoutUser",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "responses": {
           "200": {
             "description": "Successful logout"
@@ -107,7 +113,9 @@
         "summary": "Verify Authentication Status",
         "description": "Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.",
         "operationId": "verifyAuth",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "responses": {
           "200": {
             "description": "User is authenticated",
@@ -125,25 +133,6 @@
                 },
                 "description": "The authenticated user's email"
               }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "The authenticated user's ID"
-                    },
-                    "email": {
-                      "type": "string",
-                      "format": "email",
-                      "description": "The authenticated user's email"
-                    }
-                  },
-                  "required": ["id", "email"]
-                }
-              }
             }
           },
           "401": {
@@ -159,21 +148,53 @@
         }
       }
     },
-    "/todos": {
+    "/call-series": {
       "get": {
-        "summary": "List all todos",
-        "operationId": "getTodos",
-        "tags": ["todos"],
+        "summary": "List all call series for the authenticated user",
+        "operationId": "getCallSeries",
+        "tags": [
+          "Call Series"
+        ],
         "responses": {
           "200": {
-            "description": "A list of todo items",
+            "description": "List of call series",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/todo"
+                    "$ref": "#/components/schemas/call-series"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
@@ -181,32 +202,34 @@
         }
       },
       "post": {
-        "summary": "Create a new todo",
-        "operationId": "createTodo",
-        "tags": ["todos"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTodoRequest"
-              }
-            }
-          }
-        },
+        "summary": "Create a new call series",
+        "operationId": "createCallSeries",
+        "tags": [
+          "Call Series"
+        ],
         "responses": {
           "201": {
-            "description": "The created todo item",
+            "description": "Created call series",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todo"
+                  "$ref": "#/components/schemas/call-series"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request body",
+            "description": "Bad Request - Invalid input (e.g., invalid phone number format)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -218,34 +241,56 @@
         }
       }
     },
-    "/todos/{id}": {
-      "put": {
-        "summary": "Update a todo",
-        "operationId": "updateTodo",
-        "tags": ["todos"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTodoRequest"
-              }
+    "/call-series/{id}": {
+      "get": {
+        "summary": "Get a specific call series",
+        "operationId": "getCallSeriesById",
+        "tags": [
+          "Call Series"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "The updated todo item",
+            "description": "Call series details",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todo"
+                  "$ref": "#/components/schemas/call-series"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request body",
+            "description": "Bad Request - Invalid ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this call series",
             "content": {
               "application/json": {
                 "schema": {
@@ -255,7 +300,97 @@
             }
           },
           "404": {
-            "description": "Todo item not found",
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a call series",
+        "operationId": "updateCallSeries",
+        "tags": [
+          "Call Series"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "recipient_name": {
+                    "type": "string"
+                  },
+                  "phone_number": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/call-series"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid input (e.g., invalid phone number format)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -267,72 +402,64 @@
         }
       },
       "delete": {
-        "summary": "Delete a todo",
-        "operationId": "deleteTodo",
-        "tags": ["todos"],
-        "responses": {
-          "204": {
-            "description": "Todo item successfully deleted"
-          },
-          "404": {
-            "description": "Todo item not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error"
-                }
-              }
+        "summary": "Delete a call series",
+        "operationId": "deleteCallSeries",
+        "tags": [
+          "Call Series"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        }
-      }
-    },
-    "/examples": {
-      "get": {
-        "summary": "Get all examples",
-        "tags": ["examples"],
+        ],
         "responses": {
           "200": {
-            "description": "List of examples",
+            "description": "Deleted call series",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Example"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new example",
-        "tags": ["examples"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateExampleRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created example",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Example"
+                  "$ref": "#/components/schemas/call-series"
                 }
               }
             }
           },
           "400": {
-            "description": "Validation error",
+            "description": "Bad Request - Invalid ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -344,23 +471,81 @@
         }
       }
     },
-    "/examples/{id}": {
-      "get": {
-        "summary": "Get example by ID",
-        "tags": ["examples"],
+    "/call-series/{id}/test-call": {
+      "post": {
+        "summary": "Initiate a test call to the phone number associated with a call series",
+        "operationId": "initiateTestCall",
+        "tags": [
+          "Call Series"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Example item",
+            "description": "Call successfully initiated",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Example"
+                  "type": "object",
+                  "required": [
+                    "success",
+                    "message"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Whether the call was successfully initiated"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "A human-readable message about the call initiation"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - No valid phone number associated with call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not own this call series",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
                 }
               }
             }
           },
           "404": {
-            "description": "Example not found",
+            "description": "Not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -378,12 +563,15 @@
       "User": {
         "$ref": "#/components/schemas/user"
       },
-      "Todo": {
-        "$ref": "#/components/schemas/todo"
+      "CallSeries": {
+        "$ref": "#/components/schemas/call-series"
       },
       "RegisterRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -397,7 +585,10 @@
       },
       "UserResponse": {
         "type": "object",
-        "required": ["id", "email"],
+        "required": [
+          "id",
+          "email"
+        ],
         "properties": {
           "id": {
             "type": "number"
@@ -410,7 +601,9 @@
       },
       "error": {
         "type": "object",
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "properties": {
           "message": {
             "type": "string",
@@ -424,7 +617,10 @@
       },
       "LoginRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": [
+          "email",
+          "password"
+        ],
         "properties": {
           "email": {
             "type": "string",
@@ -435,81 +631,50 @@
           }
         }
       },
-      "todo": {
+      "call-series": {
         "type": "object",
-        "required": ["id", "title", "completed", "createdAt"],
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Unique identifier for the todo item"
-          },
-          "title": {
-            "type": "string",
-            "description": "The title/description of the todo item"
-          },
-          "completed": {
-            "type": "boolean",
-            "description": "Whether the todo item has been completed"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "When the todo item was created"
-          }
-        }
-      },
-      "CreateTodoRequest": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "The title/description of the todo item"
-          }
-        }
-      },
-      "UpdateTodoRequest": {
-        "type": "object",
-        "required": ["title", "completed"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "The title/description of the todo item"
-          },
-          "completed": {
-            "type": "boolean",
-            "description": "Whether the todo item has been completed"
-          }
-        }
-      },
-      "Example": {
-        "type": "object",
-        "required": ["id", "name", "createdAt"],
         "properties": {
           "id": {
             "type": "integer"
           },
-          "name": {
-            "type": "string"
+          "user_id": {
+            "type": "integer"
           },
-          "createdAt": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipient_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
             "type": "string",
             "format": "date-time"
           }
-        }
-      },
-      "CreateExampleRequest": {
-        "type": "object",
-        "required": ["name"],
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "created_at",
+          "updated_at"
+        ]
       },
       "user": {
         "type": "object",
-        "required": ["id", "email", "name"],
+        "required": [
+          "id",
+          "email",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "number"

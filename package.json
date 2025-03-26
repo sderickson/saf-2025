@@ -14,7 +14,7 @@
   "workspaces": [
     "clients",
     "dbs/*",
-    "lib/*",
+    "saflib/*",
     "services/*",
     "specs/*"
   ],
