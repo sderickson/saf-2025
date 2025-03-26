@@ -20,7 +20,7 @@ npm run dev                   # Runs all services on docker, with watch mode
                               # Use "--" to pass "docker compose up" options
                               # such as for...
 npm run dev -- --build        # * Rebuilding images
-npm run dev -- services-auth  # * Running a specific service
+npm run dev -- auth           # * Running a specific service
                               # All other local dev commands are docker compose
                               # And so can take the same extra params.
 
