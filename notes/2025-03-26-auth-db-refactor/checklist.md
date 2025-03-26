@@ -42,45 +42,21 @@
   - [ ] Ensure all tests pass
   - [ ] **Review Point**
 
-- [ ] Implement Multi-Service Support
-
-  - [ ] Add connection pooling
-  - [ ] Implement file locking mechanism
-  - [ ] Add connection management utilities
-  - [ ] Write tests for concurrent access
-  - [ ] **Review Point**
-
 - [ ] Update Documentation
   - [ ] Create package README.md
-  - [ ] Document database sharing patterns
+  - [ ] Document basic usage
   - [ ] Add API documentation
-  - [ ] Add configuration documentation
   - [ ] **Review Point**
 
 ### Integration Layer
 
-- [ ] Update Existing Services
-
-  - [ ] Update auth service to use new library
-  - [ ] Update any other services using auth database
-  - [ ] Verify all functionality works
-  - [ ] **Review Point**
-
-- [ ] Migration Support
-  - [ ] Create migration utilities
-  - [ ] Document migration process
-  - [ ] Create migration tests
+- [ ] Test Multi-Service Access
+  - [ ] Temporarily update auth service to use new library
+  - [ ] Temporarily update api service to use new library
+  - [ ] Verify both services can read/write to the same database file
   - [ ] **Review Point**
 
 ## Testing Phase
-
-- [ ] Test end-to-end
-
-  - [ ] Review [e2e-testing.md](../lib/playwright/docs/e2e-testing.md)
-  - [ ] Create production docker images
-  - [ ] Run existing tests
-  - [ ] Create new tests for multi-service scenarios
-  - [ ] **Review Point**
 
 - [ ] Make sure everything still works
   - [ ] Run `npm run test`
