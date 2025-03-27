@@ -71,16 +71,15 @@
 
 ### Demo Implementation
 
-- [ ] Add Admin Auto-Assignment
+- [x] Add Admin Auto-Assignment
 
-  - [ ] Add admin permission to users who register with "admin.\*@email.com" when NODE_ENV is "TEST" in /saflib/auth-service/routes/auth.ts
+  - [x] Add admin permission to users who register with "admin.\*@email.com" when NODE_ENV is "TEST" in /saflib/auth-service/routes/auth.ts
 
-- [ ] Add delete all spec
+- [x] Add delete all spec
 
-  - [ ] Review [update-spec.md](/saflib/openapi-specs/docs/update-spec.md) for spec patterns
-  - [ ] Add endpoint to delete all todos in /specs/apis/openapi.yaml
-  - [ ] Generate
-  - [ ] Update docs if needed
+  - [x] Review [update-spec.md](/saflib/openapi-specs/docs/update-spec.md) for spec patterns
+  - [x] Add endpoint to delete all todos in /specs/apis/openapi.yaml
+  - [x] Generate
 
 - [ ] Add Delete All Todos Feature
 

@@ -62,6 +62,23 @@ post:
           schema:
             $ref: "../schemas/error.yaml"
 
+delete:
+  summary: Delete all todos
+  operationId: deleteAllTodos
+  tags:
+    - todos
+  security:
+    - scopes: ["admin"]
+  responses:
+    "204":
+      description: All todo items successfully deleted
+    "403":
+      description: User does not have permission to delete all todos
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
+
 /{id}:
   parameters:
     - name: id

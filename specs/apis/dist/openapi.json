@@ -16,7 +16,9 @@
       "get": {
         "summary": "List all todos",
         "operationId": "getTodos",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "responses": {
           "200": {
             "description": "A list of todo items",
@@ -36,7 +38,9 @@
       "post": {
         "summary": "Create a new todo",
         "operationId": "createTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -69,13 +73,44 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete all todos",
+        "operationId": "deleteAllTodos",
+        "tags": [
+          "todos"
+        ],
+        "security": [
+          {
+            "scopes": [
+              "admin"
+            ]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "All todo items successfully deleted"
+          },
+          "403": {
+            "description": "User does not have permission to delete all todos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/todos/{id}": {
       "put": {
         "summary": "Update a todo",
         "operationId": "updateTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -122,7 +157,9 @@
       "delete": {
         "summary": "Delete a todo",
         "operationId": "deleteTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "responses": {
           "204": {
             "description": "Todo item successfully deleted"
@@ -142,13 +179,26 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "scopes": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Scopes",
+        "description": "Comma-separated list of user scopes"
+      }
+    },
     "schemas": {
       "Todo": {
         "$ref": "#/components/schemas/todo"
       },
       "todo": {
         "type": "object",
-        "required": ["id", "title", "completed", "createdAt"],
+        "required": [
+          "id",
+          "title",
+          "completed",
+          "createdAt"
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -171,7 +221,9 @@
       },
       "CreateTodoRequest": {
         "type": "object",
-        "required": ["title"],
+        "required": [
+          "title"
+        ],
         "properties": {
           "title": {
             "type": "string",
@@ -181,7 +233,9 @@
       },
       "error": {
         "type": "object",
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "properties": {
           "message": {
             "type": "string",
@@ -195,7 +249,10 @@
       },
       "UpdateTodoRequest": {
         "type": "object",
-        "required": ["title", "completed"],
+        "required": [
+          "title",
+          "completed"
+        ],
         "properties": {
           "title": {
             "type": "string",
