@@ -31,11 +31,11 @@
 
 ### Configuration Layer
 
-- [ ] Create Permissions Config
-  - [ ] Review [library-packages.md](/saflib/monorepo/docs/library-packages.md) for config patterns
-  - [ ] Create `/saflib/auth-service/config/permissions.yaml` with initial permissions - just "admin" for now
-  - [ ] Add config loading function to auth-service
-  - [ ] Update docs if needed
+- [x] Create Permissions Config
+  - [x] Review [library-packages.md](/saflib/monorepo/docs/library-packages.md) for config patterns
+  - [x] Create `/saflib/auth-service/config/permissions.yaml` with initial permissions - just "admin" for now
+  - [x] Add config loading function to auth-service
+  - [x] Update docs if needed
 
 ### Database Layer
 
