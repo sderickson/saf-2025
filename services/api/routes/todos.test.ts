@@ -4,16 +4,13 @@ import express from "express";
 import { todos, TodoNotFoundError } from "@saf-2025/dbs-main";
 import type { Todo } from "@saf-2025/dbs-main";
 import todosRouter from "./todos.ts";
-import {
-  recommendedErrorHandlers,
-  recommendedPreMiddleware,
-} from "@saflib/node-express";
+import { preMiddleware, errorHandlers } from "../middleware.ts";
 
 // Create Express app for testing
 const app = express();
-app.use(recommendedPreMiddleware);
+app.use(preMiddleware);
 app.use("/todos", todosRouter);
-app.use(recommendedErrorHandlers);
+app.use(errorHandlers);
 
 // Mock the database functions
 vi.mock("@saf-2025/dbs-main", async (importOriginal) => {
@@ -25,6 +22,7 @@ vi.mock("@saf-2025/dbs-main", async (importOriginal) => {
       createTodo: vi.fn(),
       updateTodo: vi.fn(),
       deleteTodo: vi.fn(),
+      deleteAllTodos: vi.fn(),
     },
   };
 });
@@ -68,7 +66,7 @@ describe("Todos Routes", () => {
 
     it("should handle database errors", async () => {
       vi.mocked(todos.getAllTodos).mockRejectedValue(
-        new Error("Database error"),
+        new Error("Database error")
       );
 
       const response = await request(app).get("/todos");
@@ -97,7 +95,7 @@ describe("Todos Routes", () => {
 
     it("should handle database errors", async () => {
       vi.mocked(todos.createTodo).mockRejectedValue(
-        new Error("Database error"),
+        new Error("Database error")
       );
 
       const response = await request(app)
@@ -128,14 +126,14 @@ describe("Todos Routes", () => {
       expect(todos.updateTodo).toHaveBeenCalledWith(
         todoId,
         updateData.title,
-        updateData.completed,
+        updateData.completed
       );
     });
 
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.updateTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId),
+        new TodoNotFoundError(todoId)
       );
 
       const response = await request(app)
@@ -167,13 +165,42 @@ describe("Todos Routes", () => {
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.deleteTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId),
+        new TodoNotFoundError(todoId)
       );
 
       const response = await request(app).delete(`/todos/${todoId}`);
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({ message: "Todo with id 999 not found" });
+    });
+  });
+
+  describe("DELETE /todos", () => {
+    it("should delete all todos", async () => {
+      vi.mocked(todos.deleteAllTodos).mockResolvedValue(undefined);
+
+      const response = await request(app)
+        .delete("/todos")
+        .set("x-user-scopes", "admin");
+
+      expect(response.status).toBe(204);
+      expect(todos.deleteAllTodos).toHaveBeenCalledOnce();
+    });
+
+    it("should return 403 when user is not admin", async () => {
+      const response = await request(app)
+        .delete("/todos")
+        .set("x-user-scopes", "user");
+
+      expect(response.status).toBe(403);
+      expect(todos.deleteAllTodos).not.toHaveBeenCalled();
+    });
+
+    it("should return 401 when no auth headers", async () => {
+      const response = await request(app).delete("/todos");
+
+      expect(response.status).toBe(401);
+      expect(todos.deleteAllTodos).not.toHaveBeenCalled();
     });
   });
 });

@@ -83,9 +83,9 @@
 
 - [ ] Add Delete All Todos Feature
 
-  - [ ] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
-  - [ ] Add query to auth-db
-  - [ ] write and run tests
+  - [x] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
+  - [x] Add query to auth-db
+  - [x] write and run tests
   - [ ] Add endpoint to auth-service
   - [ ] Write and run tests
   - [ ] Update docs if needed
