@@ -2,12 +2,12 @@
 
 ## Planning Phase
 
-- [ ] Set up a new branch in the monorepo
+- [x] Set up a new branch in the monorepo
 
-  - [ ] Checkout the main branch
-  - [ ] Pull the latest changes
-  - [ ] Create a new branch with the current date and the name of the feature, e.g. `2025-03-28-auth-scopes`
-  - [ ] **Review Point**
+  - [x] Checkout the main branch
+  - [x] Pull the latest changes
+  - [x] Create a new branch with the current date and the name of the feature, e.g. `2025-03-28-auth-scopes`
+  - [x] **Review Point**
 
 - [ ] Write specification
 
