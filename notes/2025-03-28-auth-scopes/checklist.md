@@ -60,14 +60,14 @@
 ### Auth Verification Layer
 
 - [ ] Implement Scope Validation
-  - [ ] Review [testing.md](/saflib/node-express-dev/docs/testing.md) for test patterns
-  - [ ] Review [mocking.md](/saflib/node-express-dev/docs/mocking.md) for auth mocking
-  - [ ] Modify auth middleware to propagate scopes from header in /saflib/node-express/src/middleware/auth.ts
-  - [ ] Add and run tests
-  - [ ] Modify openapi middleware to enforce scopes from spec in /saflib/openapi-specs/src/middleware/openapi.ts
-  - [ ] Add and run tests
-  - [ ] Add middleware writing and testing doc to /saflib/node-express/docs
-  - [ ] Update docs if needed
+  - [x] Review [testing.md](/saflib/node-express-dev/docs/testing.md) for test patterns
+  - [x] Review [mocking.md](/saflib/node-express-dev/docs/mocking.md) for auth mocking
+  - [x] Modify auth middleware to propagate scopes from header in /saflib/node-express/src/middleware/auth.ts
+  - [x] Add and run tests
+  - [x] Modify openapi middleware to enforce scopes from spec in /saflib/openapi-specs/src/middleware/openapi.ts
+  - [x] Add and run tests
+  - [x] Add middleware writing and testing doc to /saflib/node-express/docs
+  - [x] Update docs if needed
 
 ### Demo Implementation
 
