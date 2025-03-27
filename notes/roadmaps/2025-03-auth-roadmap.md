@@ -22,6 +22,8 @@ Move authentication database from `saf-2025/dbs/auth` to a library package.
 - Update connection handling for multi-service support
 - Add documentation for database sharing
 
+STATUS: DONE. [Docs](../2025-03-26-auth-db-refactor/)
+
 ### 2. Auth Service Library (`auth-service-library`)
 
 Refactor authentication service into a reusable library.
@@ -33,6 +35,8 @@ Refactor authentication service into a reusable library.
 - Extract passport configuration and strategies
 - Create clean service interface for library consumers
 - Add documentation for service integration
+
+STATUS: DONE. [Docs](../2025-03-27-auth-service-library/)
 
 ### 3. Auth Scopes (`auth-scopes`)
 
