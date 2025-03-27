@@ -12,6 +12,13 @@ app.use(preMiddleware);
 app.use("/todos", todosRouter);
 app.use(errorHandlers);
 
+// Mock user headers for all requests
+const mockHeaders = {
+  "x-user-id": "1",
+  "x-user-email": "test@example.com",
+  "x-user-scopes": "user",
+};
+
 // Mock the database functions
 vi.mock("@saf-2025/dbs-main", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@saf-2025/dbs-main")>();
@@ -57,8 +64,7 @@ describe("Todos Routes", () => {
       ];
       vi.mocked(todos.getAllTodos).mockResolvedValue(mockTodos);
 
-      const response = await request(app).get("/todos");
-
+      const response = await request(app).get("/todos").set(mockHeaders);
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockTodos.map(convertTimestamps));
       expect(todos.getAllTodos).toHaveBeenCalledOnce();
@@ -69,7 +75,7 @@ describe("Todos Routes", () => {
         new Error("Database error")
       );
 
-      const response = await request(app).get("/todos");
+      const response = await request(app).get("/todos").set(mockHeaders);
 
       expect(response.status).toBe(500);
     });
@@ -86,7 +92,10 @@ describe("Todos Routes", () => {
       };
       vi.mocked(todos.createTodo).mockResolvedValue(createdTodo);
 
-      const response = await request(app).post("/todos").send(newTodo);
+      const response = await request(app)
+        .post("/todos")
+        .set(mockHeaders)
+        .send(newTodo);
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual(convertTimestamps(createdTodo));
@@ -98,9 +107,9 @@ describe("Todos Routes", () => {
         new Error("Database error")
       );
 
-      const response = await request(app)
-        .post("/todos")
-        .send({ title: "New Todo" });
+      const response = await request(app).post("/todos").set(mockHeaders).send({
+        title: "New Todo",
+      });
 
       expect(response.status).toBe(500);
     });
@@ -119,6 +128,7 @@ describe("Todos Routes", () => {
 
       const response = await request(app)
         .put(`/todos/${todoId}`)
+        .set(mockHeaders)
         .send(updateData);
 
       expect(response.status).toBe(200);
@@ -138,7 +148,11 @@ describe("Todos Routes", () => {
 
       const response = await request(app)
         .put(`/todos/${todoId}`)
-        .send({ title: "Updated Todo", completed: true });
+        .set(mockHeaders)
+        .send({
+          title: "Updated Todo",
+          completed: true,
+        });
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({ message: "Todo with id 999 not found" });
@@ -156,7 +170,9 @@ describe("Todos Routes", () => {
       };
       vi.mocked(todos.deleteTodo).mockResolvedValue(deletedTodo);
 
-      const response = await request(app).delete(`/todos/${todoId}`);
+      const response = await request(app)
+        .delete(`/todos/${todoId}`)
+        .set(mockHeaders);
 
       expect(response.status).toBe(204);
       expect(todos.deleteTodo).toHaveBeenCalledWith(todoId);
@@ -168,7 +184,9 @@ describe("Todos Routes", () => {
         new TodoNotFoundError(todoId)
       );
 
-      const response = await request(app).delete(`/todos/${todoId}`);
+      const response = await request(app)
+        .delete(`/todos/${todoId}`)
+        .set(mockHeaders);
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({ message: "Todo with id 999 not found" });
@@ -181,16 +199,18 @@ describe("Todos Routes", () => {
 
       const response = await request(app)
         .delete("/todos")
-        .set("x-user-scopes", "admin");
+        .set({
+          ...mockHeaders,
+          "x-user-email": "admin@example.com",
+          "x-user-scopes": "admin",
+        });
 
       expect(response.status).toBe(204);
       expect(todos.deleteAllTodos).toHaveBeenCalledOnce();
     });
 
     it("should return 403 when user is not admin", async () => {
-      const response = await request(app)
-        .delete("/todos")
-        .set("x-user-scopes", "user");
+      const response = await request(app).delete("/todos").set(mockHeaders);
 
       expect(response.status).toBe(403);
       expect(todos.deleteAllTodos).not.toHaveBeenCalled();

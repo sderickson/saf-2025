@@ -36,6 +36,12 @@ get:
             type: array
             items:
               $ref: "../schemas/todo.yaml"
+    "401":
+      description: Unauthorized - missing or invalid auth headers
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
 
 post:
   summary: Create a new todo
@@ -61,6 +67,12 @@ post:
         application/json:
           schema:
             $ref: "../schemas/error.yaml"
+    "401":
+      description: Unauthorized - missing or invalid auth headers
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
 
 delete:
   summary: Delete all todos
@@ -72,6 +84,12 @@ delete:
   responses:
     "204":
       description: All todo items successfully deleted
+    "401":
+      description: Unauthorized - missing or invalid auth headers
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/error.yaml"
     "403":
       description: User does not have permission to delete all todos
       content:
@@ -106,14 +124,20 @@ delete:
           application/json:
             schema:
               $ref: "../schemas/todo.yaml"
-      "404":
-        description: Todo item not found
+      "400":
+        description: Invalid request body
         content:
           application/json:
             schema:
               $ref: "../schemas/error.yaml"
-      "400":
-        description: Invalid request body
+      "401":
+        description: Unauthorized - missing or invalid auth headers
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"
+      "404":
+        description: Todo item not found
         content:
           application/json:
             schema:
@@ -127,6 +151,12 @@ delete:
     responses:
       "204":
         description: Todo item successfully deleted
+      "401":
+        description: Unauthorized - missing or invalid auth headers
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/error.yaml"
       "404":
         description: Todo item not found
         content:
