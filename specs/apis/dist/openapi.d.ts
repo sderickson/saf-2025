@@ -4,77 +4,6 @@
  */
 
 export interface paths {
-  "/auth/register": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Register New User */
-    post: operations["registerUser"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/auth/login": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Authenticate User */
-    post: operations["loginUser"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/auth/logout": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** Logout User */
-    post: operations["logoutUser"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/auth/verify": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Verify Authentication Status
-     * @description Used by Caddy for forward authentication. Verifies if the user is authenticated and adds user information headers for downstream services.
-     */
-    get: operations["verifyAuth"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/todos": {
     parameters: {
       query?: never;
@@ -111,147 +40,11 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/examples": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Get all examples */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description List of examples */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Example"][];
-          };
-        };
-      };
-    };
-    put?: never;
-    /** Create a new example */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateExampleRequest"];
-        };
-      };
-      responses: {
-        /** @description Created example */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Example"];
-          };
-        };
-        /** @description Validation error */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["error"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/examples/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** Get example by ID */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Example item */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Example"];
-          };
-        };
-        /** @description Example not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["error"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    User: components["schemas"]["user"];
     Todo: components["schemas"]["todo"];
-    RegisterRequest: {
-      /** Format: email */
-      email: string;
-      password: string;
-    };
-    UserResponse: {
-      id: number;
-      /** Format: email */
-      email: string;
-    };
-    error: {
-      /** @description A human-readable error message */
-      message: string;
-      /** @description An optional machine-readable error code */
-      code?: string;
-    };
-    LoginRequest: {
-      /** Format: email */
-      email: string;
-      password: string;
-    };
     todo: {
       /** @description Unique identifier for the todo item */
       id: number;
@@ -269,28 +62,17 @@ export interface components {
       /** @description The title/description of the todo item */
       title: string;
     };
+    error: {
+      /** @description A human-readable error message */
+      message: string;
+      /** @description An optional machine-readable error code */
+      code?: string;
+    };
     UpdateTodoRequest: {
       /** @description The title/description of the todo item */
       title: string;
       /** @description Whether the todo item has been completed */
       completed: boolean;
-    };
-    Example: {
-      id: number;
-      name: string;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    CreateExampleRequest: {
-      name: string;
-    };
-    user: {
-      id: number;
-      /** Format: email */
-      email: string;
-      name: string;
-      /** Format: date-time */
-      createdAt?: string;
     };
   };
   responses: never;
@@ -301,131 +83,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  registerUser: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RegisterRequest"];
-      };
-    };
-    responses: {
-      /** @description User registered successfully */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UserResponse"];
-        };
-      };
-      /** @description Email already exists */
-      409: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["error"];
-        };
-      };
-    };
-  };
-  loginUser: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["LoginRequest"];
-      };
-    };
-    responses: {
-      /** @description Successful login */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UserResponse"];
-        };
-      };
-      /** @description Invalid credentials */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["error"];
-        };
-      };
-    };
-  };
-  logoutUser: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful logout */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  verifyAuth: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description User is authenticated */
-      200: {
-        headers: {
-          /** @description The authenticated user's ID */
-          "X-User-ID"?: string;
-          /** @description The authenticated user's email */
-          "X-User-Email"?: string;
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": {
-            /** @description The authenticated user's ID */
-            id: number;
-            /**
-             * Format: email
-             * @description The authenticated user's email
-             */
-            email: string;
-          };
-        };
-      };
-      /** @description User is not authenticated */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["error"];
-        };
-      };
-    };
-  };
   getTodos: {
     parameters: {
       query?: never;

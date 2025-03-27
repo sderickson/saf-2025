@@ -37,10 +37,10 @@ services:
     image: ghcr.io/sderickson/saf-2025-auth:latest
     volumes:
       - ../../saflib/auth-db/data:/app/saflib/auth-db/data
-      - ../../services/auth/data:/app/services/auth/data
+      - ../../saflib/auth-service/data:/app/saflib/auth-service/data
     build:
       context: ../..
-      dockerfile: services/auth/Dockerfile
+      dockerfile: saflib/auth-service/Dockerfile
     environment:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}

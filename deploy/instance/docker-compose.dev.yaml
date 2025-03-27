@@ -48,8 +48,10 @@ services:
           path: ../../saflib/drizzle-sqlite3
           target: /app/saflib/drizzle-sqlite3
         - action: sync+restart
-          path: ../../services/auth
-          target: /app/services/auth
+          path: ../../saflib/auth-service
+          target: /app/saflib/auth-service
+          ignore:
+            - data
 
   specs-apis:
     develop:

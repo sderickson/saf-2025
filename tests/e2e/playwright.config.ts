@@ -79,7 +79,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run dev-clean-slate 2>&1 > last-docker-compose.log",
+    command: "npm run dev-clean-slate &> last-docker-compose.log",
     url: "http://localhost",
     reuseExistingServer: true,
   },
