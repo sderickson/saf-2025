@@ -53,9 +53,9 @@
 ### Session Layer
 
 - [ ] Update Session Management
-  - [ ] Add a user's scopes to headers in /auth/verify, /auth/register, /auth/login in /saflib/auth-service/routes/auth.ts
-  - [ ] Write and run tests
-  - [ ] Update/add docs
+  - [x] Add a user's scopes to headers in /auth/verify, /auth/register, /auth/login in /saflib/auth-service/routes/auth.ts
+  - [x] Write and run tests
+  - [x] Update/add docs
 
 ### Auth Verification Layer
 
