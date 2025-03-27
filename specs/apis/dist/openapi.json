@@ -32,6 +32,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       },
@@ -71,6 +81,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       },
@@ -90,6 +110,16 @@
         "responses": {
           "204": {
             "description": "All todo items successfully deleted"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           },
           "403": {
             "description": "User does not have permission to delete all todos",
@@ -142,6 +172,16 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Todo item not found",
             "content": {
@@ -163,6 +203,16 @@
         "responses": {
           "204": {
             "description": "Todo item successfully deleted"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           },
           "404": {
             "description": "Todo item not found",
@@ -219,18 +269,6 @@
           }
         }
       },
-      "CreateTodoRequest": {
-        "type": "object",
-        "required": [
-          "title"
-        ],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "The title/description of the todo item"
-          }
-        }
-      },
       "error": {
         "type": "object",
         "required": [
@@ -244,6 +282,18 @@
           "code": {
             "type": "string",
             "description": "An optional machine-readable error code"
+          }
+        }
+      },
+      "CreateTodoRequest": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title/description of the todo item"
           }
         }
       },

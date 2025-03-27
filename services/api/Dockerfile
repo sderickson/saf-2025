@@ -16,7 +16,7 @@ RUN npm install --omit=dev
 # Copy source files
 COPY dbs/main ./dbs/main
 COPY services/api ./services/api
-COPY specs/apis/dist ./specs/apis/dist
+COPY specs/apis/ ./specs/apis/
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]
 WORKDIR /app/services/api

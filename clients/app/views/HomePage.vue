@@ -5,6 +5,7 @@ import {
   useCreateTodo,
   useUpdateTodo,
   useDeleteTodo,
+  useDeleteAllTodos,
 } from "../../requests/todos";
 
 const newTodoTitle = ref("");
@@ -12,6 +13,7 @@ const { data: todos, isLoading } = useTodos();
 const { mutate: createTodo } = useCreateTodo();
 const { mutate: updateTodo } = useUpdateTodo();
 const { mutate: deleteTodo } = useDeleteTodo();
+const { mutate: deleteAllTodos } = useDeleteAllTodos();
 
 function handleCreateTodo() {
   if (!newTodoTitle.value.trim()) return;
@@ -56,6 +58,18 @@ function handleDeleteTodo(id: number) {
         </template>
       </v-text-field>
     </v-form>
+
+    <!-- Delete all button -->
+    <v-btn
+      v-if="todos && todos.length > 0"
+      color="error"
+      variant="outlined"
+      class="mb-6"
+      @click="deleteAllTodos"
+    >
+      <v-icon start>mdi-delete-sweep</v-icon>
+      Delete All Todos
+    </v-btn>
 
     <!-- Loading state -->
     <div v-if="isLoading" class="d-flex justify-center">
