@@ -30,23 +30,18 @@
 - [x] update deploy/instance files
 - [x] make sure npm run dev works
 - [x] make sure npm run build works
-- [ ] delete auth endpoints from spec/apis
+- [x] delete auth endpoints from spec/apis
+
+### Optimization
+
+- [x] update dockerfiles to share "saflib" layers
 
 ## Testing Phase
 
 - [x] make sure e2e tests still work
 
-- [ ] Quality Checks
-  - [ ] Run `npm run test`
-  - [ ] Run `npm run test:coverage`
-  - [ ] Run `npm run lint`
-  - [ ] Run `npm run format`
-  - [ ] **Review Point**
-
-## Final Documentation Review
-
-- [ ] Review all documentation
-  - [ ] Verify API documentation
-  - [ ] Check examples
-  - [ ] Review migration guide
-  - [ ] **Review Point**
+- [x] Quality Checks
+  - [x] Run `npm run test`
+  - [x] Run `npm run lint`
+  - [x] Run `npm run format`
+  - [x] **Review Point**
