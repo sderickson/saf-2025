@@ -98,16 +98,9 @@
   - [x] write and run tests in /clients/requests/todos.test.ts
   - [x] Update docs if needed
 
-  - [ ] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
-  - [ ] Add and run test for /clients/app/views/HomePage.vue based on the doc. Just ones that test different renders are fine.
-  - [ ] Update docs if needed
-
-  - [ ] Review [writing-components.md](/saflib/vue-spa/docs/writing-components.md)
-  - [ ] Review [using-queries.md](/saflib/vue-spa/docs/using-queries.md)
-  - [ ] Add button to HomePage.vue
-  - [ ] Have the button call the query function
-  - [ ] Update test for HomePage.vue
-  - [ ] Update docs if needed
+  - [x] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
+  - [SKIP] Add and run test for /clients/app/views/HomePage.vue based on the doc. Just ones that test different renders are fine.
+  - [x] Update docs if needed
 
 ### E2E Testing
 
