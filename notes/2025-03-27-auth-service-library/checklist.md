@@ -39,32 +39,20 @@
   - [ ] Review [auth-db docs](../../lib/auth-db/docs/README.md)
   - [ ] **Review Point**
 
-- [ ] Implement Core Types
+- [ ] Implement Environment Configuration
 
-  - [ ] Define AuthServiceConfig interface
-  - [ ] Define AuthService interface
-  - [ ] Define error types
-  - [ ] Add type tests
+  - [ ] Create environment variable validation
+  - [ ] Add environment type definitions
+  - [ ] Add environment tests
   - [ ] **Review Point**
 
-- [ ] Implement Session Management
-
-  - [ ] Extract session configuration
-  - [ ] Create session middleware
-  - [ ] Add session tests
-  - [ ] **Review Point**
-
-- [ ] Implement Passport Integration
-
-  - [ ] Extract passport setup
-  - [ ] Create passport middleware
-  - [ ] Add passport tests
-  - [ ] **Review Point**
-
-- [ ] Implement Database Integration
-  - [ ] Create database middleware
-  - [ ] Add database error handling
-  - [ ] Add database tests
+- [ ] Implement Auth App Factory
+  - [ ] Create createAuthApp function
+  - [ ] Implement middleware setup
+  - [ ] Add session configuration
+  - [ ] Add passport setup
+  - [ ] Add route configuration
+  - [ ] Add error handling
   - [ ] **Review Point**
 
 ### Documentation
@@ -75,10 +63,9 @@
   - [ ] **Review Point**
 
 - [ ] Create Package Documentation
-  - [ ] Write README.md
+  - [ ] Write README.md with environment setup
   - [ ] Add API documentation
-  - [ ] Add configuration guide
-  - [ ] Add examples
+  - [ ] Add example usage
   - [ ] **Review Point**
 
 ### Testing
@@ -89,9 +76,10 @@
   - [ ] **Review Point**
 
 - [ ] Implement Tests
-  - [ ] Add unit tests
-  - [ ] Add integration tests
-  - [ ] Add security tests
+  - [ ] Add environment validation tests
+  - [ ] Add app creation tests
+  - [ ] Add middleware tests
+  - [ ] Add route tests
   - [ ] **Review Point**
 
 ### Migration
@@ -102,7 +90,7 @@
   - [ ] **Review Point**
 
 - [ ] Create Migration Guide
-  - [ ] Document breaking changes
+  - [ ] Document environment variable changes
   - [ ] Create upgrade guide
   - [ ] Add examples
   - [ ] **Review Point**

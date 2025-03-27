@@ -14,7 +14,7 @@ The Auth Service Library feature aims to refactor the authentication service int
 
 ### Package Structure
 
-- Create new package `@saflib/auth-service` in `lib/`
+- Create new package `@saflib/auth-service` in `saflib/`
 - Package should be TypeScript-based with proper type definitions
 - Package should include comprehensive documentation and examples
 
@@ -43,31 +43,55 @@ The Auth Service Library feature aims to refactor the authentication service int
 
 ### API Design
 
-The library should expose a clean, type-safe interface:
+The library will provide a simple, opinionated interface that requires minimal configuration. All configuration will be handled through environment variables:
 
 ```typescript
-interface AuthServiceConfig {
-  db: AuthDB;
-  sessionSecret: string;
-  cookieDomain: string;
-  protocol: "http" | "https";
+interface AuthApp extends Express {
+  // The app instance will have all auth middleware and routes configured
 }
 
-interface AuthService {
-  // Core setup
-  initialize(app: Express): void;
-
-  // Middleware
-  sessionMiddleware: RequestHandler;
-  authMiddleware: RequestHandler;
-
-  // Passport setup
-  setupPassport(): void;
-
-  // Error handling
-  errorHandlers: ErrorRequestHandler[];
-}
+/**
+ * Creates a fully configured Express application with authentication
+ * All configuration is handled through environment variables:
+ * - DOMAIN: The domain for cookies (e.g. "example.com")
+ * - PROTOCOL: "http" or "https"
+ * - NODE_ENV: "development" or "production"
+ * - SESSION_SECRET: Secret for session encryption
+ */
+function createAuthApp(): AuthApp;
 ```
+
+Example usage:
+
+```typescript
+import { createAuthApp } from "@saflib/auth-service";
+
+const app = createAuthApp();
+app.listen(3000);
+```
+
+Required environment variables:
+
+- `DOMAIN`: Domain for cookie settings
+- `PROTOCOL`: "http" or "https"
+- `NODE_ENV`: "development" or "production"
+- `SESSION_SECRET`: Secret for session encryption
+
+The function will:
+
+1. Create an Express application
+2. Configure all necessary middleware
+3. Set up session handling
+4. Configure passport with local strategy
+5. Set up all auth routes
+6. Configure error handling
+
+This approach:
+
+- Minimizes configuration complexity
+- Ensures consistent behavior across services
+- Makes it easy to get started
+- Still allows for future extensibility if needed
 
 ### Database Integration
 
