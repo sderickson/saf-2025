@@ -71,3 +71,19 @@ export function useDeleteTodo() {
     },
   });
 }
+
+export function useDeleteAllTodos() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, void>({
+    mutationFn: async () => {
+      const { data, response } = await client.DELETE("/todos", {});
+      if (response.status !== 204)
+        throw new Error("Failed to delete all todos");
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+}
