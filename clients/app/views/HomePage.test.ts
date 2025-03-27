@@ -10,89 +10,107 @@ import {
   useUpdateTodo,
   useDeleteTodo,
   useDeleteAllTodos,
-} from "../../requests/todos";
+} from "../../requests/todos.ts";
 import { VueWrapper } from "@vue/test-utils";
 import { router } from "../router.ts";
-import { VBtn } from "vuetify/components";
+import {
+  VBtn,
+  VList,
+  VListItem,
+  VCheckbox,
+  VTextField,
+  VProgressCircular,
+} from "vuetify/components";
 // import { Todo } from "../../requests/types";
 
+console.log(
+  "importing todos",
+  useDeleteAllTodos,
+  useDeleteTodo,
+  useUpdateTodo,
+  useCreateTodo,
+);
+
+const mockCreateTodoMutate = vi.fn();
+
 // Mock the todo queries
-vi.mock("../../requests/todos.ts", () => ({
-  useTodos: vi.fn(),
-  useCreateTodo: () => {
-    return {
+vi.mock("../../requests/todos", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("../../requests/todos.ts")>();
+  console.log("original", original);
+  return {
+    ...original,
+    useTodos: vi.fn(),
+    useCreateTodo: () => ({
+      mutate: mockCreateTodoMutate,
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+    useUpdateTodo: () => ({
       mutate: vi.fn(),
-      isLoading: false,
-      isError: false,
-    };
-  },
-  useUpdateTodo: () => {
-    return {
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+    useDeleteTodo: () => ({
       mutate: vi.fn(),
-      isLoading: false,
-      isError: false,
-    };
-  },
-  useDeleteTodo: () => {
-    return {
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+    useDeleteAllTodos: () => ({
       mutate: vi.fn(),
-      isLoading: false,
-      isError: false,
-    };
-  },
-  useDeleteAllTodos: () => {
-    return {
-      mutate: vi.fn(),
-      isLoading: false,
-      isError: false,
-    };
-  },
-}));
+      isPending: { value: false },
+      isError: { value: false },
+    }),
+  };
+});
 
 withResizeObserverMock(() => {
   describe("HomePage", () => {
     // Helper functions for element selection
     const getNewTodoInput = (wrapper: VueWrapper) => {
-      const input = wrapper.find("[placeholder='What needs to be done?']");
+      const input = wrapper.findComponent(VTextField);
       expect(input.exists()).toBe(true);
       return input;
     };
 
     const getAddButton = (wrapper: VueWrapper) => {
-      // console.log("wrapper", wrapper.html());
       const button = wrapper.findComponent(VBtn);
       expect(button.exists()).toBe(true);
       return button;
     };
 
     const getDeleteAllButton = (wrapper: VueWrapper) => {
-      const button = wrapper.find("button[color='error']");
-      expect(button.exists()).toBe(true);
-      return button;
+      const buttons = wrapper.findAllComponents(VBtn);
+      const deleteButton = buttons.find(
+        (btn) => btn.props("color") === "error",
+      );
+      expect(deleteButton?.exists()).toBe(true);
+      return deleteButton;
     };
 
     const getTodoList = (wrapper: VueWrapper) => {
-      const list = wrapper.find("v-list");
+      const list = wrapper.findComponent(VList);
       expect(list.exists()).toBe(true);
       return list;
     };
 
     const getTodoItems = (wrapper: VueWrapper) => {
-      return wrapper.findAll("v-list-item");
+      return wrapper.findAllComponents(VListItem);
     };
 
     const getTodoCheckbox = (wrapper: VueWrapper, index: number) => {
-      const checkbox = getTodoItems(wrapper)[index].find("v-checkbox");
+      const checkbox = getTodoItems(wrapper)[index].findComponent(VCheckbox);
       expect(checkbox.exists()).toBe(true);
       return checkbox;
     };
 
     const getTodoDeleteButton = (wrapper: VueWrapper, index: number) => {
-      const button = getTodoItems(wrapper)[index].find(
-        "button[icon='mdi-delete']",
+      const buttons = getTodoItems(wrapper)[index].findAllComponents(VBtn);
+      const deleteButton = buttons.find(
+        (btn) => btn.props("icon") === "mdi-delete",
       );
-      expect(button.exists()).toBe(true);
-      return button;
+      expect(deleteButton?.exists()).toBe(true);
+      return deleteButton;
     };
 
     const mountComponent = () => {
@@ -106,145 +124,189 @@ withResizeObserverMock(() => {
     it("should render the todo list page", () => {
       vi.mocked(useTodos).mockReturnValue({
         data: { value: [] },
-        isLoading: false,
-        isError: false,
-      });
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
+
       const wrapper = mountComponent();
       expect(wrapper.find("h1").text()).toBe("Todo List");
       expect(getNewTodoInput(wrapper).exists()).toBe(true);
       expect(getAddButton(wrapper).exists()).toBe(true);
     });
 
-    // it("should show loading state", () => {
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: undefined,
-    //     isLoading: true,
-    //   } as ReturnType<typeof useTodos>);
+    it("should show loading state", () => {
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: undefined },
+        isLoading: { value: true },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   expect(wrapper.find("v-progress-circular").exists()).toBe(true);
-    // });
+      const wrapper = mountComponent();
+      expect(wrapper.findComponent(VProgressCircular).exists()).toBe(true);
+    });
 
-    // it("should show empty state when no todos", () => {
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: [],
-    //     isLoading: false,
-    //   } as ReturnType<typeof useTodos>);
+    it("should show empty state when no todos", () => {
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: [] },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   expect(getTodoList(wrapper).text()).toContain(
-    //     "No todos yet. Add one above!",
-    //   );
-    //   expect(getDeleteAllButton(wrapper).exists()).toBe(false);
-    // });
+      const wrapper = mountComponent();
+      expect(getTodoList(wrapper).text()).toContain(
+        "No todos yet. Add one above!",
+      );
+      expect(getDeleteAllButton(wrapper).exists()).toBe(false);
+    });
 
-    // it("should show todos and delete all button when todos exist", () => {
-    //   const mockTodos: Todo[] = [
-    //     { id: 1, title: "Test Todo 1", completed: false },
-    //     { id: 2, title: "Test Todo 2", completed: true },
-    //   ];
+    it("should show todos and delete all button when todos exist", () => {
+      const mockTodos = [
+        {
+          id: 1,
+          title: "Test Todo 1",
+          completed: false,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+        {
+          id: 2,
+          title: "Test Todo 2",
+          completed: true,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+      ];
 
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: mockTodos,
-    //     isLoading: false,
-    //   } as ReturnType<typeof useTodos>);
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: mockTodos },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   const todoItems = getTodoItems(wrapper);
-    //   expect(todoItems).toHaveLength(2);
-    //   expect(todoItems[0].text()).toContain("Test Todo 1");
-    //   expect(todoItems[1].text()).toContain("Test Todo 2");
-    //   expect(getDeleteAllButton(wrapper).exists()).toBe(true);
-    // });
+      const wrapper = mountComponent();
+      const todoItems = getTodoItems(wrapper);
+      expect(todoItems).toHaveLength(2);
+      expect(todoItems[0].text()).toContain("Test Todo 1");
+      expect(todoItems[1].text()).toContain("Test Todo 2");
+      expect(getDeleteAllButton(wrapper).exists()).toBe(true);
+    });
 
-    // it("should create a new todo", async () => {
-    //   const mockCreateTodo = vi.fn();
-    //   vi.mocked(useCreateTodo).mockReturnValue({
-    //     mutate: mockCreateTodo,
-    //   } as ReturnType<typeof useCreateTodo>);
+    it("should create a new todo", async () => {
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: [] },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   const input = getNewTodoInput(wrapper);
-    //   const addButton = getAddButton(wrapper);
+      const wrapper = mountComponent();
+      const input = getNewTodoInput(wrapper);
+      const addButton = getAddButton(wrapper);
 
-    //   await input.setValue("New Todo");
-    //   await wrapper.vm.$nextTick();
-    //   expect(addButton.attributes("disabled")).toBeUndefined();
+      await input.setValue("New Todo");
+      await wrapper.vm.$nextTick();
+      expect(addButton.props("disabled")).toBe(false);
 
-    //   await addButton.trigger("click");
-    //   await wrapper.vm.$nextTick();
-    //   expect(mockCreateTodo).toHaveBeenCalledWith({ title: "New Todo" });
-    //   expect((input.element as HTMLInputElement).value).toBe("");
-    // });
+      await addButton.trigger("click");
+      await wrapper.vm.$nextTick();
+      expect(mockCreateTodoMutate).toHaveBeenCalledWith({ title: "New Todo" });
+      // expect((input.element as HTMLInputElement).value).toBe("");
+    });
 
-    // it("should toggle todo completion", async () => {
-    //   const mockUpdateTodo = vi.fn();
-    //   vi.mocked(useUpdateTodo).mockReturnValue({
-    //     mutate: mockUpdateTodo,
-    //   } as ReturnType<typeof useUpdateTodo>);
+    it("should toggle todo completion", async () => {
+      const mockUpdateTodo = vi.fn();
+      vi.mocked(useUpdateTodo).mockReturnValue({
+        mutate: mockUpdateTodo,
+        isPending: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const mockTodos: Todo[] = [
-    //     { id: 1, title: "Test Todo", completed: false },
-    //   ];
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: mockTodos,
-    //     isLoading: false,
-    //   } as ReturnType<typeof useTodos>);
+      const mockTodos = [
+        {
+          id: 1,
+          title: "Test Todo",
+          completed: false,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+      ];
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: mockTodos },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   const checkbox = getTodoCheckbox(wrapper, 0);
+      const wrapper = mountComponent();
+      const checkbox = getTodoCheckbox(wrapper, 0);
 
-    //   await checkbox.trigger("change");
-    //   await wrapper.vm.$nextTick();
-    //   expect(mockUpdateTodo).toHaveBeenCalledWith({
-    //     id: 1,
-    //     todo: { title: "Test Todo", completed: true },
-    //   });
-    // });
+      await checkbox.trigger("change");
+      await wrapper.vm.$nextTick();
+      expect(mockUpdateTodo).toHaveBeenCalledWith({
+        id: 1,
+        todo: { title: "Test Todo", completed: true },
+      });
+    });
 
-    // it("should delete a todo", async () => {
-    //   const mockDeleteTodo = vi.fn();
-    //   vi.mocked(useDeleteTodo).mockReturnValue({
-    //     mutate: mockDeleteTodo,
-    //   } as ReturnType<typeof useDeleteTodo>);
+    it("should delete a todo", async () => {
+      const mockDeleteTodo = vi.fn();
+      vi.mocked(useDeleteTodo).mockReturnValue({
+        mutate: mockDeleteTodo,
+        isPending: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const mockTodos: Todo[] = [
-    //     { id: 1, title: "Test Todo", completed: false },
-    //   ];
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: mockTodos,
-    //     isLoading: false,
-    //   } as ReturnType<typeof useTodos>);
+      const mockTodos = [
+        {
+          id: 1,
+          title: "Test Todo",
+          completed: false,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+      ];
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: mockTodos },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   const deleteButton = getTodoDeleteButton(wrapper, 0);
+      const wrapper = mountComponent();
+      const deleteButton = getTodoDeleteButton(wrapper, 0);
 
-    //   await deleteButton.trigger("click");
-    //   await wrapper.vm.$nextTick();
-    //   expect(mockDeleteTodo).toHaveBeenCalledWith(1);
-    // });
+      await deleteButton.trigger("click");
+      await wrapper.vm.$nextTick();
+      expect(mockDeleteTodo).toHaveBeenCalledWith(1);
+    });
 
-    // it("should delete all todos", async () => {
-    //   const mockDeleteAllTodos = vi.fn();
-    //   vi.mocked(useDeleteAllTodos).mockReturnValue({
-    //     mutate: mockDeleteAllTodos,
-    //   } as ReturnType<typeof useDeleteAllTodos>);
+    it("should delete all todos", async () => {
+      const mockDeleteAllTodos = vi.fn();
+      vi.mocked(useDeleteAllTodos).mockReturnValue({
+        mutate: mockDeleteAllTodos,
+        isPending: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const mockTodos: Todo[] = [
-    //     { id: 1, title: "Test Todo 1", completed: false },
-    //     { id: 2, title: "Test Todo 2", completed: true },
-    //   ];
-    //   vi.mocked(useTodos).mockReturnValue({
-    //     data: mockTodos,
-    //     isLoading: false,
-    //   } as ReturnType<typeof useTodos>);
+      const mockTodos = [
+        {
+          id: 1,
+          title: "Test Todo 1",
+          completed: false,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+        {
+          id: 2,
+          title: "Test Todo 2",
+          completed: true,
+          createdAt: "2024-03-28T00:00:00Z",
+        },
+      ];
+      vi.mocked(useTodos).mockReturnValue({
+        data: { value: mockTodos },
+        isLoading: { value: false },
+        isError: { value: false },
+      } as any);
 
-    //   const wrapper = mountComponent();
-    //   const deleteAllButton = getDeleteAllButton(wrapper);
+      const wrapper = mountComponent();
+      const deleteAllButton = getDeleteAllButton(wrapper);
 
-    //   await deleteAllButton.trigger("click");
-    //   await wrapper.vm.$nextTick();
-    //   expect(mockDeleteAllTodos).toHaveBeenCalled();
-    // });
+      await deleteAllButton.trigger("click");
+      await wrapper.vm.$nextTick();
+      expect(mockDeleteAllTodos).toHaveBeenCalled();
+    });
   });
 });
