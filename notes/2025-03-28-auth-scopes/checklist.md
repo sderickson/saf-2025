@@ -33,7 +33,7 @@
 
 - [ ] Create Permissions Config
   - [ ] Review [library-packages.md](/saflib/monorepo/docs/library-packages.md) for config patterns
-  - [ ] Create `config/permissions.yaml` with initial permissions - just "admin" for now
+  - [ ] Create `/saflib/auth-service/config/permissions.yaml` with initial permissions - just "admin" for now
   - [ ] Add config loading function to auth-service
   - [ ] Update docs if needed
 
