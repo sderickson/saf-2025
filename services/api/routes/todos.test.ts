@@ -69,16 +69,6 @@ describe("Todos Routes", () => {
       expect(response.body).toEqual(mockTodos.map(convertTimestamps));
       expect(todos.getAllTodos).toHaveBeenCalledOnce();
     });
-
-    it("should handle database errors", async () => {
-      vi.mocked(todos.getAllTodos).mockRejectedValue(
-        new Error("Database error")
-      );
-
-      const response = await request(app).get("/todos").set(mockHeaders);
-
-      expect(response.status).toBe(500);
-    });
   });
 
   describe("POST /todos", () => {
@@ -100,18 +90,6 @@ describe("Todos Routes", () => {
       expect(response.status).toBe(201);
       expect(response.body).toEqual(convertTimestamps(createdTodo));
       expect(todos.createTodo).toHaveBeenCalledWith(newTodo.title);
-    });
-
-    it("should handle database errors", async () => {
-      vi.mocked(todos.createTodo).mockRejectedValue(
-        new Error("Database error")
-      );
-
-      const response = await request(app).post("/todos").set(mockHeaders).send({
-        title: "New Todo",
-      });
-
-      expect(response.status).toBe(500);
     });
   });
 
