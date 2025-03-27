@@ -32,8 +32,10 @@
 ### Configuration Layer
 
 - [ ] Create Permissions Config
+  - [ ] Review [library-packages.md](/saflib/monorepo/docs/library-packages.md) for config patterns
   - [ ] Create `config/permissions.yaml` with initial permissions - just "admin" for now
   - [ ] Add config loading function to auth-service
+  - [ ] Update docs if needed
 
 ### Database Layer
 
@@ -42,8 +44,9 @@
   - [ ] Add table definitions
   - [ ] Generate migrations
   - [ ] Update schema.md if needed
+  - [ ] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
   - [ ] Implement queries
-  - [ ] Run tests
+  - [ ] Write and run tests
   - [ ] Verify package exports
   - [ ] Update/add docs
   - [ ] **Review Point**
@@ -51,72 +54,64 @@
 ### Session Layer
 
 - [ ] Update Session Management
-  - [ ] Update session types to include scopes
-  - [ ] Modify session creation/validation
-  - [ ] Add scope management functions
-  - [ ] Write tests
-  - [ ] Implement feature
-  - [ ] Run tests
-  - [ ] Verify package exports
+  - [ ] Add a user's scopes to headers in /auth/verify, /auth/register, /auth/login in /saflib/auth-service/routes/auth.ts
+  - [ ] Write and run tests
   - [ ] Update/add docs
   - [ ] **Review Point**
 
 ### Auth Verification Layer
 
 - [ ] Implement Scope Validation
-  - [ ] Modify auth verification to check scopes
-  - [ ] Add scope validation middleware
-  - [ ] Update error handling for scope violations
-  - [ ] Write tests
-  - [ ] Implement feature
-  - [ ] Run tests
-  - [ ] Verify package exports
-  - [ ] Update/add docs
-  - [ ] **Review Point**
-
-### Protocol Layer
-
-- [ ] Update Protocol Definitions
-  - [ ] Modify `envelope.proto` for scope support
-  - [ ] Update related TypeScript types
-  - [ ] Add scope-related RPC methods
-  - [ ] Write tests
-  - [ ] Implement feature
-  - [ ] Run tests
-  - [ ] Verify package exports
-  - [ ] Update/add docs
+  - [ ] Review [testing.md](/saflib/node-express-dev/docs/testing.md) for test patterns
+  - [ ] Review [mocking.md](/saflib/node-express-dev/docs/mocking.md) for auth mocking
+  - [ ] Modify auth middleware to propagate scopes from header in /saflib/node-express/src/middleware/auth.ts
+  - [ ] Add and run tests
+  - [ ] Modify openapi middleware to enforce scopes from spec in /saflib/openapi-specs/src/middleware/openapi.ts
+  - [ ] Add and run tests
+  - [ ] Add middleware writing and testing doc to /saflib/node-express/docs
   - [ ] **Review Point**
 
 ### Demo Implementation
 
 - [ ] Add Admin Auto-Assignment
 
-  - [ ] Add admin email pattern check in auth-service
-  - [ ] Add admin permission assignment on user creation when node is running in test mode
-  - [ ] **Review Point**
+  - [ ] Add admin permission to users who register with "admin.\*@email.com" when NODE_ENV is "TEST" in /saflib/auth-service/routes/auth.ts
+
+- [ ] Add delete all spec
+
+  - [ ] Review [update-spec.md](/saflib/openapi-specs/docs/update-spec.md) for spec patterns
+  - [ ] Add endpoint to delete all todos in /specs/apis/openapi.yaml
+  - [ ] Generate
 
 - [ ] Add Delete All Todos Feature
 
-  - [ ] Add spec to auth-spec
-  - [ ] generate
+  - [ ] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
   - [ ] Add query to auth-db
   - [ ] write and run tests
   - [ ] Add endpoint to auth-service
   - [ ] Write and run tests
 
 - [ ] Add Frontend Delete All Button
+
+  - [ ] Review [queries.md](/saflib/vue-spa/docs/adding-queries.md) for query patterns
   - [ ] Add vue-query functions for delete-all-todos to auth-vue
   - [ ] write and run tests
+
+  - [ ] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
+  - [ ] Add and run test for HomePage.vue
+
+  - [ ] Review [writing-components.md](/saflib/vue-spa/docs/writing-components.md)
+  - [ ] Review [using-queries.md](/saflib/vue-spa/docs/using-queries.md)
   - [ ] Add button to HomePage.vue
-  - [ ] Write and run component test
+  - [ ] Have the button call the query function
+  - [ ] Update test for HomePage.vue
 
 ### E2E Testing
 
 - [ ] Implement E2E Test Suite
-  - [ ] Create test for regular user flow
-  - [ ] Create test for admin user flow
-  - [ ] Test permission enforcement
-  - [ ] Run tests
+  - [ ] Create and run test for regular user flow where user cannot delete all todos
+  - [ ] Create and run test for admin user flow where admin can delete all todos
+  - [ ] Add /saflib/playwright/docs/e2e-testing.md and fill out based on how it went writing these tests
   - [ ] **Review Point**
 
 ## Quality Checks
@@ -125,13 +120,3 @@
   - [ ] Run `npm run test`
   - [ ] Run `npm run lint`
   - [ ] Run `npm run format`
-  - [ ] **Review Point**
-
-## Final Documentation Review
-
-- [ ] Review all documentation changes
-  - [ ] Check that all platform changes are documented
-  - [ ] Check that all product changes are documented
-  - [ ] Verify documentation matches implementation
-  - [ ] Check for any missing documentation that should be created
-  - [ ] **Review Point**
