@@ -21,11 +21,11 @@
   - [x] Break down complex tasks into smaller, manageable subtasks
   - [x] **Review Point**
 
-- [ ] Add Documentation to plan
-  - [ ] Review what .md files are in /saflib
-  - [ ] Add any that are relevant to the implementation. Docs should be reviewed before implementation.
-  - [ ] Note any missing platform documentation needs. If there are gaps, add a TODO to create a doc in an appropriate /saflib/\*/docs folder after implementation.
-  - [ ] **Review Point**
+- [x] Add Documentation to plan
+  - [x] Review what .md files are in /saflib
+  - [x] Add any that are relevant to the implementation. Docs should be reviewed before implementation.
+  - [x] Note any missing platform documentation needs. If there are gaps, add a TODO to create a doc in an appropriate /saflib/\*/docs folder after implementation.
+  - [x] **Review Point**
 
 ## Implementation Phase
 
@@ -49,7 +49,6 @@
   - [ ] Write and run tests
   - [ ] Verify package exports
   - [ ] Update/add docs
-  - [ ] **Review Point**
 
 ### Session Layer
 
@@ -57,7 +56,6 @@
   - [ ] Add a user's scopes to headers in /auth/verify, /auth/register, /auth/login in /saflib/auth-service/routes/auth.ts
   - [ ] Write and run tests
   - [ ] Update/add docs
-  - [ ] **Review Point**
 
 ### Auth Verification Layer
 
@@ -69,7 +67,7 @@
   - [ ] Modify openapi middleware to enforce scopes from spec in /saflib/openapi-specs/src/middleware/openapi.ts
   - [ ] Add and run tests
   - [ ] Add middleware writing and testing doc to /saflib/node-express/docs
-  - [ ] **Review Point**
+  - [ ] Update docs if needed
 
 ### Demo Implementation
 
@@ -82,6 +80,7 @@
   - [ ] Review [update-spec.md](/saflib/openapi-specs/docs/update-spec.md) for spec patterns
   - [ ] Add endpoint to delete all todos in /specs/apis/openapi.yaml
   - [ ] Generate
+  - [ ] Update docs if needed
 
 - [ ] Add Delete All Todos Feature
 
@@ -90,21 +89,25 @@
   - [ ] write and run tests
   - [ ] Add endpoint to auth-service
   - [ ] Write and run tests
+  - [ ] Update docs if needed
 
 - [ ] Add Frontend Delete All Button
 
   - [ ] Review [queries.md](/saflib/vue-spa/docs/adding-queries.md) for query patterns
   - [ ] Add vue-query functions for delete-all-todos to auth-vue
   - [ ] write and run tests
+  - [ ] Update docs if needed
 
   - [ ] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
   - [ ] Add and run test for HomePage.vue
+  - [ ] Update docs if needed
 
   - [ ] Review [writing-components.md](/saflib/vue-spa/docs/writing-components.md)
   - [ ] Review [using-queries.md](/saflib/vue-spa/docs/using-queries.md)
   - [ ] Add button to HomePage.vue
   - [ ] Have the button call the query function
   - [ ] Update test for HomePage.vue
+  - [ ] Update docs if needed
 
 ### E2E Testing
 
@@ -112,7 +115,6 @@
   - [ ] Create and run test for regular user flow where user cannot delete all todos
   - [ ] Create and run test for admin user flow where admin can delete all todos
   - [ ] Add /saflib/playwright/docs/e2e-testing.md and fill out based on how it went writing these tests
-  - [ ] **Review Point**
 
 ## Quality Checks
 
