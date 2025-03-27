@@ -31,7 +31,11 @@ console.log(
   useCreateTodo,
 );
 
+// Create mock functions at the top level
 const mockCreateTodoMutate = vi.fn();
+const mockUpdateTodoMutate = vi.fn();
+const mockDeleteTodoMutate = vi.fn();
+const mockDeleteAllTodosMutate = vi.fn();
 
 // Mock the todo queries
 vi.mock("../../requests/todos", async (importOriginal) => {
@@ -47,17 +51,17 @@ vi.mock("../../requests/todos", async (importOriginal) => {
       isError: { value: false },
     }),
     useUpdateTodo: () => ({
-      mutate: vi.fn(),
+      mutate: mockUpdateTodoMutate,
       isPending: { value: false },
       isError: { value: false },
     }),
     useDeleteTodo: () => ({
-      mutate: vi.fn(),
+      mutate: mockDeleteTodoMutate,
       isPending: { value: false },
       isError: { value: false },
     }),
     useDeleteAllTodos: () => ({
-      mutate: vi.fn(),
+      mutate: mockDeleteAllTodosMutate,
       isPending: { value: false },
       isError: { value: false },
     }),
@@ -211,13 +215,6 @@ withResizeObserverMock(() => {
     });
 
     it("should toggle todo completion", async () => {
-      const mockUpdateTodo = vi.fn();
-      vi.mocked(useUpdateTodo).mockReturnValue({
-        mutate: mockUpdateTodo,
-        isPending: { value: false },
-        isError: { value: false },
-      } as any);
-
       const mockTodos = [
         {
           id: 1,
@@ -237,20 +234,13 @@ withResizeObserverMock(() => {
 
       await checkbox.trigger("change");
       await wrapper.vm.$nextTick();
-      expect(mockUpdateTodo).toHaveBeenCalledWith({
+      expect(mockUpdateTodoMutate).toHaveBeenCalledWith({
         id: 1,
         todo: { title: "Test Todo", completed: true },
       });
     });
 
     it("should delete a todo", async () => {
-      const mockDeleteTodo = vi.fn();
-      vi.mocked(useDeleteTodo).mockReturnValue({
-        mutate: mockDeleteTodo,
-        isPending: { value: false },
-        isError: { value: false },
-      } as any);
-
       const mockTodos = [
         {
           id: 1,
@@ -270,17 +260,10 @@ withResizeObserverMock(() => {
 
       await deleteButton.trigger("click");
       await wrapper.vm.$nextTick();
-      expect(mockDeleteTodo).toHaveBeenCalledWith(1);
+      expect(mockDeleteTodoMutate).toHaveBeenCalledWith(1);
     });
 
     it("should delete all todos", async () => {
-      const mockDeleteAllTodos = vi.fn();
-      vi.mocked(useDeleteAllTodos).mockReturnValue({
-        mutate: mockDeleteAllTodos,
-        isPending: { value: false },
-        isError: { value: false },
-      } as any);
-
       const mockTodos = [
         {
           id: 1,
@@ -306,7 +289,7 @@ withResizeObserverMock(() => {
 
       await deleteAllButton.trigger("click");
       await wrapper.vm.$nextTick();
-      expect(mockDeleteAllTodos).toHaveBeenCalled();
+      expect(mockDeleteAllTodosMutate).toHaveBeenCalled();
     });
   });
 });
