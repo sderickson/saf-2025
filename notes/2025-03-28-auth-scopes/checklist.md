@@ -86,15 +86,16 @@
   - [x] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
   - [x] Add query to auth-db
   - [x] write and run tests
-  - [ ] Add endpoint to auth-service
-  - [ ] Write and run tests
-  - [ ] Update docs if needed
+  - [x] Add endpoint to auth-service
+  - [x] Write and run tests
+  - [x] Update docs if needed
 
 - [ ] Add Frontend Delete All Button
 
   - [ ] Review [queries.md](/saflib/vue-spa/docs/adding-queries.md) for query patterns
-  - [ ] Add vue-query functions for delete-all-todos to auth-vue
-  - [ ] write and run tests
+  - [ ] Add vue-query functions for delete-all-todos to in /clients/requests/todos.ts
+  - [ ] Review [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
+  - [ ] write and run tests in /clients/requests/todos.test.ts
   - [ ] Update docs if needed
 
   - [ ] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
