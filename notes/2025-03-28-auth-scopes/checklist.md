@@ -9,17 +9,17 @@
   - [x] Create a new branch with the current date and the name of the feature, e.g. `2025-03-28-auth-scopes`
   - [x] **Review Point**
 
-- [ ] Write specification
+- [x] Write specification
 
-  - [ ] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/2025-03-28-auth-scopes/spec.md
-  - [ ] Fill in each section
-  - [ ] **Review Point**
+  - [x] Make a copy of the [./feature-spec-template.md](./feature-spec-template.md) document, put it in /notes/2025-03-28-auth-scopes/spec.md
+  - [x] Fill in each section
+  - [x] **Review Point**
 
-- [ ] Update checklist
+- [x] Update checklist
 
-  - [ ] Update the checkbox contents for what is necessary for this feature based on the spec
-  - [ ] Break down complex tasks into smaller, manageable subtasks
-  - [ ] **Review Point**
+  - [x] Update the checkbox contents for what is necessary for this feature based on the spec
+  - [x] Break down complex tasks into smaller, manageable subtasks
+  - [x] **Review Point**
 
 - [ ] Add Documentation to plan
   - [ ] Review what .md files are in /saflib
@@ -29,9 +29,22 @@
 
 ## Implementation Phase
 
+### Configuration Layer
+
+- [ ] Create Permissions Config
+  - [ ] Create `config/permissions.yaml` with initial permissions
+  - [ ] Add TypeScript types for permissions config
+  - [ ] Add config loading function to auth-service
+  - [ ] Write tests
+  - [ ] Implement feature
+  - [ ] Run tests
+  - [ ] Verify package exports
+  - [ ] Update/add docs
+  - [ ] **Review Point**
+
 ### Database Layer
 
-- [ ] Implement Permissions Table
+- [ ] Implement User Permissions Table
   - [ ] Review [schema.md](/saflib/drizzle-sqlite3/docs/schema.md)
   - [ ] Add table definitions
   - [ ] Generate migrations
@@ -82,16 +95,39 @@
   - [ ] Update/add docs
   - [ ] **Review Point**
 
-## Testing Phase
+### Demo Implementation
 
-- [ ] Test end-to-end
+- [ ] Add Admin Auto-Assignment
 
-  - [ ] Review [e2e-testing.md](../lib/playwright/docs/e2e-testing.md)
-  - [ ] Create production docker images by running `npm run build` from `/deploy/instance`
-  - [ ] Run `npm run test` in /tests/e2e and make sure existing tests still pass
-  - [ ] Create test in /tests/e2e/specs for new user flow happy path
-  - [ ] Run to make sure it works
+  - [ ] Add admin email pattern check in auth-service
+  - [ ] Add admin permission assignment on user creation when node is running in test mode
   - [ ] **Review Point**
+
+- [ ] Add Delete All Todos Feature
+
+  - [ ] Add spec to auth-spec
+  - [ ] generate
+  - [ ] Add query to auth-db
+  - [ ] write and run tests
+  - [ ] Add endpoint to auth-service
+  - [ ] Write and run tests
+
+- [ ] Add Frontend Delete All Button
+  - [ ] Add vue-query functions for delete-all-todos to auth-vue
+  - [ ] write and run tests
+  - [ ] Add button to HomePage.vue
+  - [ ] Write and run component test
+
+### E2E Testing
+
+- [ ] Implement E2E Test Suite
+  - [ ] Create test for regular user flow
+  - [ ] Create test for admin user flow
+  - [ ] Test permission enforcement
+  - [ ] Run tests
+  - [ ] **Review Point**
+
+## Quality Checks
 
 - [ ] Make sure everything still works
   - [ ] Run `npm run test`
