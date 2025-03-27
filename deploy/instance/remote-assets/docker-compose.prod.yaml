@@ -50,7 +50,7 @@ services:
     memswap_limit: 2G
     volumes:
       - /opt/saf-2025/saflib/auth-db/data:/app/saflib/auth-db/data
-      - /opt/saf-2025/services/auth/data:/app/services/auth/data
+      - /opt/saf-2025/saflib/auth-service/data:/app/saflib/auth-service/data
 
 volumes:
   caddy_data:
