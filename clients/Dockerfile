@@ -1,14 +1,16 @@
 # syntax=docker/dockerfile:labs
 FROM node:22-slim AS builder
 
-# Copy package.json
+# install saflib
 WORKDIR /app
-COPY ./package*.json .
-COPY ./tsconfig.json .
-COPY ./specs/apis/package*.json ./specs/apis/
-COPY ./clients/package*.json ./clients/
-COPY ./saflib/ ./saflib/
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY saflib/ ./saflib/
+RUN npm install --omit=dev
 
+# Copy package.json
+COPY ./clients/package*.json ./clients/
+COPY ./specs/apis/package*.json ./specs/apis/
 RUN npm install --omit=dev
 
 # Without these two lines, builds fail with "Cannot find module @rollup/rollup-<platform>. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory."

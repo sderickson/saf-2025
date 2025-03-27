@@ -9,18 +9,6 @@ servers:
     description: Development server
 
 paths:
-  /auth/register:
-    post:
-      $ref: "./routes/auth.yaml#/register/post"
-  /auth/login:
-    post:
-      $ref: "./routes/auth.yaml#/login/post"
-  /auth/logout:
-    post:
-      $ref: "./routes/auth.yaml#/logout/post"
-  /auth/verify:
-    get:
-      $ref: "./routes/auth.yaml#/verify/get"
   /todos:
     get:
       $ref: "./routes/todos.yaml#/get"
@@ -31,18 +19,8 @@ paths:
       $ref: "./routes/todos.yaml#/~1{id}/put"
     delete:
       $ref: "./routes/todos.yaml#/~1{id}/delete"
-  /examples:
-    get:
-      $ref: "./routes/example.yaml#/get"
-    post:
-      $ref: "./routes/example.yaml#/post"
-  /examples/{id}:
-    get:
-      $ref: "./routes/example.yaml#/~1{id}/get"
 
 components:
   schemas:
-    User:
-      $ref: "./schemas/user.yaml"
     Todo:
       $ref: "./schemas/todo.yaml"

@@ -22,70 +22,19 @@
 
 ### Core Implementation
 
-- [ ] Implement Environment Configuration
-
-  - [ ] Create environment variable validation
-  - [ ] Add environment type definitions
-  - [ ] Add environment tests
-  - [ ] **Review Point**
-
-- [ ] Implement Auth App Factory
-  - [ ] Create createAuthApp function
-  - [ ] Implement middleware setup
-  - [ ] Add session configuration
-  - [ ] Add passport setup
-  - [ ] Add route configuration
-  - [ ] Add error handling
-  - [ ] **Review Point**
-
-### Documentation
-
-- [ ] Review Documentation
-
-  - [ ] Review [documentation-template.md](../../docs/documentation-template.md)
-  - [ ] **Review Point**
-
-- [ ] Create Package Documentation
-  - [ ] Write README.md with environment setup
-  - [ ] Add API documentation
-  - [ ] Add example usage
-  - [ ] **Review Point**
-
-### Testing
-
-- [ ] Review Documentation
-
-  - [ ] Review [testing.md](../../lib/vitest/docs/testing.md)
-  - [ ] **Review Point**
-
-- [ ] Implement Tests
-  - [ ] Add environment validation tests
-  - [ ] Add app creation tests
-  - [ ] Add middleware tests
-  - [ ] Add route tests
-  - [ ] **Review Point**
+- [x] Copy over entire auth service from `services/auth`
+- [x] make sure unit tests still work
 
 ### Migration
 
-- [ ] Review Documentation
-
-  - [ ] Review [migration-guide-template.md](../../docs/migration-guide-template.md)
-  - [ ] **Review Point**
-
-- [ ] Create Migration Guide
-  - [ ] Document environment variable changes
-  - [ ] Create upgrade guide
-  - [ ] Add examples
-  - [ ] **Review Point**
+- [x] update deploy/instance files
+- [x] make sure npm run dev works
+- [x] make sure npm run build works
+- [ ] delete auth endpoints from spec/apis
 
 ## Testing Phase
 
-- [ ] Test end-to-end
-
-  - [ ] Create test service using new library
-  - [ ] Verify all auth flows work
-  - [ ] Test error cases
-  - [ ] **Review Point**
+- [x] make sure e2e tests still work
 
 - [ ] Quality Checks
   - [ ] Run `npm run test`

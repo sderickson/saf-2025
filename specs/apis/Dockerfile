@@ -1,6 +1,12 @@
 FROM node:22-slim
 
+# install saflib
 WORKDIR /app
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY saflib/ ./saflib/
+RUN npm install --omit=dev
+
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./saflib/ ./saflib/
