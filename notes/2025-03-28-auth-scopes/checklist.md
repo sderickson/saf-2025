@@ -92,14 +92,14 @@
 
 - [ ] Add Frontend Delete All Button
 
-  - [ ] Review [queries.md](/saflib/vue-spa/docs/adding-queries.md) for query patterns
-  - [ ] Add vue-query functions for delete-all-todos to in /clients/requests/todos.ts
-  - [ ] Review [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
-  - [ ] write and run tests in /clients/requests/todos.test.ts
-  - [ ] Update docs if needed
+  - [x] Review [queries.md](/saflib/vue-spa/docs/adding-queries.md) for query patterns
+  - [x] Add vue-query functions for delete-all-todos to in /clients/requests/todos.ts
+  - [x] Review [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
+  - [x] write and run tests in /clients/requests/todos.test.ts
+  - [x] Update docs if needed
 
   - [ ] Review [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
-  - [ ] Add and run test for HomePage.vue
+  - [ ] Add and run test for /clients/app/views/HomePage.vue based on the doc. Just ones that test different renders are fine.
   - [ ] Update docs if needed
 
   - [ ] Review [writing-components.md](/saflib/vue-spa/docs/writing-components.md)
