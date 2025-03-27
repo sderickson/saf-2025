@@ -32,15 +32,8 @@
 ### Configuration Layer
 
 - [ ] Create Permissions Config
-  - [ ] Create `config/permissions.yaml` with initial permissions
-  - [ ] Add TypeScript types for permissions config
+  - [ ] Create `config/permissions.yaml` with initial permissions - just "admin" for now
   - [ ] Add config loading function to auth-service
-  - [ ] Write tests
-  - [ ] Implement feature
-  - [ ] Run tests
-  - [ ] Verify package exports
-  - [ ] Update/add docs
-  - [ ] **Review Point**
 
 ### Database Layer
 
@@ -49,8 +42,7 @@
   - [ ] Add table definitions
   - [ ] Generate migrations
   - [ ] Update schema.md if needed
-  - [ ] Write tests
-  - [ ] Implement feature
+  - [ ] Implement queries
   - [ ] Run tests
   - [ ] Verify package exports
   - [ ] Update/add docs
