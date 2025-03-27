@@ -39,16 +39,16 @@
 
 ### Database Layer
 
-- [ ] Implement User Permissions Table
-  - [ ] Review [schema.md](/saflib/drizzle-sqlite3/docs/schema.md)
-  - [ ] Add table definitions
-  - [ ] Generate migrations
-  - [ ] Update schema.md if needed
-  - [ ] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
-  - [ ] Implement queries
-  - [ ] Write and run tests
-  - [ ] Verify package exports
-  - [ ] Update/add docs
+- [x] Implement User Permissions Table
+  - [x] Review [schema.md](/saflib/drizzle-sqlite3/docs/schema.md)
+  - [x] Add table definitions to /saflib/auth-db/src/schema.ts
+  - [x] Generate migrations
+  - [x] Update schema.md if needed
+  - [x] Review [queries.md](/saflib/drizzle-sqlite3/docs/queries.md) for query patterns
+  - [x] Implement queries
+  - [x] Write and run tests
+  - [x] Verify package exports
+  - [x] Update/add docs
 
 ### Session Layer
 
