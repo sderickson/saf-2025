@@ -104,10 +104,9 @@
 
 ### E2E Testing
 
-- [ ] Implement E2E Test Suite
-  - [ ] Create and run test for regular user flow where user cannot delete all todos
-  - [ ] Create and run test for admin user flow where admin can delete all todos
-  - [ ] Add /saflib/playwright/docs/e2e-testing.md and fill out based on how it went writing these tests
+- [x] Implement E2E Test Suite
+  - [x] Create and run test for regular user flow where user cannot delete all todos
+  - [x] Create and run test for admin user flow where admin can delete all todos
 
 ## Quality Checks
 
