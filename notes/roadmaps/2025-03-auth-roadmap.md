@@ -52,6 +52,8 @@ Add scope-based authorization to the authentication system.
 - Add scope validation middleware
 - Add documentation for scope usage
 
+STATUS: DONE. [Docs](../2025-03-28-auth-scopes/)
+
 ### 4. Admin SPA (`auth-admin`)
 
 Create administrative interface for user management.
