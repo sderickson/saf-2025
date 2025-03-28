@@ -69,6 +69,8 @@ Create administrative interface for user management.
   - GET /users/:id (detail)
   - PUT /users/:id/scopes (update)
 
+STATUS: IN PROGRESS. [Docs](../2025-03-28-auth-admin/)
+
 ### 5. API Scopes (`api-scopes`)
 
 Add scope enforcement to OpenAPI specification.
@@ -80,6 +82,8 @@ Add scope enforcement to OpenAPI specification.
 - Add scope validation to request processing
 - Add "authenticated" pseudo-scope
 - Update documentation for scope specification
+
+STATUS: Mostly done in Auth Scopes? Need the pseudo-scope still.
 
 ### 6. ESLint Standardization (`eslint-standards`)
 
