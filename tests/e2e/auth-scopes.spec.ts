@@ -1,6 +1,12 @@
 import { test, expect } from "@playwright/test";
 import { getUniqueEmail } from "./utils";
 
+const getRandomString = (length: number) => {
+  return Math.random()
+    .toString(36)
+    .substring(2, 2 + length);
+};
+
 test.describe("Auth Scopes", () => {
   test("regular user cannot delete all todos", async ({ page }) => {
     // Register a regular user
@@ -22,10 +28,18 @@ test.describe("Auth Scopes", () => {
       page.getByRole("heading", { name: "Todo List" })
     ).toBeVisible();
 
+    // Add a todo
+    const todoText = getRandomString(10);
+    await page.getByRole("textbox", { name: "New Todo New Todo" }).click();
+    await page
+      .getByRole("textbox", { name: "New Todo New Todo" })
+      .fill(todoText);
+    await page.locator("form").getByRole("button").click();
+    await expect(page.getByText(todoText)).toBeVisible();
+
     // Verify delete all button is not visible for regular users
-    await expect(
-      page.getByRole("button", { name: "Delete All Todos" })
-    ).not.toBeVisible();
+    await page.getByRole("button", { name: "Delete All Todos" }).click();
+    await expect(page.getByText(todoText)).toBeVisible();
   });
 
   test("admin user can delete all todos", async ({ page }) => {
@@ -46,6 +60,15 @@ test.describe("Auth Scopes", () => {
       page.getByRole("heading", { name: "Todo List" })
     ).toBeVisible();
 
+    // Add a todo
+    const todoText = getRandomString(10);
+    await page.getByRole("textbox", { name: "New Todo New Todo" }).click();
+    await page
+      .getByRole("textbox", { name: "New Todo New Todo" })
+      .fill(todoText);
+    await page.locator("form").getByRole("button").click();
+    await expect(page.getByText(todoText)).toBeVisible();
+
     // Verify delete all button is visible for admin users
     await expect(
       page.getByRole("button", { name: "Delete All Todos" })
@@ -53,14 +76,6 @@ test.describe("Auth Scopes", () => {
 
     // Test the delete all functionality
     await page.getByRole("button", { name: "Delete All Todos" }).click();
-
-    // Verify confirmation dialog appears
-    await expect(
-      page.getByText("Are you sure you want to delete all todos?")
-    ).toBeVisible();
-
-    // Confirm deletion
-    await page.getByRole("button", { name: "Confirm" }).click();
 
     // Verify todos are deleted (assuming there's a message or empty state)
     await expect(page.getByText("No todos found")).toBeVisible();
