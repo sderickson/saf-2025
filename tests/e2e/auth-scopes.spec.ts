@@ -45,7 +45,8 @@ test.describe("Auth Scopes", () => {
   test("admin user can delete all todos", async ({ page }) => {
     // Register an admin user (using admin.*@email.com pattern)
     await page.goto("http://docker.localhost/auth/register");
-    const adminEmail = `admin.${getUniqueEmail()}`;
+    const randomString = getRandomString(10);
+    const adminEmail = `admin.${randomString}@email.com`;
     await page.getByRole("textbox", { name: "Email address" }).fill(adminEmail);
     await page
       .getByRole("textbox", { name: "Enter your password" })
@@ -78,6 +79,6 @@ test.describe("Auth Scopes", () => {
     await page.getByRole("button", { name: "Delete All Todos" }).click();
 
     // Verify todos are deleted (assuming there's a message or empty state)
-    await expect(page.getByText("No todos found")).toBeVisible();
+    await expect(page.getByText("No todos yet")).toBeVisible();
   });
 });
