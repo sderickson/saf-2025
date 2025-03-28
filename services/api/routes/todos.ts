@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all todos
 router.get(
   "/",
-  createHandler(async (req, res, next) => {
+  createHandler(async (_, res, next) => {
     try {
       const todoList = await todos.getAllTodos();
       res.json(todoList);
@@ -81,7 +81,7 @@ router.delete(
 // Delete all todos
 router.delete(
   "/",
-  createHandler(async (req, res, next) => {
+  createHandler(async (_, res, next) => {
     try {
       await todos.deleteAllTodos();
       res.status(204).send();
