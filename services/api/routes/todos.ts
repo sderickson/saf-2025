@@ -14,7 +14,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  })
+  }),
 );
 
 // Create a new todo
@@ -33,7 +33,7 @@ router.post(
     } catch (error) {
       next(error);
     }
-  })
+  }),
 );
 
 // Update a todo
@@ -57,7 +57,7 @@ router.put(
         next(error);
       }
     }
-  })
+  }),
 );
 
 // Delete a todo
@@ -75,7 +75,7 @@ router.delete(
         next(error);
       }
     }
-  })
+  }),
 );
 
 // Delete all todos
@@ -88,7 +88,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  })
+  }),
 );
 
 export default router;

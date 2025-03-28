@@ -54,7 +54,7 @@ describe("Todo Queries", () => {
 
     it("throws error when todo not found", async () => {
       await expect(updateTodo(999, "Title", false)).rejects.toThrow(
-        "Todo with id 999 not found"
+        "Todo with id 999 not found",
       );
     });
   });
@@ -71,7 +71,7 @@ describe("Todo Queries", () => {
 
     it("throws error when todo not found", async () => {
       await expect(deleteTodo(999)).rejects.toThrow(
-        "Todo with id 999 not found"
+        "Todo with id 999 not found",
       );
     });
   });

@@ -25,7 +25,7 @@ test.describe("Auth Scopes", () => {
 
     // Verify we're on the todo list page
     await expect(
-      page.getByRole("heading", { name: "Todo List" })
+      page.getByRole("heading", { name: "Todo List" }),
     ).toBeVisible();
 
     // Add a todo
@@ -58,7 +58,7 @@ test.describe("Auth Scopes", () => {
 
     // Verify we're on the todo list page
     await expect(
-      page.getByRole("heading", { name: "Todo List" })
+      page.getByRole("heading", { name: "Todo List" }),
     ).toBeVisible();
 
     // Add a todo
@@ -72,7 +72,7 @@ test.describe("Auth Scopes", () => {
 
     // Verify delete all button is visible for admin users
     await expect(
-      page.getByRole("button", { name: "Delete All Todos" })
+      page.getByRole("button", { name: "Delete All Todos" }),
     ).toBeVisible();
 
     // Test the delete all functionality

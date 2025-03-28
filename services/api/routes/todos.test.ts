@@ -114,14 +114,14 @@ describe("Todos Routes", () => {
       expect(todos.updateTodo).toHaveBeenCalledWith(
         todoId,
         updateData.title,
-        updateData.completed
+        updateData.completed,
       );
     });
 
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.updateTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId)
+        new TodoNotFoundError(todoId),
       );
 
       const response = await request(app)
@@ -159,7 +159,7 @@ describe("Todos Routes", () => {
     it("should return 404 when todo not found", async () => {
       const todoId = 999;
       vi.mocked(todos.deleteTodo).mockRejectedValue(
-        new TodoNotFoundError(todoId)
+        new TodoNotFoundError(todoId),
       );
 
       const response = await request(app)

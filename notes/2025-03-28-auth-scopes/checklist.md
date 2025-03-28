@@ -111,6 +111,6 @@
 ## Quality Checks
 
 - [ ] Make sure everything still works
-  - [ ] Run `npm run test`
+  - [x] Run `npm run test`
   - [ ] Run `npm run lint`
   - [ ] Run `npm run format`
