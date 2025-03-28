@@ -1,5 +1,7 @@
 #!/bin/bash
 # Build dependent images
+set -e
+
 docker build -t saf-2025-clients:latest -f ./clients/Dockerfile . --platform linux/amd64
 
 # Build production images

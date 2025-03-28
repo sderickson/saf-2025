@@ -16,7 +16,8 @@ export interface paths {
     put?: never;
     /** Create a new todo */
     post: operations["createTodo"];
-    delete?: never;
+    /** Delete all todos */
+    delete: operations["deleteAllTodos"];
     options?: never;
     head?: never;
     patch?: never;
@@ -58,15 +59,15 @@ export interface components {
        */
       createdAt: string;
     };
-    CreateTodoRequest: {
-      /** @description The title/description of the todo item */
-      title: string;
-    };
     error: {
       /** @description A human-readable error message */
       message: string;
       /** @description An optional machine-readable error code */
       code?: string;
+    };
+    CreateTodoRequest: {
+      /** @description The title/description of the todo item */
+      title: string;
     };
     UpdateTodoRequest: {
       /** @description The title/description of the todo item */
@@ -101,6 +102,15 @@ export interface operations {
           "application/json": components["schemas"]["todo"][];
         };
       };
+      /** @description Unauthorized - missing or invalid auth headers */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
+      };
     };
   };
   createTodo: {
@@ -127,6 +137,51 @@ export interface operations {
       };
       /** @description Invalid request body */
       400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
+      };
+      /** @description Unauthorized - missing or invalid auth headers */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
+      };
+    };
+  };
+  deleteAllTodos: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description All todo items successfully deleted */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized - missing or invalid auth headers */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
+      };
+      /** @description User does not have permission to delete all todos */
+      403: {
         headers: {
           [name: string]: unknown;
         };
@@ -167,6 +222,15 @@ export interface operations {
           "application/json": components["schemas"]["error"];
         };
       };
+      /** @description Unauthorized - missing or invalid auth headers */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
+      };
       /** @description Todo item not found */
       404: {
         headers: {
@@ -193,6 +257,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Unauthorized - missing or invalid auth headers */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["error"];
+        };
       };
       /** @description Todo item not found */
       404: {

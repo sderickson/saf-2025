@@ -30,6 +30,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
           }
         }
       },
@@ -60,6 +70,51 @@
           },
           "400": {
             "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete all todos",
+        "operationId": "deleteAllTodos",
+        "tags": ["todos"],
+        "security": [
+          {
+            "scopes": ["admin"]
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "All todo items successfully deleted"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not have permission to delete all todos",
             "content": {
               "application/json": {
                 "schema": {
@@ -107,6 +162,16 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Todo item not found",
             "content": {
@@ -127,6 +192,16 @@
           "204": {
             "description": "Todo item successfully deleted"
           },
+          "401": {
+            "description": "Unauthorized - missing or invalid auth headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Todo item not found",
             "content": {
@@ -142,6 +217,14 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "scopes": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-User-Scopes",
+        "description": "Comma-separated list of user scopes"
+      }
+    },
     "schemas": {
       "Todo": {
         "$ref": "#/components/schemas/todo"
@@ -169,16 +252,6 @@
           }
         }
       },
-      "CreateTodoRequest": {
-        "type": "object",
-        "required": ["title"],
-        "properties": {
-          "title": {
-            "type": "string",
-            "description": "The title/description of the todo item"
-          }
-        }
-      },
       "error": {
         "type": "object",
         "required": ["message"],
@@ -190,6 +263,16 @@
           "code": {
             "type": "string",
             "description": "An optional machine-readable error code"
+          }
+        }
+      },
+      "CreateTodoRequest": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title/description of the todo item"
           }
         }
       },

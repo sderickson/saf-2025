@@ -57,6 +57,7 @@
 		forward_auth auth:3000 {
 			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
+			copy_headers X-User-ID X-User-Email X-User-Scopes
 		}
 		reverse_proxy api:3000 {
 			import reverse_proxy_common

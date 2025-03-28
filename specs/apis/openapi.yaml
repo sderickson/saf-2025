@@ -8,19 +8,27 @@ servers:
   - url: http://api.docker.localhost/
     description: Development server
 
+components:
+  securitySchemes:
+    scopes:
+      type: apiKey
+      in: header
+      name: X-User-Scopes
+      description: Comma-separated list of user scopes
+  schemas:
+    Todo:
+      $ref: "./schemas/todo.yaml"
+
 paths:
   /todos:
     get:
       $ref: "./routes/todos.yaml#/get"
     post:
       $ref: "./routes/todos.yaml#/post"
+    delete:
+      $ref: "./routes/todos.yaml#/delete"
   /todos/{id}:
     put:
       $ref: "./routes/todos.yaml#/~1{id}/put"
     delete:
       $ref: "./routes/todos.yaml#/~1{id}/delete"
-
-components:
-  schemas:
-    Todo:
-      $ref: "./schemas/todo.yaml"

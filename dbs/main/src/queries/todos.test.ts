@@ -4,6 +4,7 @@ import {
   getAllTodos,
   updateTodo,
   deleteTodo,
+  deleteAllTodos,
   TodoNotFoundError,
 } from "./todos.ts";
 import { db } from "../instance.ts";
@@ -12,83 +13,86 @@ import { todos } from "../schema.ts";
 // The table's type is inferred automatically
 type Todo = typeof todos.$inferSelect;
 
-describe("todos queries", () => {
-  // Clean up the database before each test
+describe("Todo Queries", () => {
   beforeEach(async () => {
+    // Clear todos table before each test
     await db.delete(todos);
   });
 
-  describe("createTodo", () => {
-    it("should create a new todo", async () => {
-      const title = "Test Todo";
-      const result = await createTodo(title);
+  describe("getAllTodos", () => {
+    it("returns empty array when no todos exist", async () => {
+      const result = await getAllTodos();
+      expect(result).toEqual([]);
+    });
 
-      expect(result).toMatchObject({
-        title,
-        completed: false,
-        id: expect.any(Number),
-        createdAt: expect.any(Date),
-      });
+    it("returns all todos in order of creation", async () => {
+      const todo1 = await createTodo("First todo");
+      const todo2 = await createTodo("Second todo");
+
+      const result = await getAllTodos();
+      expect(result).toEqual([todo1, todo2]);
     });
   });
 
-  describe("getAllTodos", () => {
-    it("should return all todos in order of creation", async () => {
-      const titles = ["First Todo", "Second Todo", "Third Todo"];
-      await Promise.all(titles.map((title) => createTodo(title)));
-
-      const result = await getAllTodos();
-      expect(result).toHaveLength(3);
-      expect(result.map((todo: Todo) => todo.title)).toEqual(titles);
-    });
-
-    it("should return empty array when no todos exist", async () => {
-      const result = await getAllTodos();
-      expect(result).toEqual([]);
+  describe("createTodo", () => {
+    it("creates a new todo", async () => {
+      const todo = await createTodo("Test todo");
+      expect(todo.title).toBe("Test todo");
+      expect(todo.completed).toBe(false);
+      expect(todo.createdAt).toBeInstanceOf(Date);
     });
   });
 
   describe("updateTodo", () => {
-    it("should update a todo's title and completed status", async () => {
-      const todo = await createTodo("Original Title");
-      const updatedTitle = "Updated Title";
+    it("updates an existing todo", async () => {
+      const todo = await createTodo("Original title");
+      const updated = await updateTodo(todo.id, "Updated title", true);
 
-      const result = await updateTodo(todo.id, updatedTitle, true);
-
-      expect(result).toMatchObject({
-        id: todo.id,
-        title: updatedTitle,
-        completed: true,
-      });
+      expect(updated.title).toBe("Updated title");
+      expect(updated.completed).toBe(true);
     });
 
-    it("should throw TodoNotFoundError when todo not found", async () => {
-      const nonExistentId = 999;
-      await expect(updateTodo(nonExistentId, "Title", false)).rejects.toThrow(
-        new TodoNotFoundError(nonExistentId),
+    it("throws error when todo not found", async () => {
+      await expect(updateTodo(999, "Title", false)).rejects.toThrow(
+        "Todo with id 999 not found",
       );
     });
   });
 
   describe("deleteTodo", () => {
-    it("should delete a todo", async () => {
-      const todo = await createTodo("To Be Deleted");
-      const result = await deleteTodo(todo.id);
+    it("deletes an existing todo", async () => {
+      const todo = await createTodo("To delete");
+      const deleted = await deleteTodo(todo.id);
 
-      expect(result).toMatchObject({
-        id: todo.id,
-        title: "To Be Deleted",
-      });
-
-      const allTodos = await getAllTodos();
-      expect(allTodos).toHaveLength(0);
+      expect(deleted).toEqual(todo);
+      const remaining = await getAllTodos();
+      expect(remaining).toEqual([]);
     });
 
-    it("should throw TodoNotFoundError when todo not found", async () => {
-      const nonExistentId = 999;
-      await expect(deleteTodo(nonExistentId)).rejects.toThrow(
-        new TodoNotFoundError(nonExistentId),
+    it("throws error when todo not found", async () => {
+      await expect(deleteTodo(999)).rejects.toThrow(
+        "Todo with id 999 not found",
       );
+    });
+  });
+
+  describe("deleteAllTodos", () => {
+    it("deletes all todos", async () => {
+      // Create some test todos
+      await createTodo("First todo");
+      await createTodo("Second todo");
+      await createTodo("Third todo");
+
+      // Verify todos exist
+      let allTodos = await getAllTodos();
+      expect(allTodos).toHaveLength(3);
+
+      // Delete all todos
+      await deleteAllTodos();
+
+      // Verify todos are deleted
+      allTodos = await getAllTodos();
+      expect(allTodos).toHaveLength(0);
     });
   });
 });

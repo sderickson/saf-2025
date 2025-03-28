@@ -40,6 +40,7 @@ services:
       - NODE_ENV=${NODE_ENV}
       - PROTOCOL=${PROTOCOL}
       - DOMAIN=${DOMAIN}
+      - ALLOW_ADMIN_SIGNUPS=true
     restart: unless-stopped
     deploy:
       resources:

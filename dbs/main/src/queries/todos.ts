@@ -49,3 +49,7 @@ export const deleteTodo = queryWrapper(async (id: number): Promise<Todo> => {
 
   return result[0];
 });
+
+export const deleteAllTodos = queryWrapper(async (): Promise<void> => {
+  await db.delete(todos);
+});

@@ -4,6 +4,7 @@ import {
   useCreateTodo,
   useUpdateTodo,
   useDeleteTodo,
+  useDeleteAllTodos,
 } from "./todos.ts";
 import { client } from "./client.ts";
 import { withVueQuery } from "@saflib/vue-spa-dev/requests.ts";
@@ -309,6 +310,41 @@ describe("todo requests", () => {
 
       queryApp.unmount();
       mutationApp.unmount();
+    });
+  });
+
+  describe("useDeleteAllTodos", () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it("should delete all todos successfully", async () => {
+      const mockResponse = { data: undefined, response: { status: 204 } };
+      mockDELETE.mockResolvedValueOnce(mockResponse);
+
+      const [result, app] = withVueQuery(() => useDeleteAllTodos());
+      await result.mutateAsync();
+      app.unmount();
+
+      expect(mockDELETE).toHaveBeenCalledWith("/todos", {});
+      expect(result.isSuccess.value).toBe(true);
+    });
+
+    it("should handle error when deleting all todos fails", async () => {
+      mockDELETE.mockResolvedValueOnce({
+        data: null,
+        response: { status: 500 },
+      });
+
+      const [result, app] = withVueQuery(() => useDeleteAllTodos());
+      await expect(result.mutateAsync()).rejects.toThrow(
+        "Failed to delete all todos",
+      );
+      app.unmount();
+
+      expect(mockDELETE).toHaveBeenCalledWith("/todos", {});
+      expect(result.isError.value).toBe(true);
+      expect(result.error.value).toBeDefined();
     });
   });
 });
