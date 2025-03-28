@@ -112,5 +112,5 @@
 
 - [ ] Make sure everything still works
   - [x] Run `npm run test`
-  - [ ] Run `npm run lint`
-  - [ ] Run `npm run format`
+  - [x] Run `npm run lint`
+  - [x] Run `npm run format`
