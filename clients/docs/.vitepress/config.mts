@@ -1,54 +1,13 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
-import { readdirSync, statSync } from 'fs'
-import { join, resolve } from 'path'
+import { docsByPackage } from "./parse.ts";
 
-function findMarkdownFiles(dir: string): string[] {
-  const files: string[] = []
-  const items = readdirSync(dir)
-  
-  for (const item of items) {
-    const fullPath = join(dir, item)
-    const stat = statSync(fullPath)
-    
-    if (stat.isDirectory()) {
-      files.push(...findMarkdownFiles(fullPath))
-    } else if (item.endsWith('.md')) {
-      files.push(fullPath)
-    }
-  }
-  
-  return files
-}
-
-const saflibPath = resolve(__dirname, '../saflib');
-const markdownFiles = findMarkdownFiles(saflibPath);
-console.log("markdownFiles", markdownFiles);
-
-// interface package {
-//   name: string;
-//   docs: string[];
-//   index: string;
-//   group: string;
-// }
-
-const docsByPackage: Record<string, string[]> = markdownFiles.reduce((acc, file) => {
-  const relativePath = file.replace(saflibPath, '');
-  const packageName = relativePath.split('/').slice(1, 2).join('/');
-  if (!acc[packageName]) {
-    acc[packageName] = [];
-  }
-  acc[packageName].push(`/saflib/${relativePath}`);
-  return acc;
-}, {});
-console.log("docsByPackage", docsByPackage);
-
-const sidebar = Object.entries(docsByPackage).map(([packageName, files]) => ({
-  text: packageName,
-  items: (files).map((file) => ({ text: file.split('/').pop(), link: file })),
-}));
-
-console.log("sidebar", JSON.stringify(sidebar, null, 2));
+const sidebar = Object.entries(docsByPackage)
+  .filter(([_, files]) => files.docs.length > 0)
+  .map(([packageName, files]) => ({
+    text: packageName,
+    items: files.docs,
+  }));
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -57,10 +16,16 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: "Home", link: "/" },
+      { text: "Examples", link: "/markdown-examples" },
     ],
-    sidebar,
+    sidebar: [
+      {
+        text: "Overview",
+        link: "/saflib/",
+      },
+      ...sidebar,
+    ],
     // sidebar: [
     //   {
     //     text: 'Examples',
@@ -72,7 +37,7 @@ export default defineConfig({
     // ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/sderickson/saf-2025' }
-    ]
-  }
-})
+      { icon: "github", link: "https://github.com/sderickson/saf-2025" },
+    ],
+  },
+});
