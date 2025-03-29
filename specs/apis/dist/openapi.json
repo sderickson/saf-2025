@@ -16,7 +16,9 @@
       "get": {
         "summary": "List all todos",
         "operationId": "getTodos",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "responses": {
           "200": {
             "description": "A list of todo items",
@@ -46,7 +48,9 @@
       "post": {
         "summary": "Create a new todo",
         "operationId": "createTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -93,10 +97,14 @@
       "delete": {
         "summary": "Delete all todos",
         "operationId": "deleteAllTodos",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "security": [
           {
-            "scopes": ["admin"]
+            "scopes": [
+              "admin"
+            ]
           }
         ],
         "responses": {
@@ -130,7 +138,9 @@
       "put": {
         "summary": "Update a todo",
         "operationId": "updateTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -187,7 +197,9 @@
       "delete": {
         "summary": "Delete a todo",
         "operationId": "deleteTodo",
-        "tags": ["todos"],
+        "tags": [
+          "todos"
+        ],
         "responses": {
           "204": {
             "description": "Todo item successfully deleted"
@@ -231,7 +243,12 @@
       },
       "todo": {
         "type": "object",
-        "required": ["id", "title", "completed", "createdAt"],
+        "required": [
+          "id",
+          "title",
+          "completed",
+          "createdAt"
+        ],
         "properties": {
           "id": {
             "type": "integer",
@@ -254,7 +271,9 @@
       },
       "error": {
         "type": "object",
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "properties": {
           "message": {
             "type": "string",
@@ -268,7 +287,9 @@
       },
       "CreateTodoRequest": {
         "type": "object",
-        "required": ["title"],
+        "required": [
+          "title"
+        ],
         "properties": {
           "title": {
             "type": "string",
@@ -278,7 +299,10 @@
       },
       "UpdateTodoRequest": {
         "type": "object",
-        "required": ["title", "completed"],
+        "required": [
+          "title",
+          "completed"
+        ],
         "properties": {
           "title": {
             "type": "string",

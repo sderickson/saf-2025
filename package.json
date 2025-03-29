@@ -12,7 +12,7 @@
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [
-    "clients",
+    "clients/*",
     "dbs/*",
     "saflib/*",
     "services/*",

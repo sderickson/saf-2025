@@ -19,7 +19,7 @@ services:
     image: saf-2025-clients:latest
     build:
       context: ../..
-      dockerfile: ./clients/Dockerfile
+      dockerfile: ./clients/spas/Dockerfile
 
   api:
     image: ghcr.io/sderickson/saf-2025-api:latest

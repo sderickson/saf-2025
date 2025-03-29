@@ -1,8 +1,8 @@
-FROM saf-2025-clients:latest AS builder
+FROM saf-2025-spa-clients:latest AS builder
 
 RUN npm run build
 
 FROM caddy:2.9.1
 
-COPY --from=builder /app/clients/dist /srv
+COPY --from=builder /app/clients/spas/dist /srv
 COPY ./deploy/instance/remote-assets/config /etc/caddy/

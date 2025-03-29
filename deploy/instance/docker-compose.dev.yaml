@@ -5,7 +5,7 @@ services:
 
   clients:
     volumes:
-      - ../../clients:/app/clients
+      - ../../clients/spas:/app/clients/spas
       - ../../lib/:/app/lib/
     command: npm run dev
 
