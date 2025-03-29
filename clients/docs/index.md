@@ -8,8 +8,8 @@ hero:
   tagline: Build sites and experiment with agentic AI
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Docs
+      link: /saflib/
     - theme: alt
       text: API Examples
       link: /api-examples
