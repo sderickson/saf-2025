@@ -22,12 +22,12 @@ function findMarkdownFiles(dir: string): string[] {
 const saflibPath = resolve(__dirname, "../saflib");
 const markdownFiles = findMarkdownFiles(saflibPath);
 
-interface document {
+export interface document {
   text: string;
   link: string;
 }
 
-interface packageInfo {
+export interface packageInfo {
   name: string;
   docs: document[];
   index: string;
