@@ -17,7 +17,7 @@
 - [x] **Review Point**: Checklist review
 
 - [x] Add Documentation to plan
-  - [x] Review relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
+  - [x] Review relevant docs from [doc-outline.md](/saflib/processes/doc-outline.md)
   - [x] Note any missing platform documentation needs
 - [x] **Review Point**: Documentation plan review
 
@@ -26,17 +26,17 @@
 ## API Spec Layer
 
 - [x] Update OpenAPI Specification
-  - [x] Review [update-spec.md](../../saflib/openapi-specs/docs/03-updates.md)
-  - [x] Add `/auth/forgot-password` endpoint spec
-  - [x] Add `/auth/reset-password` endpoint spec
+  - [x] Review [update-spec.md](/saflib/openapi-specs/docs/03-updates.md)
+  - [x] Add `/auth/forgot-password` endpoint spec to [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)
+  - [x] Add `/auth/reset-password` endpoint spec to [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)
   - [x] Generate types
 - [x] **Review Point**: API spec review
 
 ## Database Layer
 
 - [ ] Review Schema
-  - [ ] Review [schema.md](../../saflib/drizzle-sqlite3/docs/02-schema.md)
-  - [ ] Verify existing fields in `emailAuth` table:
+  - [ ] Review [schema.md](/saflib/drizzle-sqlite3/docs/02-schema.md)
+  - [ ] Verify existing fields in [auth-db/src/schema.ts](/saflib/auth-db/src/schema.ts):
     - [ ] `forgotPasswordToken`
     - [ ] `forgotPasswordTokenExpiresAt`
 - [ ] **Review Point**: Schema review
@@ -44,15 +44,15 @@
 ## API Layer
 
 - [ ] Implement Forgot Password Endpoint
-  - [ ] Review [adding-routes.md](../../saflib/node-express/docs/02-adding-routes.md)
-  - [ ] Add `/auth/forgot-password` route
+  - [ ] Review [adding-routes.md](/saflib/node-express/docs/02-adding-routes.md)
+  - [ ] Add `/auth/forgot-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
   - [ ] Implement token generation
   - [ ] Add logging
-  - [ ] Add tests using [testing-middleware.md](../../saflib/node-express-dev/docs/01-test-routes.md)
+  - [ ] Add tests using [testing-middleware.md](/saflib/node-express-dev/docs/01-test-routes.md)
 - [ ] **Review Point**: Forgot password endpoint review
 
 - [ ] Implement Reset Password Endpoint
-  - [ ] Add `/auth/reset-password` route
+  - [ ] Add `/auth/reset-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
   - [ ] Implement token validation
   - [ ] Add password update logic
   - [ ] Add logging
@@ -64,21 +64,22 @@
 ### TanStack Query Layer
 
 - [ ] Implement API Integration
-  - [ ] Review [using-queries.md](../../saflib/vue-spa/docs/04-using-queries.md)
-  - [ ] Add forgot password mutation
-  - [ ] Add reset password mutation
-  - [ ] Add tests using [query-testing.md](../../saflib/vue-spa-dev/docs/query-testing.md)
+  - [ ] Review [using-queries.md](/saflib/vue-spa/docs/04-using-queries.md)
+  - [ ] Add forgot password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [ ] Add reset password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [ ] Add tests using [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
 - [ ] **Review Point**: Query implementation review
 
 ### Component Layer
 
 - [ ] Update ForgotPasswordPage.vue
-  - [ ] Review [forms.md](../../saflib/vue-spa/docs/05-forms.md)
+  - [ ] Review [forms.md](/saflib/vue-spa/docs/05-forms.md)
+  - [ ] Update [auth-vue/src/components/ForgotPasswordPage.vue](/saflib/auth-vue/src/components/ForgotPasswordPage.vue)
   - [ ] Add email input with validation
   - [ ] Add submit button
   - [ ] Add loading states
   - [ ] Add success/error messages
-  - [ ] Add tests using [component-testing.md](../../saflib/vue-spa-dev/docs/component-testing.md)
+  - [ ] Add tests using [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
 - [ ] **Review Point**: Forgot password page review
 
 - [ ] Create ChangeForgottenPasswordPage.vue
@@ -108,7 +109,7 @@
 ### Final Documentation Review
 
 - [ ] Review all documentation changes
-  - [ ] Check platform changes in relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
+  - [ ] Check platform changes in relevant docs from [doc-outline.md](/saflib/processes/doc-outline.md)
   - [ ] Check product changes
   - [ ] Verify documentation matches implementation
 - [ ] **Review Point**: Final documentation review

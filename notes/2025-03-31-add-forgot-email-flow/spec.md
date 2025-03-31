@@ -9,6 +9,24 @@ This feature adds a complete forgot password flow to the SAF authentication syst
 
 This feature is a prerequisite for implementing user administration features, as it ensures users can recover access to their accounts if they forget their passwords.
 
+## Files to Modify
+
+The following files need to be modified to implement this feature:
+
+### API Specification
+
+- [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml) - Add new endpoint specifications
+
+### Backend
+
+- [auth-db/src/schema.ts](/saflib/auth-db/src/schema.ts) - Schema already has required fields
+- [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts) - Add new endpoints
+
+### Frontend
+
+- [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts) - Add new API mutations
+- [auth-vue/src/components/ForgotPasswordPage.vue](/saflib/auth-vue/src/components/ForgotPasswordPage.vue) - Update existing component
+
 ## User Stories
 
 - As a user who forgot their password, I want to request a password reset link so that I can regain access to my account
