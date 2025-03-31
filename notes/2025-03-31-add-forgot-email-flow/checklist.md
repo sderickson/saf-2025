@@ -34,12 +34,12 @@
 
 ## Database Layer
 
-- [ ] Review Schema
-  - [ ] Review [schema.md](/saflib/drizzle-sqlite3/docs/02-schema.md)
-  - [ ] Verify existing fields in [auth-db/src/schema.ts](/saflib/auth-db/src/schema.ts):
-    - [ ] `forgotPasswordToken`
-    - [ ] `forgotPasswordTokenExpiresAt`
-- [ ] **Review Point**: Schema review
+- [x] Review Schema
+  - [x] Review [schema.md](/saflib/drizzle-sqlite3/docs/02-schema.md)
+  - [x] Verify existing fields in [auth-db/src/schema.ts](/saflib/auth-db/src/schema.ts):
+    - [x] `forgotPasswordToken`
+    - [x] `forgotPasswordTokenExpiresAt`
+- [x] **Review Point**: Schema review
 
 ## API Layer
 
