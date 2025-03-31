@@ -19,7 +19,7 @@ function findMarkdownFiles(dir: string): string[] {
   return files;
 }
 
-const saflibPath = resolve(__dirname, "../saflib");
+const saflibPath = resolve(__dirname, "../../../saflib");
 const markdownFiles = findMarkdownFiles(saflibPath);
 
 export interface document {

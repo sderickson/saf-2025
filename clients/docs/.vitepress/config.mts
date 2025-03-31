@@ -33,6 +33,7 @@ const sidebar = Object.entries(docsByPackage)
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "SAF Documentation",
+  srcDir: "../..",
   description: "Reference and Guide for Scott's Application Framework",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
