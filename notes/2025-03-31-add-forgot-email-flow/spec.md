@@ -32,11 +32,11 @@ No schema changes are required.
 
    - Purpose: Request a password reset
    - Request body: `{ email: string }`
-   - Response: `{ success: true }`
+   - Response: `{ success: true, message: "If the user exists, a recovery email was sent" }`
    - Error responses:
-     - 400: Invalid email
-     - 404: User not found
+     - 400: Invalid email format
    - Authorization: None
+   - Security: Always returns 200 to prevent email enumeration attacks
 
 2. POST /auth/reset-password
    - Purpose: Set a new password using temporary password
@@ -90,12 +90,13 @@ Changes will be made to the existing auth-vue SPA.
 
 - Security:
   - Temporary passwords should be single-use
-  - Temporary passwords should expire after a reasonable time (e.g., 1 hour)
-  - New passwords should meet minimum security requirements
+  - Temporary passwords should expire after 15 minutes
+  - New passwords should meet minimum security requirements (see confirmPasswordRules in RegisterPage.vue)
   - All sensitive operations should be logged
+  - API responses should not reveal user existence
 - Performance:
   - Password reset tokens should be stored with appropriate indexes
-  - Rate limiting should be applied to prevent abuse
+  - Rate limiting will be implemented in a future feature
 - User Experience:
   - Clear error messages for all failure cases
   - Loading states during API calls
@@ -105,10 +106,11 @@ Changes will be made to the existing auth-vue SPA.
 ## Future Enhancements / Out of Scope
 
 - Email service integration (currently just logging)
-- Password strength requirements
-- Rate limiting
+- Password strength requirements (will be refactored from RegisterPage.vue)
+- Rate limiting (requires separate rate limiting system)
 - Account lockout after failed attempts
 - Password history tracking
+- CAPTCHA or other anti-abuse measures
 
 ## Questions and Clarifications
 
