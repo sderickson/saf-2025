@@ -51,12 +51,12 @@
   - [x] Add tests using [testing-middleware.md](/saflib/node-express-dev/docs/01-test-routes.md)
 - [x] **Review Point**: Forgot password endpoint review
 
-- [ ] Implement Reset Password Endpoint
-  - [ ] Add `/auth/reset-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
-  - [ ] Implement token validation
-  - [ ] Add password update logic
-  - [ ] Add tests using [this doc](/saflib/node-express-dev/docs/01-test-routes.md)
-- [ ] **Review Point**: Reset password endpoint review
+- [x] Implement Reset Password Endpoint
+  - [x] Add `/auth/reset-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
+  - [x] Implement token validation
+  - [x] Add password update logic
+  - [x] Add tests using [this doc](/saflib/node-express-dev/docs/01-test-routes.md)
+- [x] **Review Point**: Reset password endpoint review
 
 ## Frontend Layer
 
