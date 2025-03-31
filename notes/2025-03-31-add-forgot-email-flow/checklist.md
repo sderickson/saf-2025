@@ -44,11 +44,10 @@
 ## API Layer
 
 - [ ] Implement Forgot Password Endpoint
-  - [ ] Review [adding-routes.md](/saflib/node-express/docs/02-adding-routes.md)
-  - [ ] Add `/auth/forgot-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
-  - [ ] Implement token generation
-  - [ ] Add logging
-  - [ ] Add tests using [testing-middleware.md](/saflib/node-express-dev/docs/01-test-routes.md)
+  - [x] Review [adding-routes.md](/saflib/node-express/docs/02-adding-routes.md)
+  - [x] Add `/auth/forgot-password` route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
+  - [x] Implement token generation
+  - [ ] add tests
 - [ ] **Review Point**: Forgot password endpoint review
 
 - [ ] Implement Reset Password Endpoint
