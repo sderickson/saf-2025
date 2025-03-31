@@ -6,7 +6,7 @@ services:
   clients:
     volumes:
       - ../../clients/spas:/app/clients/spas
-      - ../../lib/:/app/lib/
+      - ../../saflib/:/app/saflib/
     command: npm run dev
 
   docs:
