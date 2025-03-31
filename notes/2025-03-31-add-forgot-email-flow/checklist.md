@@ -25,12 +25,12 @@
 
 ## API Spec Layer
 
-- [ ] Update OpenAPI Specification
-  - [ ] Review [update-spec.md](../../saflib/openapi-specs/docs/03-updates.md)
-  - [ ] Add `/auth/forgot-password` endpoint spec
-  - [ ] Add `/auth/reset-password` endpoint spec
-  - [ ] Generate types
-- [ ] **Review Point**: API spec review
+- [x] Update OpenAPI Specification
+  - [x] Review [update-spec.md](../../saflib/openapi-specs/docs/03-updates.md)
+  - [x] Add `/auth/forgot-password` endpoint spec
+  - [x] Add `/auth/reset-password` endpoint spec
+  - [x] Generate types
+- [x] **Review Point**: API spec review
 
 ## Database Layer
 
