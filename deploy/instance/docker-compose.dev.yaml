@@ -5,9 +5,15 @@ services:
 
   clients:
     volumes:
-      - ../../clients:/app/clients
+      - ../../clients/spas:/app/clients/spas
       - ../../lib/:/app/lib/
     command: npm run dev
+
+  docs:
+    volumes:
+      - ../../clients/docs:/app/clients/docs
+      - ../../saflib/:/app/saflib/
+    command: npm run docs:dev -- --host
 
   api:
     develop:
