@@ -66,13 +66,13 @@
 
 ### TanStack Query Layer
 
-- [ ] Implement API Integration
-  - [ ] Review [using-queries.md](/saflib/vue-spa/docs/04-using-queries.md)
-  - [ ] Add forgot password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
-  - [ ] Add reset password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
-  - [ ] Add tests using [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
-  - [ ] Run tests to verify mutations
-- [ ] **Review Point**: Query implementation review
+- [x] Implement API Integration
+  - [x] Review [using-queries.md](/saflib/vue-spa/docs/04-using-queries.md)
+  - [x] Add forgot password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [x] Add reset password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [x] Add tests using [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
+  - [x] Run tests to verify mutations
+- [x] **Review Point**: Query implementation review
 
 ### Component Layer
 
