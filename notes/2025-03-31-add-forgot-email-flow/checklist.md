@@ -26,14 +26,24 @@
 
 ### Implementation Phase
 
-## Database Layer
+## API Spec Layer
 
-- [ ] Verify Schema Support
-  - [ ] Review existing schema in auth-db/src/schema.ts
-  - [ ] Verify forgotPasswordToken and forgotPasswordTokenExpiresAt fields exist
+- [ ] Add Forgot Password Endpoint Spec
+
+  - [ ] Create schema in auth-spec/schemas/ for forgot password request/response
+  - [ ] Add route spec in auth-spec/routes/ for /auth/forgot-password
+  - [ ] Update openapi.yaml to include new endpoint
+  - [ ] Generate types and validation
   - [ ] **Review Point**
 
-## API Layer
+- [ ] Add Reset Password Endpoint Spec
+  - [ ] Create schema in auth-spec/schemas/ for reset password request/response
+  - [ ] Add route spec in auth-spec/routes/ for /auth/reset-password
+  - [ ] Update openapi.yaml to include new endpoint
+  - [ ] Generate types and validation
+  - [ ] **Review Point**
+
+## API Implementation Layer
 
 - [ ] Implement Forgot Password Endpoint
 
@@ -50,7 +60,22 @@
   - [ ] Run tests
   - [ ] **Review Point**
 
-## Frontend Layer
+## Frontend Query Layer
+
+- [ ] Add Forgot Password Query
+
+  - [ ] Create query function in auth-vue/src/requests/auth.ts
+  - [ ] Add proper error handling
+  - [ ] Add loading state handling
+  - [ ] **Review Point**
+
+- [ ] Add Reset Password Query
+  - [ ] Create mutation function in auth-vue/src/requests/auth.ts
+  - [ ] Add proper error handling
+  - [ ] Add loading state handling
+  - [ ] **Review Point**
+
+## Frontend UI Layer
 
 - [ ] Update ForgotPasswordPage.vue
 
@@ -68,6 +93,13 @@
   - [ ] Add loading state
   - [ ] Add success/error message handling
   - [ ] Run tests
+  - [ ] **Review Point**
+
+- [ ] Integrate Queries with ChangeForgottenPasswordPage.vue
+
+  - [ ] Connect form submission to reset password mutation
+  - [ ] Handle success/error states
+  - [ ] Add navigation after successful reset
   - [ ] **Review Point**
 
 - [ ] Update Router Configuration
