@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const currentDomain = document.location.hostname;
-const docsLink = `http://docs.${currentDomain}/`;
+const protocol = document.location.protocol;
+const docsLink = `${protocol}//docs.${currentDomain}/`;
 </script>
 
 <template>

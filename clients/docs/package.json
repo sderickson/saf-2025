@@ -4,7 +4,6 @@
   "description": "Generates doc site",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run",
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
