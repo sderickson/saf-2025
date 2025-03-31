@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
-
-import { docsByPackage, type packageInfo } from "./parse.ts";
+import { resolve } from "path";
+import { getDocsByPackage, type packageInfo } from "./parse.ts";
 
 interface sidebarItem {
   text: string;
@@ -8,7 +8,9 @@ interface sidebarItem {
   items?: sidebarItem[];
 }
 
-const packageInfoToSidebar = (packageInfo: packageInfo): sidebarItem | undefined => {
+const packageInfoToSidebar = (
+  packageInfo: packageInfo,
+): sidebarItem | undefined => {
   let sidebar: sidebarItem[] = packageInfo.docs;
   if (packageInfo.index) {
     sidebar.unshift({
@@ -26,7 +28,9 @@ const packageInfoToSidebar = (packageInfo: packageInfo): sidebarItem | undefined
   }
 };
 
-const sidebar = Object.entries(docsByPackage)
+const sidebar = Object.entries(
+  getDocsByPackage(resolve(__dirname, "../../../saflib")),
+)
   .map(([_, packageInfo]) => packageInfoToSidebar(packageInfo))
   .filter((item): item is sidebarItem => item !== undefined);
 
@@ -39,9 +43,9 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Docs", link: "/" },
-      { text: "Template", link: "https://github.com/sderickson/saf-template"},
-      { text: "Demo", link: "https://saf-demo.online/"},
-      { text: "Lib", link: "https://github.com/sderickson/saflib"},
+      { text: "Template", link: "https://github.com/sderickson/saf-template" },
+      { text: "Demo", link: "https://saf-demo.online/" },
+      { text: "Lib", link: "https://github.com/sderickson/saflib" },
     ],
     sidebar: [
       {
