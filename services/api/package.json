@@ -11,16 +11,9 @@
   "dependencies": {
     "@saf-2025/dbs-main": "*",
     "@saflib/node-express": "*",
-    "@saf-2025/specs-apis": "*",
-    "express": "^4.21.2",
-    "tsx": "^4.19.2"
+    "@saf-2025/specs-apis": "*"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^3.0.5",
-    "supertest": "^7.0.0",
-    "typescript": "^5.7.3",
-    "vitest": "^3.0.5"
+    "@saflib/node-express-dev": "*"
   }
 }
