@@ -30,7 +30,7 @@
   - [x] Add `/auth/forgot-password` endpoint spec to [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)
   - [x] Add `/auth/reset-password` endpoint spec to [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)
   - [x] Generate types
-  - [x] Run tests to verify type generation
+  - [x] Run `npm run test` in the auth-spec package to verify type generation
 - [x] **Review Point**: API spec review
 
 ## Database Layer
@@ -40,7 +40,7 @@
   - [x] Verify existing fields in [auth-db/src/schema.ts](/saflib/auth-db/src/schema.ts):
     - [x] `forgotPasswordToken`
     - [x] `forgotPasswordTokenExpiresAt`
-  - [x] Run tests to verify schema
+  - [x] Run `npm run test` in the auth-db package to verify schema
 - [x] **Review Point**: Schema review
 
 ## API Layer
@@ -51,7 +51,7 @@
   - [x] Implement token generation
   - [x] Add logging
   - [x] Add tests using [testing-middleware.md](/saflib/node-express-dev/docs/01-test-routes.md)
-  - [x] Run tests to verify endpoint
+  - [x] Run `npm run test` in the auth-service package to verify endpoint
 - [x] **Review Point**: Forgot password endpoint review
 
 - [x] Implement Reset Password Endpoint
@@ -59,7 +59,7 @@
   - [x] Implement token validation
   - [x] Add password update logic
   - [x] Add tests using [this doc](/saflib/node-express-dev/docs/01-test-routes.md)
-  - [x] Run tests to verify endpoint
+  - [x] Run `npm run test` in the auth-service package to verify endpoint
 - [x] **Review Point**: Reset password endpoint review
 
 ## Frontend Layer
@@ -71,7 +71,7 @@
   - [x] Add forgot password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
   - [x] Add reset password mutation to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
   - [x] Add tests using [query-testing.md](/saflib/vue-spa-dev/docs/query-testing.md)
-  - [x] Run tests to verify mutations
+  - [x] Run `npm run test` in the auth-vue package to verify mutations
 - [x] **Review Point**: Query implementation review
 
 ### Component Layer
@@ -84,7 +84,7 @@
   - [ ] Add loading states
   - [ ] Add success/error messages
   - [ ] Add tests using [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
-  - [ ] Run tests to verify component
+  - [ ] Run `npm run test` in the auth-vue package to verify component
 - [ ] **Review Point**: Forgot password page review
 
 - [ ] Create ChangeForgottenPasswordPage.vue
@@ -95,7 +95,7 @@
   - [ ] Add loading states
   - [ ] Add success/error messages
   - [ ] Add tests
-  - [ ] Run tests to verify component
+  - [ ] Run `npm run test` in the auth-vue package to verify component
 - [ ] **Review Point**: Reset password page review
 
 ### Testing Phase
@@ -104,13 +104,13 @@
   - [ ] Create production docker images
   - [ ] Run existing e2e tests
   - [ ] Create new e2e tests for forgot password flow
-  - [ ] Run all tests to verify e2e changes
+  - [ ] Run `npm run test` in the e2e package to verify e2e changes
 - [ ] **Review Point**: E2E testing review
 
 - [ ] Make sure everything still works
-  - [ ] Run `npm run test`
-  - [ ] Run `npm run lint`
-  - [ ] Run `npm run format`
+  - [ ] Run `npm run test` from the root of the monorepo
+  - [ ] Run `npm run lint` from the root of the monorepo
+  - [ ] Run `npm run format` from the root of the monorepo
 - [ ] **Review Point**: Code quality review
 
 ### Final Documentation Review
@@ -119,5 +119,5 @@
   - [ ] Check platform changes in relevant docs from [doc-outline.md](/saflib/processes/doc-outline.md)
   - [ ] Check product changes
   - [ ] Verify documentation matches implementation
-  - [ ] Run tests one final time
+  - [ ] Run `npm run test` from the root of the monorepo
 - [ ] **Review Point**: Final documentation review
