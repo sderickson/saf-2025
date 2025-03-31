@@ -33,7 +33,7 @@ const sidebar = Object.entries(docsByPackage)
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "SAF Documentation",
-  srcDir: "../..",
+  srcDir: "../../saflib",
   description: "Reference and Guide for Scott's Application Framework",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -44,19 +44,10 @@ export default defineConfig({
     sidebar: [
       {
         text: "Overview",
-        link: "/saflib/",
+        link: "/",
       },
       ...sidebar,
     ],
-    // sidebar: [
-    //   {
-    //     text: 'Examples',
-    //     items: [
-    //       { text: 'Markdown Examples', link: '/markdown-examples' },
-    //       { text: 'Runtime API Examples', link: '/api-examples' }
-    //     ]
-    //   }
-    // ],
 
     socialLinks: [
       { icon: "github", link: "https://github.com/sderickson/saf-2025" },

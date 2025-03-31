@@ -39,12 +39,6 @@ const docsByPackage: Record<string, packageInfo> = markdownFiles.reduce(
   (acc, file) => {
     const relativePath = file.replace(saflibPath, "");
     const numberOfDirectories = relativePath.split("/").length;
-    console.log(
-      "numberOfDirectories",
-      numberOfDirectories,
-      "for",
-      relativePath,
-    );
     if (numberOfDirectories < 3) {
       // e.g. "/README.md"
       return acc;
@@ -70,7 +64,7 @@ const docsByPackage: Record<string, packageInfo> = markdownFiles.reduce(
     if (relativePath.split("/").includes("docs")) {
       const firstLine = readFileSync(file, "utf8").split("\n")[0];
       const text = firstLine.replace("#", "").trim();
-      const link = `/saflib/${relativePath}`;
+      const link = relativePath;
       acc[packageName].docs.push({
         text,
         link,
