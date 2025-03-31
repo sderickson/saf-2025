@@ -9,6 +9,12 @@ services:
       - ../../lib/:/app/lib/
     command: npm run dev
 
+  docs:
+    volumes:
+      - ../../clients/docs:/app/clients/docs
+      - ../../lib/:/app/lib/
+    command: npm run docs:dev -- --host
+
   api:
     develop:
       watch:

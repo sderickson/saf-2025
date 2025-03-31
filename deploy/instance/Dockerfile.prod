@@ -1,8 +1,13 @@
-FROM saf-2025-spa-clients:latest AS builder
+FROM saf-2025-spas:latest AS builder
 
 RUN npm run build
 
+FROM saf-2025-docs:latest AS docs
+
+RUN npm run docs:build
+
 FROM caddy:2.9.1
 
-COPY --from=builder /app/clients/spas/dist /srv
+COPY --from=builder /app/clients/spas/dist /srv/spas
+COPY --from=docs /app/clients/docs/.vitepress/dist /srv/docs
 COPY ./deploy/instance/remote-assets/config /etc/caddy/
