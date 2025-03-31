@@ -2,24 +2,24 @@
 
 ### Planning Phase
 
-- [ ] Set up a new branch in the monorepo
-  - [ ] Checkout the `main` branch
-  - [ ] Pull the latest changes
-  - [ ] Create a new branch `2025-03-31-add-forgot-email-flow`
-- [ ] **Review Point**: Branch setup complete
+- [x] Set up a new branch in the monorepo
+  - [x] Checkout the `main` branch
+  - [x] Pull the latest changes
+  - [x] Create a new branch `2025-03-31-add-forgot-email-flow`
+- [x] **Review Point**: Branch setup complete
 
-- [ ] Write specification
+- [x] Write specification
   - [x] Specification completed in spec.md
-- [ ] **Review Point**: Specification review
+- [x] **Review Point**: Specification review
 
-- [ ] Update checklist
+- [x] Update checklist
   - [x] Checklist created based on spec
-- [ ] **Review Point**: Checklist review
+- [x] **Review Point**: Checklist review
 
-- [ ] Add Documentation to plan
-  - [ ] Review relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
-  - [ ] Note any missing platform documentation needs
-- [ ] **Review Point**: Documentation plan review
+- [x] Add Documentation to plan
+  - [x] Review relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
+  - [x] Note any missing platform documentation needs
+- [x] **Review Point**: Documentation plan review
 
 ### Implementation Phase
 
