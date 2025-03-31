@@ -38,8 +38,10 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
+      { text: "Docs", link: "/" },
+      { text: "Template", link: "https://github.com/sderickson/saf-template"},
+      { text: "Demo", link: "https://saf-demo.online/"},
+      { text: "Lib", link: "https://github.com/sderickson/saflib"},
     ],
     sidebar: [
       {

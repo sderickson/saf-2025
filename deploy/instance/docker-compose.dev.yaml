@@ -12,7 +12,7 @@ services:
   docs:
     volumes:
       - ../../clients/docs:/app/clients/docs
-      - ../../lib/:/app/lib/
+      - ../../saflib/:/app/saflib/
     command: npm run docs:dev -- --host
 
   api:
