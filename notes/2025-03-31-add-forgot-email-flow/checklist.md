@@ -100,12 +100,7 @@
 
 ### Testing Phase
 
-- [ ] Test end-to-end
-  - [ ] Create production docker images
-  - [ ] Run existing e2e tests
-  - [ ] Create new e2e tests for forgot password flow
-  - [ ] Run `npm run test` in the e2e package to verify e2e changes
-- [ ] **Review Point**: E2E testing review
+(skip e2e because I need to set up 3rd party integration testing)
 
 - [ ] Make sure everything still works
   - [ ] Run `npm run test` from the root of the monorepo
