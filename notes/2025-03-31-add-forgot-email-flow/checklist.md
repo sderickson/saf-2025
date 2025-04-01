@@ -76,27 +76,27 @@
 
 ### Component Layer
 
-- [ ] Update ForgotPasswordPage.vue
-  - [ ] Review [forms.md](/saflib/vue-spa/docs/05-forms.md)
-  - [ ] Update [auth-vue/src/components/ForgotPasswordPage.vue](/saflib/auth-vue/src/components/ForgotPasswordPage.vue)
-  - [ ] Add email input with validation
-  - [ ] Add submit button
-  - [ ] Add loading states
-  - [ ] Add success/error messages
-  - [ ] Add tests using [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
-  - [ ] Run `npm run test` in the auth-vue package to verify component
+- [x] Update ForgotPasswordPage.vue
+  - [x] Review [forms.md](/saflib/vue-spa/docs/05-forms.md)
+  - [x] Update [auth-vue/src/components/ForgotPasswordPage.vue](/saflib/auth-vue/src/components/ForgotPasswordPage.vue)
+  - [x] Add email input with validation
+  - [x] Add submit button
+  - [x] Add loading states
+  - [x] Add success/error messages
+  - [x] Add tests using [component-testing.md](/saflib/vue-spa-dev/docs/component-testing.md)
+  - [x] Run `npm run test` in the auth-vue package to verify component
 - [ ] **Review Point**: Forgot password page review
 
-- [ ] Create ChangeForgottenPasswordPage.vue
-  - [ ] Add temporary password input
-  - [ ] Add new password input with validation
-  - [ ] Add confirm password field
-  - [ ] Add submit button
-  - [ ] Add loading states
-  - [ ] Add success/error messages
-  - [ ] Add tests
-  - [ ] Run `npm run test` in the auth-vue package to verify component
-- [ ] **Review Point**: Reset password page review
+- [x] Create ChangeForgottenPasswordPage.vue
+  - [x] Add temporary password input
+  - [x] Add new password input with validation
+  - [x] Add confirm password field
+  - [x] Add submit button
+  - [x] Add loading states
+  - [x] Add success/error messages
+  - [x] Add tests
+  - [x] Run `npm run test` in the auth-vue package to verify component
+- [x] **Review Point**: Reset password page review
 
 ### Testing Phase
 
