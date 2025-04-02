@@ -2,10 +2,10 @@
 
 The actual shared code lives in the [saflib repo](https://github.com/sderickson/saflib). This repository is for:
 
-* Demonstrating how to use the framework
-* A way to develop the framework
+- Demonstrating how to use the framework
+- A way to develop the framework
 
-Features in `saflib` are built in tandem with this repository to make sure they'll work, and then what is built serves as an example. If you'd rather •use* the framework, see the [documentation](https://docs.saf-demo.online/#setup).
+Features in `saflib` are built in tandem with this repository to make sure they'll work, and then what is built serves as an example. If you'd rather •use\* the framework, see the [documentation](https://docs.saf-demo.online/#setup).
 
 The code for this repo runs at [https://saf-demo.online/](https://saf-demo.online/).
 

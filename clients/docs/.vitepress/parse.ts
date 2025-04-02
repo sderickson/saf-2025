@@ -1,5 +1,18 @@
 import { readdirSync, statSync, readFileSync, existsSync } from "fs";
-import { join, resolve } from "path";
+import { join } from "path";
+
+export interface document {
+  text: string;
+  link: string;
+}
+
+export interface packageInfo {
+  name: string;
+  docs: document[];
+  index: string;
+  group: string;
+  json: object;
+}
 
 function findMarkdownFiles(dir: string): string[] {
   const files: string[] = [];
@@ -19,60 +32,53 @@ function findMarkdownFiles(dir: string): string[] {
   return files;
 }
 
-const saflibPath = resolve(__dirname, "../../../saflib");
-const markdownFiles = findMarkdownFiles(saflibPath);
-
-export interface document {
-  text: string;
-  link: string;
+interface accumulatedDocs {
+  [key: string]: packageInfo;
 }
 
-export interface packageInfo {
-  name: string;
-  docs: document[];
-  index: string;
-  group: string;
-  json: object;
-}
+const getDocsByPackage = (rootPath: string) => {
+  const markdownFiles = findMarkdownFiles(rootPath);
 
-const docsByPackage: Record<string, packageInfo> = markdownFiles.reduce(
-  (acc, file) => {
-    const relativePath = file.replace(saflibPath, "");
-    const numberOfDirectories = relativePath.split("/").length;
-    if (numberOfDirectories < 3) {
-      // e.g. "/README.md"
-      return acc;
-    }
-    const packageName = relativePath.split("/").slice(1, 2).join("/");
-    if (!acc[packageName]) {
-      const packageJsonPath = join(saflibPath, packageName, "package.json");
-      if (!existsSync(packageJsonPath)) {
+  const docsByPackage: accumulatedDocs = markdownFiles.reduce(
+    (acc: accumulatedDocs, file: string) => {
+      const relativePath = file.replace(rootPath, "");
+      const numberOfDirectories = relativePath.split("/").length;
+      if (numberOfDirectories < 3) {
+        // e.g. "/README.md"
         return acc;
       }
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+      const packageName = relativePath.split("/").slice(1, 2).join("/");
+      if (!acc[packageName]) {
+        const packageJsonPath = join(rootPath, packageName, "package.json");
+        if (!existsSync(packageJsonPath)) {
+          return acc;
+        }
+        const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 
-      const indexPath = join(saflibPath, packageName, "index.md");
-      acc[packageName] = {
-        name: packageName,
-        docs: [],
-        index: existsSync(indexPath) ? indexPath : "",
-        group: packageJson.saflib ? packageJson.saflib.group || "" : "",
-        json: packageJson,
-      };
-    }
+        const indexPath = join(rootPath, packageName, "index.md");
+        acc[packageName] = {
+          name: packageName,
+          docs: [],
+          index: existsSync(indexPath) ? indexPath : "",
+          group: packageJson.saflib ? packageJson.saflib.group || "" : "",
+          json: packageJson,
+        };
+      }
 
-    if (relativePath.split("/").includes("docs")) {
-      const firstLine = readFileSync(file, "utf8").split("\n")[0];
-      const text = firstLine.replace("#", "").trim();
-      const link = relativePath;
-      acc[packageName].docs.push({
-        text,
-        link,
-      });
-    }
-    return acc;
-  },
-  {},
-);
+      if (relativePath.split("/").includes("docs")) {
+        const firstLine = readFileSync(file, "utf8").split("\n")[0];
+        const text = firstLine.replace("#", "").trim();
+        const link = relativePath;
+        acc[packageName].docs.push({
+          text,
+          link,
+        });
+      }
+      return acc;
+    },
+    {},
+  );
+  return docsByPackage;
+};
 
-export { docsByPackage };
+export { getDocsByPackage };

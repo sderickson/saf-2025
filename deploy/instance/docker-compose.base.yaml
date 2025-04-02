@@ -14,7 +14,7 @@ services:
     depends_on:
       - clients
       - docs
-      
+
   clients:
     # Named for local dev, but doesn't get published; not needed for prod
     image: saf-2025-spas:latest
