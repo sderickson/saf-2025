@@ -28,13 +28,14 @@
   - [x] Run `npm run test` in the auth-db package
   - [x] **Review Point**
 
-- [ ] Implement Verification Endpoint
-  - [ ] Add verify-email route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
-  - [ ] Add resend-verification route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
-  - [ ] Add logging for verification links
-  - [ ] Add tests
-  - [ ] Run `npm run test` in the auth-service package
-  - [ ] **Review Point**
+- [x] Implement Verification Endpoint
+
+  - [x] Add verify-email route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
+  - [x] Add resend-verification route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)
+  - [x] Add logging for verification links
+  - [x] Add tests
+  - [x] Run `npm run test` in the auth-service package
+  - [x] **Review Point**
 
 ## Frontend Layer
 
