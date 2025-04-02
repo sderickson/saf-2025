@@ -8,25 +8,23 @@ This feature adds email verification functionality to the authentication system.
 
 ### API Specification
 
-- `/saflib/auth-spec/schemas/email-verification.yaml` - New schema for email verification request/response
-- `/saflib/auth-spec/routes/auth.yaml` - Add new endpoint for email verification
+- `/saflib/auth-spec/routes/auth.yaml` - Add new endpoints for email verification and resending verification
 
 ### Backend
 
-- `/saflib/auth-service/routes/auth.ts` - Add new route handler for email verification
-- `/saflib/auth-service/types.ts` - Add types for email verification
+- `/saflib/auth-service/routes/auth.ts` - Add route handlers for email verification and resending verification
 
 ### Frontend
 
 - `/saflib/auth-vue/src/components/VerifyEmailPage.vue` - New page for email verification
-- `/saflib/auth-vue/src/requests/auth.ts` - Add new API client function for email verification
-- `/saflib/auth-vue/src/requests/types.ts` - Add types for email verification
+- `/saflib/auth-vue/src/requests/auth.ts` - Add API client functions for email verification
 
 ## User Stories
 
 - As a new user, I want to verify my email address so that I can ensure my account is properly set up
 - As a user, I want to be redirected to the main app after verifying my email so that I can continue using the application
 - As a user, I want to see clear feedback about whether my email verification was successful or not
+- As a user, I want to be able to resend the verification email if I didn't receive it or if the link expired
 
 ## Technical Requirements
 
@@ -59,10 +57,6 @@ No schema updates required - we'll use the existing `emailAuth` table which alre
      - 200: Success response
      - 401: User not logged in
    - Authorization requirements: User must be logged in
-
-### Frontend SPA
-
-This feature will be added to the existing auth-vue SPA.
 
 ### Frontend Pages
 
