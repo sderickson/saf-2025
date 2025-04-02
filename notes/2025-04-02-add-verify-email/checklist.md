@@ -39,13 +39,13 @@
 
 ## Frontend Layer
 
-- [ ] Add API Integration
+- [x] Add API Integration
 
-  - [ ] Add verifyEmail query to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
-  - [ ] Add resendVerification query to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
-  - [ ] Add tests
-  - [ ] Run `npm run test` in the auth-vue package
-  - [ ] **Review Point**
+  - [x] Add verifyEmail query to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [x] Add resendVerification query to [auth-vue/src/requests/auth.ts](/saflib/auth-vue/src/requests/auth.ts)
+  - [x] Add tests
+  - [x] Run `npm run test` in the auth-vue package
+  - [x] **Review Point**
 
 - [ ] Implement VerifyEmailPage Component
   - [ ] Create [auth-vue/src/components/VerifyEmailPage.vue](/saflib/auth-vue/src/components/VerifyEmailPage.vue)
