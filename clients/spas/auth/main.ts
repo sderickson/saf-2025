@@ -5,7 +5,7 @@ import { createApp } from "vue";
 import App from "./AuthApp.vue";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
-import { router } from "./router";
+import { defaultRouter } from "@saflib/auth-vue";
 import { VueQueryPlugin } from "@tanstack/vue-query";
 
 const vuetify = createVuetify({
@@ -21,6 +21,6 @@ const vuetify = createVuetify({
 const app = createApp(App);
 app
   .use(vuetify)
-  .use(router)
+  .use(defaultRouter)
   .use(VueQueryPlugin, { enableDevtoolsV6Plugin: true })
   .mount("#app");
