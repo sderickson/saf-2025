@@ -12,12 +12,21 @@
 
 ## API Spec Layer
 
-- [ ] Update OpenAPI Specification
-  - [ ] Add verification endpoints to [auth-spec/routes/auth.yaml](/saflib/auth-spec/routes/auth.yaml)
-  - [ ] Generate types with `npm run generate`
-  - [ ] **Review Point**
+- [x] Update OpenAPI Specification
+  - [x] Add verification endpoints to [auth-spec/routes/auth.yaml](/saflib/auth-spec/routes/auth.yaml)
+  - [x] Generate types with `npm run generate`
+  - [x] **Review Point**
 
 ## API Layer
+
+- [x] Implement Database Queries
+
+  - [x] Add verifyEmail query to [auth-db/src/queries/email-auth.ts](/saflib/auth-db/src/queries/email-auth.ts)
+  - [x] Add getByVerificationToken query to [auth-db/src/queries/email-auth.ts](/saflib/auth-db/src/queries/email-auth.ts)
+  - [x] Add updateVerificationToken query to [auth-db/src/queries/email-auth.ts](/saflib/auth-db/src/queries/email-auth.ts)
+  - [x] Add tests
+  - [x] Run `npm run test` in the auth-db package
+  - [x] **Review Point**
 
 - [ ] Implement Verification Endpoint
   - [ ] Add verify-email route to [auth-service/routes/auth.ts](/saflib/auth-service/routes/auth.ts)

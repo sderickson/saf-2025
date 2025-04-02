@@ -13,6 +13,7 @@ This feature adds email verification functionality to the authentication system.
 ### Backend
 
 - `/saflib/auth-service/routes/auth.ts` - Add route handlers for email verification and resending verification
+- `/saflib/auth-db/src/queries/email-auth.ts` - Add queries for email verification
 
 ### Frontend
 
@@ -35,6 +36,14 @@ No schema updates required - we'll use the existing `emailAuth` table which alre
 - `verificationToken`
 - `verificationTokenExpiresAt`
 - `verifiedAt`
+
+### Database Queries
+
+We need to add the following queries to `email-auth.ts`:
+
+1. `verifyEmail` - Update verification status and clear token
+2. `getByVerificationToken` - Find user by verification token
+3. `updateVerificationToken` - Set new verification token and expiration
 
 ### API Endpoints
 
