@@ -59,13 +59,9 @@
 
 ### Testing Phase
 
-- [ ] Test end-to-end
+- [SKIP] Test end-to-end
 
-  - [ ] Create production docker images
-  - [ ] Run existing e2e tests
-  - [ ] Create new e2e tests for verification flow
-  - [ ] Run `npm run test` in the e2e package
-  - [ ] **Review Point**
+  - no 3rd party integration testing yet
 
 - [ ] Make sure everything still works
   - [ ] Run `npm run test` from the root of the monorepo
