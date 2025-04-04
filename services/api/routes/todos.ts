@@ -1,6 +1,6 @@
 import express from "express";
 import { todos, TodoNotFoundError } from "@saf-2025/dbs-main";
-import type { RequestSchema, ResponseSchema } from "@saf-2025/specs-apis";
+import type { ApiRequestSchema, ApiResponseSchema } from "@saf-2025/specs-apis";
 import { createHandler } from "@saflib/node-express";
 const router = express.Router();
 
@@ -22,10 +22,10 @@ router.post(
   "/",
   createHandler(async (req, res, next) => {
     try {
-      const { title } = req.body as RequestSchema<"createTodo">;
+      const { title } = req.body as ApiRequestSchema["createTodo"];
       const todo = await todos.createTodo(title);
       // Convert Date to ISO string for API response
-      const responseTodo: ResponseSchema<"createTodo", 201> = {
+      const responseTodo: ApiResponseSchema["createTodo"]["201"] = {
         ...todo,
         createdAt: todo.createdAt.toISOString(),
       };
@@ -42,10 +42,10 @@ router.put(
   createHandler(async (req, res, next) => {
     try {
       const id = parseInt(req.params.id, 10);
-      const { title, completed } = req.body as RequestSchema<"updateTodo">;
+      const { title, completed } = req.body as ApiRequestSchema["updateTodo"];
       const todo = await todos.updateTodo(id, title, completed);
       // Convert Date to ISO string for API response
-      const responseTodo: ResponseSchema<"updateTodo", 200> = {
+      const responseTodo: ApiResponseSchema["updateTodo"]["200"] = {
         ...todo,
         createdAt: todo.createdAt.toISOString(),
       };
