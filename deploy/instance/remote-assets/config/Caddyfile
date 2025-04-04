@@ -69,6 +69,7 @@
 			uri /auth/verify
 			header_up X-Request-ID {http.request.uuid}
 			copy_headers X-User-ID X-User-Email X-User-Scopes
+			header_up X-Csrf-Token {http.request.header.X-CSRF-Token}
 		}
 		reverse_proxy api:3000 {
 			import reverse_proxy_common
@@ -82,7 +83,7 @@
 	}
 
 	handle @docs {
-		{$DISABLE_VITE_DEV_SERVER} reverse_proxy docs:5173
+		{$DISABLE_VITE_DEV_SERVER} reverse_proxy docs:5173 
 
 		{$DISABLE_CADDY_PROD_SERVER} import serve_docs
 	}
