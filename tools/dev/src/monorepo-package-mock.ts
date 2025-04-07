@@ -1,3 +1,11 @@
+const DockerfileTemplate = `
+FROM node:20-alpine
+WORKDIR /app
+{{ copy_packages }}
+npm install --omit=dev
+{{ copy_folders }}
+`;
+
 export const monorepoPackageMock = {
   // Root package.json
   "/app/package.json": JSON.stringify({
@@ -7,6 +15,7 @@ export const monorepoPackageMock = {
 
   // Clients
   "/app/clients/.DS_Store": "",
+  "/app/clients/web-www/Dockerfile.template": DockerfileTemplate,
   "/app/clients/web-www/package.json": JSON.stringify({
     name: "@foo/www-web-client",
     dependencies: {

@@ -5,19 +5,47 @@ export function generateDockerfile(path: string) {
   return readFileSync(path, "utf-8");
 }
 
+// for documentation purposes
+type packageName = string;
+type directoryPath = string;
+
 interface PackageJson {
-  name: string;
+  name: packageName;
   workspaces?: string[];
   dependencies?: Record<string, string>;
 }
 
 interface MonorepoPackageJsons {
-  [key: string]: PackageJson;
+  [key: packageName]: PackageJson;
 }
 
-export function getMonorepoPackageJsons(rootDir: string): MonorepoPackageJsons {
-  const monorepoPackageJsons: MonorepoPackageJsons = {};
+interface MonorepoPackageDirectories {
+  [key: packageName]: directoryPath;
+}
 
+interface WorkspaceDependencyGraph {
+  [key: packageName]: packageName[];
+}
+
+interface MonorepoContext {
+  rootDir: string;
+  packages: Set<packageName>;
+  monorepoPackageJsons: MonorepoPackageJsons;
+  workspaceDependencyGraph: WorkspaceDependencyGraph;
+  monorepoPackageDirectories: MonorepoPackageDirectories;
+  packagesWithDockerfileTemplates: Set<packageName>;
+}
+
+export function getMonorepoPackages(
+  rootDir: string,
+): Pick<
+  MonorepoContext,
+  "monorepoPackageJsons" | "monorepoPackageDirectories"
+> {
+  const monorepoPackageJsons: MonorepoPackageJsons = {};
+  const monorepoPackageDirectories: MonorepoPackageDirectories = {};
+
+  // root package
   const packageJsonPath = path.join(rootDir, "package.json");
   if (!existsSync(packageJsonPath)) {
     throw new Error("package.json not found");
@@ -26,9 +54,11 @@ export function getMonorepoPackageJsons(rootDir: string): MonorepoPackageJsons {
     readFileSync(packageJsonPath, "utf-8"),
   ) as PackageJson;
   monorepoPackageJsons[rootPackageJson.name] = rootPackageJson;
+  monorepoPackageDirectories[rootPackageJson.name] = rootDir;
 
+  // workspaces
   const workspaces = rootPackageJson.workspaces ?? [];
-  const workspacePackageJsonPaths: string[] = [];
+  const workspacePackageDirectories: directoryPath[] = [];
 
   for (const workspace of workspaces) {
     if (workspace.endsWith("/*")) {
@@ -39,29 +69,31 @@ export function getMonorepoPackageJsons(rootDir: string): MonorepoPackageJsons {
           statSync(path.join(workspacesDir, folder)).isDirectory(),
         );
       for (const workspaceFolder of workspacesFolders) {
-        workspacePackageJsonPaths.push(
-          path.join(workspacesDir, workspaceFolder, "package.json"),
+        workspacePackageDirectories.push(
+          path.join(workspacesDir, workspaceFolder),
         );
       }
     } else {
-      workspacePackageJsonPaths.push(
-        path.join(rootDir, workspace, "package.json"),
-      );
+      workspacePackageDirectories.push(path.join(rootDir, workspace));
     }
   }
 
-  for (const workspacePackageJsonPath of workspacePackageJsonPaths) {
+  for (const workspacePackageDirectory of workspacePackageDirectories) {
     const workspacePackageJson = JSON.parse(
-      readFileSync(workspacePackageJsonPath, "utf-8"),
+      readFileSync(
+        path.join(workspacePackageDirectory, "package.json"),
+        "utf-8",
+      ),
     ) as PackageJson;
     monorepoPackageJsons[workspacePackageJson.name] = workspacePackageJson;
+    monorepoPackageDirectories[workspacePackageJson.name] =
+      workspacePackageDirectory;
   }
 
-  return monorepoPackageJsons;
-}
-
-interface WorkspaceDependencyGraph {
-  [key: string]: string[];
+  return {
+    monorepoPackageJsons,
+    monorepoPackageDirectories,
+  };
 }
 
 export function buildWorkspaceDependencyGraph(
@@ -76,4 +108,41 @@ export function buildWorkspaceDependencyGraph(
   }
 
   return dependencyGraph;
+}
+
+export function findPackagesWithDockerfileTemplates(
+  monorepoPackageDirectories: MonorepoPackageDirectories,
+): string[] {
+  const packageList: string[] = [];
+
+  for (const packageName of Object.keys(monorepoPackageDirectories)) {
+    const packageDirectory = monorepoPackageDirectories[packageName];
+    const dockerfileTemplatePath = path.join(
+      packageDirectory,
+      "Dockerfile.template",
+    );
+    if (existsSync(dockerfileTemplatePath)) {
+      packageList.push(packageName);
+    }
+  }
+
+  return packageList;
+}
+
+export function buildMonorepoContext(rootDir: string): MonorepoContext {
+  const { monorepoPackageJsons, monorepoPackageDirectories } =
+    getMonorepoPackages(rootDir);
+  const workspaceDependencyGraph =
+    buildWorkspaceDependencyGraph(monorepoPackageJsons);
+
+  return {
+    rootDir,
+    packages: new Set(Object.keys(monorepoPackageJsons)),
+    monorepoPackageJsons,
+    workspaceDependencyGraph,
+    monorepoPackageDirectories,
+    packagesWithDockerfileTemplates: new Set(
+      findPackagesWithDockerfileTemplates(monorepoPackageDirectories),
+    ),
+  };
 }

@@ -1,4 +1,4 @@
-import { getMonorepoPackageJsons } from "./src/generate-dockerfile.ts";
+import { buildMonorepoContext } from "./src/generate-dockerfile.ts";
 
-const packageJsons = getMonorepoPackageJsons("../../");
-console.log(packageJsons);
+const monorepoContext = buildMonorepoContext("../../");
+console.log(monorepoContext);

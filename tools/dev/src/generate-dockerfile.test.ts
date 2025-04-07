@@ -2,8 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { vol } from "memfs";
 import {
   // generateDockerfile,
-  getMonorepoPackageJsons,
+  getMonorepoPackages,
   buildWorkspaceDependencyGraph,
+  findPackagesWithDockerfileTemplates,
 } from "./generate-dockerfile.ts";
 import { monorepoPackageMock } from "./monorepo-package-mock.ts";
 vi.mock("node:fs");
@@ -17,56 +18,43 @@ afterEach(() => {
   vol.reset();
 });
 
-// describe("generateDockerfile", () => {
-//   it("should generate a Dockerfile", () => {
-//     expect(true).toBe(true);
-//   });
-// });
-
-// it("should return correct text", () => {
-//   {
-//     const path = "/hello-world.txt";
-//     fs.writeFileSync(path, "hello world");
-
-//     const text = generateDockerfile(path);
-//     expect(text).toBe("hello world");
-//   }
-
-//   {
-//     const path = "/app/package.json";
-//     const text = generateDockerfile(path);
-//     expect(text).toContain("@foo/foo");
-//   }
-// });
-
 describe("getMonorepoPackageJsons", () => {
   it("should return all workspace packages", () => {
-    const packageJsons = getMonorepoPackageJsons("/app");
-    expect(packageJsons).toBeDefined();
-    expect(packageJsons["@foo/foo"]).toBeDefined();
-    expect(packageJsons["@foo/foo"].workspaces).toBeDefined();
+    const { monorepoPackageJsons } = getMonorepoPackages("/app");
+    expect(monorepoPackageJsons).toBeDefined();
+    expect(monorepoPackageJsons["@foo/foo"]).toBeDefined();
+    expect(monorepoPackageJsons["@foo/foo"].workspaces).toBeDefined();
 
     // it should gather specific packages listed in workspaces
-    expect(packageJsons["@foo/main-db"]).toBeDefined();
+    expect(monorepoPackageJsons["@foo/main-db"]).toBeDefined();
     expect(
-      packageJsons["@foo/main-db"].dependencies?.["third-party-lib"],
+      monorepoPackageJsons["@foo/main-db"].dependencies?.["third-party-lib"],
     ).toBeDefined();
 
     // it should gather packages in sub-folders
-    expect(packageJsons["@foo/api-service"]).toBeDefined();
-    expect(packageJsons["@saflib/node-express"]).toBeDefined();
+    expect(monorepoPackageJsons["@foo/api-service"]).toBeDefined();
+    expect(monorepoPackageJsons["@saflib/node-express"]).toBeDefined();
   });
 });
 
 describe("buildWorkspaceDependencyGraph", () => {
   it("should return the correct dependency graph", () => {
-    const dependencyGraph = buildWorkspaceDependencyGraph(
-      getMonorepoPackageJsons("/app"),
-    );
+    const { monorepoPackageJsons } = getMonorepoPackages("/app");
+    const dependencyGraph = buildWorkspaceDependencyGraph(monorepoPackageJsons);
     expect(dependencyGraph).toBeDefined();
     expect(dependencyGraph["@foo/auth-web-client"]).toStrictEqual([
       "@saflib/vue-spa",
       "@saflib/auth-vue",
     ]);
+  });
+});
+
+describe("findPackagesWithDockerfileTemplates", () => {
+  it("should return the correct packages", () => {
+    const { monorepoPackageDirectories } = getMonorepoPackages("/app");
+    const packages = findPackagesWithDockerfileTemplates(
+      monorepoPackageDirectories,
+    );
+    expect(packages).toStrictEqual(["@foo/www-web-client"]);
   });
 });
