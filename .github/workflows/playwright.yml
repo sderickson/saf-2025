@@ -18,7 +18,7 @@ jobs:
       - name: Install submodules
         run: git submodule update --init
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       - name: Pre-build images
         run: npm run build
         working-directory: ./deploy/instance
