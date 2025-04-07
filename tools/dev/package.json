@@ -1,0 +1,15 @@
+{
+  "name": "@saflib/dev-tools",
+  "description": "Tools for software development",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "generate": "node --experimental-strip-types ./generate-dockerfile.ts"
+  },
+  "dependencies": {
+    "@saflib/vitest": "*"
+  }
+}

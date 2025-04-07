@@ -16,7 +16,8 @@
     "dbs/*",
     "saflib/*",
     "services/*",
-    "specs/*"
+    "specs/*",
+    "tools/dev"
   ],
   "engines": {
     "node": ">=22"
