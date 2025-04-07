@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@saf-2025/dbs-main": "*",
+    "@saf-2025/specs-apis": "*",
     "@saflib/node-express": "*",
-    "@saf-2025/specs-apis": "*"
+    "nodemailer": "^6.10.0"
   },
   "devDependencies": {
-    "@saflib/node-express-dev": "*"
+    "@saflib/node-express-dev": "*",
+    "@types/nodemailer": "^6.4.17"
   }
 }
