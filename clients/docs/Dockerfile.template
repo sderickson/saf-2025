@@ -6,5 +6,8 @@ WORKDIR /app
 RUN npm install --omit=dev
 #{ copy_src }#
 
+# Make the documentation accessible to vitepress
+COPY ./saflib ./saflib
+
 # # Vue app setup
 WORKDIR /app/clients/docs
