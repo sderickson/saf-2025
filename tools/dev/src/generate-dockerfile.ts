@@ -185,7 +185,6 @@ export function generateDockerfiles(monorepoContext: MonorepoContext): void {
       },
     );
     const copyPackageJsonCommand = `COPY --parents ./package.json ./package-lock.json ${packageJsonRelativePaths.join(" ")} ./`;
-    console.log(copyPackageJsonCommand);
 
     const copySrcCommand = `COPY --parents ${packageRelativePaths.join(" ")} ./`;
 
