@@ -3,7 +3,7 @@
   "scripts": {
     "generate": "generate-dockerfiles ../..",
     "dev": "docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up --watch",
-    "test": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
+    "test-compose": "docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
     "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up  --force-recreate",
     "exec-remote": "source .env.remote && ssh $SSH_HOSTNAME 'bash -s'",
     "build": "cd ../.. && ./deploy/instance/local-scripts/build.sh",
