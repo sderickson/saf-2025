@@ -4,7 +4,7 @@
     "generate": "generate-dockerfiles ../..",
     "dev": "npm run generate && docker compose --env-file .env.dev -f docker-compose.base.yaml -f docker-compose.dev.yaml up --watch",
     "test-compose": "npm run generate && docker compose --env-file .env.test -f docker-compose.base.yaml -f docker-compose.test.yaml up",
-    "prod-local": "npm run generate && docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up  --force-recreate",
+    "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up  --force-recreate",
     "exec-remote": "source .env.remote && ssh $SSH_HOSTNAME 'bash -s'",
     "build": "npm run generate && cd ../.. && ./deploy/instance/local-scripts/build.sh",
     "build-no-generate": "cd ../.. && ./deploy/instance/local-scripts/build.sh",
