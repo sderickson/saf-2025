@@ -10,6 +10,7 @@
     "generate": "node --experimental-strip-types ./generate-dockerfile.ts"
   },
   "dependencies": {
-    "@saflib/vitest": "*"
+    "@saflib/vitest": "*",
+    "memfs": "^4.17.0"
   }
 }
