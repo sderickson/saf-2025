@@ -18,9 +18,9 @@ jobs:
       - name: Install submodules
         run: git submodule update --init
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Pre-build images
-        run: npm run build
+        run: npm run build-no-generate
         working-directory: ./deploy/instance
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

@@ -7,6 +7,7 @@
     "prod-local": "npm run generate && docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up  --force-recreate",
     "exec-remote": "source .env.remote && ssh $SSH_HOSTNAME 'bash -s'",
     "build": "npm run generate && cd ../.. && ./deploy/instance/local-scripts/build.sh",
+    "build-no-generate": "cd ../.. && ./deploy/instance/local-scripts/build.sh",
     "push": "cd ../.. && ./deploy/instance/local-scripts/push.sh",
     "sync": "source .env.remote && cd ../.. && ./deploy/instance/local-scripts/sync.sh",
     "remote-purge": "npm run exec-remote < ./remote-scripts/purge.sh",
