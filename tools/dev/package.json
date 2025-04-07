@@ -7,7 +7,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "generate": "node --experimental-strip-types ./generate-dockerfile.ts"
+    "generate": "node --experimental-strip-types ./generate.ts"
   },
   "dependencies": {
     "@saflib/vitest": "*",
