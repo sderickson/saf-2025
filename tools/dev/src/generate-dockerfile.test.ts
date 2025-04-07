@@ -3,6 +3,7 @@ import { vol } from "memfs";
 import {
   // generateDockerfile,
   getMonorepoPackageJsons,
+  buildWorkspaceDependencyGraph,
 } from "./generate-dockerfile.ts";
 import { monorepoPackageMock } from "./monorepo-package-mock.ts";
 vi.mock("node:fs");
@@ -39,11 +40,33 @@ afterEach(() => {
 // });
 
 describe("getMonorepoPackageJsons", () => {
-  it("should return the correct package.json", () => {
+  it("should return all workspace packages", () => {
     const packageJsons = getMonorepoPackageJsons("/app");
     expect(packageJsons).toBeDefined();
     expect(packageJsons["@foo/foo"]).toBeDefined();
     expect(packageJsons["@foo/foo"].workspaces).toBeDefined();
-    expect(packageJsons["@foo/foo"].workspaces.length).toBe(5);
+
+    // it should gather specific packages listed in workspaces
+    expect(packageJsons["@foo/main-db"]).toBeDefined();
+    expect(
+      packageJsons["@foo/main-db"].dependencies?.["third-party-lib"],
+    ).toBeDefined();
+
+    // it should gather packages in sub-folders
+    expect(packageJsons["@foo/api-service"]).toBeDefined();
+    expect(packageJsons["@saflib/node-express"]).toBeDefined();
+  });
+});
+
+describe("buildWorkspaceDependencyGraph", () => {
+  it("should return the correct dependency graph", () => {
+    const dependencyGraph = buildWorkspaceDependencyGraph(
+      getMonorepoPackageJsons("/app"),
+    );
+    expect(dependencyGraph).toBeDefined();
+    expect(dependencyGraph["@foo/auth-web-client"]).toStrictEqual([
+      "@saflib/vue-spa",
+      "@saflib/auth-vue",
+    ]);
   });
 });

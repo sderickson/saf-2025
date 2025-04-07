@@ -2,7 +2,7 @@ export const monorepoPackageMock = {
   // Root package.json
   "/app/package.json": JSON.stringify({
     name: "@foo/foo",
-    workspaces: ["clients/*", "dbs/*", "saflib/*", "services/*", "specs/*"],
+    workspaces: ["clients/*", "dbs", "saflib/*", "services/*", "specs/*"],
   }),
 
   // Clients
@@ -18,6 +18,14 @@ export const monorepoPackageMock = {
     dependencies: {
       "@saflib/vue-spa": "*",
       "@saflib/auth-vue": "*",
+    },
+  }),
+
+  // Dbs
+  "/app/dbs/package.json": JSON.stringify({
+    name: "@foo/main-db",
+    dependencies: {
+      "third-party-lib": "3.2.1",
     },
   }),
 
@@ -39,28 +47,25 @@ export const monorepoPackageMock = {
   "/app/saflib/auth-vue/package.json": JSON.stringify({
     name: "@saflib/auth-vue",
     dependencies: {
-      "@saflib/vue-spa": "*",
       "third-party-lib": "3.2.1",
+      "@saflib/vue-spa": "*",
       "@saflib/auth-spec": "*",
     },
   }),
   "/app/saflib/openapi-specs/package.json": JSON.stringify({
     name: "@saflib/openapi-specs",
     dependencies: {
-      "third-party-lib": "3.2.1",
+      "third-party-lib2": "6.5.4",
     },
   }),
   "/app/saflib/node-express/package.json": JSON.stringify({
     name: "@saflib/node-express",
-    dependencies: {
-      "third-party-lib": "3.2.1",
-    },
+  }),
+  "/app/saflib/unused-lib/package.json": JSON.stringify({
+    name: "@saflib/unused-lib",
   }),
   "/app/saflib/vue-spa/package.json": JSON.stringify({
     name: "@saflib/vue-spa",
-    dependencies: {
-      "third-party-lib": "3.2.1",
-    },
   }),
 
   // Services
@@ -69,6 +74,7 @@ export const monorepoPackageMock = {
     dependencies: {
       "@foo/api-spec": "*",
       "@saflib/node-express": "*",
+      "@foo/main-db": "*",
     },
   }),
   "/app/services/auth/package.json": JSON.stringify({
