@@ -3,9 +3,9 @@ FROM node:22-slim
 
 # install saflib
 WORKDIR /app
-COPY --parents ./package.json ./package-lock.json ./specs/apis/package.json ./
+#{ copy_packages }#
 RUN npm install
-COPY --parents ./specs/apis ./
+#{ copy_src }#
 
 WORKDIR /app/specs/apis
 RUN npm run generate
