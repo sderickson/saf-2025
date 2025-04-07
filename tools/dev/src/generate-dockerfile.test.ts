@@ -5,6 +5,8 @@ import {
   getMonorepoPackages,
   buildWorkspaceDependencyGraph,
   findPackagesWithDockerfileTemplates,
+  getAllPackageWorkspaceDependencies,
+  buildMonorepoContext,
 } from "./generate-dockerfile.ts";
 import { monorepoPackageMock } from "./monorepo-package-mock.ts";
 vi.mock("node:fs");
@@ -56,5 +58,23 @@ describe("findPackagesWithDockerfileTemplates", () => {
       monorepoPackageDirectories,
     );
     expect(packages).toStrictEqual(["@foo/www-web-client"]);
+  });
+});
+
+describe("getAllPackageWorkspaceDependencies", () => {
+  it("should return the correct dependencies", () => {
+    const context = buildMonorepoContext("/app");
+    const dependencies = getAllPackageWorkspaceDependencies(
+      "@foo/auth-web-client",
+      context,
+    );
+    expect(dependencies).toStrictEqual(
+      new Set([
+        "@saflib/vue-spa",
+        "@saflib/auth-vue",
+        "@saflib/auth-spec",
+        "@saflib/openapi-specs",
+      ]),
+    );
   });
 });

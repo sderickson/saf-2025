@@ -147,3 +147,28 @@ export function buildMonorepoContext(rootDir: string): MonorepoContext {
     ),
   };
 }
+
+export function getAllPackageWorkspaceDependencies(
+  packageName: packageName,
+  monorepoContext: MonorepoContext,
+): Set<packageName> {
+  let flattenedDependencies = new Set(
+    monorepoContext.workspaceDependencyGraph[packageName],
+  );
+  for (const dependency of flattenedDependencies) {
+    flattenedDependencies = flattenedDependencies.union(
+      getAllPackageWorkspaceDependencies(dependency, monorepoContext),
+    );
+  }
+  return flattenedDependencies;
+}
+
+export function generateDockerfiles(monorepoContext: MonorepoContext): void {
+  for (const packageName of monorepoContext.packagesWithDockerfileTemplates) {
+    const dependencies = getAllPackageWorkspaceDependencies(
+      packageName,
+      monorepoContext,
+    );
+    console.log(dependencies);
+  }
+}
