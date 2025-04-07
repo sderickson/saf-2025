@@ -11,10 +11,11 @@
     "serve": "serve dist -p 3000",
     "generate-and-serve": "npm run generate && npm run serve"
   },
-  "devDependencies": {
-    "@saflib/openapi-specs": "*"
-  },
   "files": [
     "dist"
-  ]
+  ],
+  "devDependencies": {
+    "@saflib/openapi-specs": "*",
+    "yaml": "^2.7.1"
+  }
 }
