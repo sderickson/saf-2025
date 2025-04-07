@@ -1,13 +1,14 @@
 # syntax=docker/dockerfile:labs
 FROM oven/bun:latest
 
+RUN ls
+
 # install saflib
 WORKDIR /app
 COPY tsconfig.json ./
 
 # copy packages
 #{ copy_packages }#
-COPY --parents ./saflib/node-express-dev/package.json ./saflib/drizzle-sqlite3-dev/package.json ./saflib/vitest/package.json ./saflib/openapi-specs/package.json ./
 COPY ./bun.lockb ./bun.lockb
 
 RUN bun install --filter ./services/api --production
