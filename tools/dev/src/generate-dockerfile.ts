@@ -130,13 +130,14 @@ export function findPackagesWithDockerfileTemplates(
 }
 
 export function buildMonorepoContext(rootDir: string): MonorepoContext {
+  const rootDirResolved = path.resolve(rootDir);
   const { monorepoPackageJsons, monorepoPackageDirectories } =
-    getMonorepoPackages(rootDir);
+    getMonorepoPackages(rootDirResolved);
   const workspaceDependencyGraph =
     buildWorkspaceDependencyGraph(monorepoPackageJsons);
 
   return {
-    rootDir,
+    rootDir: rootDirResolved,
     packages: new Set(Object.keys(monorepoPackageJsons)),
     monorepoPackageJsons,
     workspaceDependencyGraph,
