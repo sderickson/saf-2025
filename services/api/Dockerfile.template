@@ -11,7 +11,7 @@ COPY tsconfig.json ./
 RUN npm install --omit=dev
 
 # Copy source files
-#{ copy_folders }#
+#{ copy_src }#
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]
 WORKDIR /app/services/api

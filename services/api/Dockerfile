@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:labs
 FROM node:22-slim
 
 # install saflib
@@ -5,18 +6,12 @@ WORKDIR /app
 COPY tsconfig.json ./
 
 # copy packages
-COPY package*.json ./
-COPY saflib/ ./saflib/
-COPY services/api/package*.json ./services/api/
-COPY dbs/main/package*.json ./dbs/main/
-COPY specs/apis/package*.json ./specs/apis/
+COPY --parents ./package.json ./package-lock.json ./dbs/main/package.json ./saflib/node-express/package.json ./specs/apis/package.json ./saflib/drizzle-sqlite3/package.json ./services/api/package.json ./
 
 RUN npm install --omit=dev
 
 # Copy source files
-COPY dbs/main ./dbs/main
-COPY services/api ./services/api
-COPY specs/apis/ ./specs/apis/
+COPY --parents ./dbs/main ./saflib/node-express ./specs/apis ./saflib/drizzle-sqlite3 ./services/api ./
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 CMD ["npm", "run", "healthcheck"]
 WORKDIR /app/services/api

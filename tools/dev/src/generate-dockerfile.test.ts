@@ -7,8 +7,9 @@ import {
   findPackagesWithDockerfileTemplates,
   getAllPackageWorkspaceDependencies,
   buildMonorepoContext,
+  generateDockerfiles,
 } from "./generate-dockerfile.ts";
-import { monorepoPackageMock } from "./monorepo-package-mock.ts";
+import { monorepoPackageMock } from "./monorepo-package.mock.ts";
 vi.mock("node:fs");
 vi.mock("node:fs/promises");
 
@@ -57,7 +58,12 @@ describe("findPackagesWithDockerfileTemplates", () => {
     const packages = findPackagesWithDockerfileTemplates(
       monorepoPackageDirectories,
     );
-    expect(packages).toStrictEqual(["@foo/www-web-client"]);
+    expect(packages).toStrictEqual([
+      "@foo/auth-web-client",
+      "@foo/www-web-client",
+      "@foo/api-service",
+      "@foo/auth-service",
+    ]);
   });
 });
 
@@ -76,5 +82,12 @@ describe("getAllPackageWorkspaceDependencies", () => {
         "@saflib/openapi-specs",
       ]),
     );
+  });
+});
+
+describe("generateDockerfiles", () => {
+  it("should generate the correct dockerfiles", () => {
+    const context = buildMonorepoContext("/app");
+    generateDockerfiles(context);
   });
 });

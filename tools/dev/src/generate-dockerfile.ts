@@ -1,9 +1,11 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import {
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
-
-export function generateDockerfile(path: string) {
-  return readFileSync(path, "utf-8");
-}
 
 // for documentation purposes
 type packageName = string;
@@ -165,10 +167,45 @@ export function getAllPackageWorkspaceDependencies(
 
 export function generateDockerfiles(monorepoContext: MonorepoContext): void {
   for (const packageName of monorepoContext.packagesWithDockerfileTemplates) {
-    const dependencies = getAllPackageWorkspaceDependencies(
+    const packages = getAllPackageWorkspaceDependencies(
       packageName,
       monorepoContext,
     );
-    console.log(dependencies);
+    packages.add(packageName);
+
+    const packageRelativePaths = Array.from(packages).map((packageName) => {
+      const packageDirectory =
+        monorepoContext.monorepoPackageDirectories[packageName];
+      return "./" + path.relative(monorepoContext.rootDir, packageDirectory);
+    });
+
+    const packageJsonRelativePaths = packageRelativePaths.map(
+      (packageRelativePath) => {
+        return "./" + path.join(packageRelativePath, "package.json");
+      },
+    );
+    const copyPackageJsonCommand = `COPY --parents ./package.json ./package-lock.json ${packageJsonRelativePaths.join(" ")} ./`;
+    console.log(copyPackageJsonCommand);
+
+    const copySrcCommand = `COPY --parents ${packageRelativePaths.join(" ")} ./`;
+
+    const dockerTemplate = readFileSync(
+      path.join(
+        monorepoContext.monorepoPackageDirectories[packageName],
+        "Dockerfile.template",
+      ),
+      "utf-8",
+    );
+    const dockerfileContents = dockerTemplate
+      .replace("#{ copy_packages }#", copyPackageJsonCommand)
+      .replace("#{ copy_src }#", copySrcCommand);
+
+    writeFileSync(
+      path.join(
+        monorepoContext.monorepoPackageDirectories[packageName],
+        "Dockerfile",
+      ),
+      dockerfileContents,
+    );
   }
 }

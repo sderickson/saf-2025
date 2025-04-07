@@ -1,9 +1,9 @@
 const DockerfileTemplate = `
 FROM node:20-alpine
 WORKDIR /app
-{{ copy_packages }}
+#{ copy_packages }#
 npm install --omit=dev
-{{ copy_folders }}
+#{ copy_src }#
 `;
 
 export const monorepoPackageMock = {
@@ -23,6 +23,7 @@ export const monorepoPackageMock = {
       "@foo/custom-lib": "*",
     },
   }),
+  "/app/clients/web-auth/Dockerfile.template": DockerfileTemplate,
   "/app/clients/web-auth/package.json": JSON.stringify({
     name: "@foo/auth-web-client",
     dependencies: {
@@ -80,6 +81,7 @@ export const monorepoPackageMock = {
   }),
 
   // Services
+  "/app/services/api/Dockerfile.template": DockerfileTemplate,
   "/app/services/api/package.json": JSON.stringify({
     name: "@foo/api-service",
     dependencies: {
@@ -88,6 +90,7 @@ export const monorepoPackageMock = {
       "@foo/main-db": "*",
     },
   }),
+  "/app/services/auth/Dockerfile.template": DockerfileTemplate,
   "/app/services/auth/package.json": JSON.stringify({
     name: "@foo/auth-service",
     dependencies: {
