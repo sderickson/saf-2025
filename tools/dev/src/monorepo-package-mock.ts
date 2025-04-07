@@ -6,6 +6,7 @@ export const monorepoPackageMock = {
   }),
 
   // Clients
+  "/app/clients/.DS_Store": "",
   "/app/clients/web-www/package.json": JSON.stringify({
     name: "@foo/www-web-client",
     dependencies: {
@@ -38,6 +39,7 @@ export const monorepoPackageMock = {
   }),
 
   // Saflib
+  "/app/saflib/.github/some-file.txt": "",
   "/app/saflib/auth-spec/package.json": JSON.stringify({
     name: "@saflib/auth-spec",
     dependencies: {

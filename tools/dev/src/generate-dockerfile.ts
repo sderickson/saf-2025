@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 export function generateDockerfile(path: string) {
@@ -33,7 +33,11 @@ export function getMonorepoPackageJsons(rootDir: string): MonorepoPackageJsons {
   for (const workspace of workspaces) {
     if (workspace.endsWith("/*")) {
       const workspacesDir = path.join(rootDir, workspace.slice(0, -1));
-      const workspacesFolders = readdirSync(workspacesDir);
+      const workspacesFolders = readdirSync(workspacesDir)
+        .filter((folder) => !folder.startsWith("."))
+        .filter((folder) =>
+          statSync(path.join(workspacesDir, folder)).isDirectory(),
+        );
       for (const workspaceFolder of workspacesFolders) {
         workspacePackageJsonPaths.push(
           path.join(workspacesDir, workspaceFolder, "package.json"),
