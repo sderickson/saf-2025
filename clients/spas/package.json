@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -16,7 +16,8 @@
   "dependencies": {
     "@saflib/vue-spa": "*",
     "@saf-2025/specs-apis": "*",
-    "@saflib/auth-vue": "*"
+    "@saflib/auth-vue": "*",
+    "@saflib/monorepo": "*"
   },
   "devDependencies": {
     "@saflib/vue-spa-dev": "*"

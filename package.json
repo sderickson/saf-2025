@@ -14,10 +14,10 @@
   "workspaces": [
     "clients/*",
     "dbs/*",
+    "deploy/*",
     "saflib/*",
     "services/*",
-    "specs/*",
-    "tools/*"
+    "specs/*"
   ],
   "engines": {
     "node": ">=22"
