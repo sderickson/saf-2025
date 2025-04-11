@@ -43,7 +43,17 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
 
 - [ ] Confirm no schema changes needed as per [spec.md](./spec.md).
   - [ ] Review existing schema: `[schema.ts](/saflib/auth-db/src/schema.ts)`.
-- [ ] **Review Point**: Confirm no database migrations required.
+- [ ] Add Database Queries:
+  - [ ] Review existing queries in `[users.ts](/saflib/auth-db/src/queries/users.ts)`.
+  - [ ] Implement `getAllAdminView` query in `[users.ts](/saflib/auth-db/src/queries/users.ts)` to fetch specific columns sorted by `createdAt`.
+  - [ ] Implement `getUsersWithEmailAuth` query in `[users.ts](/saflib/auth-db/src/queries/users.ts)` to fetch user and email auth details for a list of IDs.
+- [ ] Add Tests for New Queries:
+  - [ ] Review DB testing documentation (e.g., `[testing-gotchas.md](../../saflib/drizzle-sqlite3-dev/docs/01-testing-gotchas.md)` if applicable).
+  - [ ] Add tests for `getAllAdminView` (check columns, sorting).
+  - [ ] Add tests for `getUsersWithEmailAuth` (check join, handling missing email auth).
+- [ ] Verify Database Layer:
+  - [ ] Run `npm run test` in `saflib/auth-db`.
+- [ ] **Review Point**: Confirm queries implementation, tests, and no database migrations required.
 
 #### 3. API Layer - Backend (`@saflib/auth-service`)
 
@@ -52,22 +62,18 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
   - [auth-architecture.md](../../saflib/auth-service/docs/auth-architecture.md)
 - [ ] Implement the `GET /auth/users` route handler:
   - [ ] Create `[auth-service/routes/auth-users-list.ts](/saflib/auth-service/routes/auth-users-list.ts)`.
-  - [ ] Add middleware to check for authentication (`isAuthenticated`).
-  - [ ] Add middleware/logic to check if the authenticated user is an admin (using `ADMIN_EMAILS` environment variable). Return 403 if not.
-  - [ ] Implement database query to fetch all users from the `users` table.
-  - [ ] Select only required fields: `id`, `createdAt`, `lastLoginAt`, `email`.
-  - [ ] Sort results by `createdAt` descending.
-  - [ ] Format the response according to the API spec.
-  - [ ] Add logging.
+  - [ ] Call the `getAllAdminView` database query from `@saflib/auth-db`.
+  - [ ] Format the successful response according to the API spec, using the data returned by `getAllAdminView`.
+  - [ ] Add logging for the request flow and potential errors.
 - [ ] Register the new route:
   - [ ] Import and use the new route handler in `[auth-service/routes/index.ts](/saflib/auth-service/routes/index.ts)`. Ensure it's added _after_ any necessary authentication middleware.
 - [ ] Add tests for the new route:
   - [ ] Review testing documentation: [testing-middleware.md](../../saflib/node-express-dev/docs/03-test-middleware.md).
   - [ ] Create tests for `auth-users-list.ts`:
-    - [ ] Test successful retrieval for admin users.
-    - [ ] Test 403 Forbidden for non-admin users.
+    - [ ] Test successful retrieval (200 OK) for admin users.
+    - [ ] Test 403 Forbidden for authenticated non-admin users.
     - [ ] Test 401 Unauthorized for unauthenticated requests.
-    - [ ] Test correct sorting and data format.
+    - [ ] Test that the response body matches the expected format and sorting from `getAllAdminView`.
   - [ ] Run `npm run test` in `saflib/auth-service`.
 - [ ] **Review Point**: Check route implementation, registration, admin checks, and tests.
 
@@ -75,10 +81,7 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
 
 - [ ] Create the new package `@saflib/admin-vue`:
   - [ ] Create directory `[saflib/admin-vue](/saflib/admin-vue/)`.
-  - [ ] Create `[admin-vue/package.json](/saflib/admin-vue/package.json)` (define dependencies like Vue).
-  - [ ] Create `[admin-vue/tsconfig.json](/saflib/admin-vue/tsconfig.json)`.
-  - [ ] Set up basic build/dev tooling (e.g., Vite library mode).
-  - [ ] Add `@saflib/admin-vue` to the root `package.json` workspaces.
+  - [ ] Follow `ts-packages.md` to create the package.
 - [ ] Implement the `UserList` component:
   - [ ] Review component documentation: [writing-components.md](../../saflib/vue-spa/docs/02-writing-components.md).
   - [ ] Create `[admin-vue/src/components/UserList.vue](/saflib/admin-vue/src/components/UserList.vue)`.
