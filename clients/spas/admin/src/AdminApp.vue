@@ -34,7 +34,6 @@
 import { ref } from "vue";
 import { useDisplay } from "vuetify";
 
-// AdminApp.vue - Main app component for the admin SPA
-const drawer = ref(false); // Keep drawer open by default for admin
 const { smAndUp } = useDisplay();
+const drawer = ref(smAndUp.value);
 </script>
