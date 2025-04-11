@@ -54,24 +54,23 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
 
 #### 3. API Layer - Backend (`@saflib/auth-service`)
 
-- [ ] Review relevant backend documentation:
+- [x] Review relevant backend documentation:
   - [adding-routes.md](../../saflib/node-express/docs/02-adding-routes.md)
-  - [auth-architecture.md](../../saflib/auth-service/docs/auth-architecture.md)
-- [ ] Implement the `GET /auth/users` route handler:
-  - [ ] Create `[auth-service/routes/auth-users-list.ts](/saflib/auth-service/routes/auth-users-list.ts)`.
-  - [ ] Call the `getAllAdminView` database query from `@saflib/auth-db`.
-  - [ ] Format the successful response according to the API spec, using the data returned by `getAllAdminView`.
-  - [ ] Add logging for the request flow and potential errors.
-- [ ] Register the new route:
-  - [ ] Import and use the new route handler in `[auth-service/routes/index.ts](/saflib/auth-service/routes/index.ts)`. Ensure it's added _after_ any necessary authentication middleware.
-- [ ] Add tests for the new route:
-  - [ ] Review testing documentation: [testing-middleware.md](../../saflib/node-express-dev/docs/03-test-middleware.md).
-  - [ ] Create tests for `auth-users-list.ts`:
-    - [ ] Test successful retrieval (200 OK) for admin users.
-    - [ ] Test 403 Forbidden for authenticated non-admin users.
-    - [ ] Test 401 Unauthorized for unauthenticated requests.
-    - [ ] Test that the response body matches the expected format and sorting from `getAllAdminView`.
-  - [ ] Run `npm run test` in `saflib/auth-service`.
+- [x] Implement the `GET /auth/users` route handler:
+  - [x] Create `[auth-service/routes/users/list.ts](/saflib/auth-service/routes/users/list.ts)`.
+  - [x] Call the `getAll` and `getEmailAuthByUserIds` database queries from `@saflib/auth-db`.
+  - [x] Format the successful response according to the API spec.
+  - [x] Implement admin scope check.
+- [x] Register the new route:
+  - [x] Import and use the new route handler in `[auth-service/routes/users/index.ts](/saflib/auth-service/routes/users/index.ts)`.
+- [x] Add tests for the new route:
+  - [x] Review testing documentation: [testing-middleware.md](../../saflib/node-express-dev/docs/03-test-middleware.md).
+  - [x] Create tests for `users/list.ts`:
+    - [x] Test successful retrieval (200 OK) for admin users.
+    - [x] Test 403 Forbidden for authenticated non-admin users.
+    - [x] Test 401 Unauthorized for unauthenticated requests.
+    - [x] Test that the response body matches the expected format and sorting.
+  - [x] Run `npm run test` in `saflib/auth-service`.
 - [ ] **Review Point**: Check route implementation, registration, admin checks, and tests.
 
 #### 4. Frontend Layer - Library (`@saflib/admin-vue`)
