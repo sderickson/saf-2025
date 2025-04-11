@@ -25,19 +25,18 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
 
 #### 1. API Spec Layer (`@saflib/auth-spec`)
 
-- [ ] Review API Spec documentation: [update-spec.md](../../saflib/openapi-specs/docs/03-updates.md)
-- [ ] Define the new endpoint in OpenAPI YAML format:
-  - [ ] Create `[auth-spec/routes/users.yaml](/saflib/auth-spec/routes/users.yaml)`
-  - [ ] Define `GET /auth/users` operation.
-  - [ ] Define request parameters (none for now).
-  - [ ] Define success response (200 OK) with the specified user array schema.
-  - [ ] Define error responses (401, 403).
-  - [ ] Add security requirement for `admin` scope (referencing `auth-service` security schemes).
-- [ ] Update the main OpenAPI definition:
-  - [ ] Add a reference to `users.yaml` in `[auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)`.
-- [ ] Generate updated types:
-  - [ ] Run `npm run build` in `saflib/auth-spec`.
-- [ ] **Review Point**: Check API spec changes and generated types.
+- [x] Define the new endpoint in OpenAPI YAML format:
+  - [x] Create `[auth-spec/routes/users.yaml](/saflib/auth-spec/routes/users.yaml)`
+  - [x] Define `GET /auth/users` operation.
+  - [x] Define request parameters (none for now).
+  - [x] Define success response (200 OK) with the specified user array schema.
+  - [x] Define error responses (401, 403).
+  - [x] Add security requirement for `users:read` scope (referencing `auth-service` security schemes).
+- [x] Update the main OpenAPI definition:
+  - [x] Add a reference to `users.yaml` in `[auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)`.
+- [x] Generate updated types:
+  - [x] Run `npm run generate` in `saflib/auth-spec`.
+- [x] **Review Point**: Check API spec changes and generated types.
 
 #### 2. Database Layer (`@saflib/auth-db`)
 
