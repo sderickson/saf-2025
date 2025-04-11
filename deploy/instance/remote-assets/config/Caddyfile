@@ -21,6 +21,9 @@
 	handle /app/* {
 		try_files /app/index.html
 	}
+	handle /admin/* {
+		try_files /admin/index.html
+	}
 	handle @no_extension {
 		try_files /index.html
 	}

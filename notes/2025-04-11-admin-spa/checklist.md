@@ -71,63 +71,44 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
     - [x] Test 401 Unauthorized for unauthenticated requests.
     - [x] Test that the response body matches the expected format and sorting.
   - [x] Run `npm run test` in `saflib/auth-service`.
-- [ ] **Review Point**: Check route implementation, registration, admin checks, and tests.
+- [x] **Review Point**: Check route implementation, registration, admin checks, and tests.
 
-#### 4. Frontend Layer - Library (`@saflib/admin-vue`)
-
-- [ ] Create the new package `@saflib/admin-vue`:
-  - [ ] Create directory `[saflib/admin-vue](/saflib/admin-vue/)`.
-  - [ ] Follow `ts-packages.md` to create the package.
-- [ ] Implement the `UserList` component:
-  - [ ] Review component documentation: [writing-components.md](../../saflib/vue-spa/docs/02-writing-components.md).
-  - [ ] Create `[admin-vue/src/components/UserList.vue](/saflib/admin-vue/src/components/UserList.vue)`.
-  - [ ] Component should accept a list of users as a prop.
-  - [ ] Display users in a table or list format (showing `id`, `email`, `createdAt`, `lastLoginAt`).
-  - [ ] Add basic styling.
-- [ ] Export the component:
-  - [ ] Create `[admin-vue/src/index.ts](/saflib/admin-vue/src/index.ts)` to export `UserList`.
-- [ ] Add tests for the `UserList` component:
-  - [ ] Review component testing documentation: [component-testing.md](../../saflib/vue-spa-dev/docs/component-testing.md).
-  - [ ] Create tests for `UserList.vue` (e.g., rendering props correctly).
-  - [ ] Run `npm run test` in `saflib/admin-vue`.
-- [ ] **Review Point**: Check package structure, component implementation, export, and tests.
-
-#### 5. Frontend Layer - SPA (`clients/spas/admin`)
+#### 4. Frontend Layer - SPA (`clients/spas/admin`)
 
 - [ ] Create the new `admin` SPA structure:
   - [ ] Create directory `[clients/spas/admin/](/clients/spas/admin/)`.
-  - [ ] Copy structure/config files from `[clients/spas/app/](/clients/spas/app/)` as a template:
-    - `package.json` (adjust name, add `@saflib/admin-vue` dependency)
-    - `vite.config.ts`
-    - `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`
-    - `index.html` (adjust title)
-    - `src/main.ts`
-    - `src/App.vue`
-    - `src/router.ts` (or similar routing setup)
-    - Set up basic assets/styles structure if needed.
-  - [ ] Add `admin` SPA to `[clients/spas/package.json](/clients/spas/package.json)` workspaces.
+  - [ ] Structure it similarly to `[clients/spas/app](/clients/spas/app/)`.
+- [ ] Set up Routing and Layout:
+  - [ ] Configure `[admin/src/router.ts](/clients/spas/admin/src/router.ts)` with routes for `/` (Dashboard) and `/users` (Users page).
+  - [ ] Create a basic layout in `[admin/src/App.vue](/clients/spas/admin/src/App.vue)` (e.g., top bar, left navigation).
+- [ ] Implement Dashboard Page:
+  - [ ] Create `[admin/src/pages/Dashboard.vue](/clients/spas/admin/src/pages/Dashboard.vue)`: Basic welcome message.
+- [ ] Implement Users Page and Navigation:
+  - [ ] Create `[admin/src/pages/Users.vue](/clients/spas/admin/src/pages/Users.vue)`.
+  - [ ] Add links to Dashboard and Users page in the `App.vue` navigation.
 - [ ] Implement TanStack Query for user list:
   - [ ] Review query documentation: [using-queries.md](../../saflib/vue-spa/docs/04-using-queries.md).
-  - [ ] Create a query function/hook (e.g., in `src/requests/users.ts`) to call `GET /auth/users`.
-  - [ ] Add appropriate query keys.
-  - [ ] Handle loading and error states.
-- [ ] Implement Pages:
-  - [ ] Create `[admin/src/pages/Dashboard.vue](/clients/spas/admin/src/pages/Dashboard.vue)`: Basic welcome, link to Users page.
-  - [ ] Create `[admin/src/pages/Users.vue](/clients/spas/admin/src/pages/Users.vue)`:
+  - [ ] Create a query function/hook (e.g., in `[admin/src/requests/users.ts](/clients/spas/admin/src/requests/users.ts)`) to call `GET /auth/users`.
+- [ ] Implement the `UserList` component within the SPA:
+  - [ ] Review component documentation: [writing-components.md](../../saflib/vue-spa/docs/02-writing-components.md).
+  - [ ] Create `[admin/src/components/UserList.vue](/clients/spas/admin/src/components/UserList.vue)`.
+  - [ ] Component should accept a list of users as a prop.
+  - [ ] Display users in a table or list format (showing `id`, `email`, `createdAt`, `lastLoginAt`).
+  - [ ] Add basic styling.
+- [ ] Integrate Query and Component in Users Page:
+  - [ ] In `[admin/src/pages/Users.vue](/clients/spas/admin/src/pages/Users.vue)`:
     - [ ] Use the TanStack query hook to fetch users.
     - [ ] Display loading/error states.
-    - [ ] On success, pass the user data to the `UserList` component (imported from `@saflib/admin-vue`).
-- [ ] Set up Routing:
-  - [ ] Configure `src/router.ts` (or equivalent) with routes for `/` (Dashboard) and `/users` (Users page).
-  - [ ] Add basic navigation in `src/App.vue` (e.g., links to Dashboard and Users).
+    - [ ] On success, pass the user data to the `UserList` component.
 - [ ] Add Tests:
   - [ ] Review testing docs:
     - [query-testing.md](../../saflib/vue-spa-dev/docs/query-testing.md)
     - [component-testing.md](../../saflib/vue-spa-dev/docs/component-testing.md)
   - [ ] Test TanStack query hook (mocking API calls).
+  - [ ] Test `UserList.vue` component (e.g., rendering props correctly).
   - [ ] Test `Dashboard.vue` and `Users.vue` pages (mocking query hook/component).
   - [ ] Run `npm run test` in `clients/spas/admin`.
-- [ ] **Review Point**: Check SPA structure, pages, routing, API integration, and tests.
+- [ ] **Review Point**: Check SPA structure, layout, pages, routing, API integration, component implementation, and tests.
 
 ### Testing Phase
 

@@ -18,6 +18,7 @@ function makeConfig() {
           app: path.resolve(__dirname, "app/index.html"),
           auth: path.resolve(__dirname, "auth/index.html"),
           landing: path.resolve(__dirname, "index.html"),
+          admin: path.resolve(__dirname, "admin/index.html"),
         },
         plugins: [ignore(["**/*.test.ts"])],
       },
@@ -45,6 +46,11 @@ function makeConfig() {
         },
         "^/app/[^\\.]+$": {
           rewrite: () => "http://localhost:5173/app/",
+          target: "http://localhost:5173",
+          configure: proxyLogger,
+        },
+        "^/admin/[^\\.]+$": {
+          rewrite: () => "http://localhost:5173/admin/",
           target: "http://localhost:5173",
           configure: proxyLogger,
         },
