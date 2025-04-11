@@ -272,16 +272,12 @@
       "error": {
         "type": "object",
         "required": [
-          "message"
+          "error"
         ],
         "properties": {
-          "message": {
+          "error": {
             "type": "string",
             "description": "A human-readable error message"
-          },
-          "code": {
-            "type": "string",
-            "description": "An optional machine-readable error code"
           }
         }
       },

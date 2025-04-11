@@ -52,7 +52,7 @@ router.put(
       res.json(responseTodo);
     } catch (error) {
       if (error instanceof TodoNotFoundError) {
-        res.status(404).json({ message: error.message });
+        res.status(404).json({ error: error.message });
       } else {
         next(error);
       }
@@ -70,7 +70,7 @@ router.delete(
       res.status(204).send();
     } catch (error) {
       if (error instanceof TodoNotFoundError) {
-        res.status(404).json({ message: error.message });
+        res.status(404).json({ error: error.message });
       } else {
         next(error);
       }
