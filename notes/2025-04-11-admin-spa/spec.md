@@ -10,15 +10,13 @@ List only the files or folders that will definitely need changes. Organize them 
 
 ### API Specification
 
-- **New File:** `[auth-spec/routes/users.ts](/saflib/auth-spec/routes/users.ts)` - Define the types for the new `/auth/users` endpoint.
-- `[auth-spec/index.ts](/saflib/auth-spec/index.ts)` - Export the new user route types.
-- `[auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml)` - Add the specification for the `GET /auth/users` endpoint.
+- **New File:** [auth-spec/routes/users.yaml](/saflib/auth-spec/routes/users.yaml) - Define the types for the new `/auth/users` endpoint. Set "security" to require the "admin" scope like in todos.yaml it is done for "deleteAllTodos".
+- [auth-spec/openapi.yaml](/saflib/auth-spec/openapi.yaml) - Add the specification for the `GET /auth/users` endpoint.
 
 ### Backend (@saflib/auth-service)
 
-- **New File:** `[auth-service/routes/users.ts](/saflib/auth-service/routes/users.ts)` - Implement the route handler for `GET /auth/users`.
-- `[auth-service/app.ts](/saflib/auth-service/app.ts)` - Register the new users route.
-- `[auth-service/permissions.ts](/saflib/auth-service/permissions.ts)` - Define and check for an 'admin' permission or scope required for the new endpoint.
+- **New File:** [auth-service/routes/auth-users-list.ts](/saflib/auth-service/routes/auth-users-list.ts) - Implement the route handler for `GET /auth/users`.
+- [auth-service/routes/index.ts](/saflib/auth-service/routes/index.ts) - Register the new users route.
 
 ### Frontend (@saflib/admin-vue)
 
@@ -26,21 +24,12 @@ List only the files or folders that will definitely need changes. Organize them 
 - **New File:** `[admin-vue/src/components/UserList.vue](/saflib/admin-vue/src/components/UserList.vue)` - Create the Vue component to display the list of users.
 - **New File:** `[admin-vue/src/index.ts](/saflib/admin-vue/src/index.ts)` - Export the `UserList` component.
 - **New File:** `[admin-vue/package.json](/saflib/admin-vue/package.json)` - Package manifest for the new `@saflib/admin-vue` package.
-- **New File:** `[admin-vue/tsconfig.json](/saflib/admin-vue/tsconfig.json)` - TypeScript configuration for the new package.
 
 ### Frontend (clients/spas/admin)
 
-- **New SPA:** `[clients/spas/admin/](/clients/spas/admin/)`
+- **New SPA:** `[clients/spas/admin/](/clients/spas/admin/)` - structure it like /clients/spas/app
 - **New File:** `[admin/src/pages/Dashboard.vue](/clients/spas/admin/src/pages/Dashboard.vue)` - Create the main dashboard page.
 - **New File:** `[admin/src/pages/Users.vue](/clients/spas/admin/src/pages/Users.vue)` - Create the page that will use the `UserList` component.
-- **New File:** `[admin/src/router.ts](/clients/spas/admin/src/router.ts)` - Set up routing for the admin SPA (Dashboard, Users page).
-- **New File:** `[admin/src/App.vue](/clients/spas/admin/src/App.vue)` - Main application component for the admin SPA.
-- **New File:** `[admin/main.ts](/clients/spas/admin/main.ts)` - Entry point for the admin SPA.
-- **New File:** `[admin/package.json](/clients/spas/admin/package.json)` - Package manifest for the new admin SPA.
-- **New File:** `[admin/vite.config.ts](/clients/spas/admin/vite.config.ts)` - Vite configuration for the admin SPA.
-- **New File:** `[admin/tsconfig.json](/clients/spas/admin/tsconfig.json)` - TypeScript configuration.
-- **New File:** `[admin/index.html](/clients/spas/admin/index.html)` - HTML entry point.
-- `[clients/spas/package.json](/clients/spas/package.json)` - Add the new `admin` SPA to the workspace definition.
 
 ## User Stories
 
@@ -65,7 +54,6 @@ List only the files or folders that will definitely need changes. Organize them 
     - Error responses:
       - `401 Unauthorized`: If the requestor is not logged in.
       - `403 Forbidden`: If the logged-in user does not have administrative privileges.
-      - `500 Internal Server Error`: For unexpected server issues.
     - Authorization requirements: Requires the user to be authenticated and possess an 'admin' role or permission.
 
 ### Frontend SPA
@@ -102,6 +90,7 @@ List only the files or folders that will definitely need changes. Organize them 
 ## Questions and Clarifications
 
 - What specific mechanism (e.g., a role, a specific permission string in `userPermissions` table) should designate a user as an 'admin'? (Assume a simple 'admin' permission string in `userPermissions` for now).
+  - The auth-service already takes in an "ADMIN_EMAILS" environment variable, which is used to determine if a user is an admin.
 
 ## File Linking Guidelines
 
