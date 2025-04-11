@@ -14,6 +14,7 @@ services:
       # TODO: Set this somehow in the e2e folder
       - ADMIN_EMAILS=admin-firefox@example.com,admin-chromium@example.com
       - DISABLE_RATE_LIMITING=true
+      - SMTP_HOST=smtp.mock.com
   caddy:
     extends:
       file: remote-assets/docker-compose.prod.yaml

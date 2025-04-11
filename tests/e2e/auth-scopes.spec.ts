@@ -42,7 +42,9 @@ test.describe("Auth Scopes", () => {
     await expect(page.getByText(todoText)).toBeVisible();
   });
 
-  test("admin user can delete all todos", async ({ page }, workerInfo) => {
+  test("an unverified admin user cannot delete all todos", async ({
+    page,
+  }, workerInfo) => {
     // Register an admin user (using admin.*@email.com pattern)
     await page.goto("http://docker.localhost/auth/register");
     const adminEmail = `admin-${workerInfo.project.name}@example.com`;
@@ -78,6 +80,8 @@ test.describe("Auth Scopes", () => {
     await page.getByRole("button", { name: "Delete All Todos" }).click();
 
     // Verify todos are deleted (assuming there's a message or empty state)
-    await expect(page.getByText("No todos yet")).toBeVisible();
+    await expect(page.getByText(todoText)).toBeVisible();
   });
+
+  // TODO: Make sure a verified admin user can delete all todos
 });

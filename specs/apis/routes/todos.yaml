@@ -80,7 +80,7 @@ delete:
   tags:
     - todos
   security:
-    - scopes: ["admin"]
+    - scopes: ["todos:nuke"]
   responses:
     "204":
       description: All todo items successfully deleted

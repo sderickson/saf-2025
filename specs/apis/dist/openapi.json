@@ -103,7 +103,7 @@
         "security": [
           {
             "scopes": [
-              "admin"
+              "todos:nuke"
             ]
           }
         ],
