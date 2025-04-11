@@ -4,20 +4,20 @@ Based on [spec.md](./spec.md) and [checklist-generation.md](../../saflib/process
 
 ### Planning Phase
 
-- [ ] Set up a new branch in the monorepo
-  - [ ] Checkout the `main` branch
-  - [ ] Pull the latest changes: `git pull origin main`
-  - [ ] Create a new branch: `git checkout -b feat/2025-04-11-admin-spa`
-- [ ] Specification written in [spec.md](./spec.md)
-- [ ] **Review Point**: Confirm spec covers all requirements.
-- [ ] Update this checklist based on the final spec.
-  - [ ] Break down complex tasks into subtasks.
-  - [ ] Add file references to tasks.
-- [ ] **Review Point**: Confirm checklist aligns with spec.
-- [ ] Add Documentation to plan
-  - [ ] Review relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
-  - [ ] Note any missing platform documentation needs (e.g., details about admin role checks if not already documented).
-  - [ ] **Review Point**: Confirm documentation plan.
+- [x] Set up a new branch in the monorepo
+  - [x] Checkout the `main` branch
+  - [x] Pull the latest changes: `git pull origin main`
+  - [x] Create a new branch: `git checkout -b feat/2025-04-11-admin-spa`
+- [x] Specification written in [spec.md](./spec.md)
+- [x] **Review Point**: Confirm spec covers all requirements.
+- [x] Update this checklist based on the final spec.
+  - [x] Break down complex tasks into subtasks.
+  - [x] Add file references to tasks.
+- [x] **Review Point**: Confirm checklist aligns with spec.
+- [x] Add Documentation to plan
+  - [x] Review relevant docs from [doc-outline.md](../../saflib/processes/doc-outline.md)
+  - [x] Note any missing platform documentation needs (e.g., details about admin role checks if not already documented).
+  - [x] **Review Point**: Confirm documentation plan.
 
 ### Implementation Phase
 
