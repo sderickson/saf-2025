@@ -40,19 +40,19 @@ Follow the implementation order: API Spec -> Database -> API Backend -> Frontend
 
 #### 2. Database Layer (`@saflib/auth-db`)
 
-- [ ] Confirm no schema changes needed as per [spec.md](./spec.md).
-  - [ ] Review existing schema: `[schema.ts](/saflib/auth-db/src/schema.ts)`.
-- [ ] Add Database Queries:
-  - [ ] Review existing queries in `[users.ts](/saflib/auth-db/src/queries/users.ts)`.
+- [x] Confirm no schema changes needed as per [spec.md](./spec.md).
+  - [x] Review existing schema: `[schema.ts](/saflib/auth-db/src/schema.ts)`.
+- [x] Add Database Queries:
+  - [x] Review existing queries in `[users.ts](/saflib/auth-db/src/queries/users.ts)`.
   - [ ] Implement `getAllAdminView` query in `[users.ts](/saflib/auth-db/src/queries/users.ts)` to fetch specific columns sorted by `createdAt`.
-  - [ ] Implement `getUsersWithEmailAuth` query in `[users.ts](/saflib/auth-db/src/queries/users.ts)` to fetch user and email auth details for a list of IDs.
-- [ ] Add Tests for New Queries:
-  - [ ] Review DB testing documentation (e.g., `[testing-gotchas.md](../../saflib/drizzle-sqlite3-dev/docs/01-testing-gotchas.md)` if applicable).
+  - [x] Implement `getEmailAuthByUserIds` query in `[users.ts](/saflib/auth-db/src/queries/users.ts)` to fetch email auth details for a list of user IDs (refactored from `getUsersWithEmailAuth`).
+- [x] Add Tests for New Queries:
+  - [x] Review DB testing documentation (e.g., `[testing-gotchas.md](../../saflib/drizzle-sqlite3-dev/docs/01-testing-gotchas.md)` if applicable).
   - [ ] Add tests for `getAllAdminView` (check columns, sorting).
-  - [ ] Add tests for `getUsersWithEmailAuth` (check join, handling missing email auth).
-- [ ] Verify Database Layer:
-  - [ ] Run `npm run test` in `saflib/auth-db`.
-- [ ] **Review Point**: Confirm queries implementation, tests, and no database migrations required.
+  - [x] Add tests for `getEmailAuthByUserIds` (check fetching email auth, handling missing email auth).
+- [x] Verify Database Layer:
+  - [x] Run `npm run test` in `saflib/auth-db`.
+- [x] **Review Point**: Confirm queries implementation, tests, and no database migrations required.
 
 #### 3. API Layer - Backend (`@saflib/auth-service`)
 

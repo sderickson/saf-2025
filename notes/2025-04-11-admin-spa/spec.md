@@ -41,7 +41,7 @@ List only the files or folders that will definitely need changes. Organize them 
 
 ### Database Schema Updates
 
-- No schema changes are required for this initial feature. The existing `users` table in `[schema.ts](/saflib/auth-db/src/schema.ts)` contains the necessary information (id, createdAt, lastLoginAt, email).
+- No schema changes are required for this initial feature. The existing `users` table in `[schema.ts](/saflib/auth-db/src/schema.ts)` contains the necessary information (id, createdAt, lastLoginAt, email). The backend service will use the existing `getAll` query to fetch user data and the new `getEmailAuthByUserIds` query if needed for related email authentication details.
 
 ### API Endpoints
 
