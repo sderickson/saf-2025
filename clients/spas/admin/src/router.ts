@@ -7,6 +7,11 @@ const routes = [
     name: "Dashboard",
   },
   // Users route will be added later
+  {
+    path: "/users",
+    component: () => import("./pages/Users.vue"),
+    name: "Users",
+  },
 ];
 
 const router = createRouter({

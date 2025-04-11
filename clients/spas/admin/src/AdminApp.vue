@@ -8,6 +8,11 @@
           :to="{ name: 'Dashboard' }"
         ></v-list-item>
         <!-- Users link will be added later -->
+        <v-list-item
+          prepend-icon="mdi-account-group"
+          title="Users"
+          :to="{ name: 'Users' }"
+        ></v-list-item>
       </v-list>
     </v-navigation-drawer>
 
