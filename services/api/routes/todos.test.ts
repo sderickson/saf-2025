@@ -180,7 +180,7 @@ describe("Todos Routes", () => {
         .set({
           ...mockHeaders,
           "x-user-email": "admin@example.com",
-          "x-user-scopes": "admin",
+          "x-user-scopes": "users:read,todos:nuke",
         });
 
       expect(response.status).toBe(204);
