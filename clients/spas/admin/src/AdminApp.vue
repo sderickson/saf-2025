@@ -2,13 +2,15 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" :permanent="smAndUp">
       <v-list>
+        <!-- TODO: fix this. Vuetify does not do it correctly automatically, seems confused by vue-router nesting -->
         <v-list-item
           prepend-icon="mdi-view-dashboard"
           title="Dashboard"
+          :active="false"
           :to="{ name: 'Dashboard' }"
         ></v-list-item>
-        <!-- Users link will be added later -->
         <v-list-item
+          :active="false"
           prepend-icon="mdi-account-group"
           title="Users"
           :to="{ name: 'Users' }"
