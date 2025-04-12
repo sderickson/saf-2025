@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import { UserAdmin } from "@saflib/auth-vue";
 const routes = [
   {
     path: "/",
@@ -12,7 +12,7 @@ const routes = [
       },
       {
         path: "users",
-        component: () => import("./pages/Users.vue"),
+        component: UserAdmin,
         name: "Users",
       },
     ],
