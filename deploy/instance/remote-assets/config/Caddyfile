@@ -21,6 +21,9 @@
 	handle /app/* {
 		try_files /app/index.html
 	}
+	handle /admin/* {
+		try_files /admin/index.html
+	}
 	handle @no_extension {
 		try_files /index.html
 	}
@@ -47,9 +50,13 @@
 		host api.{$DOMAIN}
 		path /auth*
 	}
+	@users {
+		host api.{$DOMAIN}
+		path /users*
+	}
 	@api {
 		host api.{$DOMAIN}
-		not path /auth*
+		not path /auth* /users*
 	}
 	@docs {
 		host docs.{$DOMAIN}
@@ -59,6 +66,18 @@
 	}
 
 	handle @auth {
+		reverse_proxy auth:3000 {
+			import reverse_proxy_common
+		}
+	}
+
+	handle @users {
+		forward_auth auth:3000 {
+			uri /auth/verify
+			header_up X-Request-ID {http.request.uuid}
+			copy_headers X-User-ID X-User-Email X-User-Scopes
+			header_up X-Csrf-Token {http.request.header.X-CSRF-Token}
+		}
 		reverse_proxy auth:3000 {
 			import reverse_proxy_common
 		}

@@ -133,7 +133,7 @@ describe("Todos Routes", () => {
         });
 
       expect(response.status).toBe(404);
-      expect(response.body).toEqual({ message: "Todo with id 999 not found" });
+      expect(response.body).toEqual({ error: "Todo with id 999 not found" });
     });
   });
 
@@ -167,7 +167,7 @@ describe("Todos Routes", () => {
         .set(mockHeaders);
 
       expect(response.status).toBe(404);
-      expect(response.body).toEqual({ message: "Todo with id 999 not found" });
+      expect(response.body).toEqual({ error: "Todo with id 999 not found" });
     });
   });
 
@@ -180,7 +180,7 @@ describe("Todos Routes", () => {
         .set({
           ...mockHeaders,
           "x-user-email": "admin@example.com",
-          "x-user-scopes": "admin",
+          "x-user-scopes": "users:read,todos:nuke",
         });
 
       expect(response.status).toBe(204);
