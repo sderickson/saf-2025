@@ -39,7 +39,7 @@ Once all of this is done, should start using this in actual applications.
   - ✓ Vitest BE Unit
   - ✓ Integrate with GitHub Actions
 - Observability
-  - LGTM
+  - Prometheus, Loki, OpenTelemetry
   - PagerDuty
 
 ### Extended
@@ -49,12 +49,12 @@ What follows can largely be done in any order.
 - Backend+
   - Redis
   - Background jobs
-  - Cron jobs
+  - ~ Cron jobs
   - Backups
   - Uploads
-  - Rate limiting
-  - Stronger security, such as express/helmet, or caddy headers
-  - Scopes
+  - ~ Rate limiting
+  - ✓ Stronger security, such as express/helmet, or caddy headers
+  - ✓ Scopes
   - Workers (e.g. Cloudflare Workers)
 - Frontend+
   - ✓ Tanstack Query
@@ -68,17 +68,17 @@ What follows can largely be done in any order.
   - Storybook
   - Nock
 - Infra+
-  - Kubernetes
+  - Nix
   - Secret management
-  - Optimize memory - fit on smallest droplet? Bun?
+  - ~ Optimize memory
   - Blue/Green deployment
   - CDN
 - Workflow+
   - ✓ Code formatting, quality, ESLint
-  - Generate docker files from package files, general package-driven development
+  - ~ Generate docker files from package files, general package-driven development
   - API Versioning
-  - Documentation
-  - Checklists
+  - ✓ Documentation
+  - ✓ Checklists
   - Dependency management
   - Monorepo package management - nx, turborepo and alike
   - Try out some methodology [here](https://generaitelabs.com/one-agentic-coding-workflow-to-rule-them-all/)
