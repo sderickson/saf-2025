@@ -21,7 +21,10 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@saflib/monorepo": "*",
+    "javascript-state-machine": "^3.1.0"
+  },
   "devDependencies": {
     "@saflib/vitest": "*"
   }
