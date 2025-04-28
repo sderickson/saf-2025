@@ -2,9 +2,9 @@
   "status": "completed",
   "stepIndex": 3,
   "context": {
-    "absPath": "/Users/scotterickson/src/saf-2025/dbs/main/src/queries/todos.ts",
+    "absPath": "/Users/scotterickson/src/saf-2025/saflib/auth-db/src/queries/email-auth.ts",
     "params": {
-      "path": "/Users/scotterickson/src/saf-2025/dbs/main/src/queries/todos.ts"
+      "path": "/Users/scotterickson/src/saf-2025/saflib/auth-db/src/queries/email-auth.ts"
     }
   }
 }
