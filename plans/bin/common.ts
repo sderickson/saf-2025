@@ -35,9 +35,14 @@ export const getPlanStatusFilePath = (planAbsPath: string) => {
   return resolve(planDir, "plan-status.json");
 };
 
-export const getActivePlanPath = () => {
+export const getActivePlanPathPath = () => {
   const planDir = process.cwd();
-  return readFileSync(resolve(planDir, ".active-plan"), "utf8");
+  return resolve(planDir, ".active-plan");
+};
+
+export const getActivePlanPath = () => {
+  const planStatusFilePath = getActivePlanPathPath();
+  return readFileSync(planStatusFilePath, "utf8");
 };
 
 export const loadPlanStatusContents = (planAbsPath: string): string | null => {
@@ -54,5 +59,5 @@ export const savePlanStatusContents = (
 ) => {
   const planStatusFilePath = getPlanStatusFilePath(planAbsPath);
   writeFileSync(planStatusFilePath, contents);
-  writeFileSync(getActivePlanPath(), planAbsPath);
+  writeFileSync(getActivePlanPathPath(), planAbsPath);
 };

@@ -42,18 +42,13 @@ export const AddTestsWorkflow: SimpleWorkflow<
       name: "Get Oriented",
       prompt: (context) => {
         const filename = basename(context.absPath);
-        return `
-First, run the existing tests for the package that ${filename} is in.
-You should be able to run "npm run test". Run the tests for that package
-and make sure they are passing.`;
+        return `First, run the existing tests for the package that ${filename} is in. You should be able to run "npm run test". Run the tests for that package and make sure they are passing.`;
       },
     },
     {
       name: "Add Tests",
       prompt: (context) =>
-        `
-Now, add tests to ${basename(context.absPath)}. Create the test file
-next to the file you are testing.`,
+        `Now, add tests to ${basename(context.absPath)}. Create the test file next to the file you are testing.`,
     },
     {
       name: "Run Tests",

@@ -11,7 +11,6 @@ import {
 const args = process.argv.slice(2);
 
 const planAbsPath = args[0] ? resolve(args[0]) : getActivePlanPath();
-console.log("PLAN ABS PATH", planAbsPath);
 const { workflow } = await getPlan(planAbsPath);
 const runner = new WorkflowRunner(workflow);
 const planStatus = loadPlanStatusContents(planAbsPath);
@@ -24,4 +23,4 @@ if (!planStatus) {
 
 runner.deserialize(planStatus);
 await runner.goToNextStep();
-// savePlanStatusContents(planAbsPath, runner.serialize());
+savePlanStatusContents(planAbsPath, runner.serialize());

@@ -22,6 +22,7 @@ export class WorkflowRunner<
   }
 
   async kickoff(params: P): Promise<boolean> {
+    print("");
     const result = await this.workflow.init(params);
     if (!result.success) {
       return false;
@@ -33,8 +34,15 @@ export class WorkflowRunner<
     };
     this.status = "in progress";
     this.context.print(
-      `The workflow has been kicked off.\n\n${await this.getStatusPrompt()}`,
+      `The "${this.workflow.name}" workflow has been kicked off.`,
     );
+    this.context.print("");
+    this.context.print(await this.getStatusPrompt());
+    this.context.print("");
+    this.context.print(
+      `To continue, run "npm exec --workspace=@saf-2025/plans plans-next".`,
+    );
+    this.context.print("");
     return true;
   }
 
