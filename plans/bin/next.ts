@@ -1,15 +1,30 @@
 #!/usr/bin/env node --experimental-strip-types
 
-import process from "node:process";
-
+import { resolve } from "node:path";
+import { WorkflowRunner } from "./runner.ts";
+import {
+  loadPlanStatusContents,
+  getPlan,
+  savePlanStatusContents,
+} from "./common.ts";
 const args = process.argv.slice(2);
-const optionalArgument = args[0]; // Will be undefined if no arg is provided
 
-if (optionalArgument) {
-  console.log(
-    `Getting next step for plan with optional argument: ${optionalArgument}`,
-  );
-} else {
-  console.log("Getting next step for current plan...");
+if (args.length !== 1) {
+  console.error("Usage: status <plan-path>");
+  process.exit(1);
 }
-// TODO: Implement next step logic
+
+const planAbsPath = resolve(args[0]);
+const { workflow } = await getPlan(planAbsPath);
+const runner = new WorkflowRunner(workflow);
+const planStatus = loadPlanStatusContents(planAbsPath);
+if (!planStatus) {
+  console.error(
+    "Plan status file does not exist. Did you run 'kickoff' first?",
+  );
+  process.exit(1);
+}
+
+runner.deserialize(planStatus);
+await runner.goToNextStep();
+savePlanStatusContents(planAbsPath, runner.serialize());

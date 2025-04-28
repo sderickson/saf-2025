@@ -1,58 +1,57 @@
-import StateMachine from "javascript-state-machine";
-import type { Workflow } from "../types.ts";
+import { existsSync } from "fs";
+import type { SimpleWorkflow } from "../types.ts";
 import { resolve } from "path";
 
-const options = {
-  type: "object",
-  properties: {
-    path: {
-      type: "string",
-    },
-  },
-  required: ["path"],
-};
+export interface AddTestsWorkflowParams {
+  path: string;
+}
 
-const AddTestsWorkflow = StateMachine.factory({
-  init: "start",
-  transitions: [
-    { name: "orient", from: "start", to: "oriented" },
-    { name: "add-tests", from: "oriented", to: "implemented" },
-    { name: "fix-tests", from: "implemented", to: "done" },
-  ],
-  data: function (path: string) {
-    // const absPath = path.startsWith("/") ? path : resolve(process.cwd(), path);
-    const absPath = resolve(path);
-    console.log("Adding tests to", absPath);
+interface AddTestsWorkflowContext {
+  absPath: string;
+}
+
+export const AddTestsWorkflow: SimpleWorkflow<
+  AddTestsWorkflowParams,
+  AddTestsWorkflowContext
+> = {
+  name: "add-unit-tests",
+  usage: "Takes one param: path to the file to add tests to.",
+  params: {
+    path: "",
+  },
+  init: async (params) => {
+    const absPath = resolve(params.path);
+    const context: AddTestsWorkflowContext = {
+      absPath,
+    };
+    if (!existsSync(absPath)) {
+      console.error(`File does not exist: ${absPath}`);
+      return {
+        context,
+        success: false,
+      };
+    }
     return {
-      path: absPath,
+      context,
+      success: true,
     };
   },
-  methods: {
-    prompt: function () {
-      const taskPrompt = `
-      You are adding tests to ${this.path}.
-      `;
-
-      let stepPrompt = "";
-      switch (this.state) {
-        case "start":
-          stepPrompt = "Please go to the package and run the tests.";
-          break;
-        case "oriented":
-          stepPrompt = "Please now implement the tests.";
-          break;
-        case "implemented":
-          stepPrompt = "Please now run the tests and fix any issues.";
-          break;
-      }
-
-      return `${taskPrompt}\n${stepPrompt}`;
+  workflowPrompt: (context) => `You are adding tests to ${context.absPath}.`,
+  steps: [
+    {
+      name: "Get Oriented",
+      prompt: (context) =>
+        `First, run the existing tests for the package that ${context.absPath} is in. You should be able to run "npm run test".`,
     },
-  },
-});
-
-export const addTestsWorkflow: Workflow = {
-  name: "add-tests",
-  options,
-  factory: AddTestsWorkflow,
+    {
+      name: "Add Tests",
+      prompt: (context) =>
+        `Now, add tests to ${context.absPath}. Create the test file next to the file you are testing.`,
+    },
+    {
+      name: "Run Tests",
+      prompt: () =>
+        `Now, run the tests to make sure they are working. Fix any issues.`,
+    },
+  ],
 };

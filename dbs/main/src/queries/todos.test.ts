@@ -5,13 +5,9 @@ import {
   updateTodo,
   deleteTodo,
   deleteAllTodos,
-  TodoNotFoundError,
 } from "./todos.ts";
 import { db } from "../instance.ts";
 import { todos } from "../schema.ts";
-
-// The table's type is inferred automatically
-type Todo = typeof todos.$inferSelect;
 
 describe("Todo Queries", () => {
   beforeEach(async () => {

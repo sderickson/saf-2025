@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "stepIndex": 3,
+  "context": {
+    "absPath": "/Users/scotterickson/src/saf-2025/dbs/main/src/queries/todos.ts",
+    "params": {
+      "path": "/Users/scotterickson/src/saf-2025/dbs/main/src/queries/todos.ts"
+    }
+  }
+}

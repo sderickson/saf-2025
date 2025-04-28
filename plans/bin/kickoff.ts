@@ -1,7 +1,9 @@
 #!/usr/bin/env node --experimental-strip-types
 
 import process from "node:process";
-
+import { resolve } from "node:path";
+import { WorkflowRunner } from "./runner.ts";
+import { getPlan, savePlanStatusContents } from "./common.ts";
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {
@@ -9,7 +11,8 @@ if (args.length !== 1) {
   process.exit(1);
 }
 
-const planArgument = args[0];
-
-console.log(`Kicking off plan with argument: ${planArgument}`);
-// TODO: Implement plan kickoff logic
+const planAbsPath = resolve(args[0]);
+const { workflow, params } = await getPlan(planAbsPath);
+const runner = new WorkflowRunner(workflow);
+await runner.kickoff(params);
+savePlanStatusContents(planAbsPath, runner.serialize());

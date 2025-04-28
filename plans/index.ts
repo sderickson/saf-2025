@@ -1,8 +1,8 @@
 // Export public APIs from here
 
-import { addTestsWorkflow } from "./workflows/fix-tests.ts";
-import type { Workflow } from "./types.ts";
+import { AddTestsWorkflow } from "./workflows/fix-tests.ts";
+import type { SimpleWorkflow } from "./types.ts";
 
-const workflows: Workflow[] = [addTestsWorkflow];
+const workflows: SimpleWorkflow<any, any>[] = [AddTestsWorkflow];
 
 export { workflows };
