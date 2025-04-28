@@ -41,7 +41,7 @@ export const AddTestsWorkflow: SimpleWorkflow<
     {
       name: "Get Oriented",
       prompt: (context) =>
-        `First, run the existing tests for the package that ${context.absPath} is in. You should be able to run "npm run test".`,
+        `First, run the existing tests for the package that ${context.absPath} is in. You should be able to run "npm run test". Run the tests for that package and make sure they are passing.`,
     },
     {
       name: "Add Tests",

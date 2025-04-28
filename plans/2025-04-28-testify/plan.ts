@@ -1,7 +1,7 @@
 import {
   AddTestsWorkflow,
   type AddTestsWorkflowParams,
-} from "../workflows/fix-tests.ts";
+} from "../workflows/add-tests.ts";
 import { resolve } from "node:path";
 
 const plan = {
