@@ -15,6 +15,7 @@
     "clients/*",
     "dbs/*",
     "deploy/*",
+    "plans",
     "saflib/*",
     "services/*",
     "specs/*"

@@ -1,0 +1,28 @@
+{
+  "name": "@saf-2025/plans",
+  "description": "Manages project plans: defining, running, tracking.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "bin": {
+    "plans-ls": "./bin/ls.ts",
+    "plans-kickoff": "./bin/kickoff.ts",
+    "plans-status": "./bin/status.ts",
+    "plans-next": "./bin/next.ts"
+  },
+  "scripts": {
+    "plans-ls": "node --experimental-strip-types ./bin/ls.ts",
+    "plans-kickoff": "node --experimental-strip-types ./bin/kickoff.ts",
+    "plans-status": "node --experimental-strip-types ./bin/status.ts",
+    "plans-next": "node --experimental-strip-types ./bin/next.ts",
+    "_test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@saflib/vitest": "*"
+  }
+}
