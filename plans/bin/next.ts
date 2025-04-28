@@ -6,15 +6,12 @@ import {
   loadPlanStatusContents,
   getPlan,
   savePlanStatusContents,
+  getActivePlanPath,
 } from "./common.ts";
 const args = process.argv.slice(2);
 
-if (args.length !== 1) {
-  console.error("Usage: status <plan-path>");
-  process.exit(1);
-}
-
-const planAbsPath = resolve(args[0]);
+const planAbsPath = args[0] ? resolve(args[0]) : getActivePlanPath();
+console.log("PLAN ABS PATH", planAbsPath);
 const { workflow } = await getPlan(planAbsPath);
 const runner = new WorkflowRunner(workflow);
 const planStatus = loadPlanStatusContents(planAbsPath);
@@ -27,4 +24,4 @@ if (!planStatus) {
 
 runner.deserialize(planStatus);
 await runner.goToNextStep();
-savePlanStatusContents(planAbsPath, runner.serialize());
+// savePlanStatusContents(planAbsPath, runner.serialize());

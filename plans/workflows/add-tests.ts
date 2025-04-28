@@ -1,6 +1,6 @@
 import { existsSync } from "fs";
 import type { SimpleWorkflow } from "../types.ts";
-import { resolve } from "path";
+import { resolve, basename } from "path";
 
 export interface AddTestsWorkflowParams {
   path: string;
@@ -40,13 +40,20 @@ export const AddTestsWorkflow: SimpleWorkflow<
   steps: [
     {
       name: "Get Oriented",
-      prompt: (context) =>
-        `First, run the existing tests for the package that ${context.absPath} is in. You should be able to run "npm run test". Run the tests for that package and make sure they are passing.`,
+      prompt: (context) => {
+        const filename = basename(context.absPath);
+        return `
+First, run the existing tests for the package that ${filename} is in.
+You should be able to run "npm run test". Run the tests for that package
+and make sure they are passing.`;
+      },
     },
     {
       name: "Add Tests",
       prompt: (context) =>
-        `Now, add tests to ${context.absPath}. Create the test file next to the file you are testing.`,
+        `
+Now, add tests to ${basename(context.absPath)}. Create the test file
+next to the file you are testing.`,
     },
     {
       name: "Run Tests",

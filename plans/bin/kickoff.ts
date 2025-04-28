@@ -11,7 +11,7 @@ if (args.length !== 1) {
   process.exit(1);
 }
 
-const planAbsPath = resolve(args[0]);
+const planAbsPath = resolve(process.cwd(), args[0], "index.ts");
 const { workflow, params } = await getPlan(planAbsPath);
 const runner = new WorkflowRunner(workflow);
 await runner.kickoff(params);
