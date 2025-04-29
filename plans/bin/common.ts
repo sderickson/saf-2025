@@ -36,6 +36,9 @@ export const getActivePlanPathPath = () => {
 
 export const getActivePlanPath = () => {
   const planStatusFilePath = getActivePlanPathPath();
+  if (!existsSync(planStatusFilePath)) {
+    return null;
+  }
   return readFileSync(planStatusFilePath, "utf8");
 };
 

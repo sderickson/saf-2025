@@ -91,9 +91,19 @@ export abstract class SimpleWorkflow<
   }
 
   deserialize(serialized: string): void {
-    const serialable = JSON.parse(serialized);
-    this.status = serialable.status;
-    this.stepIndex = serialable.stepIndex;
-    this.context = serialable.context;
+    const serializable = JSON.parse(serialized);
+    if (typeof serializable !== "object" || serializable === null) {
+      throw new Error("Invalid serialized data: not an object");
+    }
+    if (
+      !["not started", "in progress", "completed"].includes(serializable.status)
+    ) {
+      throw new Error(`Invalid status: ${serializable.status}`);
+    }
+    if (typeof serializable.stepIndex !== "number") {
+      throw new Error("Invalid stepIndex: not a number");
+    }
+    this.stepIndex = serializable.stepIndex;
+    this.context = serializable.context;
   }
 }

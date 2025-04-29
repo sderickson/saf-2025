@@ -10,6 +10,10 @@ import {
 const args = process.argv.slice(2);
 
 const planAbsPath = args[0] ? resolve(args[0]) : getActivePlanPath();
+if (!planAbsPath) {
+  console.error("No plan path provided, and there is none active.");
+  process.exit(1);
+}
 const workflow = await getPlan(planAbsPath);
 const planStatus = loadPlanStatusContents(planAbsPath);
 if (!planStatus) {
