@@ -2,24 +2,23 @@ import { dirname, resolve } from "node:path";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { SimpleWorkflow } from "../workflow.ts";
 
-export const getPlan = async (planAbsPath: string) => {
+export const getPlan = async (
+  planAbsPath: string,
+): Promise<SimpleWorkflow<any, any>> => {
   if (!existsSync(planAbsPath)) {
-    console.error(`Plan file does not exist: ${planAbsPath}`);
-    process.exit(1);
+    throw new Error(`Plan file does not exist: ${planAbsPath}`);
   }
 
   const plan = await import(planAbsPath);
 
   if (!plan.default) {
-    console.error(`Plan file does not export a default plan: ${planAbsPath}`);
-    process.exit(1);
+    throw new Error(`Plan file does not export a default plan: ${planAbsPath}`);
   }
 
   if (!(plan.default instanceof SimpleWorkflow)) {
-    console.error(
+    throw new Error(
       `Plan file does not export a workflow instance: ${planAbsPath}`,
     );
-    process.exit(1);
   }
 
   return plan.default as SimpleWorkflow<any, any>;
