@@ -1,5 +1,6 @@
 import { dirname, resolve } from "node:path";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { SimpleWorkflow } from "../workflow.ts";
 
 export const getPlan = async (planAbsPath: string) => {
   if (!existsSync(planAbsPath)) {
@@ -14,20 +15,14 @@ export const getPlan = async (planAbsPath: string) => {
     process.exit(1);
   }
 
-  if (!plan.default.workflow) {
-    console.error(`Plan file does not export a workflow: ${planAbsPath}`);
+  if (!(plan.default instanceof SimpleWorkflow)) {
+    console.error(
+      `Plan file does not export a workflow instance: ${planAbsPath}`,
+    );
     process.exit(1);
   }
 
-  if (!plan.default.params) {
-    console.error(`Plan file does not export params: ${planAbsPath}`);
-    process.exit(1);
-  }
-
-  const workflow = plan.default.workflow;
-  const params = plan.default.params;
-
-  return { workflow, params };
+  return plan.default as SimpleWorkflow<any, any>;
 };
 
 export const getPlanStatusFilePath = (planAbsPath: string) => {

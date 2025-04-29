@@ -4,8 +4,8 @@ export interface BaseContext<P extends Record<string, any>> {
 }
 
 export type Result<C extends Record<string, any>> = {
-  context: C;
-  success: boolean;
+  context?: C;
+  error?: Error;
 };
 
 export type StepGuard<
@@ -13,10 +13,9 @@ export type StepGuard<
   C extends BaseContext<P>,
 > = (context: C) => Promise<Result<C>>;
 
-export interface Step<P extends Record<string, any>, C extends BaseContext<P>> {
+export interface Step {
   name: string;
-  prompt: (context: C) => string;
-  guard?: StepGuard<P, C>;
+  prompt: () => string;
 }
 
 export interface SimpleWorkflow<
@@ -26,7 +25,6 @@ export interface SimpleWorkflow<
   name: string;
   init: (params: P) => Promise<Result<C>>;
   params: P;
-  steps: Step<P, C & BaseContext<P>>[];
-  usage: string;
-  workflowPrompt: (context: C & BaseContext<P>) => string;
+  steps: Step[];
+  workflowPrompt: () => string;
 }
