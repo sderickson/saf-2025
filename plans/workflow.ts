@@ -76,7 +76,7 @@ export abstract class SimpleWorkflow<
       return;
     }
     this.print(
-      `The workflow has moved to step ${this.steps[this.stepIndex].name}.`,
+      `The workflow has moved to step "${this.steps[this.stepIndex].name}".`,
     );
     this.print(await this.getStatusPrompt());
   }
