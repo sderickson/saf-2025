@@ -1,8 +1,0 @@
-{
-  "extends": "@saflib/monorepo/tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "javascript-state-machine": ["./workflows/jsm.d.ts"]
-    }
-  }
-}
