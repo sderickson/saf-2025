@@ -105,5 +105,6 @@ export abstract class SimpleWorkflow<
     }
     this.stepIndex = serializable.stepIndex;
     this.context = serializable.context;
+    this.status = serializable.status;
   }
 }
