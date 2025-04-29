@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-strip-types
+#!/usr/bin/env node --experimental-strip-types --disable-warning=ExperimentalWarning
 
 console.log("Listing workflows...");
 

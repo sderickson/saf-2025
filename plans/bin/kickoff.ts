@@ -1,4 +1,4 @@
-#!/usr/bin/env node --experimental-strip-types
+#!/usr/bin/env node --experimental-strip-types --disable-warning=ExperimentalWarning
 
 import process from "node:process";
 import { resolve } from "node:path";
