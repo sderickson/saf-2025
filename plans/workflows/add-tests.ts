@@ -1,16 +1,15 @@
 import { existsSync } from "fs";
 // import type { SimpleWorkflow } from "../types.ts";
-import { resolve, basename } from "path";
+import { basename } from "path";
 
 import { SimpleWorkflow } from "../workflow.ts";
+import { getAbsPathFromProjectPath } from "../bin/common.ts";
 
 export interface AddTestsWorkflowParams {
   path: string;
 }
 
-interface AddTestsWorkflowContext {
-  absPath: string;
-}
+interface AddTestsWorkflowContext {}
 
 export class AddTestsWorkflow extends SimpleWorkflow<
   AddTestsWorkflowParams,
@@ -18,22 +17,22 @@ export class AddTestsWorkflow extends SimpleWorkflow<
 > {
   name = "add-unit-tests";
   init = async () => {
-    const absPath = resolve(this.params.path);
-    const context: AddTestsWorkflowContext = { absPath };
-    if (!existsSync(absPath)) {
-      return {
-        context,
-        error: new Error(`File does not exist: ${absPath}`),
-      };
-    }
-    return { context };
+    this.targetAbsPath();
+    return { context: {} };
   };
 
-  workflowPrompt = () =>
-    `You are adding tests to ${this.getContext()?.absPath}.`;
+  targetAbsPath = () => {
+    const absPath = getAbsPathFromProjectPath(this.params.path);
+    if (!existsSync(absPath)) {
+      throw new Error(`File does not exist: ${absPath}`);
+    }
+    return absPath;
+  };
+
+  workflowPrompt = () => `You are adding tests to ${this.params.path}.`;
 
   getFilenameToTest() {
-    return basename(this.getContext().absPath);
+    return basename(this.params.path);
   }
 
   steps = [

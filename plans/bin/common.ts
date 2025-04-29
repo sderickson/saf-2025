@@ -1,4 +1,4 @@
-import { dirname, resolve } from "node:path";
+import { dirname, resolve, join } from "node:path";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { SimpleWorkflow } from "../workflow.ts";
 
@@ -54,4 +54,19 @@ export const savePlanStatusContents = (
   const planStatusFilePath = getPlanStatusFilePath(planAbsPath);
   writeFileSync(planStatusFilePath, contents);
   writeFileSync(getActivePlanPathPath(), planAbsPath);
+};
+
+export const getAbsPathFromProjectPath = (projectPath: string) => {
+  let projectDir = process.cwd();
+  console.log("projectDir", projectDir);
+  console.log("projectPath", projectPath);
+  while (!existsSync(join(projectDir, projectPath)) && projectDir !== "/") {
+    console.log("checked", join(projectDir, projectPath));
+    projectDir = dirname(projectDir);
+    console.log("projectDir", projectDir);
+  }
+  if (projectDir === "/") {
+    throw new Error(`File does not exist: ${projectPath}`);
+  }
+  return join(projectDir, projectPath);
 };
