@@ -12,3 +12,5 @@
 *.njsproj
 *.sln
 *.sw?
+
+**/saf-workflow-status.json

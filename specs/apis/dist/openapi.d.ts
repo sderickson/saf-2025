@@ -61,7 +61,9 @@ export interface components {
         };
         error: {
             /** @description A human-readable error message */
-            error: string;
+            error?: string;
+            /** @description A human-readable error message */
+            message?: string;
         };
         CreateTodoRequest: {
             /** @description The title/description of the todo item */
