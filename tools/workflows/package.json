@@ -1,24 +1,12 @@
 {
   "name": "@saf-2025/workflows",
-  "description": "Workflow tools",
+  "description": "Project-specific workflows using @saflib/workflows",
   "private": true,
   "type": "module",
-  "exports": {
-    ".": "./index.ts"
-  },
   "bin": {
-    "saf-workflow": "./bin/workflow-cli.ts"
-  },
-
-  "scripts": {
-    "_test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "saf-workflow": "./workflow-cli.ts"
   },
   "dependencies": {
     "@saflib/workflows": "*"
-  },
-  "devDependencies": {
-    "@saflib/vitest": "*"
   }
 } 
