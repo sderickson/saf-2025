@@ -13,4 +13,4 @@
 *.sln
 *.sw?
 
-**/saf-plan-status.json
+**/saf-workflow-status.json
