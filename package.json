@@ -15,7 +15,6 @@
     "clients/*",
     "dbs/*",
     "deploy/*",
-    "plans",
     "saflib/*",
     "services/*",
     "specs/*"
@@ -24,9 +23,7 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "@saflib/monorepo": "*"
-  },
-  "dependencies": {
+    "@saflib/monorepo": "*",
     "@saflib/workflows": "*"
   }
 }
