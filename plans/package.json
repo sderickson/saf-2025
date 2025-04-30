@@ -7,17 +7,9 @@
     ".": "./index.ts"
   },
   "bin": {
-    "plans-ls": "./bin/ls.ts",
-    "plans-kickoff": "./bin/kickoff.ts",
-    "plans-status": "./bin/status.ts",
-    "plans-next": "./bin/next.ts",
-    "plans-workflow": "./bin/workflow.ts"
+    "saf-workflow": "./bin/workflow-cli.ts"
   },
   "scripts": {
-    "plans-ls": "node --experimental-strip-types ./bin/ls.ts",
-    "plans-kickoff": "node --experimental-strip-types ./bin/kickoff.ts",
-    "plans-status": "node --experimental-strip-types ./bin/status.ts",
-    "plans-next": "node --experimental-strip-types ./bin/next.ts",
     "_test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

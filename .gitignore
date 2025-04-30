@@ -12,3 +12,5 @@
 *.njsproj
 *.sln
 *.sw?
+
+**/saf-plan-status.json

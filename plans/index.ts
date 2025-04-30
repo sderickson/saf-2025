@@ -1,8 +1,9 @@
-import type { CLIArgument, WorkflowImplementation } from "./bin/workflow.ts";
+import type { CLIArgument } from "./bin/types.ts";
+import type { ConcreteWorkflow as ConcreteWorkflow } from "./bin/workflow.ts";
 import { AddTestsWorkflow } from "./workflows/add-tests.ts";
 import { SplitFileWorkflow } from "./workflows/split-file.ts";
 
-const workflowClasses: WorkflowImplementation[] = [
+const workflowClasses: ConcreteWorkflow[] = [
   AddTestsWorkflow,
   SplitFileWorkflow,
 ];
@@ -10,7 +11,7 @@ const workflowClasses: WorkflowImplementation[] = [
 interface WorkflowMeta {
   name: string;
   cliArguments: CLIArgument[];
-  Workflow: WorkflowImplementation;
+  Workflow: ConcreteWorkflow;
 }
 
 export const workflows: WorkflowMeta[] = workflowClasses.map((Workflow) => {

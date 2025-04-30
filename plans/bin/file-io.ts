@@ -1,10 +1,11 @@
 import { resolve } from "node:path";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { SimpleWorkflow, type WorkflowBlob } from "./workflow.ts";
+import { SimpleWorkflow } from "./workflow.ts";
 import { workflows } from "../index.ts";
+import type { WorkflowBlob } from "./types.ts";
 
 export const getPlanStatusFilePath = () => {
-  return resolve(process.cwd(), "plan-status.json");
+  return resolve(process.cwd(), "saf-plan-status.json");
 };
 
 export const loadPlanStatusContents = (): string | null => {

@@ -1,67 +1,20 @@
-export type Result<C extends Record<string, any>> = {
-  data?: C;
-  error?: Error;
-};
+import type {
+  CLIArgument,
+  Result,
+  Step,
+  WorkflowBlob,
+  WorkflowStatus,
+} from "./types.ts";
+import { addNewLinesToString } from "./utils.ts";
 
-export interface Step {
-  name: string;
-  prompt: () => string;
-}
-
-export interface CLIArgument {
-  name: string;
-  description?: string;
-  defaultValue?: string;
-}
-
+// The following is TS magic to describe a class constructor that implements the abstract SimpleWorkflow class.
 type AbstractClassConstructor<T extends SimpleWorkflow<any, any>> = new (
   ...args: any[]
 ) => T;
 
-export type WorkflowImplementation = AbstractClassConstructor<
+export type ConcreteWorkflow = AbstractClassConstructor<
   SimpleWorkflow<any, any>
 >;
-
-export type WorkflowStatus = "not started" | "in progress" | "completed";
-
-export interface WorkflowBlobInternalState {
-  status: WorkflowStatus;
-  stepIndex: number;
-  data: Record<string, any>;
-  params: Record<string, any>;
-}
-
-export interface WorkflowBlob {
-  workflowName: string;
-  internalState: WorkflowBlobInternalState;
-}
-
-/**
- * Given a string which may have newlines already included, add /n to each line such that no line is longer than maxLineWidth.
- */
-function addNewLinesToString(str: string, maxLineWidth: number = 80) {
-  return str
-    .split("\n")
-    .map((line) => addNewLinesToLine(line, maxLineWidth))
-    .join("\n");
-}
-
-function addNewLinesToLine(str: string, maxLineWidth: number = 80) {
-  const words = str.split(" ");
-  const lines = [];
-  let currentLine = words.shift() ?? "";
-  while (words.length > 0) {
-    const word = words.shift() ?? "";
-    if ((currentLine + " " + word).length > maxLineWidth) {
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = currentLine + " " + word;
-    }
-  }
-  lines.push(currentLine);
-  return lines.join("\n");
-}
 
 export abstract class SimpleWorkflow<
   P extends Record<string, any>,
@@ -110,9 +63,7 @@ export abstract class SimpleWorkflow<
     this.status = "in progress";
     this.print(`The "${this.workflowName}" workflow has been kicked off.`);
     await this.printStatus();
-    this.print(
-      `To continue, run "npm exec --workspace=@saf-2025/plans plans-next".`,
-    );
+    this.print(`To continue, run "npm exec saf-workflow -- next"`);
     return true;
   }
 
