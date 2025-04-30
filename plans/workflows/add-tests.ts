@@ -1,38 +1,37 @@
 import { existsSync } from "fs";
-// import type { SimpleWorkflow } from "../types.ts";
 import { basename } from "path";
 
-import { SimpleWorkflow } from "../workflow.ts";
-import { getAbsPathFromProjectPath } from "../bin/common.ts";
+import { SimpleWorkflow } from "../bin/workflow.ts";
 
 export interface AddTestsWorkflowParams {
   path: string;
 }
 
-interface AddTestsWorkflowContext {}
+interface AddTestsWorkflowData {}
 
 export class AddTestsWorkflow extends SimpleWorkflow<
   AddTestsWorkflowParams,
-  AddTestsWorkflowContext
+  AddTestsWorkflowData
 > {
-  name = "add-unit-tests";
-  init = async () => {
-    this.targetAbsPath();
-    return { context: {} };
-  };
-
-  targetAbsPath = () => {
-    const absPath = getAbsPathFromProjectPath(this.params.path);
-    if (!existsSync(absPath)) {
-      throw new Error(`File does not exist: ${absPath}`);
+  workflowName = "add-tests";
+  cliArguments = [
+    {
+      name: "path",
+      description: "The path to the plan",
+    },
+  ];
+  init = async (path: string) => {
+    this.params = { path };
+    if (!existsSync(this.getParams().path)) {
+      throw new Error(`File does not exist: ${this.getParams().path}`);
     }
-    return absPath;
+    return { data: {} };
   };
 
-  workflowPrompt = () => `You are adding tests to ${this.params.path}.`;
+  workflowPrompt = () => `You are adding tests to ${this.getParams().path}.`;
 
   getFilenameToTest() {
-    return basename(this.params.path);
+    return basename(this.getParams().path);
   }
 
   steps = [

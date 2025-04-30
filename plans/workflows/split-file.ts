@@ -1,40 +1,48 @@
 import { existsSync } from "fs";
-// import type { SimpleWorkflow } from "../types.ts";
 import { basename } from "path";
 
-import { SimpleWorkflow } from "../workflow.ts";
-import { getAbsPathFromProjectPath } from "../bin/common.ts";
+import { SimpleWorkflow } from "../bin/workflow.ts";
 
 export interface SplitFileWorkflowParams {
   path: string;
   item: string;
 }
 
-interface SplitFileWorkflowContext {}
+interface SplitFileWorkflowData {}
 
 export class SplitFileWorkflow extends SimpleWorkflow<
   SplitFileWorkflowParams,
-  SplitFileWorkflowContext
+  SplitFileWorkflowData
 > {
-  name = "split-file";
-  init = async () => {
+  workflowName = "split-file";
+  cliArguments = [
+    {
+      name: "path",
+      description: "The path to the file to split",
+    },
+    {
+      name: "item",
+      description: "The item to split",
+    },
+  ];
+  init = async (path: string, item: string) => {
+    this.params = { path, item };
     this.targetAbsPath();
-    return { context: {} };
+    return { data: {} };
   };
 
   targetAbsPath = () => {
-    const absPath = getAbsPathFromProjectPath(this.params.path);
-    if (!existsSync(absPath)) {
-      throw new Error(`File does not exist: ${absPath}`);
+    if (!existsSync(this.getParams().path)) {
+      throw new Error(`File does not exist: ${this.getParams().path}`);
     }
-    return absPath;
+    return this.getParams().path;
   };
 
   workflowPrompt = () =>
-    `You are breaking up ${this.params.path} into multiple files.`;
+    `You are breaking up ${this.getParams().path} into multiple files.`;
 
   getFilenameToSplit() {
-    return basename(this.params.path);
+    return basename(this.getParams().path);
   }
 
   steps = [
@@ -51,12 +59,12 @@ export class SplitFileWorkflow extends SimpleWorkflow<
     {
       name: "Mark Each Item to Split",
       prompt: () =>
-        `Add a comment to each ${this.params.item} in ${this.getFilenameToSplit()} that says "TODO: Split this item out into <filename>"`,
+        `Add a comment to each ${this.getParams().item} in ${this.getFilenameToSplit()} that says "TODO: Split this item out into <filename>"`,
     },
     {
       name: "Split out files",
       prompt: () =>
-        `For each ${this.params.item} in ${this.getFilenameToSplit()}, create a new file and move the contents of the ${this.params.item} to the new file, add it to the index file, and mark the TODO comment as DONE.`,
+        `For each ${this.getParams().item} in ${this.getFilenameToSplit()}, create a new file and move the contents of the ${this.getParams().item} to the new file, add it to the index file, and mark the TODO comment as DONE.`,
     },
     {
       name: "Update Imports",

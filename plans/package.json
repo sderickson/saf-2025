@@ -10,7 +10,8 @@
     "plans-ls": "./bin/ls.ts",
     "plans-kickoff": "./bin/kickoff.ts",
     "plans-status": "./bin/status.ts",
-    "plans-next": "./bin/next.ts"
+    "plans-next": "./bin/next.ts",
+    "plans-workflow": "./bin/workflow.ts"
   },
   "scripts": {
     "plans-ls": "node --experimental-strip-types ./bin/ls.ts",
@@ -22,7 +23,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@saflib/monorepo": "*"
+    "@saflib/monorepo": "*",
+    "commander": "^13.1.0"
   },
   "devDependencies": {
     "@saflib/vitest": "*"
