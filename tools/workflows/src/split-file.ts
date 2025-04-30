@@ -15,6 +15,7 @@ export class SplitFileWorkflow extends SimpleWorkflow<
   SplitFileWorkflowData
 > {
   name = "split-file";
+  description = "Split a file into multiple files, one for each item.";
   cliArguments = [
     {
       name: "path",
@@ -22,7 +23,8 @@ export class SplitFileWorkflow extends SimpleWorkflow<
     },
     {
       name: "item",
-      description: "The item to split",
+      description:
+        "Name of the thing to split the file by, like 'route' or 'query'",
     },
   ];
   init = async (path: string, item: string) => {

@@ -14,10 +14,11 @@ export class AddTestsWorkflow extends SimpleWorkflow<
   AddTestsWorkflowData
 > {
   name = "add-tests";
+  description = "Given a file, add tests to the file.";
   cliArguments = [
     {
       name: "path",
-      description: "The path to the plan",
+      description: "The path to the file to add tests to",
     },
   ];
   init = async (path: string) => {
