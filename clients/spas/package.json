@@ -14,10 +14,11 @@
     "ts:check": "vue-tsc -b"
   },
   "dependencies": {
-    "@saflib/vue-spa": "*",
     "@saf-2025/specs-apis": "*",
     "@saflib/auth-vue": "*",
-    "@saflib/monorepo": "*"
+    "@saflib/monorepo": "*",
+    "@saflib/vue-spa": "*",
+    "@vitejs/plugin-vue": "^6.0.1"
   },
   "devDependencies": {
     "@saflib/vue-spa-dev": "*"

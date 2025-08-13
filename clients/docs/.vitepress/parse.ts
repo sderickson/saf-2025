@@ -41,12 +41,14 @@ const getDocsByPackage = (rootPath: string) => {
 
   const docsByPackage: accumulatedDocs = markdownFiles.reduce(
     (acc: accumulatedDocs, file: string) => {
+      console.log("file", file);
       const relativePath = file.replace(rootPath, "");
       const numberOfDirectories = relativePath.split("/").length;
       if (numberOfDirectories < 3) {
         // e.g. "/README.md"
         return acc;
       }
+
       const packageName = relativePath.split("/").slice(1, 2).join("/");
       if (!acc[packageName]) {
         const packageJsonPath = join(rootPath, packageName, "package.json");
