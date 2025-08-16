@@ -56,6 +56,10 @@ export default defineConfig({
         text: "Best Practices",
         link: "/best-practices",
       },
+      {
+        text: "Conventions",
+        link: "/conventions",
+      },
       ...sidebar,
     ],
 
