@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@saflib/dev-tools": "*",
     "vitepress": "^1.6.3",
     "vue": "^3.5.13"
   }

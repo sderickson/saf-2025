@@ -12,12 +12,6 @@ const packageInfoToSidebar = (
   packageInfo: packageInfo,
 ): sidebarItem | undefined => {
   let sidebar: sidebarItem[] = packageInfo.docs;
-  if (packageInfo.index) {
-    sidebar.unshift({
-      text: packageInfo.name,
-      link: packageInfo.index,
-    });
-  }
   if (sidebar.length > 0) {
     return {
       text: packageInfo.name,

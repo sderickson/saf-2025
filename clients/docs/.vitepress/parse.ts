@@ -1,6 +1,6 @@
 import { readdirSync, statSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
-
+import { buildMonorepoContext } from "@saflib/dev-tools";
 export interface document {
   text: string;
   link: string;
@@ -9,9 +9,6 @@ export interface document {
 export interface packageInfo {
   name: string;
   docs: document[];
-  index: string;
-  group: string;
-  json: object;
 }
 
 function findMarkdownFiles(dir: string): string[] {
@@ -36,12 +33,27 @@ interface accumulatedDocs {
   [key: string]: packageInfo;
 }
 
+const getDocsByPackage2 = (rootPath: string) => {
+  const monorepoContext = buildMonorepoContext(rootPath);
+  const packages = Array.from(monorepoContext.packages).filter(
+    (packageName) => {
+      const packageJsonPath = join(rootPath, packageName, "package.json");
+      if (!existsSync(packageJsonPath)) {
+        return false;
+      }
+      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+    },
+  );
+};
+
 const getDocsByPackage = (rootPath: string) => {
+  getDocsByPackage2(rootPath);
+
   const markdownFiles = findMarkdownFiles(rootPath);
 
   const docsByPackage: accumulatedDocs = markdownFiles.reduce(
     (acc: accumulatedDocs, file: string) => {
-      console.log("file", file);
+      // console.log("file", file);
       const relativePath = file.replace(rootPath, "");
       const numberOfDirectories = relativePath.split("/").length;
       if (numberOfDirectories < 3) {
@@ -55,15 +67,9 @@ const getDocsByPackage = (rootPath: string) => {
         if (!existsSync(packageJsonPath)) {
           return acc;
         }
-        const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-
-        const indexPath = join(rootPath, packageName, "index.md");
         acc[packageName] = {
           name: packageName,
           docs: [],
-          index: existsSync(indexPath) ? indexPath : "",
-          group: packageJson.saflib ? packageJson.saflib.group || "" : "",
-          json: packageJson,
         };
       }
 
@@ -80,6 +86,7 @@ const getDocsByPackage = (rootPath: string) => {
     },
     {},
   );
+  console.log(docsByPackage);
   return docsByPackage;
 };
 
