@@ -1,6 +1,6 @@
 import { readdirSync, statSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
-
+import { buildMonorepoContext } from "@saflib/dev-tools";
 export interface document {
   text: string;
   link: string;
@@ -9,78 +9,62 @@ export interface document {
 export interface packageInfo {
   name: string;
   docs: document[];
-  index: string;
-  group: string;
-  json: object;
-}
-
-function findMarkdownFiles(dir: string): string[] {
-  const files: string[] = [];
-  const items = readdirSync(dir);
-
-  for (const item of items) {
-    const fullPath = join(dir, item);
-    const stat = statSync(fullPath);
-
-    if (stat.isDirectory()) {
-      files.push(...findMarkdownFiles(fullPath));
-    } else if (item.endsWith(".md")) {
-      files.push(fullPath);
-    }
-  }
-
-  return files;
-}
-
-interface accumulatedDocs {
-  [key: string]: packageInfo;
 }
 
 const getDocsByPackage = (rootPath: string) => {
-  const markdownFiles = findMarkdownFiles(rootPath);
-
-  const docsByPackage: accumulatedDocs = markdownFiles.reduce(
-    (acc: accumulatedDocs, file: string) => {
-      console.log("file", file);
-      const relativePath = file.replace(rootPath, "");
-      const numberOfDirectories = relativePath.split("/").length;
-      if (numberOfDirectories < 3) {
-        // e.g. "/README.md"
-        return acc;
+  const monorepoContext = buildMonorepoContext(rootPath);
+  const packages = Array.from(monorepoContext.packages)
+    .filter((packageName) => {
+      return packageName.startsWith("@saflib/");
+    })
+    .map((packageName) => {
+      const packageDir =
+        monorepoContext.monorepoPackageDirectories[packageName];
+      const docsDir = join(packageDir, "docs");
+      if (!existsSync(docsDir)) {
+        return false;
       }
-
-      const packageName = relativePath.split("/").slice(1, 2).join("/");
-      if (!acc[packageName]) {
-        const packageJsonPath = join(rootPath, packageName, "package.json");
-        if (!existsSync(packageJsonPath)) {
-          return acc;
-        }
-        const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-
-        const indexPath = join(rootPath, packageName, "index.md");
-        acc[packageName] = {
-          name: packageName,
-          docs: [],
-          index: existsSync(indexPath) ? indexPath : "",
-          group: packageJson.saflib ? packageJson.saflib.group || "" : "",
-          json: packageJson,
-        };
+      const stat = statSync(docsDir);
+      if (!stat.isDirectory()) {
+        return false;
       }
+      const files = readdirSync(docsDir);
+      const markdownFiles = files.filter((file) => file.endsWith(".md"));
+      const info: packageInfo = {
+        name: packageName,
+        docs: markdownFiles.map((file) => {
+          const absPath = join(docsDir, file);
+          const firstLine = readFileSync(absPath, "utf8").split("\n")[0];
+          const relativePath = absPath.replace(rootPath, "");
+          const text = firstLine.replace("#", "").trim();
+          return {
+            text,
+            link: relativePath,
+          };
+        }),
+      };
 
-      if (relativePath.split("/").includes("docs")) {
-        const firstLine = readFileSync(file, "utf8").split("\n")[0];
-        const text = firstLine.replace("#", "").trim();
-        const link = relativePath;
-        acc[packageName].docs.push({
-          text,
-          link,
+      const refPath = join(docsDir, "ref", "index.md");
+      if (existsSync(refPath)) {
+        const relativePath = refPath.replace(rootPath, "");
+        info.docs.push({
+          text: "Code Reference",
+          link: relativePath,
         });
       }
-      return acc;
-    },
-    {},
-  );
-  return docsByPackage;
+
+      const cliPath = join(docsDir, "cli", "index.md");
+      if (existsSync(cliPath)) {
+        const relativePath = cliPath.replace(rootPath, "");
+        info.docs.push({
+          text: "CLI Reference",
+          link: relativePath,
+        });
+      }
+      return info;
+    })
+    .filter((p) => p !== false);
+  return packages;
 };
 
 export { getDocsByPackage };
