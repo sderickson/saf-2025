@@ -52,6 +52,15 @@ const getDocsByPackage = (rootPath: string) => {
           link: relativePath,
         });
       }
+
+      const cliPath = join(docsDir, "cli", "index.md");
+      if (existsSync(cliPath)) {
+        const relativePath = cliPath.replace(rootPath, "");
+        info.docs.push({
+          text: "CLI Reference",
+          link: relativePath,
+        });
+      }
       return info;
     })
     .filter((p) => p !== false);
