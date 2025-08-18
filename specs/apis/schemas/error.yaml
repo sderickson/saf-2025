@@ -1,8 +1,0 @@
-type: object
-properties:
-  error:
-    type: string
-    description: A human-readable error message
-  message:
-    type: string
-    description: A human-readable error message

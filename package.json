@@ -3,27 +3,28 @@
   "description": "Site and demonstration of SAF features.",
   "type": "module",
   "scripts": {
-    "test": "npm run test --workspaces --if-present --parallel",
+    "test": "vitest run",
     "test:coverage": "npm run test:coverage --workspaces --if-present --parallel",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "typecheck": "vue-tsc -b",
     "format": "prettier --write ."
   },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
   "workspaces": [
     "clients/*",
-    "dbs/*",
     "deploy/*",
-    "saflib/*",
-    "services/*",
-    "specs/*",
-    "tools/*"
+    "saflib/**"
   ],
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
     "@saflib/monorepo": "*"
+  },
+  "dependencies": {
+    "@saflib/vue-spa": "*",
+    "vitest": "^3.2.4"
   }
 }

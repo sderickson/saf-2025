@@ -52,6 +52,14 @@ export default defineConfig({
         text: "Overview",
         link: "/",
       },
+      {
+        text: "Best Practices",
+        link: "/best-practices",
+      },
+      {
+        text: "Conventions",
+        link: "/conventions",
+      },
       ...sidebar,
     ],
 

@@ -21,9 +21,6 @@ const docsLink = `${protocol}//docs.${currentDomain}/`;
         Template
         <v-icon icon="mdi-github" class="ml-1" />
       </v-btn>
-      <v-btn color="secondary" variant="flat" class="mr-5" href="/auth/login">
-        Sign In
-      </v-btn>
     </v-app-bar>
 
     <v-main class="d-flex align-center justify-center text-center">
