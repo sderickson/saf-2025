@@ -48,14 +48,13 @@ const getDocsByPackage = (rootPath: string) => {
       if (existsSync(refPath)) {
         const relativePath = refPath.replace(rootPath, "");
         info.docs.push({
-          text: "Reference",
+          text: "Code Reference",
           link: relativePath,
         });
       }
       return info;
     })
     .filter((p) => p !== false);
-  console.log("packages", packages);
   return packages;
 };
 
