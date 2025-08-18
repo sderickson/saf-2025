@@ -35,19 +35,45 @@ interface accumulatedDocs {
 
 const getDocsByPackage2 = (rootPath: string) => {
   const monorepoContext = buildMonorepoContext(rootPath);
-  const packages = Array.from(monorepoContext.packages).filter(
-    (packageName) => {
-      const packageJsonPath = join(rootPath, packageName, "package.json");
-      if (!existsSync(packageJsonPath)) {
+  const packages = Array.from(monorepoContext.packages)
+    .filter((packageName) => {
+      return packageName.startsWith("@saflib/");
+    })
+    .map((packageName) => {
+      const packageDir =
+        monorepoContext.monorepoPackageDirectories[packageName];
+      const docsDir = join(packageDir, "docs");
+      if (!existsSync(docsDir)) {
         return false;
       }
-      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
-    },
-  );
+      const stat = statSync(docsDir);
+      if (!stat.isDirectory()) {
+        return false;
+      }
+      const files = readdirSync(docsDir);
+      const markdownFiles = files.filter((file) => file.endsWith(".md"));
+      const info: packageInfo = {
+        name: packageName,
+        docs: markdownFiles.map((file) => {
+          const absPath = join(docsDir, file);
+          const firstLine = readFileSync(absPath, "utf8").split("\n")[0];
+          const relativePath = absPath.replace(rootPath, "");
+          const text = firstLine.replace("#", "").trim();
+          return {
+            text,
+            link: relativePath,
+          };
+        }),
+      };
+      return info;
+    })
+    .filter((p) => p !== false);
+  console.log("packages", packages);
+  return packages;
 };
 
 const getDocsByPackage = (rootPath: string) => {
-  getDocsByPackage2(rootPath);
+  return getDocsByPackage2(rootPath);
 
   const markdownFiles = findMarkdownFiles(rootPath);
 
@@ -86,7 +112,7 @@ const getDocsByPackage = (rootPath: string) => {
     },
     {},
   );
-  console.log(docsByPackage);
+  // console.log(docsByPackage);
   return docsByPackage;
 };
 
