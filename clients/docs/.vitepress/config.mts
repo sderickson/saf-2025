@@ -28,6 +28,16 @@ const sidebar = Object.entries(
   .map(([_, packageInfo]) => packageInfoToSidebar(packageInfo))
   .filter((item): item is sidebarItem => item !== undefined);
 
+sidebar.sort((a, b) => {
+  if (a.text > b.text) {
+    return 1;
+  }
+  if (a.text < b.text) {
+    return -1;
+  }
+  return 0;
+});
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "SAF Documentation",
