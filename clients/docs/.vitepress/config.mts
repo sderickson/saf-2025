@@ -26,7 +26,9 @@ const packagesToSkip = [
   "@saflib/cron-db",
   "@saflib/cron-spec",
   "@saflib/cron-vue",
-]
+  "@saflib/email-vue",
+  "@saflib/email-spec",
+];
 
 const sidebar = Object.entries(
   getDocsByPackage(resolve(__dirname, "../../../saflib")),
