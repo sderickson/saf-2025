@@ -24,6 +24,7 @@ const packageInfoToSidebar = (
 
 const packagesToSkip = [
   "@saflib/cron-db",
+  "@saflib/cron-spec",
   "@saflib/cron-vue",
 ]
 
