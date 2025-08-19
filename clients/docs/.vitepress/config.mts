@@ -26,7 +26,8 @@ const sidebar = Object.entries(
   getDocsByPackage(resolve(__dirname, "../../../saflib")),
 )
   .map(([_, packageInfo]) => packageInfoToSidebar(packageInfo))
-  .filter((item): item is sidebarItem => item !== undefined);
+  .filter((item): item is sidebarItem => item !== undefined)
+  .filter((item): item is sidebarItem => item.text !== "@saflib/cron-db");
 
 sidebar.sort((a, b) => {
   if (a.text > b.text) {
