@@ -61,6 +61,16 @@ const getDocsByPackage = (rootPath: string) => {
           link: relativePath,
         });
       }
+
+      const envPath = join(docsDir, "env", "index.md");
+      if (existsSync(envPath)) {
+        const relativePath = envPath.replace(rootPath, "");
+        info.docs.push({
+          text: "Environment Variables",
+          link: relativePath,
+        });
+      }
+
       return info;
     })
     .filter((p) => p !== false);
