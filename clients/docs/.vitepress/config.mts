@@ -29,6 +29,14 @@ const packagesToSkip = [
   "@saflib/email-vue",
   "@saflib/email-spec",
   "@saflib/grpc-specs",
+  "@saflib/identity-common",
+  "@saflib/identity-db",
+  "@saflib/identity-grpc",
+  "@saflib/identity-http",
+  "@saflib/identity-rpcs",
+  "@saflib/identity-spec",
+  "@saflib/auth-links",
+  "@saflib/auth-vue",
 ];
 
 const sidebar = Object.entries(
