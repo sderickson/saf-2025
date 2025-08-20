@@ -28,6 +28,7 @@ const packagesToSkip = [
   "@saflib/cron-vue",
   "@saflib/email-vue",
   "@saflib/email-spec",
+  "@saflib/grpc-specs",
 ];
 
 const sidebar = Object.entries(
