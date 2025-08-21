@@ -36,7 +36,7 @@ const packagesToSkip = [
   "@saflib/identity-rpcs",
   "@saflib/identity-spec",
   "@saflib/auth-links",
-  "@saflib/auth-vue",
+  "@saflib/auth",
 ];
 
 const sidebar = Object.entries(

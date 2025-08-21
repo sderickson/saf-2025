@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@saf-2025/specs-apis": "*",
-    "@saflib/auth-vue": "*",
+    "@saflib/auth": "*",
     "@saflib/monorepo": "*",
     "@saflib/vue-spa": "*",
     "@vitejs/plugin-vue": "^6.0.1"
