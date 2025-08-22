@@ -79,6 +79,10 @@ export default defineConfig({
         link: "/best-practices",
       },
       {
+        text: "Workflows",
+        link: "/workflows",
+      },
+      {
         text: "Conventions",
         link: "/conventions",
       },

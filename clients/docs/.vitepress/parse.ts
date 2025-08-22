@@ -57,7 +57,7 @@ const getDocsByPackage = (rootPath: string) => {
       if (existsSync(cliPath)) {
         const relativePath = cliPath.replace(rootPath, "");
         info.docs.push({
-          text: "CLI Reference",
+          text: "CLI Tools",
           link: relativePath,
         });
       }
@@ -67,6 +67,15 @@ const getDocsByPackage = (rootPath: string) => {
         const relativePath = envPath.replace(rootPath, "");
         info.docs.push({
           text: "Environment Variables",
+          link: relativePath,
+        });
+      }
+
+      const workflowsPath = join(docsDir, "workflows", "index.md");
+      if (existsSync(workflowsPath)) {
+        const relativePath = workflowsPath.replace(rootPath, "");
+        info.docs.push({
+          text: "Workflows",
           link: relativePath,
         });
       }
