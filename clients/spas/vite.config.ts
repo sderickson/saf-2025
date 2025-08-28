@@ -18,12 +18,6 @@ function makeConfig() {
         plugins: [ignore(["**/*.test.ts"])],
       },
     },
-    resolve: {
-      alias: {
-        clients: path.resolve(__dirname, "./"),
-        "@saflib/specs-apis": path.resolve(__dirname, "../specs/apis/dist"),
-      },
-    },
     server: {
       strictPort: true,
       host: true,

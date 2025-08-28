@@ -17,10 +17,7 @@
     "@saf-2025/specs-apis": "*",
     "@saflib/auth": "*",
     "@saflib/monorepo": "*",
-    "@saflib/vue-spa": "*",
+    "@saflib/vue": "*",
     "@vitejs/plugin-vue": "^6.0.1"
-  },
-  "devDependencies": {
-    "@saflib/vue-spa-dev": "*"
   }
 }

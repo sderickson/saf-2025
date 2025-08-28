@@ -37,6 +37,7 @@ const packagesToSkip = [
   "@saflib/identity-spec",
   "@saflib/auth-links",
   "@saflib/auth",
+  "@saflib/processes", // This needs work
 ];
 
 const sidebar = Object.entries(

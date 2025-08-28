@@ -24,7 +24,7 @@
     "@saflib/monorepo": "*"
   },
   "dependencies": {
-    "@saflib/vue-spa": "*",
+    "@saflib/vue": "*",
     "vitest": "^3.2.4"
   }
 }

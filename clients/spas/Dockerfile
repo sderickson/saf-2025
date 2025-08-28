@@ -4,7 +4,7 @@ FROM node:22-slim AS builder
 # install saflib
 WORKDIR /app
 
-COPY --parents ./package.json ./package-lock.json ./clients/spas/package.json ./saflib/identity/auth/package.json ./saflib/identity/identity-spec/package.json ./saflib/monorepo/package.json ./saflib/openapi/package.json ./saflib/utils/package.json ./saflib/vue-spa/package.json ./
+COPY --parents ./package.json ./package-lock.json ./clients/spas/package.json ./saflib/identity/auth/package.json ./saflib/identity/identity-spec/package.json ./saflib/monorepo/package.json ./saflib/openapi/package.json ./saflib/utils/package.json ./saflib/vue/package.json ./
 RUN npm install --omit=dev
 
 # Without these two lines, builds fail with "Cannot find module @rollup/rollup-<platform>. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory."
@@ -15,7 +15,7 @@ RUN npm install --omit=dev
 RUN npm install @rollup/rollup-linux-arm64-gnu || true
 RUN npm install @rollup/rollup-linux-x64-gnu || true
 
-COPY --parents ./clients/spas ./saflib/identity/auth ./saflib/identity/identity-spec ./saflib/monorepo ./saflib/openapi ./saflib/utils ./saflib/vue-spa ./
+COPY --parents ./clients/spas ./saflib/identity/auth ./saflib/identity/identity-spec ./saflib/monorepo ./saflib/openapi ./saflib/utils ./saflib/vue ./
 
 # # Vue app setup
 WORKDIR /app/clients/spas
