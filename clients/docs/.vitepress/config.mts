@@ -83,10 +83,6 @@ export default defineConfig({
         text: "Workflows",
         link: "/workflows",
       },
-      {
-        text: "Conventions",
-        link: "/conventions",
-      },
       ...sidebar,
     ],
 
