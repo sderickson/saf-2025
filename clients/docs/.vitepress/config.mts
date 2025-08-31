@@ -80,7 +80,7 @@ export default defineConfig({
         link: "/best-practices",
       },
       {
-        text: "Workflows",
+        text: "Automated Workflows",
         link: "/workflows",
       },
       ...sidebar,
