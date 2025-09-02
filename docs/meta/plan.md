@@ -3,23 +3,6 @@
 Working doc for keeping track of what main features are built, and what is still be done.
 Also throw in some interesting things to try as I find them.
 
-### Backlog
-
-- Auth
-  - Add forgot email flow
-  - Add verify email flow
-- To migrate from product repos
-  - npm scripts
-- To create to reduce manual work for each product
-  - generate docker and compose files from package.json
-  - generate vite config from spa manifest
-- Static analysis
-  - Apply linting to entire repo, not just clients
-  - Add typescript checking to CI for whole repo
-  - Add linter to enforce exact file extensions
-- Docs
-  - Add doc manifest generated from lib folder entries
-
 ### Core
 
 Once all of this is done, should start using this in actual applications.
@@ -39,7 +22,7 @@ Once all of this is done, should start using this in actual applications.
   - ✓ Vitest BE Unit
   - ✓ Integrate with GitHub Actions
 - Observability
-  - Prometheus, Loki, OpenTelemetry
+  - ✓ Prometheus, Loki
   - PagerDuty
 
 ### Extended
@@ -49,10 +32,10 @@ What follows can largely be done in any order.
 - Backend+
   - Redis
   - Background jobs
-  - ~ Cron jobs
+  - ✓ Cron jobs
   - Backups
   - Uploads
-  - ~ Rate limiting
+  - ✓ Rate limiting
   - ✓ Stronger security, such as express/helmet, or caddy headers
   - ✓ Scopes
   - Workers (e.g. Cloudflare Workers)
@@ -60,9 +43,9 @@ What follows can largely be done in any order.
   - ✓ Tanstack Query
   - ✓ Vue Router
   - ✓ Design system, components
-  - Sentry, Error boundaries
-  - Analytics et al
-  - i18n
+  - ✓ Sentry, Error boundaries
+  - ✓ Analytics et al
+  - ✓ i18n
 - Testing+
   - ✓ Playwright
   - Storybook
@@ -70,12 +53,12 @@ What follows can largely be done in any order.
 - Infra+
   - Nix
   - Secret management
-  - ~ Optimize memory
+  - ✓ Optimize memory
   - Blue/Green deployment
   - CDN
 - Workflow+
   - ✓ Code formatting, quality, ESLint
-  - ~ Generate docker files from package files, general package-driven development
+  - ✓ Generate docker files from package files, general package-driven development
   - API Versioning
   - ✓ Documentation
   - ✓ Checklists
