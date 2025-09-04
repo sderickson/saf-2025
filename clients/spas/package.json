@@ -17,7 +17,9 @@
     "@saf-2025/specs-apis": "*",
     "@saflib/auth": "*",
     "@saflib/monorepo": "*",
+    "@saflib/vite": "*",
     "@saflib/vue": "*",
-    "@vitejs/plugin-vue": "^6.0.1"
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite-plugin-vue-devtools": "^8.0.1"
   }
 }
