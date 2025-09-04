@@ -10,8 +10,7 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "ts:check": "vue-tsc -b"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@saf-2025/specs-apis": "*",
