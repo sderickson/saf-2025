@@ -24,7 +24,9 @@
     "@saflib/monorepo": "*"
   },
   "dependencies": {
+    "@saflib/dev-tools": "*",
     "@saflib/vue": "*",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.0"
   }
 }
