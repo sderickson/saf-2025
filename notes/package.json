@@ -1,3 +1,4 @@
 {
-  "name": "@saflib-2025/notes"
+  "name": "@saflib-2025/notes",
+  "type": "module"
 }
