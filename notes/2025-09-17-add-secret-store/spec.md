@@ -381,7 +381,7 @@ interface EncryptionKeyStorage {
 const keyRotationInterval = 30 * 24 * 60 * 60 * 1000; // 30 days
 ```
 
-## Implementation Plan
+## Implementation Plan (rough)
 
 ### Phase 1: Core Infrastructure
 
