@@ -25,4 +25,3 @@
 ### Monorepo templates
 
 ### Including one "thing"
-

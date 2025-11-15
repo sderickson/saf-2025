@@ -43,7 +43,10 @@ export default defineConfig({
           { text: "With an Agent", link: "/with-an-agent" },
           { text: "With Version Control", link: "/with-version-control" },
           { text: "In CI", link: "/in-ci" },
-          { text: "Monitoring and Iterating", link: "/monitoring-and-iterating" },
+          {
+            text: "Monitoring and Iterating",
+            link: "/monitoring-and-iterating",
+          },
         ],
       },
       {

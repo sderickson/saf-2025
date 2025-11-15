@@ -17,4 +17,3 @@
 ### Validation
 
 ## Best practices
-
