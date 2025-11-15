@@ -1,0 +1,13 @@
+FROM saf-docs-client:latest AS saf-docs_builder
+
+RUN npm run build
+
+FROM workflow-docs-client:latest AS workflow-docs_builder
+
+RUN npm run build
+
+FROM caddy:2.9.1
+
+COPY --from=saf-docs_builder /app/clients/saf-docs/.vitepress/dist /srv/docs/saf
+COPY --from=workflow-docs_builder /app/clients/workflow-docs/.vitepress/dist /srv/docs/workflows
+COPY ./deploy/prod/remote-assets/config /etc/caddy/

@@ -1,0 +1,13 @@
+import common.Caddyfile 
+
+{$PROTOCOL}://docs.{$DOMAIN} {
+	import spa /docs/saf /index.html
+}
+
+{$PROTOCOL}://workflows.{$DOMAIN} {
+	import spa /docs/workflows /index.html
+}
+
+{$PROTOCOL}://{$DOMAIN} {
+	redir {$PROTOCOL}://docs.{$DOMAIN}
+}

@@ -1,0 +1,21 @@
+services:
+  caddy:
+    cap_add:
+      - NET_ADMIN
+    image: ghcr.io/sderickson/saf-2025-caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./config:/etc/caddy/
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - DOMAIN=${DOMAIN}
+      - PROTOCOL=${PROTOCOL}
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
