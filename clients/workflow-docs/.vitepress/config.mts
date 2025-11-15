@@ -17,16 +17,50 @@ export default defineConfig({
     nav: [
       // { text: "Docs", link: "/" },
     ],
-    // sidebar: [
-    //   {
-    //     text: "Sidebar section",
-    //     items: [
-    //       { text: "Item 1", link: "/item-1" },
-    //       { text: "Item 2", link: "/item-2" },
-    //       { text: "Item 3", link: "/item-3" },
-    //     ],
-    //   },
-    // ],
+    sidebar: [
+      {
+        text: "Getting Started",
+        items: [
+          { text: "Introduction", link: "/introduction" },
+          { text: "Quick Start", link: "/quick-start" },
+        ],
+      },
+      {
+        text: "Writing Workflows",
+        items: [
+          { text: "Scope and Design", link: "/scope-and-design" },
+          { text: "Directory structure", link: "/directory-structure" },
+          { text: "Templates", link: "/templates" },
+          { text: "Steps", link: "/steps" },
+          { text: "Documentation", link: "/documentation" },
+          { text: "Complex Workflows", link: "/complex-workflows" },
+        ],
+      },
+      {
+        text: "Running Workflows",
+        items: [
+          { text: "Manual testing", link: "/manual-testing" },
+          { text: "With an Agent", link: "/with-an-agent" },
+          { text: "With Version Control", link: "/with-version-control" },
+          { text: "In CI", link: "/in-ci" },
+          { text: "Monitoring and Iterating", link: "/monitoring-and-iterating" },
+        ],
+      },
+      {
+        text: "Development",
+        items: [
+          { text: "Roadmap", link: "/roadmap" },
+          { text: "Contributing", link: "/contributing" },
+        ],
+      },
+      {
+        text: "Reference",
+        items: [
+          { text: "Library", link: "/library" },
+          { text: "Examples", link: "/examples" },
+        ],
+      },
+    ],
 
     socialLinks: [
       // { icon: "github", link: "https://github.com/sderickson/saf-2025" },
