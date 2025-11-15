@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REMOTE_HOST="root@137.184.36.178"
+REMOTE_HOST="root@saf-demo.online"
 REMOTE_PATH="/root"
 REMOTE_FOLDER="/root/saf-2025/"
 LOCAL_FOLDER="./deploy/prod/remote-assets"
