@@ -16,27 +16,20 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       // { text: "Docs", link: "/" },
-      // { text: "Template", link: "https://github.com/sderickson/saf-template" },
-      // { text: "Demo", link: "https://saf-demo.online/" },
-      // { text: "Lib", link: "https://github.com/sderickson/saflib" },
     ],
     // sidebar: [
     //   {
-    //     text: "Overview",
-    //     link: "/",
-    //   },
-    //   {
-    //     text: "Best Practices",
-    //     link: "/best-practices",
-    //   },
-    //   {
-    //     text: "Automated Workflows",
-    //     link: "/workflows",
+    //     text: "Sidebar section",
+    //     items: [
+    //       { text: "Item 1", link: "/item-1" },
+    //       { text: "Item 2", link: "/item-2" },
+    //       { text: "Item 3", link: "/item-3" },
+    //     ],
     //   },
     // ],
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/sderickson/saf-2025" },
+      // { icon: "github", link: "https://github.com/sderickson/saf-2025" },
     ],
   },
 });
