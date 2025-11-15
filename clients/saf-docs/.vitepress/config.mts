@@ -64,29 +64,24 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: "Docs", link: "/" },
-      { text: "Template", link: "https://github.com/sderickson/saf-template" },
-      { text: "Demo", link: "https://saf-demo.online/" },
-      { text: "Lib", link: "https://github.com/sderickson/saflib" },
+      { text: "Workflows", link: "https://workflows.saf-demo.online/" },
+      { text: "Blog", link: "https://scotterickson.info/" },
     ],
     sidebar: [
-      {
-        text: "Overview",
-        link: "/",
-      },
-      {
-        text: "Best Practices",
-        link: "/best-practices",
-      },
-      {
-        text: "Automated Workflows",
-        link: "/workflows",
-      },
+      { text: "General", items: [
+        { text: "Overview", link: "/" },
+        { text: "Best Practices", link: "/best-practices" },
+        { text: "Automated Workflows", link: "/workflows" },
+      ]},
+      { text: "Repositories", items: [
+        { text: "Source", link: "https://github.com/sderickson/saflib" },
+        { text: "Template", link: "https://github.com/sderickson/saf-template" },
+      ]},
       ...sidebar,
     ],
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/sderickson/saf-2025" },
+      { icon: "github", link: "https://github.com/sderickson" },
     ],
   },
 });
