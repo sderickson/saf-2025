@@ -115,12 +115,12 @@ LLMs are still a new technology, and there may yet be a fundamental shift in the
 
 A very different tack is to use LLMs heavily but with manual supervision. Code that is generated is reviewed, edited, trimmed, and fixed, either through more prompting or directly by the developer. This takes much more time-per-line than vibe coding, but it protects against cancerous code growths.
 
-This approach can run the gamut from checking every line to being tactical about what generated code gets thorough review. You can spend more time reviewing code for platforms, interfaces, and risky ares, and give the rest a passing glance. A balanced approach probably leads to the best productivity gains overall between the two extremes, but it seems not all _that_ much faster than simply building without LLMs.
+This approach can run the gamut from checking every line to being tactical about what generated code gets thorough review. You can spend more time reviewing code for platforms, interfaces, and risky areas, and give the rest a passing glance. A balanced approach probably leads to the best productivity gains overall between the two extremes, but it seems not all _that_ much faster than simply building without LLMs.
 
 ### Black box service
 
 The most ambitious attempt to change the nature of software development are products and services that eschew code as the source of truth at all; instead product specs and issue trackers are the "source". Instead of building and maintaining a codebase by hand, documentation is written and updated and code is generated from that corpus, like some sort of higher-order compiler. These are the most extreme; there are of course services which help you start the product with a description and some iteration, then allow you to "eject" the code that's built which can be expanded upon normally.
 
-It may be that one or more of these services can produce great things, but finding out directly is risky and time consuming. One could evaluate their potential by building many products with many of them and see how far you can get. But this is costly and if it turns out they don't work, you can't determine why since the mechanisms and strategies are proprietary and hidden.
+It may be that one or more of these services can produce great things, but finding out directly is risky and time-consuming. One could evaluate their potential by building many products with many of them and see how far you can get. But this is costly and if it turns out they don't work, you can't determine why since the mechanisms and strategies are proprietary and hidden.
 
 In an indirect way, this library is an attempt to see how viable these approaches really are. By building an open-source framework for generating routine code reliably, we can get a better sense of how high this house of cards really can go.
