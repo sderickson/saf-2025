@@ -20,7 +20,7 @@ EOF
 # SSH into remote, unzip file and run command
 echo "Unzipping and running command on remote..."
 ssh "$REMOTE_HOST" << EOF
-sudo -i
+
 cd "$REMOTE_PATH"
 # Check if unzip is installed, if not install it
 if ! command -v unzip &> /dev/null; then
