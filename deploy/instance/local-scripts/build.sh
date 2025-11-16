@@ -1,9 +1,0 @@
-#!/bin/bash
-# Build dependent images
-set -e
-
-docker build -t saf-2025-spas:latest -f ./clients/spas/Dockerfile . --platform linux/amd64
-docker build -t saf-2025-docs:latest -f ./clients/docs/Dockerfile . --platform linux/amd64
-
-# Build production images
-docker build -t ghcr.io/sderickson/saf-2025-caddy:latest -f ./deploy/instance/Dockerfile.prod --platform linux/amd64 .
