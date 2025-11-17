@@ -1,5 +1,69 @@
 # Templates
 
+## Adding Templates
+
+Most workflows will copy over templates first thing, as a scaffold for the agent to work from. The templates should be in a `templates` directory adjacent to the workflow directory.
+
+To add, copy, and update a template, set up your workflow like this:
+
+```ts
+import {
+  CopyStepMachine,
+  UpdateStepMachine,
+  defineWorkflow,
+  step,
+} from "@saflib/workflows";
+import path from "node:path";
+
+const sourceDir = path.join(import.meta.dirname, "../templates");
+const input = [] as const;
+interface WorkflowContext {}
+
+export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>({
+  // ...
+
+  // Targets may be directories or files. The keys can be referenced
+  // in the workflow so include files you want to directly reference
+  // in prompts.
+  templateFiles: {
+    route: path.join(sourceDir, "./routes/__group-name__/__target-name__.ts"),
+    test: path.join(sourceDir, "./routes/__group-name__/__target-name__.test.ts"),
+    index: path.join(sourceDir, "./routes/__group-name__/index.ts"),
+  },
+
+  steps: [
+    // `targetDir` is provided in the context function in this workflow.
+    // All other context values (`cwd`, `copiedFiles`, etc.) are provided
+    // by the workflows tool.
+    step(CopyStepMachine, ({ context }) => ({
+      targetDir: context.targetDir,
+    })),
+
+    step(UpdateStepMachine, ({ context }) => ({
+      // `fileId` is the key of the template file to update.
+      fileId: "route",
+      promptMessage: `Update **${path.relative(context.targetDir, context.copiedFiles!.route)}**.
+
+      - Return errors created with the `http-error` package.
+      - Check the OpenAPI spec for what errors are expected.
+      - Also make sure the handler is added to the express router in **${path.relative(context.targetDir, context.copiedFiles!.index)}**.`,
+    })),
+
+    step(UpdateStepMachine, ({ context }) => ({
+      fileId: "test",
+      promptMessage: `Update **${path.relative(context.targetDir, context.copiedFiles!.test)}**.
+
+      - Mock any external dependencies.
+      - Test both success and error scenarios.`,
+    })),
+
+    // ...
+  ],
+});
+
+export default WorkflowDefinition;
+```
+
 ## String Interpolation
 
 To streamline the process of adding new things to the codebase, template files can contain placeholders which will automatically be replaced in the copy step. The copy step takes as an optional input a `lineReplace` function to perform string transformations on the template files **and paths**.
@@ -72,7 +136,9 @@ export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>(
 });
 ```
 
-See a full example [here](https://github.com/sderickson/saflib/blob/main/express/workflows/templates/routes/__group-name__/__target-name__.ts).
+See a full example template file [here](https://github.com/sderickson/saflib/blob/main/express/workflows/templates/routes/__group-name__/__target-name__.ts).
+
+Or of course, you may provide your own templating approach, using your own helper functions in a similar fashion.
 
 ## Adding TODOs
 
@@ -80,22 +146,22 @@ Usually agents will do what they're prompted to do, but not always; for this rea
 
 ## Best practices
 
-### Templates should work
+### Templates should work as-is
 
 The reason the provided templating function uses underscores is these are valid variables in TypeScript; this way the template can actually compile and run. If you run the template tests, they should pass, and if you check types, they should be correct.
 
-This also helps when your platform changes. If you change function signatures or deprecated functions, the template should be updated to reflect the latest and best way to do things.
+This also helps when your platform changes. If you change function signatures or deprecate functions, the template should be updated to reflect the latest and best way to do things, and being a part of your linting and typechecking processes helps keep your templates up-to-date.
 
 To make sure template breakages are fixed, template files should also be part of CI checks. If a template test fails or its types are not correct, they should be fixed before changes are merged.
 
 ### Include instructions
 
-## Advanced
-
-### Package names
+The closer the prompt is to the time and location of the change, the better. It's *least* likely an agent will follow instructions in a giant corpus of documentation it is fed every time, it is *more* likely to follow instructions if they are part of the prompt, and they are *most* likely to follow instructions if they are right where they need to happen. Don't be shy about including a `TODO` comment in every part of the template where the agent needs to do something.
 
 ### Shared templates
 
-### Monorepo templates
+An area of the codebase is likely to have multiple workflows to act on it; those workflows should all draw from the same directory of template files.
 
-### Including one "thing"
+For example, if you have a database directory, with schemas and query functions, your template folder for database workflows should have those schema and query files together in the same structure that they will be copied into. This way your templates are not only representing the contents of the files you want, they also reflect the folder structure you want. This also helps with having making templates work as-is, if they can reference one another.
+
+For a real use case, see [SAF's openapi templates files](https://github.com/sderickson/saflib/tree/main/openapi/workflows/templates), which have files laid out and used by four different workflows: `init`, `add-schema`, `add-route`, and `add-event`.
