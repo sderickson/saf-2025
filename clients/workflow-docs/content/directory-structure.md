@@ -28,8 +28,8 @@ Workflows often start by copying template files into the target directory. The t
 
 ## Documentation
 
-Documentation is useful to refer to, both for creating workflows, and as part of workflows. As such, it's good to have documentation live near the workflows for reference.
+Documentation is useful to refer to, both for creating workflows, and as part of workflows. As such, keep documentation near the workflows for reference.
 
 ## Workflows
 
-Workflows for related files should reside together, and can likely draw from the same template files.
+Workflows for the same area of the codebase should reside together, and will draw from the same template files.
