@@ -18,15 +18,11 @@ http://caddy:2020 {
 }
 
 # Used for SPA clients accessible to all users
-(spa) {
+(static-site) {
 	encode gzip
 	root * /srv{args[0]}
 	file_server {
 		pass_thru
-	}
-	@non-file expression path_regexp('^[^.]*$')
-	handle @non-file {
-		try_files {args[1]}
 	}
 }
 

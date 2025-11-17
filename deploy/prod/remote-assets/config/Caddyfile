@@ -1,11 +1,11 @@
 import common.Caddyfile 
 
 {$PROTOCOL}://docs.{$DOMAIN} {
-	import spa /docs/saf /index.html
+	import static-site /docs/saf
 }
 
 {$PROTOCOL}://workflows.{$DOMAIN} {
-	import spa /docs/workflows /index.html
+	import static-site /docs/workflows
 }
 
 {$PROTOCOL}://{$DOMAIN} {
