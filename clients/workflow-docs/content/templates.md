@@ -7,18 +7,6 @@ Most workflows will copy over templates first thing, as a scaffold for the agent
 To add, copy, and update a template, set up your workflow like this:
 
 ```ts
-import {
-  CopyStepMachine,
-  UpdateStepMachine,
-  defineWorkflow,
-  step,
-} from "@saflib/workflows";
-import path from "node:path";
-
-const sourceDir = path.join(import.meta.dirname, "../templates");
-const input = [] as const;
-interface WorkflowContext {}
-
 export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>({
   // ...
 
@@ -84,23 +72,6 @@ The library also comes with helper functions to assist in templating:
 Put all together, a workflow (in this case to add an http route) that uses the provided helpers will look like this:
 
 ```ts
-import {
-  CopyStepMachine,
-  UpdateStepMachine,
-  defineWorkflow,
-  step,
-  parsePath,
-  parsePackageName,
-  getPackageName,
-  makeLineReplace,
-  type ParsePathOutput,
-  type ParsePackageNameOutput,
-} from "@saflib/workflows";
-
-const sourceDir = path.join(import.meta.dirname, "./templates");
-
-const input = [ { name: "path" } ] as const;
-
 interface WorkflowContext
   extends ParsePathOutput,
     ParsePackageNameOutput {}
