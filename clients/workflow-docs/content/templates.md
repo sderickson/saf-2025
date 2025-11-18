@@ -48,8 +48,6 @@ export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>(
     // ...
   ],
 });
-
-export default WorkflowDefinition;
 ```
 
 ## String Interpolation
