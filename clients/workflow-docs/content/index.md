@@ -109,13 +109,13 @@ It is pretty amazing what people can build now without any coding knowledge, or 
 
 However, at least the way agents behave now, building with this method quickly hits a wall. Agents write inconsistent and tightly coupled modules, with overly complicated functions and components, leading to a codebase that is brittle and cumbersome much sooner than a classically and professionally built stack does. The high of vibe coding and rapid development is followed by the hangover of massive, compounding tech debt.
 
-LLMs are still a new technology, and there may yet be a fundamental shift in their capabilities through continued development. But this library is built on the assumption that what we have now is largely what we get for the time being.
+LLMs are still a new technology, and their capabilities will continue to improve. However, this library is built on the assumption that the fundamental characteristics of LLMs will not change substantially, and so workflows will be a valuable way to get the most out of coding tools for the foreseeable future.
 
 ### Micro-managing
 
 A very different tack is to use LLMs heavily but with manual supervision. Code that is generated is reviewed, edited, trimmed, and fixed, either through more prompting or directly by the developer. This takes much more time-per-line than vibe coding, but it protects against cancerous code growths.
 
-This approach can run the gamut from checking every line to being tactical about what generated code gets thorough review. You can spend more time reviewing code for platforms, interfaces, and risky areas, and give the rest a passing glance. A balanced approach probably leads to the best productivity gains overall between the two extremes, but it seems not all _that_ much faster than simply building without LLMs.
+This approach can run the gamut from checking every line to being tactical about what generated code gets thorough review. You can spend more time reviewing code for platforms, interfaces, and risky areas, and give the rest a passing glance. A balanced approach between these two extremes leads to the best productivity gains overall, and when doing non-routine changes or figuring out what the routine should be this is the best way to go. Once you have identified a routine and decided how it should be, that's when to introduce a workflow.
 
 ### Black box service
 
