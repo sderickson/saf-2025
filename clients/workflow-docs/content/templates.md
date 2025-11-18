@@ -146,6 +146,16 @@ Usually agents will do what they're prompted to do, but not always; for this rea
 
 ## Best practices
 
+### Keep files (and by extension, their templates) small
+
+Have one file for every "thing" in your codebase. One file per route, query, event, db table, component, etc. This will:
+
+* Help the agent go faster
+* Make it easier to tell them what to do (just a file, not also a line number)
+* Make it apparent what the agent has done (based on which files have changed)
+
+See [SAF best practices](https://docs.saf-demo.online/best-practices.html#keep-files-small) for more details.
+
 ### Templates should work as-is
 
 The reason the provided templating function uses underscores is these are valid variables in TypeScript; this way the template can actually compile and run. If you run the template tests, they should pass, and if you check types, they should be correct.
@@ -158,7 +168,7 @@ To make sure template breakages are fixed, template files should also be part of
 
 The closer the prompt is to the time and location of the change, the better. It's *least* likely an agent will follow instructions in a giant corpus of documentation it is fed every time, it is *more* likely to follow instructions if they are part of the prompt, and they are *most* likely to follow instructions if they are right where they need to happen. Don't be shy about including a `TODO` comment in every part of the template where the agent needs to do something.
 
-### Shared templates
+### Share templates
 
 An area of the codebase is likely to have multiple workflows to act on it; those workflows should all draw from the same directory of template files.
 
