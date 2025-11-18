@@ -44,17 +44,10 @@ export default defineConfig({
         ],
       },
       {
-        text: "Development",
+        text: "More Resources",
         items: [
-          { text: "Roadmap", link: "/roadmap" },
-          { text: "Contributing", link: "/contributing" },
-        ],
-      },
-      {
-        text: "Reference",
-        items: [
-          { text: "Library", link: "/library" },
-          { text: "Examples", link: "/examples" },
+          { text: "Reference", link: "/reference" },
+          { text: "Development", link: "/development" },
         ],
       },
     ],

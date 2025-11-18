@@ -22,6 +22,12 @@ npm exec saf-workflow next -- -m "Don't use that approach, use..."
 
 Changing the workflow in the middle of a run might work but no guarantees. If you don't edit any steps which have already happened, and don't edit the step currently being executed, it will probably work. However, if you edit the workflow heavily, it will probably be best to start a new workflow instead. If you're partway through a complex workflow, comment out the steps that have already completed and kick it off fresh.
 
+## Errors
+
+If an error happens during execution, the workflow state machine will enter an error state. The state of the machine will be saved to a file for review, see [xstate](https://stately.ai/docs) for more information about how these state machines work.
+
+The workflow tool automatically saves the current state of the state machine whenever it changes, but it will not save the state if the machine is in an error state. This is because once the machine has errored, it's basically irrecoverable. You may be able to fix the source of the error and run `npm exec saf-workflow next` and continue.
+
 ## Improving your workflow
 
 One of the benefits of having a workflow in your codebase is that it provides something concrete you can improve over time and managed in version control. Every time you code review work done by an agent through a workflow and find areas of improvement, make changes to the workflow to get those improvements going forward. This includes:

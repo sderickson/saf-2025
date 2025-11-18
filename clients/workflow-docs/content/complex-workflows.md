@@ -40,7 +40,7 @@ If you have a step such as a command you use all the time, you can wrap it in a 
 
 ### Project Plans
 
-Complex workflows are, ironically, easier to generate than routine ones. If you have a PRD or spec for a project, and a list of routine workflows you've developed, you can instruct an agent to write a one-off workflow composed of those routine workflows.
+Complex workflows are, ironically, easier to generate than [routine ones](./index.md#routine-workflows). If you have a PRD or spec for a project, and a list of routine workflows you've developed, you can instruct an agent to write a one-off workflow composed of those routine workflows.
 
 ### Iterative Changes
 
