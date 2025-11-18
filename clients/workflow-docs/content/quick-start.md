@@ -57,7 +57,7 @@ Then run the workflow with `npm exec saf-workflow kickoff ./path/to/hello-workfl
 
 ```bash
 (base) scotterickson@Scotts-MacBook-Pro saf-2025 % npm exec saf-workflow kickoff ./clients/workflow-docs/content/hello-workflows.ts 
-[✓] Workflow sucessfully loaded
+[✓] Workflow successfully loaded
 [✓] - Workflow:     demo/hello-workflow
 [✓] - Description:  Say hello to the world
 [✓] Running command: echo Hello, world!

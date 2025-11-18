@@ -1,11 +1,4 @@
 import { defineConfig } from "vitepress";
-import { resolve } from "path";
-
-interface sidebarItem {
-  text: string;
-  link?: string;
-  items?: sidebarItem[];
-}
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -22,7 +15,7 @@ export default defineConfig({
       {
         text: "Getting Started",
         items: [
-          { text: "Introduction", link: "/introduction" },
+          { text: "Introduction", link: "/" },
           { text: "Quick Start", link: "/quick-start" },
         ],
       },
