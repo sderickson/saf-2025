@@ -8,7 +8,7 @@ Workflows are basically a checklist, and steps are items on that checklist. The 
 
 The `CopyStepMachine` takes all the [template files](./templates.md) and copies them to the target directory, with some simple string replacement, and skipping files that already exist. Use `UpdateStepMachine` to prompt the agent to make changes to any of those copied files.
 
-* [CopyStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CommandStepInput.html)
+* [CopyStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CopyStepInput.html)
 * [UpdateStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/UpdateStepInput.html)
 
 ### Prompt
@@ -17,17 +17,17 @@ The `PromptStepMachine` prompts the agent to do an arbitrary task.
 
 * [PromptStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/PromptStepInput.html)
 
-### Cmd
+### Command
 
 The `CommandStepMachine` runs a shell command as part of a workflow. Stops the workflow if the command fails.
 
 * [CommandStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CommandStepInput.html)
 
-### Cwd
+### CD
 
-The `CwdStepMachine` updates the current working directory for subsequent steps, such as "copy", "update", and "command".
+The `CdStepMachine` updates the current working directory for subsequent steps, such as "copy", "update", and "command".
 
-* [CwdStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CwdStepInput.html)
+* [CdStepInput](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CdStepInput.html)
 
 ## Options
 

@@ -2,7 +2,7 @@
 
 ## Adding Templates
 
-Most workflows will copy over templates first thing, as a scaffold for the agent to work from. The templates should be in a `templates` directory adjacent to the workflow directory.
+Most workflows will first copy over templates, to create a scaffold for the agent to work from.
 
 To add, copy, and update a template, set up your workflow like this:
 
@@ -52,20 +52,20 @@ export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>(
 
 ## String Interpolation
 
-To streamline the process of adding new things to the codebase, template files can contain placeholders which will automatically be replaced in the copy step. The copy step takes as an optional input a [`lineReplace`](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CopyStepInput.html#linereplace) function to perform string transformations on the template files **and paths**.
+To streamline the process, template files can contain placeholders which will automatically be replaced in the copy step. The copy step can take a [`lineReplace`](https://docs.saf-demo.online/workflows/docs/ref/interfaces/CopyStepInput.html#linereplace) function to perform string transformations on the template files and paths.
 
 The `saflib/workflows` library provides one function, [`makeLineReplace`](https://docs.saf-demo.online/workflows/docs/ref/functions/makeLineReplace.html), which will replace strings wrapped in double underscores with the given context. It assumes the context will have key values in `camelCase` with values in `kebab-case`. Then it will look for all string variations of the key, such as `kebab-case`, `snake_case`, `PascalCase`, `camelCase`, and `SNAKE_CASE`, and replace them with the value with the appropriate casing and connecting characters. It also replaces instances of `template-package` with the value of the `sharedPackagePrefix` context key, if it exists, which is a special case because npm package names cannot start with an underscore, and template package.json files should still be valid packages.
 
 The library also comes with helper functions to assist in templating:
 - `getPackageName` - reads the package.json for the given cwd and returns the package name.
-- `parsePackageName` - takes a package name and returns a breakdown into conventional parts for templating. It assumes the package name is the service name followed by the kind of package it is, such as `-http`, `-db`, `-common`, etc. Provides:
-  - `organizationName` - the organization name, such as `saflib`.
-  - `packageName` - the full package name, such as `@saflib/product-http`.
-  - `serviceName` - the service name, such as `product`.
-  - `sharedPackagePrefix` - the shared package prefix, such as `@saflib/product`.
+- `parsePackageName` - takes a package name and returns a breakdown into conventional parts for templating. It assumes the package name is the service name followed by the kind of package it is, such as `-http`, `-db`, `-common`, etc. The package name `@saflib/product-http` provides:
+  - `organizationName` - the organization name: `@saflib`.
+  - `packageName` - the full package name: `@saflib/product-http`.
+  - `serviceName` - the service name: `product`.
+  - `sharedPackagePrefix` - the shared package prefix: `@saflib/product`.
 - `parsePath` - takes a target path to a file and breaks it down into conventional parts for templating, such as `./routes/gizmos/list.ts`. Provides:
-  - `groupName` - the group name, such as `gizmos`.
-  - `targetName` - the target name, such as `list`.
+  - `groupName` - the group name: `gizmos`.
+  - `targetName` - the target name: `list`.
 
 Put all together, a workflow (in this case to add an http route) that uses the provided helpers will look like this:
 
@@ -94,7 +94,6 @@ export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>(
 
   steps: [
     step(CopyStepMachine, ({ context }) => ({
-      name: context.targetName,
       targetDir: context.targetDir,
       lineReplace: makeLineReplace(context),
     })),
@@ -107,11 +106,9 @@ export const WorkflowDefinition = defineWorkflow<typeof input, WorkflowContext>(
 
 See a full example template file [here](https://github.com/sderickson/saflib/blob/main/express/workflows/templates/routes/__group-name__/__target-name__.ts).
 
-Or of course, you may provide your own templating approach, using your own helper functions in a similar fashion.
-
 ## Adding TODOs
 
-Usually agents will do what they're prompted to do, but not always; for this reason the `update` step will not allow the workflow to move forward until all instances of "todo" comments are removed from the file. Sprinkle these throughout your template with specific instructions to the agent, to both guide them and add a small but effective check that it gets done. 
+Usually agents will do what they're prompted to do, but not always; for this reason the `update` step will not allow the workflow to move forward until all instances of "todo" comments are removed from the file. Sprinkle these throughout your template with specific instructions to the agent, to both guide them and add a small but effective check that they get done. 
 
 ## Best practices
 
@@ -141,6 +138,6 @@ The closer the prompt is to the time and location of the change, the better. It'
 
 An area of the codebase is likely to have multiple workflows to act on it; those workflows should all draw from the same directory of template files.
 
-For example, if you have a database directory, with schemas and query functions, your template folder for database workflows should have those schema and query files together in the same structure that they will be copied into. This way your templates are not only representing the contents of the files you want, they also reflect the folder structure you want. This also helps with having making templates work as-is, if they can reference one another.
+For example, if you have a database directory, with schemas and query functions, your template folder for database workflows should have those schema and query files together in the same structure that they will be copied into. This way your templates are not only representing the contents of the files you want, they also reflect the folder structure you want. This also helps with making templates work as-is, when they can reference one another.
 
 For a real use case, see [SAF's openapi templates files](https://github.com/sderickson/saflib/tree/main/openapi/workflows/templates), which have files laid out and used by four different workflows: `init`, `add-schema`, `add-route`, and `add-event`.
