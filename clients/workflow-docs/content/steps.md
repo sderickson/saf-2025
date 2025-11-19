@@ -42,7 +42,7 @@ Both have access to the workflow context.
 
 ### Keep steps medium in size
 
-Steps should neither be too small or too large. If the step is too small, the agent may try to busy itself and do extraneous work. If it's too large, the agent is not likely to be able to do it all reliably.
+Steps should neither be too small nor too large. If the step is too small, the agent may try to busy itself and do extraneous work. If it's too large, the agent is not likely to be able to do it all reliably.
 
 As a general rule, use an update step for each file which requires non-trivial changes. Use a prompt step as a catch-all for multiple small code changes, or fold them into an update step prompt.
 
