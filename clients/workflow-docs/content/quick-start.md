@@ -56,7 +56,7 @@ export default HelloWorkflowDefinition;
 Then run the workflow with `npm exec saf-workflow kickoff ./path/to/hello-workflow.ts`. You should see something like this:
 
 ```bash
-(base) scotterickson@Scotts-MacBook-Pro saf-2025 % npm exec saf-workflow kickoff ./path/to/hello-workflow.ts 
+$ npm exec saf-workflow kickoff ./path/to/hello-workflow.ts 
 [✓] Workflow successfully loaded
 [✓] - Workflow:     demo/hello-workflow
 [✓] - Description:  Say hello to the world
@@ -70,18 +70,18 @@ Congrats! You've set up your first workflow.
 
 ## Setting Up a Custom CLI
 
-If you'd rather refer to your workflows by id rather than by path, you'll need to set up your own CLI.
+If you'd rather refer to your workflows by id, you'll need to set up your own CLI.
 
 First, add this `workflow-cli.ts` file to your project.
 
 ```ts
 #!/usr/bin/env node --experimental-strip-types --disable-warning=ExperimentalWarning
+// the line above lets Node run the file directly without compiling first.
 
 import { runWorkflowCli } from "saflib-workflows";
 import { HelloWorkflowDefinition } from "./hello-workflow.ts";
 
 runWorkflowCli([
-  // workflows/add-workflow HOOK - do not remove this line
   HelloWorkflowDefinition,
 ]);
 ```
