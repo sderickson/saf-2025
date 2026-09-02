@@ -1,6 +1,6 @@
 import { readdirSync, statSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
-import { buildMonorepoContext } from "@saflib/dev-tools";
+import { buildMonorepoContext } from "@saflib/monorepo/workspace";
 export interface document {
   text: string;
   link: string;

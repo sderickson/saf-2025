@@ -10,7 +10,6 @@
     "prod-local": "docker compose --env-file .env.prod-local -f docker-compose.prod-local.yaml up",
     "exec-remote": "source .env.remote && ssh $SSH_HOSTNAME 'bash -s'",
     "build": "npm run generate && cd ../.. && ./deploy/prod/local-scripts/build.sh",
-    "update-health-assets": "cd ../.. && ./deploy/prod/local-scripts/update-health-assets.sh",
     "build-no-generate": "cd ../.. && ./deploy/prod/local-scripts/build.sh",
     "push": "cd ../.. && ./deploy/prod/local-scripts/push.sh",
     "sync": "source .env.remote && cd ../.. && ./deploy/prod/local-scripts/sync.sh",
