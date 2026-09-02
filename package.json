@@ -20,6 +20,9 @@
   "engines": {
     "node": ">=22"
   },
+  "overrides": {
+    "better-sqlite3": "12.11.1"
+  },
   "devDependencies": {
     "@saflib/monorepo": "*"
   },
@@ -28,5 +31,8 @@
     "@saflib/vue": "*",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true
   }
 }
