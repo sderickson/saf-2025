@@ -21,16 +21,20 @@
     "node": ">=22"
   },
   "overrides": {
-    "better-sqlite3": "12.11.1"
+    "better-sqlite3": "12.11.1",
+    "@types/node": "^24.3.0"
   },
   "devDependencies": {
     "@saflib/monorepo": "*",
+    "@types/node": "^24.3.0",
     "drizzle-orm": "^0.45.2",
     "openapi-fetch": "^0.14.0",
     "vite-plugin-vuetify": "^2.1.3"
   },
   "dependencies": {
     "@saflib/dev-tools": "*",
+    "@saflib/docker": "*",
+    "@saflib/docs": "*",
     "@saflib/vue": "*",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.0"
