@@ -24,7 +24,10 @@
     "better-sqlite3": "12.11.1"
   },
   "devDependencies": {
-    "@saflib/monorepo": "*"
+    "@saflib/monorepo": "*",
+    "drizzle-orm": "^0.45.2",
+    "openapi-fetch": "^0.14.0",
+    "vite-plugin-vuetify": "^2.1.3"
   },
   "dependencies": {
     "@saflib/dev-tools": "*",
