@@ -27,17 +27,14 @@
   },
   "devDependencies": {
     "@saflib/monorepo": "*",
-    "@types/node": "^24.3.0",
-    "better-sqlite3": "12.11.1",
-    "openapi-fetch": "^0.17.0"
+    "vitest": "*",
+    "vue-tsc": "*"
   },
   "dependencies": {
     "@saflib/dev-tools": "*",
     "@saflib/docker": "*",
     "@saflib/docs": "*",
-    "@saflib/vue": "*",
-    "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.0"
+    "@saflib/vue": "*"
   },
   "allowScripts": {
     "better-sqlite3@12.11.1": true
