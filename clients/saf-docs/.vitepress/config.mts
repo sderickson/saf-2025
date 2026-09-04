@@ -21,7 +21,9 @@ const packageInfoToSidebar = (
   return undefined;
 };
 
-const packagesToSkip: string[] = [];
+const packagesToSkip = [
+  "@saflib/saflib", // This needs work
+];
 
 const { packages, suites } = getDocsByPackage(
   resolve(__dirname, "../../../saflib"),
