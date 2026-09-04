@@ -10,7 +10,7 @@
     "typecheck": "vue-tsc -b",
     "cleanup-declarations": "saf-imports tsconfig cleanup-declarations --root saflib",
     "format": "prettier --write .",
-    "lock-prune": "saf-lock-prune"
+    "lock-prune": "saf-monorepo lock-prune"
   },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
