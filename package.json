@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "typecheck": "vue-tsc -b",
+    "cleanup-declarations": "saf-imports tsconfig cleanup-declarations --root saflib",
     "format": "prettier --write .",
     "lock-prune": "saf-lock-prune"
   },
