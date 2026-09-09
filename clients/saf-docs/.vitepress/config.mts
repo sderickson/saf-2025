@@ -61,7 +61,6 @@ export default defineConfig({
         items: [
           { text: "Overview", link: "/" },
           { text: "Best Practices", link: "/best-practices" },
-          { text: "Automated Workflows", link: "/workflows" },
         ],
       },
       {
@@ -77,8 +76,6 @@ export default defineConfig({
       ...sidebar,
     ],
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/sderickson" },
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/sderickson" }],
   },
 });
