@@ -2,12 +2,16 @@
 FROM node:22-slim AS builder
 
 WORKDIR /app
-COPY --parents ./package.json ./package-lock.json ./saflib/cron/cron-spec/package.json ./saflib/dev-tools/package.json ./saflib/email/email-vue/package.json ./saflib/env/package.json ./saflib/links/package.json ./saflib/monorepo/package.json ./saflib/openapi/package.json ./saflib/sdk/package.json ./saflib/utils/package.json ./saflib/vue/package.json ./clients/saf-docs/package.json ./
+COPY .saf-docker/stage/saf-docs-client/ ./
 RUN npm install --omit=dev
-COPY --parents ./saflib/cron/cron-spec ./saflib/dev-tools ./saflib/email/email-vue ./saflib/env ./saflib/links ./saflib/monorepo ./saflib/openapi ./saflib/sdk ./saflib/utils ./saflib/vue ./clients/saf-docs ./
+COPY --parents ./saflib/analytics/analytics-sdk ./saflib/analytics/analytics-spec ./saflib/commander ./saflib/cron/cron-spec ./saflib/docker ./saflib/docs ./saflib/email/email-spec ./saflib/email/email-vue ./saflib/env ./saflib/links ./saflib/monorepo ./saflib/openapi ./saflib/ory-kratos/ory-kratos-sdk ./saflib/sdk ./saflib/templates ./saflib/utils ./saflib/vitepress ./saflib/vue ./clients/saf-docs ./
 
 # Make the documentation accessible to vitepress
 COPY ./saflib ./saflib
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends git \
+  && rm -rf /var/lib/apt/lists/* \
+  && ./saflib/docker/bin/saf-git-hashes/index.ts
 
 # # Vue app setup
 WORKDIR /app/clients/saf-docs

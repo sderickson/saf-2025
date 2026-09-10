@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@saflib/docs": "*",
-    "@saflib/email-vue": "*"
+    "@saflib/email-vue": "*",
+    "@saflib/vitepress": "*"
   }
 }

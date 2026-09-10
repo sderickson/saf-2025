@@ -48,6 +48,10 @@ sidebar.sort((a, b) => {
 export default defineConfig({
   title: "SAF Documentation",
   srcDir: "../../saflib",
+  // Typedoc copies hand-written docs into ref/_media with paths relative to
+  // docs/, so those copies have systematically broken relative links. Prefer
+  // the originals under docs/ (see generate-typedoc media link rewrite).
+  srcExclude: ["**/docs/ref/_media/**"],
   description: "Reference and Guide for Scott's Application Framework",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
