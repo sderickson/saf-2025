@@ -53,6 +53,7 @@ export default defineConfig({
   // the originals under docs/ (see generate-typedoc media link rewrite).
   srcExclude: ["**/docs/ref/_media/**"],
   description: "Reference and Guide for Scott's Application Framework",
+  ignoreDeadLinks: "localhostLinks",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
