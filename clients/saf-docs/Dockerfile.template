@@ -8,6 +8,7 @@ RUN npm install --omit=dev
 
 # Make the documentation accessible to vitepress
 COPY ./saflib ./saflib
+#{ git_hashes }#
 
 # # Vue app setup
 WORKDIR /app/clients/saf-docs

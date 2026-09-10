@@ -1,6 +1,6 @@
 import { defineConfig } from "vitepress";
 import { resolve } from "path";
-import { getDocsByPackage, type packageInfo } from "./parse.ts";
+import { getDocsByPackage, type packageInfo, type suiteInfo } from "./parse.ts";
 
 interface sidebarItem {
   text: string;
@@ -9,40 +9,28 @@ interface sidebarItem {
 }
 
 const packageInfoToSidebar = (
-  packageInfo: packageInfo,
+  packageInfo: packageInfo | suiteInfo,
 ): sidebarItem | undefined => {
-  let sidebar: sidebarItem[] = packageInfo.docs;
+  const sidebar: sidebarItem[] = packageInfo.docs;
   if (sidebar.length > 0) {
     return {
       text: packageInfo.name,
       items: sidebar,
     };
-  } else {
-    return undefined;
   }
+  return undefined;
 };
 
 const packagesToSkip = [
-  "@saflib/cron-db",
-  "@saflib/cron-spec",
-  "@saflib/cron-vue",
-  "@saflib/email-vue",
-  "@saflib/email-spec",
-  "@saflib/identity-common",
-  "@saflib/identity-db",
-  "@saflib/identity-grpc",
-  "@saflib/identity-http",
-  "@saflib/identity-rpcs",
-  "@saflib/identity-spec",
-  "@saflib/auth-links",
-  "@saflib/auth",
-  "@saflib/processes", // This needs work
+  "@saflib/saflib", // This needs work
 ];
 
-const sidebar = Object.entries(
-  getDocsByPackage(resolve(__dirname, "../../../saflib")),
-)
-  .map(([_, packageInfo]) => packageInfoToSidebar(packageInfo))
+const { packages, suites } = getDocsByPackage(
+  resolve(__dirname, "../../../saflib"),
+);
+
+const sidebar = [...packages, ...suites]
+  .map((entry) => packageInfoToSidebar(entry))
   .filter((item): item is sidebarItem => item !== undefined)
   .filter((item): item is sidebarItem => !packagesToSkip.includes(item.text));
 
@@ -60,6 +48,10 @@ sidebar.sort((a, b) => {
 export default defineConfig({
   title: "SAF Documentation",
   srcDir: "../../saflib",
+  // Typedoc copies hand-written docs into ref/_media with paths relative to
+  // docs/, so those copies have systematically broken relative links. Prefer
+  // the originals under docs/ (see generate-typedoc media link rewrite).
+  srcExclude: ["**/docs/ref/_media/**"],
   description: "Reference and Guide for Scott's Application Framework",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -68,20 +60,26 @@ export default defineConfig({
       { text: "Blog", link: "https://scotterickson.info/" },
     ],
     sidebar: [
-      { text: "General", items: [
-        { text: "Overview", link: "/" },
-        { text: "Best Practices", link: "/best-practices" },
-        { text: "Automated Workflows", link: "/workflows" },
-      ]},
-      { text: "Repositories", items: [
-        { text: "Source", link: "https://github.com/sderickson/saflib" },
-        { text: "Template", link: "https://github.com/sderickson/saf-template" },
-      ]},
+      {
+        text: "General",
+        items: [
+          { text: "Overview", link: "/" },
+          { text: "Best Practices", link: "/best-practices" },
+        ],
+      },
+      {
+        text: "Repositories",
+        items: [
+          { text: "Source", link: "https://github.com/sderickson/saflib" },
+          {
+            text: "Template",
+            link: "https://github.com/sderickson/saflib-template",
+          },
+        ],
+      },
       ...sidebar,
     ],
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/sderickson" },
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/sderickson" }],
   },
 });

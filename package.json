@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "typecheck": "vue-tsc -b",
-    "format": "prettier --write ."
+    "cleanup-declarations": "saf-imports tsconfig cleanup-declarations --root saflib",
+    "format": "prettier --write .",
+    "lock-prune": "saf-monorepo lock-prune"
   },
   "author": "Scott Erickson <sderickson@gmail.com>",
   "license": "MIT",
@@ -20,13 +22,22 @@
   "engines": {
     "node": ">=22"
   },
+  "overrides": {
+    "better-sqlite3": "12.11.1",
+    "@types/node": "^24.3.0"
+  },
   "devDependencies": {
-    "@saflib/monorepo": "*"
+    "@saflib/monorepo": "*",
+    "vitest": "*",
+    "vue-tsc": "*"
   },
   "dependencies": {
     "@saflib/dev-tools": "*",
-    "@saflib/vue": "*",
-    "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.0"
+    "@saflib/docker": "*",
+    "@saflib/docs": "*",
+    "@saflib/vue": "*"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true
   }
 }
