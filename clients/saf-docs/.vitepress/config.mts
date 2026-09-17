@@ -58,13 +58,14 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Workflows", link: "https://workflows.saf-demo.online/" },
-      { text: "Blog", link: "https://scotterickson.info/" },
+      { text: "Blog", link: "https://blog.scotterickson.info/" },
     ],
     sidebar: [
       {
         text: "General",
         items: [
           { text: "Overview", link: "/" },
+          { text: "Getting Started", link: "/getting-started" },
           { text: "Best Practices", link: "/best-practices" },
         ],
       },

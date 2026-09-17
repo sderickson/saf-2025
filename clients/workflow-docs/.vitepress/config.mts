@@ -9,7 +9,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "SAF", link: "https://docs.saf-demo.online/" },
-      { text: "Blog", link: "https://scotterickson.info/" },
+      { text: "Blog", link: "https://blog.scotterickson.info/" },
     ],
     sidebar: [
       {
@@ -52,8 +52,6 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/sderickson" },
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/sderickson" }],
   },
 });
