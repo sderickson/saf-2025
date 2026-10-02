@@ -1,6 +1,18 @@
 import { defineConfig } from "vitepress";
-import { resolve } from "path";
+import { loadEnv } from "vite";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import { getDocsByPackage, type packageInfo, type suiteInfo } from "./parse.ts";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const clientRoot = resolve(__dirname, "..");
+
+// VitePress/Vite can leave import.meta.env.VITE_* as undefined in the client
+// bundle unless we define them explicitly from .env* files.
+const mode = process.argv.some((arg) => /(^|\/)build$/.test(arg))
+  ? "production"
+  : "development";
+const env = loadEnv(mode, clientRoot, "VITE_");
 
 interface sidebarItem {
   text: string;
@@ -54,6 +66,17 @@ export default defineConfig({
   srcExclude: ["**/docs/ref/_media/**"],
   description: "Reference and Guide for Scott's Application Framework",
   ignoreDeadLinks: "localhostLinks",
+  vite: {
+    envDir: clientRoot,
+    define: {
+      "import.meta.env.VITE_POSTHOG_PROJECT_API_KEY": JSON.stringify(
+        env.VITE_POSTHOG_PROJECT_API_KEY ?? "",
+      ),
+      "import.meta.env.VITE_POSTHOG_PROJECT_HOST": JSON.stringify(
+        env.VITE_POSTHOG_PROJECT_HOST ?? "https://us.i.posthog.com",
+      ),
+    },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

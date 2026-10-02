@@ -14,6 +14,7 @@
   "dependencies": {
     "@saflib/docs": "*",
     "@saflib/email-vue": "*",
+    "@saflib/vendors-posthog-client": "*",
     "@saflib/vitepress": "*"
   }
 }
