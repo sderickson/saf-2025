@@ -5,14 +5,6 @@ import DefaultTheme from "vitepress/theme";
 import { initPostHogIfConfigured } from "@saflib/vendors-posthog-client/init";
 import "./style.css";
 
-function capturePageview(url: string) {
-  // @ts-expect-error - posthog is attached to globalThis by posthog-js
-  if ("posthog" in globalThis && globalThis.posthog?.capture) {
-    // @ts-expect-error - posthog is not typed on globalThis
-    globalThis.posthog.capture("$pageview", { $current_url: url });
-  }
-}
-
 // `as Theme` (not `satisfies`) — assigning Layout to Theme crashes TS 6's
 // satisfies elaborator when VitePress's nested @vue/* types diverge by path.
 export default {
@@ -22,7 +14,7 @@ export default {
       // https://vitepress.dev/guide/extending-default-theme#layout-slots
     });
   },
-  enhanceApp({ router }) {
+  enhanceApp() {
     if (import.meta.env.SSR) {
       return;
     }
@@ -33,12 +25,5 @@ export default {
       apiKey: import.meta.env.VITE_POSTHOG_PROJECT_API_KEY,
       apiHost: import.meta.env.VITE_POSTHOG_PROJECT_HOST,
     });
-    capturePageview(window.location.href);
-
-    const previous = router.onAfterRouteChange;
-    router.onAfterRouteChange = async (to) => {
-      await previous?.(to);
-      capturePageview(new URL(to, window.location.origin).href);
-    };
   },
 } as Theme;
