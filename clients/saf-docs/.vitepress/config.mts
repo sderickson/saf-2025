@@ -63,7 +63,12 @@ export default defineConfig({
   // Typedoc copies hand-written docs into ref/_media with paths relative to
   // docs/, so those copies have systematically broken relative links. Prefer
   // the originals under docs/ (see generate-typedoc media link rewrite).
-  srcExclude: ["**/docs/ref/_media/**"],
+  srcExclude: [
+    "**/docs/ref/_media/**",
+    // Root-level internal plans — not published docs, and often contain raw
+    // HTML that Vue's markdown compiler rejects (e.g. unclosed <label> tags).
+    "plans/**",
+  ],
   description: "Reference and Guide for Scott's Application Framework",
   ignoreDeadLinks: "localhostLinks",
   vite: {
