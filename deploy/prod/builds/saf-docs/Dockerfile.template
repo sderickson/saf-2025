@@ -1,0 +1,6 @@
+# Built SAF docs site (static output only), copied into caddy.
+FROM #{ image saf-docs-client }# AS build
+RUN npm run build
+
+FROM busybox:1.37
+COPY --from=build /app/clients/saf-docs/.vitepress/dist /dist

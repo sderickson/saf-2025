@@ -2,7 +2,7 @@ services:
   caddy:
     cap_add:
       - NET_ADMIN
-    image: ghcr.io/sderickson/saf-2025-caddy:latest
+    image: $CONTAINER_REGISTRY/saf-2025-caddy:latest
     ports:
       - "80:80"
       - "443:443"
