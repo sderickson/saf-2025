@@ -1,0 +1,6 @@
+# Built workflow docs site (static output only), copied into caddy.
+FROM #{ image blog-client }# AS build
+RUN npm run build
+
+FROM busybox:1.37
+COPY --from=build /app/clients/workflow-docs/.vitepress/dist /dist

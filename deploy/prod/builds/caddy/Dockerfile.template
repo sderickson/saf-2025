@@ -1,0 +1,7 @@
+# Production reverse proxy. Each site is its own build (deploy/prod/builds/*),
+# so changing one site rebuilds only that site; this image copies the output in.
+FROM caddy:2.9.1
+
+COPY --from=#{ image saf-2025-deploy/builds/saf-docs }# /dist /srv/docs/saf
+COPY --from=#{ image saf-2025-deploy/builds/workflow-docs }# /dist /srv/docs/workflows
+COPY ./deploy/prod/remote-assets/config /etc/caddy/

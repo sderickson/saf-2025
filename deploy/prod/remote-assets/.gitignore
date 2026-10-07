@@ -1,4 +1,4 @@
-.env.prod
+.env
 health-assets/coverage/**
 health-assets/e2e/**
 health-assets/manifest.json
